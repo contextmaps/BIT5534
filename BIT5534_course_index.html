@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIT 5534: Applied Business Intelligence and Analytics · Course Index</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Pamplin-anchored editorial palette */
+    --ink:        #1a1d24;
+    --ink-soft:   #3d4250;
+    --ink-mute:   #6b7280;
+    --paper:      #faf7f2;
+    --paper-2:    #f3ede2;
+    --rule:       #d8cfbf;
+
+    --maroon:     #642424;  /* Virginia Tech maroon, dialed slightly muted */
+    --maroon-ink: #4a1818;
+    --orange:     #cf6b1b;
+    --orange-ink: #a04d05;
+
+    --p1:         #4a7a47;  /* foundations, quiet green */
+    --p1-soft:    #e6efe2;
+    --p1-deep:    #325531;
+
+    --p2:         #4a5b8c;  /* structure and segmentation, indigo */
+    --p2-soft:    #e5e9f2;
+    --p2-deep:    #2f3e6b;
+
+    --p3:         #b86a2f;  /* prediction and comparison, amber */
+    --p3-soft:    #f6e8d6;
+    --p3-deep:    #84481a;
+
+    --p4:         #7b4b6d;  /* project and delivery, plum */
+    --p4-soft:    #f0e6ee;
+    --p4-deep:    #5a3450;
+
+    --shadow-1:   0 1px 0 rgba(26, 29, 36, 0.04), 0 6px 16px -8px rgba(26, 29, 36, 0.10);
+    --shadow-2:   0 2px 0 rgba(26, 29, 36, 0.05), 0 12px 32px -12px rgba(26, 29, 36, 0.14);
+
+    --serif:      "Fraunces", "Iowan Old Style", "Apple Garamond", Georgia, serif;
+    --sans:       "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --mono:       "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ---------- Layout shell ---------- */
+  .page {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 56px 48px 96px;
+  }
+  @media (max-width: 900px) {
+    .page { padding: 32px 20px 64px; }
+  }
+
+  /* ---------- Masthead ---------- */
+  .mast {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 24px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 40px;
+  }
+  .mast-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--maroon);
+    margin: 0 0 14px 0;
+    font-weight: 500;
+  }
+  .mast h1 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-style: italic;
+    font-size: clamp(38px, 5.4vw, 64px);
+    line-height: 1.02;
+    letter-spacing: -0.015em;
+    margin: 0;
+    color: var(--ink);
+  }
+  .mast h1 .ampersand {
+    font-style: italic;
+    color: var(--orange);
+  }
+  .mast-sub {
+    font-family: var(--serif);
+    font-size: 19px;
+    line-height: 1.45;
+    color: var(--ink-soft);
+    margin: 14px 0 0 0;
+    max-width: 60ch;
+    font-weight: 400;
+  }
+  .mast-meta {
+    text-align: right;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.06em;
+    line-height: 1.7;
+  }
+  .mast-meta .pill {
+    display: inline-block;
+    padding: 4px 10px;
+    border: 1px solid var(--rule);
+    border-radius: 99px;
+    background: var(--paper-2);
+    color: var(--ink-soft);
+    margin-top: 6px;
+    font-weight: 500;
+  }
+  @media (max-width: 720px) {
+    .mast { grid-template-columns: 1fr; }
+    .mast-meta { text-align: left; }
+  }
+
+  /* ---------- Macro structure strip ---------- */
+  .macro {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 48px;
+  }
+  @media (max-width: 1040px) {
+    .macro { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .macro { grid-template-columns: 1fr; }
+  }
+  .macro-card {
+    padding: 18px 20px 20px;
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    box-shadow: var(--shadow-1);
+    position: relative;
+    overflow: hidden;
+  }
+  .macro-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+  }
+  .macro-card[data-phase="1"]::before { background: var(--p1); }
+  .macro-card[data-phase="2"]::before { background: var(--p2); }
+  .macro-card[data-phase="3"]::before { background: var(--p3); }
+  .macro-card[data-phase="4"]::before { background: var(--p4); }
+  .macro-eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin: 0 0 6px 0;
+    font-weight: 600;
+  }
+  .macro-card[data-phase="1"] .macro-eyebrow { color: var(--p1-deep); }
+  .macro-card[data-phase="2"] .macro-eyebrow { color: var(--p2-deep); }
+  .macro-card[data-phase="3"] .macro-eyebrow { color: var(--p3-deep); }
+  .macro-card[data-phase="4"] .macro-eyebrow { color: var(--p4-deep); }
+  .macro-title {
+    font-family: var(--serif);
+    font-size: 19px;
+    font-weight: 500;
+    line-height: 1.25;
+    color: var(--ink);
+    margin: 0 0 6px 0;
+  }
+  .macro-desc {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    margin: 0;
+    line-height: 1.5;
+  }
+  .macro-weeks {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    margin-top: 10px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ---------- Phase block ---------- */
+  .phase {
+    margin-bottom: 64px;
+    scroll-margin-top: 24px;
+  }
+  .phase-head {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding-bottom: 14px;
+    margin-bottom: 22px;
+    border-bottom: 2px solid var(--rule);
+    flex-wrap: wrap;
+  }
+  .phase-num {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 56px;
+    line-height: 0.9;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .phase[data-phase="1"] .phase-num { color: var(--p1); }
+  .phase[data-phase="2"] .phase-num { color: var(--p2); }
+  .phase[data-phase="3"] .phase-num { color: var(--p3); }
+  .phase[data-phase="4"] .phase-num { color: var(--p4); }
+  .phase-titleblock { flex: 1 1 360px; }
+  .phase-kicker {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin: 0 0 2px 0;
+  }
+  .phase-title {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 1.15;
+    margin: 0;
+    color: var(--ink);
+  }
+  .phase-sub {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin: 6px 0 0 0;
+    max-width: 60ch;
+  }
+
+  /* ---------- Week rows ---------- */
+  .week {
+    display: grid;
+    grid-template-columns: 92px 1fr;
+    gap: 24px;
+    padding: 14px 0 22px;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .week:last-child { border-bottom: none; }
+  .week-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding-top: 12px;
+  }
+  .week-label .num {
+    display: block;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 36px;
+    line-height: 1;
+    color: var(--ink);
+    margin-top: 2px;
+    text-transform: none;
+    letter-spacing: -0.01em;
+    font-weight: 500;
+  }
+  .week-lectures {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+  }
+
+  /* ---------- Lecture tile ---------- */
+  .lec {
+    display: block;
+    text-decoration: none;
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 14px 16px 16px;
+    color: var(--ink);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .lec::after {
+    content: '';
+    position: absolute;
+    right: 14px;
+    top: 14px;
+    width: 14px;
+    height: 14px;
+    background-image: linear-gradient(45deg, transparent 47%, currentColor 47% 53%, transparent 53%), linear-gradient(-45deg, transparent 47%, currentColor 47% 53%, transparent 53%);
+    background-size: 9px 1.5px, 1.5px 9px;
+    background-repeat: no-repeat;
+    background-position: top right, top right;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+  .lec:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-2);
+    border-color: var(--ink-soft);
+  }
+  .lec:hover::after { opacity: 0.5; }
+  .lec-id {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink-mute);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .lec-mode-tag {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    padding: 1px 6px;
+    border-radius: 99px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+  }
+  .mode-orientation       { background: #efe6d7; color: #6b4a14; }
+  .mode-exploratory       { background: var(--p1-soft); color: var(--p1-deep); }
+  .mode-consolidation     { background: var(--p2-soft); color: var(--p2-deep); }
+  .mode-project_lab       { background: var(--p4-soft); color: var(--p4-deep); }
+  .mode-capstone_demonstration { background: var(--p3-soft); color: var(--p3-deep); }
+  .lec-tool {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 9.5px;
+    padding: 1px 6px;
+    border-radius: 99px;
+    background: var(--maroon);
+    color: white;
+    font-family: var(--mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .lec-tool::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    background: white;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .lec-title {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 16.5px;
+    line-height: 1.3;
+    color: var(--ink);
+    margin: 0;
+  }
+  .lec-business {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin: 8px 0 0 0;
+    line-height: 1.45;
+    font-style: italic;
+  }
+
+  /* ---------- Legend ---------- */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 16px 20px;
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    margin-bottom: 36px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+  .legend-item { display: inline-flex; align-items: center; gap: 8px; }
+  .legend-dot {
+    display: inline-block;
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+  .legend-item .lec-mode-tag,
+  .legend-item .lec-tool { margin-left: 0; }
+
+  /* ---------- Footer note ---------- */
+  .colophon {
+    margin-top: 56px;
+    padding-top: 22px;
+    border-top: 1px solid var(--rule);
+    font-size: 12px;
+    color: var(--ink-mute);
+    line-height: 1.5;
+    font-family: var(--mono);
+    letter-spacing: 0.02em;
+  }
+  .colophon strong { color: var(--ink-soft); font-weight: 600; }
+
+  /* ---------- Subtle paper grain ---------- */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(100,36,36,0.025) 0%, transparent 40%),
+      radial-gradient(circle at 80% 90%, rgba(207,107,27,0.025) 0%, transparent 40%);
+    z-index: -1;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ========== MASTHEAD ========== -->
+  <header class="mast">
+    <div>
+      <p class="mast-eyebrow">Pamplin College of Business &middot; Virginia Tech</p>
+      <h1>BIT 5534<br><span style="font-style:normal; font-weight:400;">Applied Business Intelligence <span class="ampersand">&amp;</span> Analytics</span></h1>
+      <p class="mast-sub">A thread-centered, fifteen-week graduate course in which every analytics method is specified in plain language, built as a working tool with an AI assistant, verified against something you can check, and read for what it means for a decision.</p>
+    </div>
+    <div class="mast-meta">
+      <span class="pill">Course Index</span>
+    </div>
+  </header>
+
+  <!-- ========== MACRO STRIPS ========== -->
+  <nav class="macro" aria-label="Course phases">
+    <a class="macro-card" data-phase="1" href="#phase-1" style="text-decoration:none;">
+      <p class="macro-eyebrow">Phase I</p>
+      <p class="macro-title">Foundations</p>
+      <p class="macro-desc">The thread workflow, data discovery, and the two regression models everything else is measured against.</p>
+      <p class="macro-weeks">Weeks 1&ndash;3 &middot; 6 lectures</p>
+    </a>
+    <a class="macro-card" data-phase="2" href="#phase-2" style="text-decoration:none;">
+      <p class="macro-eyebrow">Phase II</p>
+      <p class="macro-title">Structure &amp; Segmentation</p>
+      <p class="macro-desc">Finding the shape of data without a target variable: components, distances, and segments you can defend.</p>
+      <p class="macro-weeks">Weeks 4&ndash;5 &middot; 4 lectures</p>
+    </a>
+    <a class="macro-card" data-phase="3" href="#phase-3" style="text-decoration:none;">
+      <p class="macro-eyebrow">Phase III</p>
+      <p class="macro-title">Prediction &amp; Comparison</p>
+      <p class="macro-desc">Trees, forests, networks, margins, and ensembles, then an honest harness that scores them all the same way.</p>
+      <p class="macro-weeks">Weeks 6&ndash;11 &middot; 12 lectures</p>
+    </a>
+    <a class="macro-card" data-phase="4" href="#phase-4" style="text-decoration:none;">
+      <p class="macro-eyebrow">Phase IV</p>
+      <p class="macro-title">Project &amp; Delivery</p>
+      <p class="macro-desc">Team-built business intelligence and analytics dashboards, developed in class and presented to peers.</p>
+      <p class="macro-weeks">Weeks 12&ndash;15 &middot; 7 lectures</p>
+    </a>
+  </nav>
+
+  <!-- ========== LEGEND ========== -->
+  <div class="legend">
+    <span class="legend-item"><span class="lec-mode-tag mode-orientation">orientation</span></span>
+    <span class="legend-item"><span class="lec-mode-tag mode-exploratory">exploratory</span></span>
+    <span class="legend-item"><span class="lec-mode-tag mode-consolidation">consolidation</span></span>
+    <span class="legend-item"><span class="lec-mode-tag mode-project_lab">project lab</span></span>
+    <span class="legend-item"><span class="lec-mode-tag mode-capstone_demonstration">presentation</span></span>
+    <span class="legend-item"><span class="lec-tool">tool build</span> student specifies and builds a Python tool, then verifies it</span>
+  </div>
+
+  <!-- ========== PHASE BLOCKS (injected by JS) ========== -->
+  <main id="phases"></main>
+
+  <!-- ========== COLOPHON ========== -->
+  <p class="colophon">
+    <strong>BIT 5534 &middot; Fall 2026 &middot; Dr. Onur Seref.</strong>
+    Each tile links to that lecture's Canvas assignment, which embeds the HTML companion authored from the lecture source.
+  
+
+</div>
+
+<script>
+/* ============================================================
+   LECTURE INDEX — Phase / Week / Lecture data
+   ============================================================
+   To activate the links: replace each `url` field below with the
+   Canvas assignment URL for that lecture. Until then the tiles
+   are inert (href="#"). The structure of the rest of the page
+   never needs to change.
+   ============================================================ */
+
+const PHASES = [
+  {
+    n: 1,
+    kicker: "Phase I \u00b7 Weeks 1\u20133",
+    title: "Foundations",
+    sub: "How the course works now, what a dataset tells you before any model touches it, and the two regression models that every later method is measured against.",
+    weeks: [1, 2, 3],
+  },
+  {
+    n: 2,
+    kicker: "Phase II \u00b7 Weeks 4\u20135",
+    title: "Structure and Segmentation",
+    sub: "Finding structure with no target variable. Components that recover the true dimensionality of a process, and distances that turn customers into segments a business can act on.",
+    weeks: [4, 5],
+  },
+  {
+    n: 3,
+    kicker: "Phase III \u00b7 Weeks 6\u201311",
+    title: "Prediction and Comparison",
+    sub: "Trees, forests, neural networks, margins, and ensembles, each built and verified in turn, then scored against one another on a harness that does not flatter any of them. Text enters last and has to earn its place.",
+    weeks: [6, 7, 8, 9, 10, 11],
+  },
+  {
+    n: 4,
+    kicker: "Phase IV \u00b7 Weeks 12\u201315",
+    title: "Project and Delivery",
+    sub: "Team-built business intelligence and analytics dashboards. Four in-class development sessions, presentations to the other teams, and a closing session on what the semester established.",
+    weeks: [12, 13, 14, 15],
+  },
+];
+
+const LECTURES = [
+  // Week 1
+  { id: "lec1_1",  week: 1,  phase: 1, mode: "orientation",  title: "How This Course Works Now: Threads, Tools, and Asking Better Questions",
+    business: "The thread as the assessed record; signing in, pasting the opener, and starting a Python installation with the assistant." },
+  { id: "lec1_2",  week: 1,  phase: 1, mode: "exploratory",  tool: true, title: "Statistics Review and First Data Discovery: Describing a Dataset You Have Not Seen",
+    business: "Center, spread, shape, and missingness. A first-look tool that reports what a dataset is before anything gets modeled." },
+  // Week 2
+  { id: "lec2_1",  week: 2,  phase: 1, mode: "exploratory",  tool: true, title: "Linear Regression: Specifying a Model and Checking What It Assumes",
+    business: "Building a regression tool and verifying it against a coefficient you can work out yourself before reading any output." },
+  { id: "lec2_2",  week: 2,  phase: 1, mode: "consolidation", title: "ANOVA and Model Adequacy: Reading Residuals and Comparing Nested Models",
+    business: "Where a fitted model stops being trustworthy, and what an F test is actually comparing when it reports significance." },
+  // Week 3
+  { id: "lec3_1",  week: 3,  phase: 1, mode: "exploratory",  tool: true, title: "Logistic Regression: Modeling a Binary Outcome and Reading Odds Ratios",
+    business: "Customer churn as a probability rather than a label, and what an odds ratio is worth saying to a manager." },
+  { id: "lec3_2",  week: 3,  phase: 1, mode: "consolidation", title: "Thresholds and Costs: Confusion Matrices, ROC Curves, and Being Wrong in Two Directions",
+    business: "Choosing an operating point when a false positive and a false negative cost the business different amounts." },
+
+  // Week 4
+  { id: "lec4_1",  week: 4,  phase: 2, mode: "exploratory",  tool: true, title: "Principal Component Analysis: Building the Tool and Reading Its First Outputs",
+    business: "Twenty sensors watching a process you cannot see; verifying the tool against a known eigenvalue before trusting a plot." },
+  { id: "lec4_2",  week: 4,  phase: 2, mode: "exploratory",  title: "Principal Component Analysis: Choosing Components and Reading Meaning Across Datasets",
+    business: "Three datasets and three component counts; what normalization brings out when raw dollars hide everything but size." },
+  // Week 5
+  { id: "lec5_1",  week: 5,  phase: 2, mode: "exploratory",  tool: true, title: "Cluster Analysis: Distance, Linkage, and What a Segment Actually Is",
+    business: "Building a clustering tool, then watching the answer move as the distance measure and the linkage rule change." },
+  { id: "lec5_2",  week: 5,  phase: 2, mode: "consolidation", title: "Choosing k and Defending It: Profiling Segments for a Business Audience",
+    business: "Naming clusters from their profiles and saying what a firm should do differently for each one." },
+
+  // Week 6
+  { id: "lec6_1",  week: 6,  phase: 3, mode: "exploratory",  tool: true, title: "Decision Trees: Splits, Impurity, and Why a Tree Overfits",
+    business: "Reading a fitted tree as a set of business rules, then watching the same tree memorize its training set." },
+  { id: "lec6_2",  week: 6,  phase: 3, mode: "consolidation", title: "Random Forests: Bagging, Variable Importance, and the Interpretability Trade",
+    business: "What the forest buys in accuracy, what it costs in explanation, and how to answer for the difference." },
+  // Week 7
+  { id: "lec7_1",  week: 7,  phase: 3, mode: "exploratory",  tool: true, title: "Neural Networks: Layers, Activations, and What the Network Is Fitting",
+    business: "Building a small network and finding the point where added capacity stops improving anything that matters." },
+  { id: "lec7_2",  week: 7,  phase: 3, mode: "consolidation", title: "Training and Regularization: Diagnosing a Network That Learned the Wrong Thing",
+    business: "Learning curves, early stopping, and telling a bad model apart from a bad dataset." },
+  // Week 8
+  { id: "lec8_1",  week: 8,  phase: 3, mode: "exploratory",  tool: true, title: "Support Vector Machines: Margins, Kernels, and Where the Boundary Comes From",
+    business: "Why a handful of observations decide the boundary, and what changing the kernel really changes." },
+  { id: "lec8_2",  week: 8,  phase: 3, mode: "consolidation", title: "Ensemble Modeling: Boosting, Stacking, and When Combining Models Helps",
+    business: "Combining the semester's models, including the cases where the ensemble beats nothing but the effort spent on it." },
+  // Week 9
+  { id: "lec9_1",  week: 9,  phase: 3, mode: "exploratory",  tool: true, title: "Model Comparison: Building an Honest Evaluation Harness",
+    business: "One harness, every model from the semester, scored the same way on the same splits." },
+  { id: "lec9_2",  week: 9,  phase: 3, mode: "consolidation", title: "Cross-Validation and Leakage: Making a Performance Number Mean Something",
+    business: "Finding the leak that made a model look excellent, and reporting the corrected number without excuses." },
+  // Week 10
+  { id: "lec10_1", week: 10, phase: 3, mode: "exploratory",  title: "Comparing Models Across Metrics: Accuracy, Lift, and Business Cost",
+    business: "When the most accurate model is the wrong one, priced in the currency of the decision it supports." },
+  { id: "lec10_2", week: 10, phase: 3, mode: "consolidation", title: "Choosing a Model and Defending the Choice",
+    business: "Writing the selection argument a sponsor would accept, including a statement of what would change your mind." },
+  // Week 11
+  { id: "lec11_1", week: 11, phase: 3, mode: "exploratory",  tool: true, title: "Text Mining: From Documents to Features",
+    business: "Turning free-text customer feedback into something a model can use, and naming what is lost on the way." },
+  { id: "lec11_2", week: 11, phase: 3, mode: "consolidation", title: "Sentiment, Topics, and What Text Adds to a Structured Model",
+    business: "Measuring whether the text columns earned their place beside the numeric ones, or only looked as though they had." },
+
+  // Week 12
+  { id: "lec12_1", week: 12, phase: 4, mode: "project_lab", title: "Project Development I",
+    business: "Dashboard build session. Topic to be confirmed." },
+  { id: "lec12_2", week: 12, phase: 4, mode: "project_lab", title: "Project Development II",
+    business: "Dashboard build session. Topic to be confirmed." },
+  // Week 13
+  { id: "lec13_1", week: 13, phase: 4, mode: "project_lab", title: "Project Development III",
+    business: "Dashboard build session. Topic to be confirmed." },
+  { id: "lec13_2", week: 13, phase: 4, mode: "project_lab", title: "Project Development IV",
+    business: "Dashboard build session. Topic to be confirmed." },
+  // Week 14
+  { id: "lec14_1", week: 14, phase: 4, mode: "capstone_demonstration", title: "Dashboard Presentations: Session 1",
+    business: "Teams present the dashboard and the analysis behind it, evaluated by the other teams." },
+  { id: "lec14_2", week: 14, phase: 4, mode: "capstone_demonstration", title: "Dashboard Presentations: Session 2",
+    business: "Teams present the dashboard and the analysis behind it, evaluated by the other teams." },
+  // Week 15
+  { id: "lec15_1", week: 15, phase: 4, mode: "consolidation", title: "Course Wrap-Up and Closing Reflections",
+    business: "What the semester established about building analytics with an assistant, and where the habit goes after this course." },
+];
+
+/* ============================================================
+   CANVAS ASSIGNMENT LINKS
+   ============================================================
+   Fill in the URL for each lecture between the quotes.
+
+   To get a URL: open the assignment in Canvas and copy the
+   address bar, e.g.
+       https://canvas.vt.edu/courses/233475/assignments/67890
+   The course ID is the same for every row; only the assignment
+   ID at the end changes.
+
+   You can paste either the full URL above, OR just the relative
+   part "/courses/233475/assignments/67890" - both work.
+
+   Any row left as "" stays inert (the tile shows but does not
+   click through), so these can be filled in gradually.
+   ============================================================ */
+const CANVAS_LINKS = {
+  "lec1_1":   "https://canvas.vt.edu/courses/233475/assignments/2844142",
+  "lec1_2":   "https://canvas.vt.edu/courses/233475/assignments/2844143",
+  "lec2_1":   "https://canvas.vt.edu/courses/233475/assignments/2844159",
+  "lec2_2":   "https://canvas.vt.edu/courses/233475/assignments/2844160",
+  "lec3_1":   "https://canvas.vt.edu/courses/233475/assignments/2844161",
+  "lec3_2":   "https://canvas.vt.edu/courses/233475/assignments/2844162",
+  "lec4_1":   "https://canvas.vt.edu/courses/233475/assignments/2844163",
+  "lec4_2":   "https://canvas.vt.edu/courses/233475/assignments/2844164",
+  "lec5_1":   "https://canvas.vt.edu/courses/233475/assignments/2844165",
+  "lec5_2":   "https://canvas.vt.edu/courses/233475/assignments/2844166",
+  "lec6_1":   "https://canvas.vt.edu/courses/233475/assignments/2844167",
+  "lec6_2":   "https://canvas.vt.edu/courses/233475/assignments/2844168",
+  "lec7_1":   "https://canvas.vt.edu/courses/233475/assignments/2844169",
+  "lec7_2":   "https://canvas.vt.edu/courses/233475/assignments/2844170",
+  "lec8_1":   "https://canvas.vt.edu/courses/233475/assignments/2844171",
+  "lec8_2":   "https://canvas.vt.edu/courses/233475/assignments/2844173",
+  "lec9_1":   "https://canvas.vt.edu/courses/233475/assignments/2844175",
+  "lec9_2":   "https://canvas.vt.edu/courses/233475/assignments/2844176",
+  "lec10_1":  "https://canvas.vt.edu/courses/233475/assignments/2844144",
+  "lec10_2":  "https://canvas.vt.edu/courses/233475/assignments/2844145",
+  "lec11_1":  "https://canvas.vt.edu/courses/233475/assignments/2844147",
+  "lec11_2":  "https://canvas.vt.edu/courses/233475/assignments/2844148",
+  "lec12_1":  "https://canvas.vt.edu/courses/233475/assignments/2844149",
+  "lec12_2":  "https://canvas.vt.edu/courses/233475/assignments/2844150",
+  "lec13_1":  "https://canvas.vt.edu/courses/233475/assignments/2844152",
+  "lec13_2":  "https://canvas.vt.edu/courses/233475/assignments/2844153",
+  "lec14_1":  "https://canvas.vt.edu/courses/233475/assignments/2844155",
+  "lec14_2":  "https://canvas.vt.edu/courses/233475/assignments/2844156",
+  "lec15_1":  "https://canvas.vt.edu/courses/233475/assignments/2844157",
+};
+
+/* ============ Render ============ */
+
+const ROMAN = { 1: "I", 2: "II", 3: "III", 4: "IV" };
+
+const root = document.getElementById("phases");
+
+function escapeAttr(s) { return String(s).replace(/"/g, '&quot;'); }
+
+PHASES.forEach(phase => {
+  const phaseEl = document.createElement("section");
+  phaseEl.className = "phase";
+  phaseEl.dataset.phase = phase.n;
+  phaseEl.id = `phase-${phase.n}`;
+
+  phaseEl.innerHTML = `
+    <header class="phase-head">
+      <div class="phase-num">${ROMAN[phase.n]}</div>
+      <div class="phase-titleblock">
+        <p class="phase-kicker">${phase.kicker}</p>
+        <h2 class="phase-title">${phase.title}</h2>
+        <p class="phase-sub">${phase.sub}</p>
+      </div>
+    </header>
+    <div class="phase-body"></div>
+  `;
+  const body = phaseEl.querySelector(".phase-body");
+
+  phase.weeks.forEach(weekNum => {
+    const weekLectures = LECTURES.filter(l => l.week === weekNum).sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
+    if (!weekLectures.length) return;
+
+    const weekEl = document.createElement("div");
+    weekEl.className = "week";
+    weekEl.innerHTML = `
+      <div class="week-label">Week<span class="num">${weekNum}</span></div>
+      <div class="week-lectures"></div>
+    `;
+    const lecturesEl = weekEl.querySelector(".week-lectures");
+
+    weekLectures.forEach(l => {
+      const url = CANVAS_LINKS[l.id] || "#";
+      const modeLabel = l.mode === "capstone_demonstration" ? "presentation"
+                       : l.mode === "project_lab" ? "project lab"
+                       : l.mode;
+      const toolTag = l.tool ? `<span class="lec-tool">tool build</span>` : "";
+      const a = document.createElement("a");
+      a.className = "lec";
+      a.href = url;
+      a.setAttribute("data-lec", l.id);
+      if (url !== "#") {
+        a.setAttribute("target", "_top");  // exit iframe and load assignment in main Canvas frame
+      } else {
+        a.setAttribute("aria-disabled", "true");
+        a.addEventListener("click", e => e.preventDefault());
+      }
+      a.innerHTML = `
+        <div class="lec-id">
+          <span>${l.id}</span>
+          <span class="lec-mode-tag mode-${l.mode}">${modeLabel}</span>
+          ${toolTag}
+        </div>
+        <h3 class="lec-title">${l.title}</h3>
+        <p class="lec-business">${l.business}</p>
+      `;
+      lecturesEl.appendChild(a);
+    });
+
+    body.appendChild(weekEl);
+  });
+
+  root.appendChild(phaseEl);
+});
+
+/* Smooth scroll for in-page anchors */
+document.querySelectorAll('a[href^="#phase-"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const id = a.getAttribute('href').slice(1);
+    const target = document.getElementById(id);
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
+});
+</script>
+</body>
+</html>
