@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIT 5534: Applied Business Intelligence and Analytics &middot; Syllabus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1a1d24; --ink-soft:#3d4250; --ink-mute:#6b7280;
+  --paper:#faf7f2; --paper-2:#f3ede2; --rule:#d8cfbf;
+  --maroon:#642424; --maroon-ink:#4a1818; --orange:#cf6b1b; --orange-ink:#a04d05;
+  --p1:#4a7a47; --p1-soft:#e6efe2; --p2:#4a5b8c; --p2-soft:#e5e9f2;
+  --p3:#b86a2f; --p3-soft:#f6e8d6; --p4:#7b4b6d; --p4-soft:#f0e6ee;
+  --shadow-1:0 1px 0 rgba(26,29,36,.04), 0 6px 16px -8px rgba(26,29,36,.10);
+  --serif:"Fraunces","Iowan Old Style","Apple Garamond",Georgia,serif;
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono","SF Mono",Menlo,Consolas,monospace;
+  --radius:6px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+  font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding:0 24px 96px}
+
+.mast{border-bottom:2px solid var(--maroon);padding:56px 0 26px;margin-bottom:34px}
+.mast .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--orange-ink);margin:0 0 10px}
+.mast h1{font-family:var(--serif);font-weight:700;font-size:44px;line-height:1.1;
+  margin:0 0 6px;color:var(--maroon-ink);letter-spacing:-.01em}
+.mast .sub{font-family:var(--serif);font-size:23px;color:var(--ink-soft);margin:0 0 22px}
+.people{display:grid;grid-template-columns:repeat(2,minmax(210px,1fr));gap:14px 26px;
+  font-size:14.5px;margin-top:14px}
+@media (max-width:620px){.people{grid-template-columns:1fr}}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 26px;
+  font-size:14.5px}
+.facts div span,.people div span{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-mute);margin-bottom:2px}
+.facts a,.people a{color:var(--maroon);text-decoration:none;border-bottom:1px solid var(--rule)}
+.facts a:hover,.people a:hover{border-color:var(--maroon)}
+
+.pdf-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--paper-2);
+  border:1px solid var(--rule);border-radius:var(--radius);padding:13px 18px;margin:0 0 38px;
+  font-size:14px;color:var(--ink-soft)}
+.pdf-bar a{display:inline-block;background:var(--maroon);color:#fff;text-decoration:none;
+  font-weight:600;font-size:13.5px;padding:7px 15px;border-radius:4px}
+.pdf-bar a:hover{background:var(--maroon-ink)}
+
+h2{font-family:var(--serif);font-size:15px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--maroon);margin:38px 0 10px;
+  padding-bottom:7px;border-bottom:1px solid var(--rule)}
+h3{font-family:var(--sans);font-size:15.5px;font-weight:700;color:var(--ink);margin:22px 0 6px}
+p{margin:0 0 13px;color:var(--ink-soft)}
+b{color:var(--ink);font-weight:600}
+ol,ul{margin:0 0 14px;padding-left:1.3rem;color:var(--ink-soft)}
+li{margin-bottom:7px}
+.lead{font-weight:700;color:var(--ink)}
+
+.tcp{background:var(--p2-soft);border-left:4px solid var(--p2);border-radius:0 var(--radius) var(--radius) 0;
+  padding:22px 26px 10px;margin:14px 0 8px}
+.tcp p{color:var(--ink-soft)}
+
+table{width:100%;border-collapse:collapse;margin:6px 0 18px;font-size:14px}
+.grading td{padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.grading .g-k{font-weight:600;color:var(--ink);white-space:nowrap;width:104px}
+.grading .g-d{color:var(--ink-mute);font-size:13.5px}
+.grading .g-p{text-align:right;font-family:var(--mono);font-weight:500;width:64px;color:var(--ink)}
+.grading .g-total td{border-top:2px solid var(--maroon);border-bottom:none;font-weight:700;
+  color:var(--maroon-ink);padding-top:9px}
+.grading .g-bonus .g-k,.grading .g-bonus .g-p{color:var(--orange-ink)}
+
+.scale td{padding:5px 9px;border-bottom:1px solid var(--rule);font-size:13.5px}
+.scale .s-g{font-weight:700;color:var(--ink);width:44px}
+.scale .s-r{font-family:var(--mono);color:var(--ink-soft);font-size:12.5px}
+
+.outline th{text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-mute);font-weight:500;padding:0 9px 7px;
+  border-bottom:1.5px solid var(--rule)}
+.outline td{padding:8px 9px;border-bottom:1px solid var(--rule);vertical-align:top;font-size:13.5px}
+.outline .o-w{font-family:var(--mono);font-weight:600;width:44px;color:var(--ink)}
+.outline .o-d{font-family:var(--mono);font-size:12px;color:var(--ink-mute);width:96px;white-space:nowrap}
+.outline .o-p{width:38px;font-family:var(--serif);font-weight:700;font-size:13px}
+.outline .o-p.p1{color:var(--p1)} .outline .o-p.p2{color:var(--p2)}
+.outline .o-p.p3{color:var(--p3)} .outline .o-p.p4{color:var(--p4)}
+.outline .o-p.brk{color:var(--ink-mute)}
+.outline .o-t{color:var(--ink-soft)}
+.outline .o-a{color:var(--orange-ink);font-size:12.5px;white-space:nowrap;text-align:right}
+.outline tr.brk td{background:var(--paper-2);color:var(--ink-mute);font-style:italic}
+
+.note{font-size:13px;color:var(--ink-mute);border-left:3px solid var(--rule);padding-left:14px;
+  margin:2px 0 18px}
+footer{margin-top:52px;padding-top:18px;border-top:1px solid var(--rule);
+  font-size:12.5px;color:var(--ink-mute)}
+@media (max-width:640px){ .mast h1{font-size:32px} .outline .o-a{white-space:normal} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="mast">
+  <p class="kicker">Virginia Tech &middot; Pamplin College of Business &middot; Fall 2026</p>
+  <h1>BIT 5534</h1>
+  <p class="sub">Applied Business Intelligence and Analytics</p>
+  <div class="facts">
+    <div><span>Meets</span>Tuesdays and Thursdays</div>
+    <div><span>CRN 91801</span>8:00 am to 9:15 am<br>DDS 180</div><div><span>CRN 82091</span>5:00 pm to 6:15 pm<br>DDS 220</div>
+  </div>
+  <div class="people">
+    <div><span>Instructor</span>Dr. Onur Seref<br><a href="mailto:seref@vt.edu">seref@vt.edu</a></div>
+    <div><span>Office Hours</span>Wednesdays, 1:00 pm to 2:30 pm</div>
+    <div><span>Teaching Assistant</span>Manas Ganti<br><a href="mailto:manasganti@vt.edu">manasganti@vt.edu</a></div>
+    <div><span>Office Hours</span>TBD</div>
+  </div>
+</header>
+
+<div class="pdf-bar">
+  <span>A printable version of this syllabus is posted on Canvas.</span>
+  <a href="https://canvas.vt.edu/courses/233475/files/folder/syllabus?preview=46303754" target="_top">Open the PDF</a>
+</div>
+
+<h2>Course Description</h2>
+<p>Development of business intelligence and analytics solutions and applications for decision-making problems. Analytics software and techniques, data preparation, data exploration and visualization, predictive analytics techniques, text analytics. In this offering you specify each method in plain language, build it as a working Python tool with HokieAI, verify the tool against a result you can check, and devote the remaining time to what the output means and what a business should do about it. The semester closes with a team-built business intelligence and analytics dashboard presented to the class.</p>
+
+<h2>Course Objectives</h2>
+<p>By the end of the semester, students will be able to:</p>
+<ol><li>Specify an analytics method in operational language, build it as a working Python tool with HokieAI, and verify the tool against a known result before trusting anything it produces.</li>
+<li>Choose among regression, classification, dimension reduction, segmentation, and ensemble methods for a given business decision problem, and say why the alternatives were set aside.</li>
+<li>Interpret model output for what it indicates about the data and about the business decision it supports.</li>
+<li>Build an honest evaluation harness, compare candidate models on metrics tied to the cost of the decision, and defend the model selected.</li>
+<li>Recognize the ways HokieAI fails on technical material, and verify generated code and generated explanations before they reach a result.</li>
+<li>Design and build a business intelligence and analytics dashboard that delivers a decision to a non-technical audience.</li>
+<li>Present the dashboard and the analysis behind it to peers, and defend the choices it rests on.</li></ol>
+
+<h2>How This Course Works: Thread-Centered Pedagogy</h2>
+<div class="tcp"><p>This course is taught through Thread-Centered Pedagogy. In every session you open a conversation with HokieAI, work through a sequence of structured blocks on the course companion, build and run what the session calls for, and submit the complete conversation together with whatever your tools produced. The thread captures your conversation as a record of your work. The requirements and evaluation procedures below apply to every thread you submit.</p>
+<p><span class="lead">You write your own prompts.</span> The companion provides structure. Write using your own words in every block that asks you to specify a method, interrogate an explanation, respond to an answer, or reflect on the session. The reflection that closes each session records your own thinking, and a reflection drafted by HokieAI will be treated as work that is not your own.</p>
+<p><span class="lead">All of your work stays in the thread.</span> Work completed outside the thread cannot be assessed. Do not delete turns, edit messages you have already sent, or reconstruct a conversation after the session has ended. A thread that records where you became stuck, caught an error in generated code, or revised your choice of model receives full credit for the reasoning it documents.</p>
+<p><span class="lead">Generated code is your responsibility.</span> HokieAI writes a large share of the Python in this course, and it will sometimes produce code that runs and returns an incorrect result. Every session that builds a tool also supplies a value to check the tool against. Verify each result before you report it, and record the verification in your thread.</p>
+<p><span class="lead">The thread is transparent and traceable.</span> Each submission records the prompts you wrote, the responses you received, the code you ran, and the actions you took afterward. A complete thread documents the origin of every element of the analysis. This course encourages good habits for honest AI-assisted work.</p>
+<p><span class="lead">How submissions are evaluated.</span> Each block is assessed against the instruction printed above it on the companion page, and every graded element produces a distribution across the class. A thread that was not genuinely created falls outside the range of authentic submissions in those distributions.</p>
+<p><span class="lead">If a submission is not genuine.</span> A first instance receives zero points for that submission. Any further instance is reported to the Graduate Honor System. A student who disputes a case will be given a comparable but independent assignment to complete under direct supervision. If the quality of that interaction differs substantially from the disputed submission, the case is reported to the Honor System with the supervised result submitted alongside the original.</p></div>
+
+<h2>Grading</h2>
+<table class="grading"><tr><td class="g-k">Classwork</td><td class="g-d">24 graded sessions, weeks 2 through 13, at 1.5 points each</td><td class="g-p">36</td></tr><tr><td class="g-k">Homework</td><td class="g-d">9 assignments, weeks 2 through 10, at 3 points each</td><td class="g-p">27</td></tr><tr><td class="g-k">Project</td><td class="g-d">3 deliverables at 10 points each, plus a 10-point team presentation</td><td class="g-p">40</td></tr><tr class="g-total"><td class="g-k">Total</td><td></td><td class="g-p">103</td></tr><tr class="g-bonus"><td class="g-k">Bonus</td><td class="g-d">SPOT evaluation completed</td><td class="g-p">+1</td></tr><tr class="g-bonus"><td class="g-k">Bonus</td><td class="g-d">A complete set of individual peer evaluations for the presentations of all other teams</td><td class="g-p">+1</td></tr><tr class="g-total"><td class="g-k">Maximum</td><td></td><td class="g-p">105</td></tr></table>
+<p class="note">The two bonus points are earned, not given. A student who completes neither is
+graded out of 103.</p>
+
+<h2>Grading Scale</h2>
+<p>Rounded to two decimal places.</p>
+<table class="scale"><tr><td class="s-g">A</td><td class="s-r">&ge; 95</td><td class="s-g">C</td><td class="s-r">73.00 - 76.99</td></tr><tr><td class="s-g">A-</td><td class="s-r">90.00 - 94.99</td><td class="s-g">C-</td><td class="s-r">70.00 - 72.99</td></tr><tr><td class="s-g">B+</td><td class="s-r">87.00 - 89.99</td><td class="s-g">D+</td><td class="s-r">67.00 - 69.99</td></tr><tr><td class="s-g">B</td><td class="s-r">83.00 - 86.99</td><td class="s-g">D</td><td class="s-r">63.00 - 66.99</td></tr><tr><td class="s-g">B-</td><td class="s-r">80.00 - 82.99</td><td class="s-g">D-</td><td class="s-r">60.00 - 62.99</td></tr><tr><td class="s-g">C+</td><td class="s-r">77.00 - 79.99</td><td class="s-g">F</td><td class="s-r">&lt; 60.00</td></tr></table>
+
+<h2>Course Text</h2>
+<p>There is no required textbook. All course materials are delivered through the course companion and by the instructor. Students who want a conventional reference alongside the course may use <i>Fundamentals of Predictive Analytics with JMP</i>, Second Edition, by Klimberg and McCullough, which covers most of the methods in the outline below.</p>
+<h2>Software Required</h2>
+<p>HokieAI, signed in with your Virginia Tech credentials, at <b>hokieai.vt.edu</b>. HokieAI is the only AI platform used in this course. You also need a working Python installation on your own machine, which you will set up in week 1 with help from HokieAI. JMP Student Edition, at <b>software.vt.edu/getjmpse</b>, remains available and is useful for cross-checking a result you have just computed yourself. Nothing in this course has to be purchased.</p>
+<h2>Computer Equipment</h2>
+<p>You must bring a laptop to every class meeting. It needs to connect to the internet, run Python locally, and meet the recommended configuration for students entering the Pamplin College of Business. All sessions are hands-on and require a working laptop. Carry a power adapter so that a low battery does not prevent a submission.</p>
+<h2>Course Website</h2>
+<p>Canvas, at <b>canvas.vt.edu</b>, provides the syllabus, announcements, assignments, grades, and team rosters. Each lecture links from its Canvas assignment to the course companion, where the session material is posted. Course news is sent by email and posted to the announcements page. You are responsible for checking your Virginia Tech email and the announcements page often enough to stay updated.</p>
+<h2>Lectures and Classwork</h2>
+<p>All lectures are in person and hands-on unless announced otherwise. Session material appears on the companion at the start of class. You work through the blocks during the meeting, run what you build, and submit your thread together with any files your tools produced before you leave. Twenty-four graded sessions run from week 2 through week 13 at 1.5 points each.</p>
+<h2>Homework Assignments</h2>
+<p>Nine homework assignments are given, one for each of weeks 2 through 10, each worth 3 points. Each homework assignment is released at the end of the day on Thursday and is due at 11:59 pm on the Friday of the following week. Homework follows the same structure as the classwork and is usually more substantial, and some assignments require more than one thread. Homework is individual work. You are encouraged to discuss homework with your classmates. A submission that reproduces another student's thread or another student's code in whole or in part will not receive credit. A submission up to 24 hours late is subject to a 10 percent penalty and receives no credit after that. Once a homework grade is released, you have one week to raise a question about it.</p>
+<h2>Project</h2>
+<p>Teams of four to five students design and build a business intelligence and analytics dashboard for an authentic business decision problem. Teams form informally in week 5 and are finalized in week 6. Three deliverables are due during the semester at 10 points each, covering the problem and its data, the analysis and model selection, and the dashboard itself. Each team presents its dashboard during week 14 for 10 points. Presentations are evaluated by the students' peers. Weeks 12 and 13 are in-class development sessions given over to the build. Full project instructions are released in week 5.</p>
+<h2>Email</h2>
+<p>Put <b>BIT 5534</b> and the purpose of your message in the subject line so that it is filtered correctly. Open with "Hi Dr. Seref" or "Dear Dr. Seref", keep the body brief, and sign your name at the end. Messages that do not follow this format will not receive a response.</p>
+<h2>Absences from Class</h2>
+<p>A student who has to miss a lecture for a documentable reason can request an extension on that session's classwork until 11:59 pm the same day. Request it by email to seref@vt.edu at least 24 hours before the lecture begins. Requests after that deadline will not be considered. Submit your supporting document to the Excuse Document Submission assignment on Canvas as a PDF. Official activities such as school-related travel and professional activities such as job interviews are valid reasons, recognized on submission of a letter or email from the relevant authority or organization. For a health problem, notify the instructor by email before the lecture where possible and no later than three days after it, with documentation submitted within the same three days. Other emergencies are handled case by case and should be raised as soon as possible. Personal preferences, including family travel and leaving early for or returning late from a break, are not valid reasons. You receive an extension with an accepted excuse, and you still need to complete the work by the extended deadline to earn credit.</p>
+<h2>Academic Integrity</h2>
+<p>The Graduate Honor System is in effect for every part of this course. All work other than the project is individual. You are not to receive assistance from other students on classwork or homework, and a project team may not use any part of another team's work. A student who is unsure how the Honor System applies to an assignment is responsible for asking the instructor before submitting it. Ignorance of the rules is not an exemption from them. For more, see <b>graduateschool.vt.edu/academics/expectations/graduate-honor-system.html</b>.</p>
+<h2>AI-Based Technologies</h2>
+<p>Using AI is expected in every session of this course. HokieAI is the only approved platform, and using another AI service for coursework requires the instructor's approval in advance. All of your user prompts in any thread submitted to any assignment, including classwork, homework, and project work, must be your genuine words. An exported thread must be preserved in its original form and must not be edited to improve its appearance. Report code as verified only after you have run it. You are encouraged to archive on HokieAI the official threads you submit for course assignments. See the section on Thread-Centered Pedagogy above for how submissions are evaluated.</p>
+<h2>Services for Students with Disabilities</h2>
+<p><b>ssd.vt.edu</b>. An email from SSD is required for accommodations.</p>
+<h2>Counseling Support</h2>
+<p><b>ucc.vt.edu</b>. Students under personal or academic stress are encouraged to meet with trained counselors at the Cook Counseling Center. All conversations are confidential. Thomas E. Cook Counseling Center, 240 McComas Hall, (540) 231-6557. Office hours are Monday through Friday, 8:00 am to 5:00 pm. After-hours service is at the same number.</p>
+<h2>VT Principles of Community</h2>
+<p><b>vt.edu/diversity/principles-of-community.html</b>. Student Conduct works to uphold the safety and success of our community by educating students about community expectations and values, at <b>studentconduct.vt.edu</b>.</p>
+<h2>Online Learning Technologies</h2>
+<p>Pamplin IT at <b>technology.pamplin.vt.edu</b>. Technology-enhanced Learning and Online Strategies at <b>tlos.vt.edu</b>. Student software at <b>itpals.vt.edu/student.html</b>.</p>
+
+<h2>Tentative Course Outline</h2>
+<p>All topics and dates are subject to change.</p>
+<table class="outline"><thead><tr><th>Week</th><th>Dates</th><th>Phase</th><th>Topics</th><th>Due</th></tr></thead><tbody><tr><td class="o-w">1</td><td class="o-d">08/25, 08/27</td><td class="o-p p1">I</td><td class="o-t">How this course works now &middot; Statistics review and first data discovery</td><td class="o-a">not graded</td></tr><tr><td class="o-w">2</td><td class="o-d">09/01, 09/03</td><td class="o-p p1">I</td><td class="o-t">Linear regression &middot; ANOVA and model adequacy</td><td class="o-a">HW1</td></tr><tr><td class="o-w">3</td><td class="o-d">09/08, 09/10</td><td class="o-p p1">I</td><td class="o-t">Logistic regression &middot; Thresholds and costs</td><td class="o-a">HW2</td></tr><tr><td class="o-w">4</td><td class="o-d">09/15, 09/17</td><td class="o-p p2">II</td><td class="o-t">Principal component analysis &middot; Choosing components</td><td class="o-a">HW3</td></tr><tr><td class="o-w">5</td><td class="o-d">09/22, 09/24</td><td class="o-p p2">II</td><td class="o-t">Cluster analysis &middot; Choosing k and profiling segments</td><td class="o-a">HW4 &middot; teams form</td></tr><tr><td class="o-w">6</td><td class="o-d">09/29, 10/01</td><td class="o-p p3">III</td><td class="o-t">Decision trees &middot; Random forests</td><td class="o-a">HW5 &middot; teams finalized</td></tr><tr><td class="o-w">7</td><td class="o-d">10/06, 10/08</td><td class="o-p p3">III</td><td class="o-t">Neural networks &middot; Training and regularization</td><td class="o-a">HW6</td></tr><tr><td class="o-w">8</td><td class="o-d">10/13, 10/15</td><td class="o-p p3">III</td><td class="o-t">Support vector machines &middot; Ensemble modeling</td><td class="o-a">HW7</td></tr><tr><td class="o-w">9</td><td class="o-d">10/20, 10/22</td><td class="o-p p3">III</td><td class="o-t">Building an evaluation harness &middot; Cross-validation and leakage</td><td class="o-a">HW8 &middot; Deliverable 1</td></tr><tr><td class="o-w">10</td><td class="o-d">10/27, 10/29</td><td class="o-p p3">III</td><td class="o-t">Comparing models across metrics &middot; Choosing and defending a model</td><td class="o-a">HW9</td></tr><tr><td class="o-w">11</td><td class="o-d">11/03, 11/05</td><td class="o-p p3">III</td><td class="o-t">Text mining &middot; Sentiment, topics, and what text adds</td><td class="o-a"></td></tr><tr><td class="o-w">12</td><td class="o-d">11/10, 11/12</td><td class="o-p p4">IV</td><td class="o-t">Project development I &middot; Project development II</td><td class="o-a">Deliverable 2</td></tr><tr><td class="o-w">13</td><td class="o-d">11/17, 11/19</td><td class="o-p p4">IV</td><td class="o-t">Project development III &middot; Project development IV</td><td class="o-a"></td></tr><tr class="brk"><td class="o-w"></td><td class="o-d">11/24, 11/26</td><td class="o-p brk"> </td><td class="o-t">Thanksgiving break, no class</td><td class="o-a">Deliverable 3, Mon 11/30</td></tr><tr><td class="o-w">14</td><td class="o-d">12/01, 12/03</td><td class="o-p p4">IV</td><td class="o-t">Dashboard presentations</td><td class="o-a">Presentations</td></tr><tr><td class="o-w">15</td><td class="o-d">12/08</td><td class="o-p p4">IV</td><td class="o-t">Course wrap-up and closing reflections</td><td class="o-a">not graded</td></tr></tbody></table>
+<p class="note">Homework is released at the end of the day Thursday and is due at 11:59 pm on the Friday of the following week. HW5 is due Monday, October 12, because the Friday of that week falls during fall break. Project deliverable 1 is due Friday, October 23 and deliverable 2 is due Friday, November 13. Deliverable 3, the dashboard itself, is due Monday, November 30, the day before presentations begin.</p>
+
+<footer>BIT 5534 &middot; Applied Business Intelligence and Analytics &middot; Fall 2026 &middot; Dr. Onur Seref</footer>
+</div>
+</body>
+</html>
