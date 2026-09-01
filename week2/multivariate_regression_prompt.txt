@@ -1,0 +1,67 @@
+Write a single Python script named multivariate_regression.py that I run by
+double-clicking. No command-line arguments, nothing printed to a console. Use
+pandas, statsmodels and matplotlib. Before writing any code, list the libraries I
+need to install and give me the exact pip command.
+
+INPUT
+
+Open a file dialog offering .xlsx, .xls and .csv, and read the first sheet. If I
+cancel, close quietly. The first row holds column names, the first column is the
+response, and every other column is a predictor. Nothing is named in the script, so
+the tool runs on any file of that shape.
+
+Before fitting, check the data and stop with a message if any check fails: at least
+two columns, every column numeric, at least one more row than the number of
+predictors plus one, and no predictor that never changes. Drop any row with a
+missing value and report how many you dropped.
+
+METHOD
+
+Fit ordinary least squares of the first column on all the others with an intercept,
+using statsmodels, on the raw scale with no standardization and no variable
+selection.
+
+For each predictor compute the variance inflation factor. Include the intercept
+column in the matrix you compute it from, because leaving it out silently inflates
+every VIF.
+
+For each predictor compute logworth, which is -log10 of its p-value. A p-value of
+0.05 gives 1.30103. Cap logworth at 16 so an underflow cannot produce infinity.
+
+OUTPUT
+
+Write everything into a folder created beside the input file, named after it with
+"_outputs" on the end.
+
+logworth.png. Horizontal bars, one per predictor, largest at the top, each labeled
+with its logworth to two decimals just past the end of the bar. A vertical
+reference line at 1.30103 labeled "p = 0.05". Leave room on the right so no label
+is clipped.
+
+residuals.png. Two panels sharing a vertical scale, each with a horizontal line at
+zero: residual against fitted value on the left, and residual against row number in
+file order on the right.
+
+report.txt. Two tables. The model: R-squared, adjusted R-squared, the F statistic
+and its p-value. The terms, one row each beginning with the intercept: the estimate,
+the standard error, the p-value, and the variance inflation factor, which is blank
+for the intercept. Build both tables as pandas DataFrames and write them with
+to_string, rounded to four decimals, rather than formatting the columns by hand.
+
+Finish by showing a message box with the folder written to, the rows used and the
+rows dropped, then R-squared, adjusted R-squared, the F statistic and its p-value.
+Those are the numbers I check against the lecture before trusting a coefficient.
+
+GUARDS
+
+Put every third-party import in a try block. Route every failure, from a missing
+library to a failed check to an error nobody expected, into one resizable window
+titled "Error" holding the message and full traceback in a scrollable read-only but
+selectable text box, with a "Copy to clipboard" button and a "Close" button. Write
+the same text to error_log.txt beside the script. Build that window with tkinter
+alone, so it works when the failure is the missing library.
+
+That window must stay on screen until I close it. Hold the script open on it with
+wait_window for a Toplevel or mainloop for a root window, and destroy no window
+before it is dismissed. A window that appears and vanishes is the same as no window
+at all, and it is worse, because it looks like the script did nothing.

@@ -1,0 +1,117 @@
+Write a single Python script named regression_sampling.py that I will run by
+double-clicking. It takes no command-line arguments and prints nothing to the
+console. Everything appears in one window that opens and stays open until I close
+it, and that window redraws in place. It never opens a second window.
+
+RUN
+
+Startup check. Put every third-party import inside a try block. If any import
+fails, use only Python's standard library to open a small window that names the
+module that is missing, shows the full path of the interpreter running the script
+from sys.executable, and gives a pip install command built from that same path, so
+the install reaches the interpreter that will actually run the script. The script
+must never close without showing me something.
+
+Before you write any code, list every library the script needs that does not ship
+with Python, and give me the exact command to install them.
+
+INPUT
+
+No data files. The script generates everything.
+
+Constants, defined once at the top with these names and values:
+
+    BETA0 = 5.0                    true intercept
+    BETA1 = 3.0                    true slope
+    SIGMA = 5.0                    standard deviation of the noise
+    X_LOW, X_HIGH = 0.0, 10.0      X is uniform on this interval
+    N_POP = 10000                  size of the population
+    N_REPS = 1000                  samples drawn per run
+
+Controls. Two, and no others. Place a numeric input field at the top of the window
+labeled "Sample size (n)", pre-filled with 25, and a button labeled "Resample"
+beside it. Pressing Resample, or pressing Enter inside the field, reads the field
+and performs one full run.
+
+Validation. Read the field as a real number, truncate it toward zero to an integer,
+and require the result to be at least 1 and at most 10000. So 25.9 becomes 25 and
+is accepted, while 0.5 becomes 0 and is rejected. If the field holds anything else,
+anything non-numeric, or a value outside that range, show a short message in the
+window and leave the previous display unchanged. Nothing recomputes and no panel
+is cleared.
+
+METHOD
+
+Population. At startup, and again at the beginning of every run, build a fresh
+population of N_POP pairs:
+
+    draw N_POP values of X uniformly on [X_LOW, X_HIGH]
+    Y = BETA0 + BETA1 * X + normal noise with standard deviation SIGMA
+
+Samples. From that one population, repeat N_REPS times at the current sample size n:
+
+    draw n rows at random with replacement
+    fit a straight line by ordinary least squares on those rows:
+        b1 = sum((x - mean(x)) * (y - mean(y))) / sum((x - mean(x))**2)
+        b0 = mean(y) - b1 * mean(x)
+    store b1 and b0
+
+Every repetition draws from the same population, and the population itself is
+rebuilt only when a new run begins. Keep the b1 and b0 from the first of the
+N_REPS repetitions separately. That pair is "the first sample" and it is marked on
+the two bottom panels.
+
+Numbers. For each of the four distributions displayed, compute the mean and the
+variance. For b1 and b0 also compute the empirical standard error, which is the
+standard deviation across the N_REPS values, and the theoretical standard error:
+
+    Var(X) = (X_HIGH - X_LOW)**2 / 12
+    mean(X) = (X_LOW + X_HIGH) / 2
+    SE(b1) = SIGMA / sqrt(n * Var(X))
+    SE(b0) = SIGMA * sqrt(1/n + mean(X)**2 / (n * Var(X)))
+
+OUTPUT
+
+One window holding a two-by-two grid of histograms with the controls above it, and
+a heading across the top reading the model and the current sample size, for example
+"Y = 5 + 3X + noise, 1000 samples of n = 25".
+
+Top left. The N_POP population values of X. Title "Population of X, wait at the
+stop, minutes".
+
+Top right. The N_POP population values of Y. Title "Population of Y, ad revenue,
+cents".
+
+Bottom left. The N_REPS values of b1. Title "1000 estimates of the slope b1". It
+carries a vertical line at BETA1 in a colour different from the bars, and a red dot
+sitting on the horizontal axis at the first sample's b1.
+
+Bottom right. The N_REPS values of b0, with the vertical line at BETA0 and a red
+dot on the horizontal axis at the first sample's b0. Title "1000 estimates of the
+intercept b0".
+
+The red dots. Filled red circles, large enough to read from the back of a
+classroom, centred on the axis line itself and drawn on top of everything else so
+no bar hides them. Each is labeled with its value. They appear only on the two
+bottom panels, and they move to the new first sample on every run.
+
+Numbers below the panels. Under each of the four panels, on its own line beneath
+the horizontal axis, print the mean and the variance of what that panel shows, each
+labeled and given to four decimal places. Under the two bottom panels add a second
+line with the empirical standard error and the theoretical standard error, also
+labeled and to four decimal places, so I can hold the tool against the formula.
+
+Fixed axes. The horizontal axis limits of the two bottom panels are fixed and do
+not change when the sample size changes. Use 0.5 to 6.0 for b1 and -15 to 25 for
+b0. This is the single most important line in the specification. If those axes
+rescale, the two histograms look identical at every sample size and the whole point
+of the sample size field is lost. At larger n the bottom panels must visibly narrow
+inside axes that stay put.
+
+No y-axis tick labels on any panel. Around 45 histogram bins per panel.
+
+GUARDS
+
+The startup import check described under RUN, the input validation described under
+INPUT, and one more: if a drawn sample happens to give a zero denominator in the
+slope formula, discard that repetition and draw another, rather than raising.
