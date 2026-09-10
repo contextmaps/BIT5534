@@ -1,0 +1,1901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Logistic Regression with Multiple Inputs</title>
+<style>
+:root {
+  --c-text:#1a1a1a; --c-muted:#4a4a4a;
+  --c-meta-bg:#f4f6f9; --c-meta-border:#d0d7e2;
+  --c-obj-bg:#eef4fb; --c-obj-accent:#1a5da0;
+  --c-ctx-bg:#fffbf0; --c-ctx-border:#e8d8a0; --c-ctx-label:#5c4400;
+  --c-ctx-s-bg:#f0f7ff; --c-ctx-s-border:#a0c8f0; --c-ctx-s-label:#1a4a80;
+  --c-nar-bg:#f9f9f9; --c-nar-border:#bbb;
+  --c-dis-bg:#f0f4ff; --c-dis-border:#8090cc; --c-dis-label:#1e2e80;
+  --c-sys-bg:#f3f0ff; --c-sys-border:#9080d0; --c-sys-label:#3a2090;
+  --c-scr-bg:#fff8e8; --c-scr-border:#d0a030; --c-scr-label:#6b4a00;
+  --c-s-bg:#f0faf4; --c-s-border:#70c090; --c-s-id:#14552f;
+  --c-r-bg:#fff8f0; --c-r-border:#d0a040; --c-r-id:#6b3e00;
+  --c-mk-bg:#f0f0ff; --c-mk-border:#8080c8; --c-mk-id:#2a2a80;
+  --c-m-bg:#f0f8ff; --c-m-border:#70a8d0; --c-m-id:#0a4a70;
+  --c-mc-bg:#f8f8ff; --c-mc-border:#a0a0d0;
+  --c-btn:#14552f; --c-btn-r:#6b3e00; --c-btn-mk:#2a2a80;
+  --c-btn-mo:#0a4a70; --c-btn-mc:#3a3a6a;
+  --c-q-bg:#f0fafd; --c-q-border:#70b8d0; --c-q-id:#0a5070;
+  --c-btn-q:#0a5070;
+  --c-o-bg:#fef6f0; --c-o-border:#e89870; --c-o-id:#a04510;
+  --c-btn-o:#a04510;
+  --radius:8px; --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --page:1100px;
+}
+/* Two layers. The wrapper takes the width Canvas gives it, up to --page, so it
+   never overflows a narrow frame and never needs a per-machine number. Everything
+   inside fills the block it sits in. */
+.plib-wrap{font-family:var(--font);color:var(--c-text);max-width:min(var(--page),100% - 2rem);margin:0 auto;padding:1rem 0}
+/* Every block spans the page so their left and right edges line up down the
+   column, and the text inside fills the block.
+
+   There is no reading column. D-032 put prose in a 720px column inside a 1100px
+   wrapper, and on 2026-09-02 the instructor read the rendered result and rejected
+   it: every text block stopped two thirds of the way across its own card and
+   stranded the rest, and a bordered box that stops short of the card it sits in
+   reads as broken rather than as typography. The wrapper's own
+   min(1100px, 100% - 2rem) is now the only bound, so a line never exceeds about
+   1055px. The cost is real and is worth stating. A long paragraph at 1055px reads
+   worse than the same paragraph at 800, and what pays for it is the writing
+   standard's rule on paragraph length, which now carries the load the column used
+   to carry. Recorded as D-043, amending D-032. */
+.plib-wrap > *{max-width:100%}
+.plib-submit{margin:2rem 0 1rem;padding:1.4rem 1.6rem;border-radius:var(--radius);background:var(--c-obj-bg);border:2px solid var(--c-obj-accent)}
+.plib-submit-title{font-size:13px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--c-obj-accent)}
+.plib-submit-p{margin:.5rem 0 1rem;font-size:15px;line-height:1.65}
+.plib-submit-btn{display:inline-block;background:var(--c-obj-accent);color:#fff;text-decoration:none;font-size:16px;font-weight:600;padding:.7rem 1.4rem;border-radius:var(--radius)}
+.plib-submit-btn:hover{filter:brightness(1.12)}
+.plib-submit-btn:focus{outline:3px solid var(--c-obj-accent);outline-offset:3px}
+.plib-submit-note{margin-top:.55rem;font-size:13px;color:var(--c-muted)}
+.plib-material{margin:1.6rem 0;padding:1.2rem 1.4rem;border-radius:var(--radius);background:var(--c-s-bg);border:1px solid var(--c-s-border)}
+.plib-material-tag{font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--c-s-id)}
+.plib-material-title{margin-top:.3rem;font-size:17px;font-weight:600;color:var(--c-text)}
+.plib-material-box{margin:.9rem 0 1.1rem;padding:.9rem 1rem;max-height:22rem;overflow:auto;background:#fff;border:1px solid var(--c-s-border);border-radius:6px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;color:var(--c-text)}
+.plib-material-box:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+.plib-material-btns{display:flex;flex-wrap:wrap;gap:.6rem}
+.plib-material-copies{margin:.9rem 0 0;display:flex;flex-wrap:wrap;gap:.8rem}
+.plib-copyrow{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;padding:.55rem .7rem;background:#fff;border:1px solid var(--c-s-border);border-radius:6px}
+.plib-copyrow-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-s-id)}
+.plib-copyrow-code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;color:var(--c-text)}
+.plib-copy-btn-row{padding:.3rem .6rem;font-size:12px}
+.plib-material-btn{display:inline-block;background:var(--c-s-id);color:#fff;text-decoration:none;font-size:15px;font-weight:600;padding:.6rem 1.2rem;border-radius:var(--radius)}
+.plib-material-btn:hover{filter:brightness(1.25)}
+.plib-material-btn:focus{outline:3px solid var(--c-s-id);outline-offset:3px}
+.plib-material-note{margin-top:.55rem;font-size:13px;color:var(--c-muted)}
+.plib-section{margin:2.25rem 0 1.1rem;padding-top:.9rem;border-top:3px solid var(--c-obj-accent)}
+.plib-section-n{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--c-muted)}
+.plib-section-t{font-size:23px;font-weight:700;letter-spacing:.04em;color:var(--c-obj-accent);margin-top:2px}
+.plib-wrap > .plib-section:first-child{margin-top:.5rem}
+.plib-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;margin-bottom:1.25rem}
+.plib-tile{background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);padding:.9rem;display:flex;flex-direction:column}
+.plib-tile img{width:100%;height:auto;border-radius:4px;background:#faf7f8}
+.plib-tile figure,.plib-tile{margin:0}
+/* A drawing narrower than its grid cell is centred in it. render_tiles caps the
+   wrapper at the SVG's own viewBox width so a 400px card is not blown up to the
+   full row, and without this the drawing sat against the left edge with the slack
+   stranded on the right, which is the same fault D-043 removed from the prose. */
+.plib-tile-svg{width:100%;margin-left:auto;margin-right:auto}
+.plib-tile-svg svg{width:100%;height:auto;display:block}
+.plib-tile-caption{font-size:13px;line-height:1.55;color:var(--c-text);margin-top:auto;padding-top:.6rem}
+.plib-meta{background:var(--c-meta-bg);border:1px solid var(--c-meta-border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1.5rem}
+.plib-meta-course{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--c-muted);margin-bottom:4px}
+.plib-meta-title{font-size:20px;font-weight:600;margin:4px 0 8px}
+.plib-meta-week{font-size:13px;color:var(--c-muted);margin-bottom:2px}
+.plib-meta-details{font-size:12px;color:var(--c-muted);margin-top:8px}
+.plib-objectives{background:var(--c-obj-bg);border-left:4px solid var(--c-obj-accent);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.5rem}
+.plib-objectives-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-obj-accent);font-weight:700;margin-bottom:8px}
+.plib-objectives-intro{margin:0 0 8px;font-size:14px;line-height:1.6;font-style:italic;color:var(--c-muted)}
+.plib-objectives-list{margin:0;padding-left:1.25rem}
+.plib-objectives-list li{margin-bottom:6px;font-size:14px;line-height:1.6}
+.plib-context{background:var(--c-ctx-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-context-student{background:var(--c-ctx-s-bg);border-color:var(--c-ctx-s-border)}
+.plib-context-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-ctx-label);font-weight:700;margin-bottom:8px}
+.plib-context-student .plib-context-label{color:var(--c-ctx-s-label)}
+.plib-context-body p{margin:4px 0;font-size:13px;line-height:1.6;color:var(--c-muted)}
+.plib-formula{margin:1rem 0;padding:1rem 1.25rem;background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);text-align:center}
+.plib-formula-body{overflow-x:auto;color:var(--c-text);padding:2px 0}
+.plib-formula-svg{max-width:100%;height:auto}
+.plib-formula-caption{margin-top:.85rem;font-size:13px;line-height:1.6;color:var(--c-muted);text-align:left}
+.plib-formula-missing{font-size:13px;color:var(--c-muted);text-align:left}
+.plib-formula-note{font-size:12px;margin-top:6px}
+.plib-formula-source{margin-top:.85rem;text-align:left}
+.plib-formula-source summary{font-size:12px;color:var(--c-muted);cursor:pointer}
+.plib-formula-latex{margin:6px 0 0;padding:8px 10px;background:var(--c-ctx-bg);border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.5;white-space:pre-wrap;color:var(--c-muted)}
+.plib-context-pre{margin:8px 0;padding:10px 12px;background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.55;color:var(--c-text);white-space:pre;overflow-x:auto}
+.plib-context-bullet{font-size:13px;color:var(--c-muted);padding-left:1rem;position:relative;margin-bottom:3px}
+.plib-context-bullet::before{content:"\2022";position:absolute;left:0}
+.plib-script{background:var(--c-scr-bg);border:1px solid var(--c-scr-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-script-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-scr-label);font-weight:700;margin-bottom:10px}
+.plib-script-list{margin:0;padding-left:1.25rem}
+.plib-script-list li{font-size:14px;line-height:1.6;margin-bottom:8px}
+.plib-script-time{font-weight:700;color:var(--c-scr-label);font-family:monospace;background:rgba(208,160,48,.15);padding:1px 6px;border-radius:3px}
+.plib-narration{background:var(--c-nar-bg);border-left:3px solid var(--c-nar-border);padding:.9rem 1.25rem;margin-bottom:1rem;border-radius:0 var(--radius) var(--radius) 0}
+.plib-narration p{margin:0 0 8px;font-size:14px;line-height:1.7}
+.plib-narration p:last-child{margin-bottom:0}
+.plib-narration-list{margin:4px 0;padding-left:1.25rem}
+.plib-narration-list li{font-size:14px;line-height:1.6;margin-bottom:4px}
+.plib-discussion{background:var(--c-dis-bg);border:1px solid var(--c-dis-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-slide{margin:0 0 1.25rem;text-align:center}
+.plib-slide-img{max-width:100%;height:auto;border:1px solid var(--c-dis-border);border-radius:var(--radius);box-shadow:0 1px 4px rgba(0,0,0,.08);background:#faf7f8;min-height:60px}
+.plib-slide-caption{font-size:13px;color:var(--c-muted);margin-top:.4rem}
+.plib-slide-script{margin-top:.6rem;text-align:left;font-size:13px;color:var(--c-muted)}
+.plib-slide-script summary{cursor:pointer;font-weight:600}
+.plib-slide-script-body{white-space:pre-wrap;background:rgba(0,0,0,.04);border-radius:var(--radius);padding:.6rem .8rem;margin-top:.4rem}
+.plib-discussion-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-dis-label);font-weight:700;margin-bottom:8px}
+.plib-discussion-intro{margin:0 0 8px;font-size:14px;line-height:1.6;font-style:italic;color:var(--c-dis-label)}
+.plib-discussion-list{margin:0;padding-left:1.25rem}
+.plib-discussion-list li{font-size:14px;line-height:1.6;margin-bottom:6px;color:var(--c-dis-label)}
+.plib-scenarios{margin-bottom:1rem}
+.plib-scenarios-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:#630031;font-weight:700;margin-bottom:8px}
+.plib-scenario-card{background:var(--c-ctx-s-bg);border:1px solid var(--c-ctx-s-border);border-left:4px solid #630031;border-radius:var(--radius);padding:.7rem 1rem;margin-bottom:.6rem}
+.plib-scenario-title{font-weight:700;font-size:14px;color:#630031;margin-bottom:4px}
+.plib-scenario-body{margin:0 0 4px;font-size:14px;line-height:1.6}
+.plib-scenario-line{font-size:13px;line-height:1.55;margin:2px 0 0;padding-left:1rem;position:relative}
+.plib-scenario-line::before{content:"›";position:absolute;left:.2rem;color:#CF4420;font-weight:700}
+.plib-system{background:var(--c-sys-bg);border:1px solid var(--c-sys-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-system-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-sys-label);font-weight:700;margin-bottom:8px}
+.plib-system-note{font-weight:400;text-transform:none;letter-spacing:0;font-style:italic}
+.plib-prompt-s-ref{opacity:.92;border-style:dashed}
+.plib-ref-note{font-size:12px;color:var(--c-muted);font-style:italic;margin-top:6px}
+.plib-prompt-text{display:none}
+.plib-prompt-display{font-size:14px;line-height:1.7;white-space:pre-wrap;background:rgba(255,255,255,.6);border-radius:4px;padding:.6rem .8rem;margin-bottom:10px}
+.plib-prompt-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.plib-prompt-id{font-size:12px;font-weight:700;font-family:monospace;padding:2px 7px;border-radius:4px}
+.plib-prompt-type-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-muted);font-weight:600}
+.plib-prompt-s{background:var(--c-s-bg);border:1px solid var(--c-s-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-prompt-s .plib-prompt-id{color:var(--c-s-id);background:rgba(20,85,47,.1)}
+.plib-prompt-r{background:var(--c-r-bg);border:1px solid var(--c-r-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-r-id{color:var(--c-r-id)!important;background:rgba(107,62,0,.1)!important}
+.plib-reflect-label{color:var(--c-r-id)!important}
+.plib-reflect-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-prompt-marker{background:var(--c-mk-bg);border:2px solid var(--c-mk-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-marker-id{color:var(--c-mk-id)!important;background:rgba(42,42,128,.1)!important}
+.plib-marker-label{color:var(--c-mk-id)!important}
+.plib-marker-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-marker-display{border-left:3px solid var(--c-mk-border);max-height:18em;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;box-shadow:inset 0 -10px 10px -10px rgba(0,0,0,.18)}
+.plib-prompt-m{background:var(--c-m-bg);border:1.5px solid var(--c-m-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:.5rem}
+.plib-m-id{color:var(--c-m-id)!important;background:rgba(10,74,112,.1)!important}
+.plib-m-label{color:var(--c-m-id)!important}
+.plib-m-badge{font-size:11px;background:var(--c-m-id);color:#fff;padding:2px 8px;border-radius:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.plib-m-instructions{background:rgba(255,255,255,.7);border-radius:6px;padding:10px 14px;margin-bottom:12px}
+.plib-m-instructions-label{font-size:12px;font-weight:700;color:var(--c-m-id);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.plib-m-steps{margin:0;padding-left:1.25rem}
+.plib-m-steps li{font-size:13px;line-height:1.6;margin-bottom:4px}
+.plib-m-seed{background:rgba(255,255,255,.5);border-left:3px solid var(--c-m-border);padding:8px 12px;margin-bottom:12px;border-radius:0 4px 4px 0}
+.plib-m-seed-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-m-id);margin-bottom:4px}
+.plib-m-seed-text{font-size:13px;line-height:1.6;white-space:pre-wrap}
+.plib-prompt-m-close{background:var(--c-mc-bg);border:1px dashed var(--c-mc-border);border-radius:var(--radius);padding:.75rem 1.25rem;margin-bottom:1.25rem}
+.plib-m-close-label{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.plib-m-close-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-copy-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;font-size:13px;font-weight:500;border:1.5px solid var(--c-btn);background:transparent;color:var(--c-btn);border-radius:6px;cursor:pointer;transition:background .15s,color .15s}
+.plib-copy-btn:hover{background:var(--c-btn);color:#fff}
+.plib-copy-btn:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+.plib-copy-btn.copied{background:#333;color:#fff;border-color:#333}
+.plib-copy-btn-reflect{border-color:var(--c-btn-r);color:var(--c-btn-r)}
+.plib-copy-btn-reflect:hover{background:var(--c-btn-r);color:#fff}
+.plib-copy-btn-marker{border-color:var(--c-btn-mk);color:var(--c-btn-mk)}
+.plib-copy-btn-marker:hover{background:var(--c-btn-mk);color:#fff}
+.plib-copy-btn-m-open{border-color:var(--c-btn-mo);color:var(--c-btn-mo)}
+.plib-copy-btn-m-open:hover{background:var(--c-btn-mo);color:#fff}
+.plib-copy-btn-m-close{border-color:var(--c-btn-mc);color:var(--c-btn-mc)}
+.plib-copy-btn-m-close:hover{background:var(--c-btn-mc);color:#fff}
+.plib-textarea{display:block;width:100%;box-sizing:border-box;padding:10px 12px;font-size:14px;font-family:var(--font);line-height:1.6;border:1.5px solid var(--c-r-border);border-radius:6px;margin-bottom:10px;background:#fff;color:var(--c-text);resize:vertical;min-height:120px}
+.plib-textarea:focus{outline:3px solid #005fcc;outline-offset:2px;border-color:#005fcc}
+.plib-counter{font-size:13px;color:var(--c-muted);margin-bottom:8px;font-variant-numeric:tabular-nums}
+.plib-counter.at-limit{color:#b00020;font-weight:600}
+.plib-counter .plib-count-ok{color:#14552f}
+.plib-counter .plib-count-warn{color:#8a4a00}
+.plib-counter .plib-count-bad{color:#b00020;font-weight:600}
+.plib-counter-min{font-size:12px;color:var(--c-muted);margin-left:8px}
+.plib-warn{font-size:13px;color:#b00020;font-weight:600;margin-bottom:8px;min-height:20px}
+.plib-prompt-q{background:var(--c-q-bg);border:1px solid var(--c-q-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-q-id{color:var(--c-q-id)!important;background:rgba(10,80,112,.1)!important}
+.plib-q-label{color:var(--c-q-id)!important}
+.plib-q-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-q-items{display:flex;flex-direction:column;gap:14px;margin-bottom:10px}
+.plib-q-item{background:rgba(255,255,255,.6);border-radius:6px;padding:10px 12px}
+.plib-q-question{font-size:14px;font-weight:500;display:block;margin-bottom:8px;line-height:1.5}
+.plib-q-item-num{font-family:monospace;font-weight:700;color:var(--c-q-id);margin-right:6px}
+.plib-q-cap-note{font-weight:400;font-style:italic;color:var(--c-muted);margin-left:6px;font-size:13px}
+.plib-q-select{width:100%;padding:6px 8px;font-size:14px;border:1px solid var(--c-q-border);border-radius:4px;background:#fff}
+.plib-q-likert{display:flex;flex-wrap:wrap;gap:10px}
+.plib-q-likert-opt{display:flex;align-items:center;gap:5px;font-size:14px;cursor:pointer}
+.plib-q-checkboxes{display:flex;flex-direction:column;gap:6px}
+.plib-q-check-opt{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.plib-q-check-opt input[disabled] + span{opacity:.5}
+.plib-copy-btn-q{border-color:var(--c-btn-q);color:var(--c-btn-q)}
+.plib-copy-btn-q:hover{background:var(--c-btn-q);color:#fff}
+.plib-prompt-o{background:var(--c-o-bg);border:1px solid var(--c-o-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-o-id{color:var(--c-o-id)!important;background:rgba(160,69,16,.1)!important}
+.plib-o-label{color:var(--c-o-id)!important}
+.plib-o-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-o-question{font-size:14px;font-weight:500;margin-bottom:10px;line-height:1.5}
+.plib-o-list{list-style:none;padding:0;margin:0 0 10px 0;display:flex;flex-direction:column;gap:6px}
+.plib-o-item{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.7);border-radius:6px;padding:8px 10px;font-size:14px}
+.plib-o-rank{font-family:monospace;font-weight:700;color:var(--c-o-id);min-width:1.5em;text-align:right}
+.plib-o-item-text{flex:1}
+.plib-o-controls{display:flex;flex-direction:column;gap:2px}
+.plib-o-arrow{background:transparent;border:1px solid var(--c-o-border);color:var(--c-o-id);width:28px;height:22px;font-size:14px;line-height:1;cursor:pointer;border-radius:3px;padding:0}
+.plib-o-arrow:hover:not([disabled]){background:var(--c-o-border);color:#fff}
+.plib-o-arrow[disabled]{opacity:.25;cursor:default}
+.plib-copy-btn-o{border-color:var(--c-btn-o);color:var(--c-btn-o)}
+.plib-copy-btn-o:hover{background:var(--c-btn-o);color:#fff}
+.plib-demo-badge{font-size:11px;color:var(--c-muted);background:rgba(0,0,0,.05);padding:2px 8px;border-radius:3px;font-style:italic;margin-left:8px}
+.plib-ai-badge{font-size:11px;padding:2px 8px;border-radius:3px;font-family:monospace;margin-left:8px}
+.plib-ai-respond{background:#e8f5e8;color:#2c5e2c}
+.plib-ai-acknowledge{background:#fef0e6;color:#8c4a1a}
+.plib-ai-archive{background:#f0e8f5;color:#5a2c8c}
+</style>
+</head>
+<body>
+<a href="#main-content" class="plib-skip-link">Skip to main content</a>
+<style>.plib-skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;}.plib-skip-link:focus{position:static;width:auto;height:auto;background:#005fcc;color:#fff;padding:8px 16px;font-size:14px;font-weight:600;border-radius:4px;text-decoration:none;display:inline-block;margin:8px;}</style>
+<main id="main-content">
+<div class="plib-wrap">
+<div class="plib-meta">
+  <div class="plib-meta-course">BIT 5534 Applied Business Intelligence and Analytics</div>
+  <div class="plib-meta-week">Week 3 · Lecture 2</div>
+  <div class="plib-meta-title">Logistic Regression with Multiple Inputs</div>
+  <div class="plib-meta-details"><span><strong>Duration:</strong> 75 minutes</span>&ensp;·&ensp;<span><strong>Platform:</strong> Hokie AI</span>&ensp;·&ensp;<span><strong>Submission:</strong> Thread exported as a .txt and uploaded to Canvas before leaving class</span>&ensp;·&ensp;<span><strong>Lecture Mode:</strong> consolidating</span></div>
+</div>
+
+<div class="plib-objectives">
+  <div class="plib-objectives-label">Learning Objectives</div>
+  <p class="plib-objectives-intro">By the end of this lecture, students will be able to:</p>
+  <ol class="plib-objectives-list">
+    <li>Write the logistic model for many inputs at once and say what the fitted equation produces at each step, from the linear combination to the odds to the probability.</li>
+    <li>State what a coefficient is, that it carries a standard error, a p-value and a logworth, and that its exponent is the odds multiplier for a one unit increase.</li>
+    <li>Read a whole-model likelihood ratio chi-square and say where its degrees of freedom came from.</li>
+    <li>Explain that a categorical input contributes one column per level, so that individual levels can carry their own p-values.</li>
+    <li>Read a two by two table of actual against predicted and say what each row percentage measures.</li>
+  </ol>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 1 of 5</div><div class="plib-section-t">INTRODUCTION</div></div>
+
+<div class="plib-context plib-context-student">
+  <div class="plib-context-label">&#128203; Note for Students</div>
+  <div class="plib-context-body">
+    <p>Tuesday's model had one input. The response was still zero or one, the sigmoid still turned a number into a probability, and the exponentiated slope was still the multiplier on the odds for a one unit increase.</p>
+    <p>Today the same machine takes many inputs at once, and almost nothing about it changes. What changes is what you have to read. A model with one input has one estimate to judge. The model you will fit today has sixty-five, and the work of the hour is deciding which of them you would repeat out loud to somebody who has to act on it.</p>
+  </div>
+</div>
+
+<div class="plib-narration">
+  <p>One equation, one table of terms, one whole-model test, one figure about categorical inputs, and one two by two. Everything with a formula in it is in this section.</p>
+</div>
+
+<figure class="plib-formula">
+  <div class="plib-formula-body"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-71.00374 -71.1286 300.740068 22.481198" width="741.8" height="55.5" fill="currentColor" role="img" class="plib-formula-svg" aria-label="The log odds equal beta naught plus beta one x one plus beta two x two and so on up to beta k x k. That quantity is z. The odds are e to the z, and the probability is the odds over one plus the odds."><title>The log odds equal beta naught plus beta one x one plus beta two x two and so on up to beta k x k. That quantity is z. The odds are e to the z, and the probability is the odds over one plus the odds.</title>
+<defs>
+<path id='fml3-2-model-g1-107' d='M2.327273-5.292154C2.335243-5.308095 2.359153-5.411706 2.359153-5.419676C2.359153-5.459527 2.327273-5.531258 2.231631-5.531258C2.199751-5.531258 1.952677-5.507347 1.769365-5.491407L1.323039-5.459527C1.147696-5.443587 1.067995-5.435616 1.067995-5.292154C1.067995-5.180573 1.179577-5.180573 1.275218-5.180573C1.657783-5.180573 1.657783-5.132752 1.657783-5.061021C1.657783-5.037111 1.657783-5.021171 1.617933-4.877709L.486177-.342715C.454296-.223163 .454296-.175342 .454296-.167372C.454296-.03188 .565878 .079701 .71731 .079701C.988294 .079701 1.052055-.175342 1.083935-.286924C1.163636-.621669 1.370859-1.466501 1.458531-1.801245C1.896887-1.753425 2.430884-1.601993 2.430884-1.147696C2.430884-1.107846 2.430884-1.067995 2.414944-.988294C2.391034-.884682 2.375093-.773101 2.375093-.73325C2.375093-.263014 2.725778 .079701 3.188045 .079701C3.52279 .079701 3.730012-.167372 3.833624-.318804C4.024907-.613699 4.152428-1.091905 4.152428-1.139726C4.152428-1.219427 4.088667-1.243337 4.032877-1.243337C3.937235-1.243337 3.921295-1.195517 3.889415-1.052055C3.785803-.67746 3.57858-.143462 3.203985-.143462C2.996762-.143462 2.948941-.318804 2.948941-.533998C2.948941-.637609 2.956912-.73325 2.996762-.916563C3.004732-.948443 3.036613-1.075965 3.036613-1.163636C3.036613-1.817186 2.215691-1.960648 1.809215-2.016438C2.10411-2.191781 2.375093-2.462765 2.470735-2.566376C2.909091-2.996762 3.267746-3.291656 3.650311-3.291656C3.753923-3.291656 3.849564-3.267746 3.913325-3.188045C3.482939-3.132254 3.482939-2.757659 3.482939-2.749689C3.482939-2.574346 3.618431-2.454795 3.793773-2.454795C4.008966-2.454795 4.24807-2.630137 4.24807-2.956912C4.24807-3.227895 4.056787-3.514819 3.658281-3.514819C3.196015-3.514819 2.781569-3.164134 2.327273-2.709838C1.865006-2.255542 1.665753-2.16787 1.538232-2.11208L2.327273-5.292154Z'/>
+<path id='fml3-2-model-g1-122' d='M1.155666-.6934C1.44259-.988294 1.530262-1.075965 2.231631-1.657783C2.319303-1.729514 2.87721-2.191781 3.092403-2.399004C3.594521-2.893151 3.905355-3.331507 3.905355-3.419178C3.905355-3.490909 3.841594-3.514819 3.785803-3.514819C3.706102-3.514819 3.698132-3.498879 3.618431-3.379328C3.371357-3.012702 3.196015-2.948941 3.052553-2.948941C2.901121-2.948941 2.805479-3.012702 2.646077-3.172105C2.438854-3.371357 2.279452-3.514819 2.024408-3.514819C1.3868-3.514819 .988294-2.797509 .988294-2.582316C.988294-2.574346 .988294-2.486675 1.115816-2.486675C1.195517-2.486675 1.211457-2.518555 1.243337-2.606227C1.346949-2.83736 1.689664-2.917061 1.928767-2.917061C2.11208-2.917061 2.303362-2.86924 2.494645-2.81345C2.82939-2.725778 2.901121-2.725778 3.084433-2.725778C2.917061-2.550436 2.693898-2.327273 2.080199-1.825156C1.745455-1.546202 1.41071-1.275218 1.195517-1.067995C.605729-.486177 .350685-.095641 .350685-.01594C.350685 .055791 .406476 .079701 .470237 .079701C.549938 .079701 .565878 .055791 .605729 0C.765131-.239103 1.012204-.486177 1.315068-.486177C1.498381-.486177 1.578082-.414446 1.729514-.263014C1.984558-.01594 2.12802 .079701 2.359153 .079701C3.188045 .079701 3.690162-.908593 3.690162-1.155666C3.690162-1.227397 3.634371-1.259278 3.57061-1.259278C3.482939-1.259278 3.466999-1.211457 3.435118-1.131756C3.283686-.73325 2.84533-.518057 2.446824-.518057C2.295392-.518057 2.12005-.557908 1.880946-.621669C1.546202-.70934 1.466501-.70934 1.346949-.70934C1.267248-.70934 1.219427-.70934 1.155666-.6934Z'/>
+<path id='fml3-2-model-g0-1' d='M2.295392-2.988792C2.295392-3.335492 2.008468-3.622416 1.661768-3.622416S1.028144-3.335492 1.028144-2.988792S1.315068-2.355168 1.661768-2.355168S2.295392-2.642092 2.295392-2.988792Z'/>
+<path id='fml3-2-model-g3-48' d='M3.897385-2.542466C3.897385-3.395268 3.809714-3.913325 3.5467-4.423412C3.196015-5.124782 2.550436-5.300125 2.11208-5.300125C1.107846-5.300125 .74122-4.550934 .629639-4.327771C.342715-3.745953 .326775-2.956912 .326775-2.542466C.326775-2.016438 .350685-1.211457 .73325-.573848C1.099875 .01594 1.689664 .167372 2.11208 .167372C2.494645 .167372 3.180075 .047821 3.57858-.74122C3.873474-1.315068 3.897385-2.024408 3.897385-2.542466ZM2.11208-.055791C1.841096-.055791 1.291158-.183313 1.123786-1.020174C1.036115-1.474471 1.036115-2.223661 1.036115-2.638107C1.036115-3.188045 1.036115-3.745953 1.123786-4.184309C1.291158-4.99726 1.912827-5.076961 2.11208-5.076961C2.383064-5.076961 2.933001-4.941469 3.092403-4.216189C3.188045-3.777833 3.188045-3.180075 3.188045-2.638107C3.188045-2.16787 3.188045-1.45056 3.092403-1.004234C2.925031-.167372 2.375093-.055791 2.11208-.055791Z'/>
+<path id='fml3-2-model-g3-49' d='M2.502615-5.076961C2.502615-5.292154 2.486675-5.300125 2.271482-5.300125C1.944707-4.98132 1.522291-4.790037 .765131-4.790037V-4.527024C.980324-4.527024 1.41071-4.527024 1.872976-4.742217V-.653549C1.872976-.358655 1.849066-.263014 1.091905-.263014H.812951V0C1.139726-.02391 1.825156-.02391 2.183811-.02391S3.235866-.02391 3.56264 0V-.263014H3.283686C2.526526-.263014 2.502615-.358655 2.502615-.653549V-5.076961Z'/>
+<path id='fml3-2-model-g3-50' d='M2.247572-1.625903C2.375093-1.745455 2.709838-2.008468 2.83736-2.12005C3.331507-2.574346 3.801743-3.012702 3.801743-3.737983C3.801743-4.686426 3.004732-5.300125 2.008468-5.300125C1.052055-5.300125 .422416-4.574844 .422416-3.865504C.422416-3.474969 .73325-3.419178 .844832-3.419178C1.012204-3.419178 1.259278-3.53873 1.259278-3.841594C1.259278-4.25604 .860772-4.25604 .765131-4.25604C.996264-4.837858 1.530262-5.037111 1.920797-5.037111C2.662017-5.037111 3.044583-4.407472 3.044583-3.737983C3.044583-2.909091 2.462765-2.303362 1.522291-1.338979L.518057-.302864C.422416-.215193 .422416-.199253 .422416 0H3.57061L3.801743-1.42665H3.55467C3.53076-1.267248 3.466999-.868742 3.371357-.71731C3.323537-.653549 2.717808-.653549 2.590286-.653549H1.171606L2.247572-1.625903Z'/>
+<path id='fml3-2-model-g4-43' d='M4.770112-2.761644H8.069738C8.237111-2.761644 8.452304-2.761644 8.452304-2.976837C8.452304-3.203985 8.249066-3.203985 8.069738-3.203985H4.770112V-6.503611C4.770112-6.670984 4.770112-6.886177 4.554919-6.886177C4.327771-6.886177 4.327771-6.682939 4.327771-6.503611V-3.203985H1.028144C.860772-3.203985 .645579-3.203985 .645579-2.988792C.645579-2.761644 .848817-2.761644 1.028144-2.761644H4.327771V.537983C4.327771 .705355 4.327771 .920548 4.542964 .920548C4.770112 .920548 4.770112 .71731 4.770112 .537983V-2.761644Z'/>
+<path id='fml3-2-model-g4-49' d='M3.443088-7.663263C3.443088-7.938232 3.443088-7.950187 3.203985-7.950187C2.917061-7.627397 2.319303-7.185056 1.08792-7.185056V-6.838356C1.362889-6.838356 1.960648-6.838356 2.618182-7.149191V-.920548C2.618182-.490162 2.582316-.3467 1.530262-.3467H1.159651V0C1.482441-.02391 2.642092-.02391 3.036613-.02391S4.578829-.02391 4.901619 0V-.3467H4.531009C3.478954-.3467 3.443088-.490162 3.443088-.920548V-7.663263Z'/>
+<path id='fml3-2-model-g4-61' d='M8.069738-3.873474C8.237111-3.873474 8.452304-3.873474 8.452304-4.088667C8.452304-4.315816 8.249066-4.315816 8.069738-4.315816H1.028144C.860772-4.315816 .645579-4.315816 .645579-4.100623C.645579-3.873474 .848817-3.873474 1.028144-3.873474H8.069738ZM8.069738-1.649813C8.237111-1.649813 8.452304-1.649813 8.452304-1.865006C8.452304-2.092154 8.249066-2.092154 8.069738-2.092154H1.028144C.860772-2.092154 .645579-2.092154 .645579-1.876961C.645579-1.649813 .848817-1.649813 1.028144-1.649813H8.069738Z'/>
+<path id='fml3-2-model-g2-12' d='M6.766625-6.957908C6.766625-7.675218 6.156912-8.428394 5.068991-8.428394C3.526775-8.428394 2.546451-6.539477 2.235616-5.296139L.3467 2.199751C.32279 2.295392 .394521 2.319303 .454296 2.319303C.537983 2.319303 .597758 2.307347 .609714 2.247572L1.446575-1.099875C1.566127-.430386 2.223661 .119552 2.929016 .119552C4.638605 .119552 6.252553-1.219427 6.252553-3.000747C6.252553-3.455044 6.144956-3.90934 5.893898-4.291905C5.750436-4.519054 5.571108-4.686426 5.379826-4.829888C6.240598-5.284184 6.766625-6.01345 6.766625-6.957908ZM4.686426-4.841843C4.495143-4.770112 4.303861-4.746202 4.076712-4.746202C3.90934-4.746202 3.753923-4.734247 3.53873-4.805978C3.658281-4.889664 3.837609-4.913574 4.088667-4.913574C4.303861-4.913574 4.519054-4.889664 4.686426-4.841843ZM6.144956-7.065504C6.144956-6.40797 5.822167-5.451557 5.045081-5.009215C4.817933-5.092902 4.507098-5.152677 4.244085-5.152677C3.993026-5.152677 3.275716-5.176588 3.275716-4.794022C3.275716-4.471233 3.93325-4.507098 4.136488-4.507098C4.447323-4.507098 4.722291-4.578829 5.009215-4.662516C5.391781-4.351681 5.559153-3.945205 5.559153-3.347447C5.559153-2.654047 5.36787-2.092154 5.140722-1.578082C4.746202-.6934 3.813699-.119552 2.988792-.119552C2.116065-.119552 1.661768-.812951 1.661768-1.625903C1.661768-1.733499 1.661768-1.888917 1.709589-2.068244L2.486675-5.212453C2.881196-6.77858 3.88543-8.18929 5.045081-8.18929C5.905853-8.18929 6.144956-7.591532 6.144956-7.065504Z'/>
+<path id='fml3-2-model-g2-101' d='M2.139975-2.773599C2.462765-2.773599 3.275716-2.797509 3.849564-3.012702C4.758157-3.359402 4.841843-4.052802 4.841843-4.267995C4.841843-4.794022 4.387547-5.272229 3.598506-5.272229C2.343213-5.272229 .537983-4.136488 .537983-2.008468C.537983-.753176 1.255293 .119552 2.343213 .119552C3.969116 .119552 4.99726-1.147696 4.99726-1.303113C4.99726-1.374844 4.925529-1.43462 4.877709-1.43462C4.841843-1.43462 4.829888-1.422665 4.722291-1.315068C3.957161-.298879 2.82142-.119552 2.367123-.119552C1.685679-.119552 1.327024-.657534 1.327024-1.542217C1.327024-1.709589 1.327024-2.008468 1.506351-2.773599H2.139975ZM1.566127-3.012702C2.080199-4.853798 3.21594-5.033126 3.598506-5.033126C4.124533-5.033126 4.483188-4.722291 4.483188-4.267995C4.483188-3.012702 2.570361-3.012702 2.068244-3.012702H1.566127Z'/>
+<path id='fml3-2-model-g2-111' d='M5.451557-3.287671C5.451557-4.423412 4.710336-5.272229 3.622416-5.272229C2.044334-5.272229 .490162-3.550685 .490162-1.865006C.490162-.729265 1.231382 .119552 2.319303 .119552C3.90934 .119552 5.451557-1.601993 5.451557-3.287671ZM2.331258-.119552C1.733499-.119552 1.291158-.597758 1.291158-1.43462C1.291158-1.984558 1.578082-3.203985 1.912827-3.801743C2.450809-4.722291 3.120299-5.033126 3.610461-5.033126C4.196264-5.033126 4.65056-4.554919 4.65056-3.718057C4.65056-3.239851 4.399502-1.960648 3.945205-1.231382C3.455044-.430386 2.797509-.119552 2.331258-.119552Z'/>
+<path id='fml3-2-model-g2-112' d='M.514072 1.518306C.430386 1.876961 .382565 1.972603-.107597 1.972603C-.251059 1.972603-.37061 1.972603-.37061 2.199751C-.37061 2.223661-.358655 2.319303-.227148 2.319303C-.071731 2.319303 .095641 2.295392 .251059 2.295392H.765131C1.016189 2.295392 1.625903 2.319303 1.876961 2.319303C1.948692 2.319303 2.092154 2.319303 2.092154 2.10411C2.092154 1.972603 2.008468 1.972603 1.80523 1.972603C1.255293 1.972603 1.219427 1.888917 1.219427 1.793275C1.219427 1.649813 1.75741-.406476 1.829141-.681445C1.960648-.3467 2.283437 .119552 2.905106 .119552C4.25604 .119552 5.71457-1.637858 5.71457-3.395268C5.71457-4.495143 5.092902-5.272229 4.196264-5.272229C3.431133-5.272229 2.785554-4.531009 2.654047-4.363636C2.558406-4.961395 2.092154-5.272229 1.613948-5.272229C1.267248-5.272229 .992279-5.104857 .765131-4.65056C.549938-4.220174 .382565-3.490909 .382565-3.443088S.430386-3.335492 .514072-3.335492C.609714-3.335492 .621669-3.347447 .6934-3.622416C.872727-4.327771 1.099875-5.033126 1.578082-5.033126C1.853051-5.033126 1.948692-4.841843 1.948692-4.483188C1.948692-4.196264 1.912827-4.076712 1.865006-3.861519L.514072 1.518306ZM2.582316-3.730012C2.666002-4.064757 3.000747-4.411457 3.19203-4.578829C3.323537-4.698381 3.718057-5.033126 4.172354-5.033126C4.698381-5.033126 4.937484-4.507098 4.937484-3.88543C4.937484-3.311582 4.60274-1.960648 4.303861-1.338979C4.004981-.6934 3.455044-.119552 2.905106-.119552C2.092154-.119552 1.960648-1.147696 1.960648-1.195517C1.960648-1.231382 1.984558-1.327024 1.996513-1.3868L2.582316-3.730012Z'/>
+<path id='fml3-2-model-g2-120' d='M5.66675-4.877709C5.284184-4.805978 5.140722-4.519054 5.140722-4.291905C5.140722-4.004981 5.36787-3.90934 5.535243-3.90934C5.893898-3.90934 6.144956-4.220174 6.144956-4.542964C6.144956-5.045081 5.571108-5.272229 5.068991-5.272229C4.339726-5.272229 3.93325-4.554919 3.825654-4.327771C3.550685-5.224408 2.809465-5.272229 2.594271-5.272229C1.374844-5.272229 .729265-3.706102 .729265-3.443088C.729265-3.395268 .777086-3.335492 .860772-3.335492C.956413-3.335492 .980324-3.407223 1.004234-3.455044C1.41071-4.782067 2.211706-5.033126 2.558406-5.033126C3.096389-5.033126 3.203985-4.531009 3.203985-4.244085C3.203985-3.981071 3.132254-3.706102 2.988792-3.132254L2.582316-1.494396C2.402989-.777086 2.056289-.119552 1.422665-.119552C1.362889-.119552 1.06401-.119552 .812951-.274969C1.243337-.358655 1.338979-.71731 1.338979-.860772C1.338979-1.099875 1.159651-1.243337 .932503-1.243337C.645579-1.243337 .334745-.992279 .334745-.609714C.334745-.107597 .896638 .119552 1.41071 .119552C1.984558 .119552 2.391034-.334745 2.642092-.824907C2.833375-.119552 3.431133 .119552 3.873474 .119552C5.092902 .119552 5.738481-1.446575 5.738481-1.709589C5.738481-1.769365 5.69066-1.817186 5.618929-1.817186C5.511333-1.817186 5.499377-1.75741 5.463512-1.661768C5.140722-.609714 4.447323-.119552 3.90934-.119552C3.490909-.119552 3.263761-.430386 3.263761-.920548C3.263761-1.183562 3.311582-1.374844 3.502864-2.163885L3.921295-3.789788C4.100623-4.507098 4.507098-5.033126 5.057036-5.033126C5.080946-5.033126 5.415691-5.033126 5.66675-4.877709Z'/>
+<path id='fml3-2-model-g2-122' d='M1.518306-.968369C2.032379-1.554172 2.450809-1.924782 3.048568-2.462765C3.765878-3.084433 4.076712-3.383313 4.244085-3.56264C5.080946-4.387547 5.499377-5.080946 5.499377-5.176588S5.403736-5.272229 5.379826-5.272229C5.296139-5.272229 5.272229-5.224408 5.212453-5.140722C4.913574-4.62665 4.62665-4.375592 4.315816-4.375592C4.064757-4.375592 3.93325-4.483188 3.706102-4.770112C3.455044-5.068991 3.251806-5.272229 2.905106-5.272229C2.032379-5.272229 1.506351-4.184309 1.506351-3.93325C1.506351-3.897385 1.518306-3.825654 1.625903-3.825654C1.721544-3.825654 1.733499-3.873474 1.769365-3.957161C1.972603-4.435367 2.546451-4.519054 2.773599-4.519054C3.024658-4.519054 3.263761-4.435367 3.514819-4.327771C3.969116-4.136488 4.160399-4.136488 4.27995-4.136488C4.363636-4.136488 4.411457-4.136488 4.471233-4.148443C4.076712-3.682192 3.431133-3.108344 2.893151-2.618182L1.685679-1.506351C.956413-.765131 .514072-.059776 .514072 .02391C.514072 .095641 .573848 .119552 .645579 .119552S.729265 .107597 .812951-.035866C1.004234-.334745 1.3868-.777086 1.829141-.777086C2.080199-.777086 2.199751-.6934 2.438854-.394521C2.666002-.131507 2.86924 .119552 3.251806 .119552C4.423412 .119552 5.092902-1.398755 5.092902-1.673724C5.092902-1.721544 5.080946-1.793275 4.961395-1.793275C4.865753-1.793275 4.853798-1.745455 4.817933-1.625903C4.554919-.920548 3.849564-.633624 3.383313-.633624C3.132254-.633624 2.893151-.71731 2.642092-.824907C2.163885-1.016189 2.032379-1.016189 1.876961-1.016189C1.75741-1.016189 1.625903-1.016189 1.518306-.968369Z'/>
+</defs>
+<g id='fml3-2-model-page1'>
+<use x='-71.00374' y='-57.768612' xlink:href='#fml3-2-model-g2-122'/>
+<use x='-61.712304' y='-57.768612' xlink:href='#fml3-2-model-g4-61'/>
+<use x='-49.286824' y='-57.768612' xlink:href='#fml3-2-model-g2-12'/>
+<use x='-42.678335' y='-55.975349' xlink:href='#fml3-2-model-g3-48'/>
+<use x='-35.289357' y='-57.768612' xlink:href='#fml3-2-model-g4-43'/>
+<use x='-23.528042' y='-57.768612' xlink:href='#fml3-2-model-g2-12'/>
+<use x='-16.919553' y='-55.975349' xlink:href='#fml3-2-model-g3-49'/>
+<use x='-12.187239' y='-57.768612' xlink:href='#fml3-2-model-g2-120'/>
+<use x='-5.535151' y='-55.975349' xlink:href='#fml3-2-model-g3-49'/>
+<use x='1.853827' y='-57.768612' xlink:href='#fml3-2-model-g4-43'/>
+<use x='13.615142' y='-57.768612' xlink:href='#fml3-2-model-g2-12'/>
+<use x='20.22363' y='-55.975349' xlink:href='#fml3-2-model-g3-50'/>
+<use x='24.955945' y='-57.768612' xlink:href='#fml3-2-model-g2-120'/>
+<use x='31.608032' y='-55.975349' xlink:href='#fml3-2-model-g3-50'/>
+<use x='38.997011' y='-57.768612' xlink:href='#fml3-2-model-g4-43'/>
+<use x='50.758326' y='-57.768612' xlink:href='#fml3-2-model-g0-1'/>
+<use x='56.071713' y='-57.768612' xlink:href='#fml3-2-model-g0-1'/>
+<use x='61.385101' y='-57.768612' xlink:href='#fml3-2-model-g0-1'/>
+<use x='67.362655' y='-57.768612' xlink:href='#fml3-2-model-g4-43'/>
+<use x='79.12397' y='-57.768612' xlink:href='#fml3-2-model-g2-12'/>
+<use x='85.732458' y='-55.975349' xlink:href='#fml3-2-model-g1-107'/>
+<use x='90.852206' y='-57.768612' xlink:href='#fml3-2-model-g2-120'/>
+<use x='97.504293' y='-55.975349' xlink:href='#fml3-2-model-g1-107'/>
+<use x='126.036001' y='-57.768612' xlink:href='#fml3-2-model-g2-111'/>
+<use x='134.984268' y='-57.768612' xlink:href='#fml3-2-model-g4-61'/>
+<use x='147.409749' y='-57.768612' xlink:href='#fml3-2-model-g2-101'/>
+<use x='152.835189' y='-62.704798' xlink:href='#fml3-2-model-g1-122'/>
+<use x='181.020966' y='-57.768612' xlink:href='#fml3-2-model-g2-112'/>
+<use x='190.216939' y='-57.768612' xlink:href='#fml3-2-model-g4-61'/>
+<use x='213.973418' y='-65.856371' xlink:href='#fml3-2-model-g2-111'/>
+<rect x='203.837933' y='-60.996498' height='.478187' width='25.898395'/>
+<use x='203.837933' y='-49.56795' xlink:href='#fml3-2-model-g4-49'/>
+<use x='212.347587' y='-49.56795' xlink:href='#fml3-2-model-g4-43'/>
+<use x='224.108902' y='-49.56795' xlink:href='#fml3-2-model-g2-111'/>
+</g>
+</svg></div>
+  <figcaption class="plib-formula-caption">Nothing after z changes. One input or fifteen, z exponentiates to odds and the odds turn into a probability.</figcaption>
+</figure>
+
+<figure class="plib-formula">
+  <div class="plib-formula-body"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-71.00374 -71.000196 324.23903 15.989837" width="799.8" height="39.4" fill="currentColor" role="img" class="plib-formula-svg" aria-label="Each coefficient beta j hat is an estimate with a standard error. Its exponent is the odds multiplier for a one unit increase in x j, and the logworth is minus the base ten logarithm of the p-value."><title>Each coefficient beta j hat is an estimate with a standard error. Its exponent is the odds multiplier for a one unit increase in x j, and the logworth is minus the base ten logarithm of the p-value.</title>
+<defs>
+<path id='fml3-2-terms-g1-106' d='M2.773599-3.730012C2.773599-3.90934 2.630137-3.969116 2.534496-3.969116C2.343213-3.969116 2.193773-3.783811 2.193773-3.640349C2.193773-3.514819 2.289415-3.401245 2.438854-3.401245C2.594271-3.401245 2.773599-3.550685 2.773599-3.730012ZM1.500374 .268991C1.3868 .71731 1.034122 1.022167 .687422 1.022167C.669489 1.022167 .502117 1.016189 .502117 .992279C.502117 .986301 .52005 .974346 .52005 .968369C.609714 .896638 .651557 .800996 .651557 .711333C.651557 .52005 .496139 .478207 .412453 .478207C.251059 .478207 .071731 .609714 .071731 .830884C.071731 1.147696 .448319 1.219427 .6934 1.219427C1.093898 1.219427 1.811208 .992279 1.990535 .274969L2.528518-1.865006C2.540473-1.924782 2.558406-1.97858 2.558406-2.062267C2.558406-2.397011 2.259527-2.636115 1.876961-2.636115C1.201494-2.636115 .783064-1.829141 .783064-1.715567C.783064-1.679701 .806974-1.63188 .89066-1.63188S.980324-1.655791 1.022167-1.739477C1.195517-2.12802 1.530262-2.438854 1.859029-2.438854C2.038356-2.438854 2.080199-2.289415 2.080199-2.139975C2.080199-2.062267 2.068244-1.97858 2.062267-1.960648L1.500374 .268991Z'/>
+<path id='fml3-2-terms-g4-48' d='M3.897385-2.542466C3.897385-3.395268 3.809714-3.913325 3.5467-4.423412C3.196015-5.124782 2.550436-5.300125 2.11208-5.300125C1.107846-5.300125 .74122-4.550934 .629639-4.327771C.342715-3.745953 .326775-2.956912 .326775-2.542466C.326775-2.016438 .350685-1.211457 .73325-.573848C1.099875 .01594 1.689664 .167372 2.11208 .167372C2.494645 .167372 3.180075 .047821 3.57858-.74122C3.873474-1.315068 3.897385-2.024408 3.897385-2.542466ZM2.11208-.055791C1.841096-.055791 1.291158-.183313 1.123786-1.020174C1.036115-1.474471 1.036115-2.223661 1.036115-2.638107C1.036115-3.188045 1.036115-3.745953 1.123786-4.184309C1.291158-4.99726 1.912827-5.076961 2.11208-5.076961C2.383064-5.076961 2.933001-4.941469 3.092403-4.216189C3.188045-3.777833 3.188045-3.180075 3.188045-2.638107C3.188045-2.16787 3.188045-1.45056 3.092403-1.004234C2.925031-.167372 2.375093-.055791 2.11208-.055791Z'/>
+<path id='fml3-2-terms-g4-49' d='M2.502615-5.076961C2.502615-5.292154 2.486675-5.300125 2.271482-5.300125C1.944707-4.98132 1.522291-4.790037 .765131-4.790037V-4.527024C.980324-4.527024 1.41071-4.527024 1.872976-4.742217V-.653549C1.872976-.358655 1.849066-.263014 1.091905-.263014H.812951V0C1.139726-.02391 1.825156-.02391 2.183811-.02391S3.235866-.02391 3.56264 0V-.263014H3.283686C2.526526-.263014 2.502615-.358655 2.502615-.653549V-5.076961Z'/>
+<path id='fml3-2-terms-g4-94' d='M2.11208-5.531258L.980324-4.463263L1.139726-4.27198L2.11208-5.061021L3.084433-4.27198L3.243836-4.455293L2.11208-5.531258Z'/>
+<path id='fml3-2-terms-g0-0' d='M7.878456-2.749689C8.081694-2.749689 8.296887-2.749689 8.296887-2.988792S8.081694-3.227895 7.878456-3.227895H1.41071C1.207472-3.227895 .992279-3.227895 .992279-2.988792S1.207472-2.749689 1.41071-2.749689H7.878456Z'/>
+<path id='fml3-2-terms-g0-6' d='M4.889664-3.741968H8.2132C8.416438-3.741968 8.631631-3.741968 8.631631-3.981071S8.416438-4.220174 8.2132-4.220174H4.889664V-7.519801C4.889664-7.711083 4.889664-7.962142 4.65056-7.962142S4.411457-7.746949 4.411457-7.555666V-4.220174H1.075965C.872727-4.220174 .657534-4.220174 .657534-3.981071S.872727-3.741968 1.075965-3.741968H4.411457V-.478207H1.075965C.872727-.478207 .657534-.478207 .657534-.239103S.872727 0 1.075965 0H8.2132C8.416438 0 8.631631 0 8.631631-.239103S8.416438-.478207 8.2132-.478207H4.889664V-3.741968Z'/>
+<path id='fml3-2-terms-g2-12' d='M4.782067-4.534994C4.782067-5.260274 4.192279-5.618929 3.53076-5.618929C2.502615-5.618929 1.737484-4.455293 1.514321-3.57858L.255044 1.45056C.239103 1.506351 .302864 1.546202 .350685 1.546202C.414446 1.546202 .478207 1.546202 .494147 1.490411L1.036115-.645579C1.219427-.215193 1.594022 .071731 2.16787 .071731C3.267746 .071731 4.471233-.70934 4.471233-1.976588C4.471233-2.502615 4.27198-2.8533 3.873474-3.180075C3.921295-3.188045 4.064757-3.291656 4.104608-3.323537C4.503113-3.594521 4.782067-4.048817 4.782067-4.534994ZM3.211955-3.180075C3.068493-3.156164 2.925031-3.140224 2.773599-3.140224C2.685928-3.140224 2.598257-3.140224 2.510585-3.172105C2.662017-3.211955 2.82142-3.211955 2.972852-3.211955C3.052553-3.211955 3.132254-3.203985 3.211955-3.180075ZM4.27995-4.686426C4.27995-4.28792 4.104608-3.817684 3.825654-3.53873C3.785803-3.498879 3.618431-3.347447 3.57061-3.339477C3.347447-3.379328 3.172105-3.435118 2.940971-3.435118C2.733748-3.435118 2.231631-3.451059 2.231631-3.140224C2.231631-2.901121 2.685928-2.917061 2.84533-2.917061C3.092403-2.917061 3.323537-2.940971 3.55467-3.028643C3.793773-2.83736 3.913325-2.582316 3.913325-2.183811C3.913325-1.713574 3.753923-1.187547 3.52279-.868742C3.227895-.446326 2.733748-.151432 2.13599-.151432C1.609963-.151432 1.195517-.557908 1.195517-1.115816C1.195517-1.219427 1.203487-1.323039 1.227397-1.40274L1.753425-3.52279C1.928767-4.224159 2.606227-5.395766 3.498879-5.395766C3.905355-5.395766 4.27995-5.196513 4.27995-4.686426Z'/>
+<path id='fml3-2-terms-g2-106' d='M3.291656-4.97335C3.291656-5.124782 3.172105-5.276214 2.980822-5.276214C2.741719-5.276214 2.534496-5.053051 2.534496-4.845828C2.534496-4.694396 2.654047-4.542964 2.84533-4.542964C3.084433-4.542964 3.291656-4.766127 3.291656-4.97335ZM1.625903 .398506C1.506351 .884682 1.115816 1.40274 .629639 1.40274C.502117 1.40274 .382565 1.370859 .366625 1.362889C.613699 1.243337 .645579 1.028144 .645579 .956413C.645579 .765131 .502117 .661519 .334745 .661519C.103611 .661519-.111582 .860772-.111582 1.123786C-.111582 1.42665 .183313 1.625903 .637609 1.625903C1.123786 1.625903 2.000498 1.323039 2.239601 .366625L2.956912-2.486675C2.980822-2.582316 2.996762-2.646077 2.996762-2.765629C2.996762-3.203985 2.646077-3.514819 2.183811-3.514819C1.338979-3.514819 .844832-2.399004 .844832-2.295392C.844832-2.223661 .900623-2.191781 .964384-2.191781C1.052055-2.191781 1.060025-2.215691 1.115816-2.335243C1.354919-2.885181 1.761395-3.291656 2.1599-3.291656C2.327273-3.291656 2.422914-3.180075 2.422914-2.917061C2.422914-2.805479 2.399004-2.693898 2.375093-2.582316L1.625903 .398506Z'/>
+<path id='fml3-2-terms-g3-12' d='M6.766625-6.957908C6.766625-7.675218 6.156912-8.428394 5.068991-8.428394C3.526775-8.428394 2.546451-6.539477 2.235616-5.296139L.3467 2.199751C.32279 2.295392 .394521 2.319303 .454296 2.319303C.537983 2.319303 .597758 2.307347 .609714 2.247572L1.446575-1.099875C1.566127-.430386 2.223661 .119552 2.929016 .119552C4.638605 .119552 6.252553-1.219427 6.252553-3.000747C6.252553-3.455044 6.144956-3.90934 5.893898-4.291905C5.750436-4.519054 5.571108-4.686426 5.379826-4.829888C6.240598-5.284184 6.766625-6.01345 6.766625-6.957908ZM4.686426-4.841843C4.495143-4.770112 4.303861-4.746202 4.076712-4.746202C3.90934-4.746202 3.753923-4.734247 3.53873-4.805978C3.658281-4.889664 3.837609-4.913574 4.088667-4.913574C4.303861-4.913574 4.519054-4.889664 4.686426-4.841843ZM6.144956-7.065504C6.144956-6.40797 5.822167-5.451557 5.045081-5.009215C4.817933-5.092902 4.507098-5.152677 4.244085-5.152677C3.993026-5.152677 3.275716-5.176588 3.275716-4.794022C3.275716-4.471233 3.93325-4.507098 4.136488-4.507098C4.447323-4.507098 4.722291-4.578829 5.009215-4.662516C5.391781-4.351681 5.559153-3.945205 5.559153-3.347447C5.559153-2.654047 5.36787-2.092154 5.140722-1.578082C4.746202-.6934 3.813699-.119552 2.988792-.119552C2.116065-.119552 1.661768-.812951 1.661768-1.625903C1.661768-1.733499 1.661768-1.888917 1.709589-2.068244L2.486675-5.212453C2.881196-6.77858 3.88543-8.18929 5.045081-8.18929C5.905853-8.18929 6.144956-7.591532 6.144956-7.065504Z'/>
+<path id='fml3-2-terms-g3-101' d='M2.139975-2.773599C2.462765-2.773599 3.275716-2.797509 3.849564-3.012702C4.758157-3.359402 4.841843-4.052802 4.841843-4.267995C4.841843-4.794022 4.387547-5.272229 3.598506-5.272229C2.343213-5.272229 .537983-4.136488 .537983-2.008468C.537983-.753176 1.255293 .119552 2.343213 .119552C3.969116 .119552 4.99726-1.147696 4.99726-1.303113C4.99726-1.374844 4.925529-1.43462 4.877709-1.43462C4.841843-1.43462 4.829888-1.422665 4.722291-1.315068C3.957161-.298879 2.82142-.119552 2.367123-.119552C1.685679-.119552 1.327024-.657534 1.327024-1.542217C1.327024-1.709589 1.327024-2.008468 1.506351-2.773599H2.139975ZM1.566127-3.012702C2.080199-4.853798 3.21594-5.033126 3.598506-5.033126C4.124533-5.033126 4.483188-4.722291 4.483188-4.267995C4.483188-3.012702 2.570361-3.012702 2.068244-3.012702H1.566127Z'/>
+<path id='fml3-2-terms-g3-112' d='M.514072 1.518306C.430386 1.876961 .382565 1.972603-.107597 1.972603C-.251059 1.972603-.37061 1.972603-.37061 2.199751C-.37061 2.223661-.358655 2.319303-.227148 2.319303C-.071731 2.319303 .095641 2.295392 .251059 2.295392H.765131C1.016189 2.295392 1.625903 2.319303 1.876961 2.319303C1.948692 2.319303 2.092154 2.319303 2.092154 2.10411C2.092154 1.972603 2.008468 1.972603 1.80523 1.972603C1.255293 1.972603 1.219427 1.888917 1.219427 1.793275C1.219427 1.649813 1.75741-.406476 1.829141-.681445C1.960648-.3467 2.283437 .119552 2.905106 .119552C4.25604 .119552 5.71457-1.637858 5.71457-3.395268C5.71457-4.495143 5.092902-5.272229 4.196264-5.272229C3.431133-5.272229 2.785554-4.531009 2.654047-4.363636C2.558406-4.961395 2.092154-5.272229 1.613948-5.272229C1.267248-5.272229 .992279-5.104857 .765131-4.65056C.549938-4.220174 .382565-3.490909 .382565-3.443088S.430386-3.335492 .514072-3.335492C.609714-3.335492 .621669-3.347447 .6934-3.622416C.872727-4.327771 1.099875-5.033126 1.578082-5.033126C1.853051-5.033126 1.948692-4.841843 1.948692-4.483188C1.948692-4.196264 1.912827-4.076712 1.865006-3.861519L.514072 1.518306ZM2.582316-3.730012C2.666002-4.064757 3.000747-4.411457 3.19203-4.578829C3.323537-4.698381 3.718057-5.033126 4.172354-5.033126C4.698381-5.033126 4.937484-4.507098 4.937484-3.88543C4.937484-3.311582 4.60274-1.960648 4.303861-1.338979C4.004981-.6934 3.455044-.119552 2.905106-.119552C2.092154-.119552 1.960648-1.147696 1.960648-1.195517C1.960648-1.231382 1.984558-1.327024 1.996513-1.3868L2.582316-3.730012Z'/>
+<path id='fml3-2-terms-g5-40' d='M3.88543 2.905106C3.88543 2.86924 3.88543 2.84533 3.682192 2.642092C2.486675 1.43462 1.817186-.537983 1.817186-2.976837C1.817186-5.296139 2.379078-7.292653 3.765878-8.703362C3.88543-8.810959 3.88543-8.834869 3.88543-8.870735C3.88543-8.942466 3.825654-8.966376 3.777833-8.966376C3.622416-8.966376 2.642092-8.105604 2.056289-6.933998C1.446575-5.726526 1.171606-4.447323 1.171606-2.976837C1.171606-1.912827 1.338979-.490162 1.960648 .789041C2.666002 2.223661 3.646326 3.000747 3.777833 3.000747C3.825654 3.000747 3.88543 2.976837 3.88543 2.905106Z'/>
+<path id='fml3-2-terms-g5-41' d='M3.371357-2.976837C3.371357-3.88543 3.251806-5.36787 2.582316-6.75467C1.876961-8.18929 .896638-8.966376 .765131-8.966376C.71731-8.966376 .657534-8.942466 .657534-8.870735C.657534-8.834869 .657534-8.810959 .860772-8.607721C2.056289-7.400249 2.725778-5.427646 2.725778-2.988792C2.725778-.669489 2.163885 1.327024 .777086 2.737733C.657534 2.84533 .657534 2.86924 .657534 2.905106C.657534 2.976837 .71731 3.000747 .765131 3.000747C.920548 3.000747 1.900872 2.139975 2.486675 .968369C3.096389-.251059 3.371357-1.542217 3.371357-2.976837Z'/>
+<path id='fml3-2-terms-g5-61' d='M8.069738-3.873474C8.237111-3.873474 8.452304-3.873474 8.452304-4.088667C8.452304-4.315816 8.249066-4.315816 8.069738-4.315816H1.028144C.860772-4.315816 .645579-4.315816 .645579-4.100623C.645579-3.873474 .848817-3.873474 1.028144-3.873474H8.069738ZM8.069738-1.649813C8.237111-1.649813 8.452304-1.649813 8.452304-1.865006C8.452304-2.092154 8.249066-2.092154 8.069738-2.092154H1.028144C.860772-2.092154 .645579-2.092154 .645579-1.876961C.645579-1.649813 .848817-1.649813 1.028144-1.649813H8.069738Z'/>
+<path id='fml3-2-terms-g5-69' d='M7.627397-3.060523H7.364384C7.07746-1.195517 6.790535-.3467 4.770112-.3467H3.144209C2.618182-.3467 2.594271-.430386 2.594271-.824907V-4.052802H3.682192C4.829888-4.052802 4.961395-3.682192 4.961395-2.654047H5.224408V-5.798257H4.961395C4.961395-4.770112 4.829888-4.399502 3.682192-4.399502H2.594271V-7.316563C2.594271-7.711083 2.618182-7.79477 3.144209-7.79477H4.734247C6.491656-7.79477 6.862267-7.197011 7.041594-5.475467H7.304608L6.993773-8.141469H.490162V-7.79477H.729265C1.590037-7.79477 1.625903-7.675218 1.625903-7.232877V-.908593C1.625903-.466252 1.590037-.3467 .729265-.3467H.490162V0H7.149191L7.627397-3.060523Z'/>
+<path id='fml3-2-terms-g5-83' d='M2.486675-4.985305C1.876961-5.140722 1.338979-5.738481 1.338979-6.503611C1.338979-7.340473 2.008468-8.093649 2.940971-8.093649C4.901619-8.093649 5.164633-6.156912 5.236364-5.642839C5.260274-5.499377 5.260274-5.451557 5.379826-5.451557C5.511333-5.451557 5.511333-5.511333 5.511333-5.726526V-8.141469C5.511333-8.356663 5.511333-8.416438 5.391781-8.416438C5.355915-8.416438 5.308095-8.416438 5.224408-8.261021L4.829888-7.531756C4.25604-8.272976 3.466999-8.416438 2.940971-8.416438C1.613948-8.416438 .645579-7.352428 .645579-6.133001C.645579-5.559153 .848817-5.033126 1.291158-4.554919C1.709589-4.088667 2.12802-3.981071 2.976837-3.765878C3.395268-3.670237 4.052802-3.502864 4.220174-3.431133C4.782067-3.156164 5.152677-2.510585 5.152677-1.841096C5.152677-.944458 4.519054-.095641 3.526775-.095641C2.988792-.095641 2.247572-.227148 1.661768-.74122C.968369-1.362889 .920548-2.223661 .908593-2.618182C.896638-2.713823 .800996-2.713823 .777086-2.713823C.645579-2.713823 .645579-2.654047 .645579-2.438854V-.02391C.645579 .191283 .645579 .251059 .765131 .251059C.836862 .251059 .848817 .227148 .932503 .083686C.980324-.011955 1.231382-.454296 1.327024-.633624C1.75741-.155417 2.510585 .251059 3.53873 .251059C4.877709 .251059 5.846077-.884682 5.846077-2.199751C5.846077-2.929016 5.571108-3.466999 5.248319-3.861519C4.805978-4.399502 4.267995-4.531009 3.801743-4.65056L2.486675-4.985305Z'/>
+<path id='fml3-2-terms-g5-94' d='M2.929016-8.296887L1.362889-6.670984L1.554172-6.491656L2.917061-7.723039L4.291905-6.491656L4.483188-6.670984L2.929016-8.296887Z'/>
+<path id='fml3-2-terms-g5-100' d='M3.58655-8.16538V-7.81868C4.399502-7.81868 4.495143-7.734994 4.495143-7.149191V-4.507098C4.244085-4.853798 3.730012-5.272229 3.000747-5.272229C1.613948-5.272229 .418431-4.100623 .418431-2.570361C.418431-1.052055 1.554172 .119552 2.86924 .119552C3.777833 .119552 4.303861-.478207 4.471233-.705355V.119552L6.156912 0V-.3467C5.34396-.3467 5.248319-.430386 5.248319-1.016189V-8.296887L3.58655-8.16538ZM4.471233-1.398755C4.471233-1.183562 4.471233-1.147696 4.303861-.884682C4.016936-.466252 3.526775-.119552 2.929016-.119552C2.618182-.119552 1.327024-.239103 1.327024-2.558406C1.327024-3.419178 1.470486-3.897385 1.733499-4.291905C1.972603-4.662516 2.450809-5.033126 3.048568-5.033126C3.789788-5.033126 4.208219-4.495143 4.327771-4.303861C4.471233-4.100623 4.471233-4.076712 4.471233-3.861519V-1.398755Z'/>
+<path id='fml3-2-terms-g5-101' d='M4.578829-2.773599C4.841843-2.773599 4.865753-2.773599 4.865753-3.000747C4.865753-4.208219 4.220174-5.332005 2.773599-5.332005C1.41071-5.332005 .358655-4.100623 .358655-2.618182C.358655-1.0401 1.578082 .119552 2.905106 .119552C4.327771 .119552 4.865753-1.171606 4.865753-1.422665C4.865753-1.494396 4.805978-1.542217 4.734247-1.542217C4.638605-1.542217 4.614695-1.482441 4.590785-1.422665C4.27995-.418431 3.478954-.143462 2.976837-.143462S1.267248-.478207 1.267248-2.546451V-2.773599H4.578829ZM1.279203-3.000747C1.374844-4.877709 2.426899-5.092902 2.761644-5.092902C4.040847-5.092902 4.112578-3.407223 4.124533-3.000747H1.279203Z'/>
+<path id='fml3-2-terms-g5-103' d='M1.422665-2.163885C1.984558-1.793275 2.462765-1.793275 2.594271-1.793275C3.670237-1.793275 4.471233-2.606227 4.471233-3.526775C4.471233-3.849564 4.375592-4.303861 3.993026-4.686426C4.459278-5.164633 5.021171-5.164633 5.080946-5.164633C5.128767-5.164633 5.188543-5.164633 5.236364-5.140722C5.116812-5.092902 5.057036-4.97335 5.057036-4.841843C5.057036-4.674471 5.176588-4.531009 5.36787-4.531009C5.463512-4.531009 5.678705-4.590785 5.678705-4.853798C5.678705-5.068991 5.511333-5.403736 5.092902-5.403736C4.471233-5.403736 4.004981-5.021171 3.837609-4.841843C3.478954-5.116812 3.060523-5.272229 2.606227-5.272229C1.530262-5.272229 .729265-4.459278 .729265-3.53873C.729265-2.857285 1.147696-2.414944 1.267248-2.307347C1.123786-2.12802 .908593-1.78132 .908593-1.315068C.908593-.621669 1.327024-.32279 1.422665-.263014C.872727-.107597 .32279 .32279 .32279 .944458C.32279 1.769365 1.446575 2.450809 2.917061 2.450809C4.339726 2.450809 5.523288 1.817186 5.523288 .920548C5.523288 .621669 5.439601-.083686 4.722291-.454296C4.112578-.765131 3.514819-.765131 2.486675-.765131C1.75741-.765131 1.673724-.765131 1.458531-.992279C1.338979-1.111831 1.231382-1.338979 1.231382-1.590037C1.231382-1.793275 1.303113-1.996513 1.422665-2.163885ZM2.606227-2.044334C1.554172-2.044334 1.554172-3.251806 1.554172-3.526775C1.554172-3.741968 1.554172-4.23213 1.75741-4.554919C1.984558-4.901619 2.343213-5.021171 2.594271-5.021171C3.646326-5.021171 3.646326-3.813699 3.646326-3.53873C3.646326-3.323537 3.646326-2.833375 3.443088-2.510585C3.21594-2.163885 2.857285-2.044334 2.606227-2.044334ZM2.929016 2.199751C1.78132 2.199751 .908593 1.613948 .908593 .932503C.908593 .836862 .932503 .37061 1.3868 .059776C1.649813-.107597 1.75741-.107597 2.594271-.107597C3.58655-.107597 4.937484-.107597 4.937484 .932503C4.937484 1.637858 4.028892 2.199751 2.929016 2.199751Z'/>
+<path id='fml3-2-terms-g5-104' d='M5.32005-2.905106C5.32005-4.016936 5.32005-4.351681 5.045081-4.734247C4.698381-5.200498 4.136488-5.272229 3.730012-5.272229C2.701868-5.272229 2.223661-4.495143 2.056289-4.124533H2.044334V-8.296887L.382565-8.16538V-7.81868C1.195517-7.81868 1.291158-7.734994 1.291158-7.149191V-.884682C1.291158-.3467 1.159651-.3467 .382565-.3467V0C.6934-.02391 1.338979-.02391 1.673724-.02391C2.020423-.02391 2.666002-.02391 2.976837 0V-.3467C2.211706-.3467 2.068244-.3467 2.068244-.884682V-3.108344C2.068244-4.363636 2.893151-5.033126 3.634371-5.033126S4.542964-4.423412 4.542964-3.694147V-.884682C4.542964-.3467 4.411457-.3467 3.634371-.3467V0C3.945205-.02391 4.590785-.02391 4.925529-.02391C5.272229-.02391 5.917808-.02391 6.228643 0V-.3467C5.630884-.3467 5.332005-.3467 5.32005-.705355V-2.905106Z'/>
+<path id='fml3-2-terms-g5-105' d='M2.080199-7.364384C2.080199-7.675218 1.829141-7.950187 1.494396-7.950187C1.183562-7.950187 .920548-7.699128 .920548-7.376339C.920548-7.017684 1.207472-6.790535 1.494396-6.790535C1.865006-6.790535 2.080199-7.10137 2.080199-7.364384ZM.430386-5.140722V-4.794022C1.195517-4.794022 1.303113-4.722291 1.303113-4.136488V-.884682C1.303113-.3467 1.171606-.3467 .394521-.3467V0C.729265-.02391 1.303113-.02391 1.649813-.02391C1.78132-.02391 2.47472-.02391 2.881196 0V-.3467C2.10411-.3467 2.056289-.406476 2.056289-.872727V-5.272229L.430386-5.140722Z'/>
+<path id='fml3-2-terms-g5-108' d='M2.056289-8.296887L.394521-8.16538V-7.81868C1.207472-7.81868 1.303113-7.734994 1.303113-7.149191V-.884682C1.303113-.3467 1.171606-.3467 .394521-.3467V0C.729265-.02391 1.315068-.02391 1.673724-.02391S2.630137-.02391 2.964882 0V-.3467C2.199751-.3467 2.056289-.3467 2.056289-.884682V-8.296887Z'/>
+<path id='fml3-2-terms-g5-109' d='M8.571856-2.905106C8.571856-4.016936 8.571856-4.351681 8.296887-4.734247C7.950187-5.200498 7.388294-5.272229 6.981818-5.272229C5.989539-5.272229 5.487422-4.554919 5.296139-4.088667C5.128767-5.009215 4.483188-5.272229 3.730012-5.272229C2.570361-5.272229 2.116065-4.27995 2.020423-4.040847H2.008468V-5.272229L.382565-5.140722V-4.794022C1.195517-4.794022 1.291158-4.710336 1.291158-4.124533V-.884682C1.291158-.3467 1.159651-.3467 .382565-.3467V0C.6934-.02391 1.338979-.02391 1.673724-.02391C2.020423-.02391 2.666002-.02391 2.976837 0V-.3467C2.211706-.3467 2.068244-.3467 2.068244-.884682V-3.108344C2.068244-4.363636 2.893151-5.033126 3.634371-5.033126S4.542964-4.423412 4.542964-3.694147V-.884682C4.542964-.3467 4.411457-.3467 3.634371-.3467V0C3.945205-.02391 4.590785-.02391 4.925529-.02391C5.272229-.02391 5.917808-.02391 6.228643 0V-.3467C5.463512-.3467 5.32005-.3467 5.32005-.884682V-3.108344C5.32005-4.363636 6.144956-5.033126 6.886177-5.033126S7.79477-4.423412 7.79477-3.694147V-.884682C7.79477-.3467 7.663263-.3467 6.886177-.3467V0C7.197011-.02391 7.84259-.02391 8.177335-.02391C8.524035-.02391 9.169614-.02391 9.480448 0V-.3467C8.88269-.3467 8.583811-.3467 8.571856-.705355V-2.905106Z'/>
+<path id='fml3-2-terms-g5-111' d='M5.487422-2.558406C5.487422-4.100623 4.315816-5.332005 2.929016-5.332005C1.494396-5.332005 .358655-4.064757 .358655-2.558406C.358655-1.028144 1.554172 .119552 2.917061 .119552C4.327771 .119552 5.487422-1.052055 5.487422-2.558406ZM2.929016-.143462C2.486675-.143462 1.948692-.334745 1.601993-.920548C1.279203-1.458531 1.267248-2.163885 1.267248-2.666002C1.267248-3.120299 1.267248-3.849564 1.637858-4.387547C1.972603-4.901619 2.49863-5.092902 2.917061-5.092902C3.383313-5.092902 3.88543-4.877709 4.208219-4.411457C4.578829-3.861519 4.578829-3.108344 4.578829-2.666002C4.578829-2.247572 4.578829-1.506351 4.267995-.944458C3.93325-.37061 3.383313-.143462 2.929016-.143462Z'/>
+<path id='fml3-2-terms-g5-112' d='M2.929016 1.972603C2.163885 1.972603 2.020423 1.972603 2.020423 1.43462V-.645579C2.235616-.3467 2.725778 .119552 3.490909 .119552C4.865753 .119552 6.073225-1.0401 6.073225-2.582316C6.073225-4.100623 4.94944-5.272229 3.646326-5.272229C2.594271-5.272229 2.032379-4.519054 1.996513-4.471233V-5.272229L.334745-5.140722V-4.794022C1.171606-4.794022 1.243337-4.710336 1.243337-4.184309V1.43462C1.243337 1.972603 1.111831 1.972603 .334745 1.972603V2.319303C.645579 2.295392 1.291158 2.295392 1.625903 2.295392C1.972603 2.295392 2.618182 2.295392 2.929016 2.319303V1.972603ZM2.020423-3.813699C2.020423-4.040847 2.020423-4.052802 2.15193-4.244085C2.510585-4.782067 3.096389-5.009215 3.550685-5.009215C4.447323-5.009215 5.164633-3.921295 5.164633-2.582316C5.164633-1.159651 4.351681-.119552 3.431133-.119552C3.060523-.119552 2.713823-.274969 2.47472-.502117C2.199751-.777086 2.020423-1.016189 2.020423-1.350934V-3.813699Z'/>
+<path id='fml3-2-terms-g5-114' d='M1.996513-2.785554C1.996513-3.945205 2.47472-5.033126 3.395268-5.033126C3.490909-5.033126 3.514819-5.033126 3.56264-5.021171C3.466999-4.97335 3.275716-4.901619 3.275716-4.578829C3.275716-4.23213 3.550685-4.100623 3.741968-4.100623C3.981071-4.100623 4.220174-4.25604 4.220174-4.578829C4.220174-4.937484 3.897385-5.272229 3.383313-5.272229C2.367123-5.272229 2.020423-4.172354 1.948692-3.945205H1.936737V-5.272229L.334745-5.140722V-4.794022C1.147696-4.794022 1.243337-4.710336 1.243337-4.124533V-.884682C1.243337-.3467 1.111831-.3467 .334745-.3467V0C.669489-.02391 1.327024-.02391 1.685679-.02391C2.008468-.02391 2.857285-.02391 3.132254 0V-.3467H2.893151C2.020423-.3467 1.996513-.478207 1.996513-.908593V-2.785554Z'/>
+<path id='fml3-2-terms-g5-115' d='M3.921295-5.057036C3.921295-5.272229 3.921295-5.332005 3.801743-5.332005C3.706102-5.332005 3.478954-5.068991 3.395268-4.961395C3.024658-5.260274 2.654047-5.332005 2.271482-5.332005C.824907-5.332005 .394521-4.542964 .394521-3.88543C.394521-3.753923 .394521-3.335492 .848817-2.917061C1.231382-2.582316 1.637858-2.49863 2.187796-2.391034C2.84533-2.259527 3.000747-2.223661 3.299626-1.984558C3.514819-1.80523 3.670237-1.542217 3.670237-1.207472C3.670237-.6934 3.371357-.119552 2.319303-.119552C1.530262-.119552 .956413-.573848 .6934-1.769365C.645579-1.984558 .645579-1.996513 .633624-2.008468C.609714-2.056289 .561893-2.056289 .526027-2.056289C.394521-2.056289 .394521-1.996513 .394521-1.78132V-.155417C.394521 .059776 .394521 .119552 .514072 .119552C.573848 .119552 .585803 .107597 .789041-.143462C.848817-.227148 .848817-.251059 1.028144-.442341C1.482441 .119552 2.12802 .119552 2.331258 .119552C3.58655 .119552 4.208219-.573848 4.208219-1.518306C4.208219-2.163885 3.813699-2.546451 3.706102-2.654047C3.275716-3.024658 2.952927-3.096389 2.163885-3.239851C1.80523-3.311582 .932503-3.478954 .932503-4.196264C.932503-4.566874 1.183562-5.116812 2.259527-5.116812C3.56264-5.116812 3.634371-4.004981 3.658281-3.634371C3.670237-3.53873 3.753923-3.53873 3.789788-3.53873C3.921295-3.53873 3.921295-3.598506 3.921295-3.813699V-5.057036Z'/>
+<path id='fml3-2-terms-g5-116' d='M2.008468-4.805978H3.694147V-5.152677H2.008468V-7.352428H1.745455C1.733499-6.228643 1.303113-5.080946 .215193-5.045081V-4.805978H1.231382V-1.482441C1.231382-.155417 2.116065 .119552 2.749689 .119552C3.502864 .119552 3.897385-.621669 3.897385-1.482441V-2.163885H3.634371V-1.506351C3.634371-.645579 3.287671-.143462 2.82142-.143462C2.008468-.143462 2.008468-1.255293 2.008468-1.458531V-4.805978Z'/>
+<path id='fml3-2-terms-g5-117' d='M3.634371-5.140722V-4.794022C4.447323-4.794022 4.542964-4.710336 4.542964-4.124533V-1.984558C4.542964-.968369 4.004981-.119552 3.108344-.119552C2.12802-.119552 2.068244-.681445 2.068244-1.315068V-5.272229L.382565-5.140722V-4.794022C1.291158-4.794022 1.291158-4.758157 1.291158-3.694147V-1.900872C1.291158-1.159651 1.291158-.729265 1.649813-.334745C1.936737-.02391 2.426899 .119552 3.036613 .119552C3.239851 .119552 3.622416 .119552 4.028892-.227148C4.375592-.502117 4.566874-.956413 4.566874-.956413V.119552L6.228643 0V-.3467C5.415691-.3467 5.32005-.430386 5.32005-1.016189V-5.272229L3.634371-5.140722Z'/>
+<path id='fml3-2-terms-g5-119' d='M7.232877-4.016936C7.49589-4.770112 8.021918-4.794022 8.225156-4.805978V-5.152677C7.926276-5.128767 7.711083-5.128767 7.340473-5.128767C6.993773-5.128767 6.969863-5.128767 6.324284-5.152677V-4.805978C6.862267-4.782067 7.005729-4.459278 7.005729-4.23213C7.005729-4.220174 7.005729-4.136488 6.957908-4.016936L5.858032-.884682L4.662516-4.267995C4.60274-4.411457 4.60274-4.435367 4.60274-4.471233C4.60274-4.805978 5.045081-4.805978 5.296139-4.805978V-5.152677C4.961395-5.128767 4.471233-5.128767 4.124533-5.128767C3.741968-5.128767 3.718057-5.128767 3.048568-5.152677V-4.805978C3.502864-4.805978 3.658281-4.782067 3.789788-4.62665C3.849564-4.554919 3.993026-4.160399 4.076712-3.921295L3.060523-1.004234L1.912827-4.25604C1.853051-4.411457 1.853051-4.435367 1.853051-4.483188C1.853051-4.805978 2.319303-4.805978 2.546451-4.805978V-5.152677C2.247572-5.128767 1.649813-5.128767 1.327024-5.128767C.992279-5.128767 .968369-5.128767 .215193-5.152677V-4.805978C.824907-4.805978 .944458-4.758157 1.075965-4.375592L2.582316-.095641C2.630137 .035866 2.666002 .119552 2.797509 .119552C2.905106 .119552 2.964882 .083686 3.024658-.107597L4.220174-3.514819L5.415691-.107597C5.475467 .083686 5.535243 .119552 5.642839 .119552C5.774346 .119552 5.810212 .035866 5.858032-.095641L7.232877-4.016936Z'/>
+</defs>
+<g id='fml3-2-terms-page1'>
+<use x='-68.434913' y='-61.584336' xlink:href='#fml3-2-terms-g5-94'/>
+<use x='-71.00374' y='-58.429525' xlink:href='#fml3-2-terms-g3-12'/>
+<use x='-64.395252' y='-56.636262' xlink:href='#fml3-2-terms-g2-106'/>
+<use x='-57.356431' y='-58.429525' xlink:href='#fml3-2-terms-g0-6'/>
+<use x='-45.401271' y='-58.429525' xlink:href='#fml3-2-terms-g5-83'/>
+<use x='-38.897948' y='-58.429525' xlink:href='#fml3-2-terms-g5-69'/>
+<use x='-30.933446' y='-58.429525' xlink:href='#fml3-2-terms-g5-40'/>
+<use x='-23.812292' y='-61.584336' xlink:href='#fml3-2-terms-g5-94'/>
+<use x='-26.38112' y='-58.429525' xlink:href='#fml3-2-terms-g3-12'/>
+<use x='-19.772632' y='-56.636262' xlink:href='#fml3-2-terms-g2-106'/>
+<use x='-15.390475' y='-58.429525' xlink:href='#fml3-2-terms-g5-41'/>
+<use x='12.573812' y='-58.429525' xlink:href='#fml3-2-terms-g3-101'/>
+<use x='20.209394' y='-65.468939' xlink:href='#fml3-2-terms-g4-94'/>
+<use x='17.999252' y='-63.365711' xlink:href='#fml3-2-terms-g2-12'/>
+<use x='22.750934' y='-62.150633' xlink:href='#fml3-2-terms-g1-106'/>
+<use x='30.472664' y='-58.429525' xlink:href='#fml3-2-terms-g5-61'/>
+<use x='42.898145' y='-58.429525' xlink:href='#fml3-2-terms-g5-111'/>
+<use x='49.076302' y='-58.429525' xlink:href='#fml3-2-terms-g5-100'/>
+<use x='55.579624' y='-58.429525' xlink:href='#fml3-2-terms-g5-100'/>
+<use x='62.082947' y='-58.429525' xlink:href='#fml3-2-terms-g5-115'/>
+<use x='70.602299' y='-58.429525' xlink:href='#fml3-2-terms-g5-109'/>
+<use x='80.032117' y='-58.429525' xlink:href='#fml3-2-terms-g5-117'/>
+<use x='86.535439' y='-58.429525' xlink:href='#fml3-2-terms-g5-108'/>
+<use x='89.787101' y='-58.429525' xlink:href='#fml3-2-terms-g5-116'/>
+<use x='94.339426' y='-58.429525' xlink:href='#fml3-2-terms-g5-105'/>
+<use x='97.591088' y='-58.429525' xlink:href='#fml3-2-terms-g5-112'/>
+<use x='104.09441' y='-58.429525' xlink:href='#fml3-2-terms-g5-108'/>
+<use x='107.346071' y='-58.429525' xlink:href='#fml3-2-terms-g5-105'/>
+<use x='110.597733' y='-58.429525' xlink:href='#fml3-2-terms-g5-101'/>
+<use x='115.800391' y='-58.429525' xlink:href='#fml3-2-terms-g5-114'/>
+<use x='143.764677' y='-58.429525' xlink:href='#fml3-2-terms-g5-108'/>
+<use x='147.016339' y='-58.429525' xlink:href='#fml3-2-terms-g5-111'/>
+<use x='152.869329' y='-58.429525' xlink:href='#fml3-2-terms-g5-103'/>
+<use x='158.722319' y='-58.429525' xlink:href='#fml3-2-terms-g5-119'/>
+<use x='166.851472' y='-58.429525' xlink:href='#fml3-2-terms-g5-111'/>
+<use x='172.704462' y='-58.429525' xlink:href='#fml3-2-terms-g5-114'/>
+<use x='177.256788' y='-58.429525' xlink:href='#fml3-2-terms-g5-116'/>
+<use x='181.809114' y='-58.429525' xlink:href='#fml3-2-terms-g5-104'/>
+<use x='191.633266' y='-58.429525' xlink:href='#fml3-2-terms-g5-61'/>
+<use x='204.058747' y='-58.429525' xlink:href='#fml3-2-terms-g0-0'/>
+<use x='215.349741' y='-58.429525' xlink:href='#fml3-2-terms-g5-108'/>
+<use x='218.601403' y='-58.429525' xlink:href='#fml3-2-terms-g5-111'/>
+<use x='224.454393' y='-58.429525' xlink:href='#fml3-2-terms-g5-103'/>
+<use x='230.469966' y='-55.606797' xlink:href='#fml3-2-terms-g4-49'/>
+<use x='234.704149' y='-55.606797' xlink:href='#fml3-2-terms-g4-48'/>
+<use x='239.436464' y='-58.429525' xlink:href='#fml3-2-terms-g5-40'/>
+<use x='243.98879' y='-58.429525' xlink:href='#fml3-2-terms-g3-112'/>
+<use x='249.863933' y='-58.429525' xlink:href='#fml3-2-terms-g5-41'/>
+</g>
+</svg></div>
+  <figcaption class="plib-formula-caption">Every coefficient is a statistic. It has a distribution, so it has a standard error, and from that a p-value and a logworth.</figcaption>
+</figure>
+
+<figure class="plib-formula">
+  <div class="plib-formula-body"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-71.00374 -71.167563 139.896352 13.271527" width="345.1" height="32.7" fill="currentColor" role="img" class="plib-formula-svg" aria-label="G squared equals two times the difference between the fitted log likelihood and the null log likelihood, and it follows a chi-square distribution with k degrees of freedom, where k counts the parameters past the intercept."><title>G squared equals two times the difference between the fitted log likelihood and the null log likelihood, and it follows a chi-square distribution with k degrees of freedom, where k counts the parameters past the intercept.</title>
+<defs>
+<path id='fml3-2-lrtest-g1-107' d='M2.327273-5.292154C2.335243-5.308095 2.359153-5.411706 2.359153-5.419676C2.359153-5.459527 2.327273-5.531258 2.231631-5.531258C2.199751-5.531258 1.952677-5.507347 1.769365-5.491407L1.323039-5.459527C1.147696-5.443587 1.067995-5.435616 1.067995-5.292154C1.067995-5.180573 1.179577-5.180573 1.275218-5.180573C1.657783-5.180573 1.657783-5.132752 1.657783-5.061021C1.657783-5.037111 1.657783-5.021171 1.617933-4.877709L.486177-.342715C.454296-.223163 .454296-.175342 .454296-.167372C.454296-.03188 .565878 .079701 .71731 .079701C.988294 .079701 1.052055-.175342 1.083935-.286924C1.163636-.621669 1.370859-1.466501 1.458531-1.801245C1.896887-1.753425 2.430884-1.601993 2.430884-1.147696C2.430884-1.107846 2.430884-1.067995 2.414944-.988294C2.391034-.884682 2.375093-.773101 2.375093-.73325C2.375093-.263014 2.725778 .079701 3.188045 .079701C3.52279 .079701 3.730012-.167372 3.833624-.318804C4.024907-.613699 4.152428-1.091905 4.152428-1.139726C4.152428-1.219427 4.088667-1.243337 4.032877-1.243337C3.937235-1.243337 3.921295-1.195517 3.889415-1.052055C3.785803-.67746 3.57858-.143462 3.203985-.143462C2.996762-.143462 2.948941-.318804 2.948941-.533998C2.948941-.637609 2.956912-.73325 2.996762-.916563C3.004732-.948443 3.036613-1.075965 3.036613-1.163636C3.036613-1.817186 2.215691-1.960648 1.809215-2.016438C2.10411-2.191781 2.375093-2.462765 2.470735-2.566376C2.909091-2.996762 3.267746-3.291656 3.650311-3.291656C3.753923-3.291656 3.849564-3.267746 3.913325-3.188045C3.482939-3.132254 3.482939-2.757659 3.482939-2.749689C3.482939-2.574346 3.618431-2.454795 3.793773-2.454795C4.008966-2.454795 4.24807-2.630137 4.24807-2.956912C4.24807-3.227895 4.056787-3.514819 3.658281-3.514819C3.196015-3.514819 2.781569-3.164134 2.327273-2.709838C1.865006-2.255542 1.665753-2.16787 1.538232-2.11208L2.327273-5.292154Z'/>
+<path id='fml3-2-lrtest-g0-0' d='M7.878456-2.749689C8.081694-2.749689 8.296887-2.749689 8.296887-2.988792S8.081694-3.227895 7.878456-3.227895H1.41071C1.207472-3.227895 .992279-3.227895 .992279-2.988792S1.207472-2.749689 1.41071-2.749689H7.878456Z'/>
+<path id='fml3-2-lrtest-g0-24' d='M8.631631-3.993026C8.631631-4.25604 8.5599-4.375592 8.464259-4.375592C8.404483-4.375592 8.308842-4.291905 8.296887-4.064757C8.249066-2.917061 7.460025-2.259527 6.623163-2.259527C5.869988-2.259527 5.296139-2.773599 4.710336-3.287671C4.100623-3.837609 3.478954-4.387547 2.666002-4.387547C1.362889-4.387547 .657534-3.072478 .657534-1.984558C.657534-1.601993 .812951-1.601993 .824907-1.601993C.956413-1.601993 .992279-1.841096 .992279-1.876961C1.0401-3.19203 1.936737-3.718057 2.666002-3.718057C3.419178-3.718057 3.993026-3.203985 4.578829-2.689913C5.188543-2.139975 5.810212-1.590037 6.623163-1.590037C7.926276-1.590037 8.631631-2.905106 8.631631-3.993026Z'/>
+<path id='fml3-2-lrtest-g4-40' d='M3.88543 2.905106C3.88543 2.86924 3.88543 2.84533 3.682192 2.642092C2.486675 1.43462 1.817186-.537983 1.817186-2.976837C1.817186-5.296139 2.379078-7.292653 3.765878-8.703362C3.88543-8.810959 3.88543-8.834869 3.88543-8.870735C3.88543-8.942466 3.825654-8.966376 3.777833-8.966376C3.622416-8.966376 2.642092-8.105604 2.056289-6.933998C1.446575-5.726526 1.171606-4.447323 1.171606-2.976837C1.171606-1.912827 1.338979-.490162 1.960648 .789041C2.666002 2.223661 3.646326 3.000747 3.777833 3.000747C3.825654 3.000747 3.88543 2.976837 3.88543 2.905106Z'/>
+<path id='fml3-2-lrtest-g4-41' d='M3.371357-2.976837C3.371357-3.88543 3.251806-5.36787 2.582316-6.75467C1.876961-8.18929 .896638-8.966376 .765131-8.966376C.71731-8.966376 .657534-8.942466 .657534-8.870735C.657534-8.834869 .657534-8.810959 .860772-8.607721C2.056289-7.400249 2.725778-5.427646 2.725778-2.988792C2.725778-.669489 2.163885 1.327024 .777086 2.737733C.657534 2.84533 .657534 2.86924 .657534 2.905106C.657534 2.976837 .71731 3.000747 .765131 3.000747C.920548 3.000747 1.900872 2.139975 2.486675 .968369C3.096389-.251059 3.371357-1.542217 3.371357-2.976837Z'/>
+<path id='fml3-2-lrtest-g4-50' d='M5.260274-2.008468H4.99726C4.961395-1.80523 4.865753-1.147696 4.746202-.956413C4.662516-.848817 3.981071-.848817 3.622416-.848817H1.41071C1.733499-1.123786 2.462765-1.888917 2.773599-2.175841C4.590785-3.849564 5.260274-4.471233 5.260274-5.654795C5.260274-7.029639 4.172354-7.950187 2.785554-7.950187S.585803-6.766625 .585803-5.738481C.585803-5.128767 1.111831-5.128767 1.147696-5.128767C1.398755-5.128767 1.709589-5.308095 1.709589-5.69066C1.709589-6.025405 1.482441-6.252553 1.147696-6.252553C1.0401-6.252553 1.016189-6.252553 .980324-6.240598C1.207472-7.053549 1.853051-7.603487 2.630137-7.603487C3.646326-7.603487 4.267995-6.75467 4.267995-5.654795C4.267995-4.638605 3.682192-3.753923 3.000747-2.988792L.585803-.286924V0H4.94944L5.260274-2.008468Z'/>
+<path id='fml3-2-lrtest-g4-61' d='M8.069738-3.873474C8.237111-3.873474 8.452304-3.873474 8.452304-4.088667C8.452304-4.315816 8.249066-4.315816 8.069738-4.315816H1.028144C.860772-4.315816 .645579-4.315816 .645579-4.100623C.645579-3.873474 .848817-3.873474 1.028144-3.873474H8.069738ZM8.069738-1.649813C8.237111-1.649813 8.452304-1.649813 8.452304-1.865006C8.452304-2.092154 8.249066-2.092154 8.069738-2.092154H1.028144C.860772-2.092154 .645579-2.092154 .645579-1.876961C.645579-1.649813 .848817-1.649813 1.028144-1.649813H8.069738Z'/>
+<path id='fml3-2-lrtest-g3-12' d='M2.765629-3.459029C2.677958-3.451059 2.638107-3.451059 2.622167-3.443088S2.590286-3.435118 2.478705-3.435118H1.44259V-4.303861C1.44259-5.092902 2.183811-5.387796 2.677958-5.387796C2.917061-5.387796 3.156164-5.332005 3.355417-5.180573C3.339477-5.180573 3.028643-5.116812 3.028643-4.790037C3.028643-4.534994 3.235866-4.407472 3.411208-4.407472C3.52279-4.407472 3.793773-4.479203 3.793773-4.805978C3.793773-5.228394 3.379328-5.610959 2.701868-5.610959C1.920797-5.610959 .884682-5.220423 .884682-4.311831V-3.435118H.231133V-3.172105H.884682V-.621669C.884682-.263014 .789041-.263014 .278954-.263014V0C.589788-.02391 1.036115-.02391 1.171606-.02391C1.331009-.02391 1.761395-.02391 2.072229 0V-.263014C1.562142-.263014 1.466501-.263014 1.466501-.621669V-3.172105H2.83736C3.172105-3.172105 3.227895-3.076463 3.227895-2.741719V-.621669C3.227895-.263014 3.132254-.263014 2.622167-.263014V0C2.933001-.02391 3.379328-.02391 3.514819-.02391C3.674222-.02391 4.104608-.02391 4.415442 0V-.263014C3.905355-.263014 3.809714-.263014 3.809714-.621669V-3.53076L2.765629-3.459029Z'/>
+<path id='fml3-2-lrtest-g3-50' d='M2.247572-1.625903C2.375093-1.745455 2.709838-2.008468 2.83736-2.12005C3.331507-2.574346 3.801743-3.012702 3.801743-3.737983C3.801743-4.686426 3.004732-5.300125 2.008468-5.300125C1.052055-5.300125 .422416-4.574844 .422416-3.865504C.422416-3.474969 .73325-3.419178 .844832-3.419178C1.012204-3.419178 1.259278-3.53873 1.259278-3.841594C1.259278-4.25604 .860772-4.25604 .765131-4.25604C.996264-4.837858 1.530262-5.037111 1.920797-5.037111C2.662017-5.037111 3.044583-4.407472 3.044583-3.737983C3.044583-2.909091 2.462765-2.303362 1.522291-1.338979L.518057-.302864C.422416-.215193 .422416-.199253 .422416 0H3.57061L3.801743-1.42665H3.55467C3.53076-1.267248 3.466999-.868742 3.371357-.71731C3.323537-.653549 2.717808-.653549 2.590286-.653549H1.171606L2.247572-1.625903Z'/>
+<path id='fml3-2-lrtest-g3-100' d='M2.622167-5.443587V-5.180573C3.164134-5.180573 3.227895-5.124782 3.227895-4.734247V-3.052553C2.948941-3.355417 2.574346-3.514819 2.1599-3.514819C1.163636-3.514819 .278954-2.741719 .278954-1.713574C.278954-.73325 1.075965 .079701 2.080199 .079701C2.550436 .079701 2.940971-.143462 3.203985-.422416V.079701L4.415442 0V-.263014C3.873474-.263014 3.809714-.318804 3.809714-.70934V-5.531258L2.622167-5.443587ZM3.203985-.988294C3.203985-.844832 3.203985-.812951 3.084433-.653549C2.86127-.334745 2.494645-.143462 2.12005-.143462C1.753425-.143462 1.43462-.334745 1.243337-.629639C1.028144-.940473 .988294-1.331009 .988294-1.705604C.988294-2.16787 1.060025-2.494645 1.243337-2.773599C1.43462-3.068493 1.793275-3.291656 2.199751-3.291656C2.582316-3.291656 2.964882-3.100374 3.203985-2.685928V-.988294Z'/>
+<path id='fml3-2-lrtest-g3-101' d='M3.291656-1.817186C3.466999-1.817186 3.514819-1.817186 3.514819-2.000498C3.514819-2.709838 3.124284-3.55467 2.000498-3.55467C1.012204-3.55467 .239103-2.733748 .239103-1.745455C.239103-.71731 1.099875 .079701 2.10411 .079701C3.116314 .079701 3.514819-.773101 3.514819-.956413C3.514819-.988294 3.490909-1.067995 3.387298-1.067995C3.299626-1.067995 3.283686-1.012204 3.267746-.964384C2.980822-.191283 2.295392-.167372 2.15193-.167372C1.793275-.167372 1.42665-.334745 1.187547-.70137S.948443-1.578082 .948443-1.817186H3.291656ZM.956413-2.024408C1.028144-3.140224 1.705604-3.331507 2.000498-3.331507C2.933001-3.331507 2.964882-2.207721 2.972852-2.024408H.956413Z'/>
+<path id='fml3-2-lrtest-g3-108' d='M1.522291-5.531258L.334745-5.443587V-5.180573C.876712-5.180573 .940473-5.124782 .940473-4.734247V-.621669C.940473-.263014 .844832-.263014 .334745-.263014V0C.645579-.02391 1.091905-.02391 1.227397-.02391C1.3868-.02391 1.817186-.02391 2.12802 0V-.263014C1.617933-.263014 1.522291-.263014 1.522291-.621669V-5.531258Z'/>
+<path id='fml3-2-lrtest-g3-110' d='M3.873474-2.414944C3.873474-3.084433 3.57061-3.514819 2.733748-3.514819C1.944707-3.514819 1.586052-2.940971 1.490411-2.749689H1.482441V-3.514819L.326775-3.427148V-3.164134C.868742-3.164134 .932503-3.108344 .932503-2.717808V-.621669C.932503-.263014 .836862-.263014 .326775-.263014V0C.669489-.02391 1.020174-.02391 1.235367-.02391C1.466501-.02391 1.801245-.02391 2.14396 0V-.263014C1.633873-.263014 1.538232-.263014 1.538232-.621669V-2.064259C1.538232-2.901121 2.175841-3.291656 2.662017-3.291656S3.267746-2.948941 3.267746-2.446824V-.621669C3.267746-.263014 3.172105-.263014 2.662017-.263014V0C3.004732-.02391 3.355417-.02391 3.57061-.02391C3.801743-.02391 4.136488-.02391 4.479203 0V-.263014C3.969116-.263014 3.873474-.263014 3.873474-.621669V-2.414944Z'/>
+<path id='fml3-2-lrtest-g3-116' d='M1.482441-3.172105H2.669988V-3.435118H1.482441V-4.901619H1.235367C1.227397-4.176339 .900623-3.419178 .159402-3.395268V-3.172105H.876712V-.996264C.876712-.063761 1.594022 .079701 1.960648 .079701C2.494645 .079701 2.81345-.398506 2.81345-.996264V-1.44259H2.566376V-1.012204C2.566376-.462267 2.319303-.167372 2.016438-.167372C1.482441-.167372 1.482441-.852802 1.482441-.980324V-3.172105Z'/>
+<path id='fml3-2-lrtest-g3-117' d='M2.662017-3.427148V-3.164134C3.203985-3.164134 3.267746-3.108344 3.267746-2.717808V-1.331009C3.267746-.645579 2.8533-.143462 2.255542-.143462C1.570112-.143462 1.538232-.486177 1.538232-.884682V-3.514819L.326775-3.427148V-3.164134C.932503-3.164134 .932503-3.140224 .932503-2.430884V-1.235367C.932503-.661519 .932503 .079701 2.207721 .079701C2.956912 .079701 3.243836-.494147 3.283686-.565878H3.291656V.079701L4.479203 0V-.263014C3.937235-.263014 3.873474-.318804 3.873474-.70934V-3.514819L2.662017-3.427148Z'/>
+<path id='fml3-2-lrtest-g2-31' d='M3.945205-1.924782C3.622416-2.917061 3.694147-2.82142 3.395268-3.658281C3.024658-4.686426 2.929016-4.770112 2.761644-4.937484C2.546451-5.128767 2.139975-5.272229 1.721544-5.272229C1.052055-5.272229 .729265-4.65056 .729265-4.495143C.729265-4.423412 .789041-4.387547 .860772-4.387547C.956413-4.387547 .980324-4.447323 .992279-4.495143C1.171606-4.961395 1.542217-5.033126 1.649813-5.033126C1.996513-5.033126 2.331258-4.172354 2.546451-3.598506C2.833375-2.86924 2.976837-2.367123 3.299626-1.207472L.478207 1.996513C.37061 2.12802 .37061 2.175841 .37061 2.187796C.37061 2.283437 .430386 2.307347 .478207 2.307347S.561893 2.283437 .597758 2.247572C.932503 1.912827 1.673724 1.028144 1.984558 .669489L3.371357-.908593C3.957161 .932503 3.957161 .956413 4.136488 1.398755C4.327771 1.853051 4.578829 2.438854 5.595019 2.438854C6.276463 2.438854 6.587298 1.829141 6.587298 1.661768C6.587298 1.578082 6.515567 1.554172 6.455791 1.554172C6.360149 1.554172 6.348194 1.601993 6.312329 1.697634C6.180822 2.032379 5.869988 2.199751 5.678705 2.199751C5.523288 2.199751 5.332005 2.199751 4.805978 .872727C4.495143 .071731 4.220174-.884682 4.016936-1.625903L6.850311-4.853798C6.945953-4.961395 6.957908-4.97335 6.957908-5.021171C6.957908-5.104857 6.898132-5.140722 6.838356-5.140722C6.802491-5.140722 6.766625-5.140722 6.647073-5.009215L3.945205-1.924782Z'/>
+<path id='fml3-2-lrtest-g2-71' d='M8.918555-8.308842C8.918555-8.416438 8.834869-8.416438 8.810959-8.416438S8.739228-8.416438 8.643587-8.296887L7.81868-7.304608C7.758904-7.400249 7.519801-7.81868 7.053549-8.093649C6.539477-8.416438 6.025405-8.416438 5.846077-8.416438C3.287671-8.416438 .597758-5.810212 .597758-2.988792C.597758-1.016189 1.960648 .251059 3.753923 .251059C4.614695 .251059 5.702615-.035866 6.300374-.789041C6.43188-.334745 6.694894-.011955 6.77858-.011955C6.838356-.011955 6.850311-.047821 6.862267-.047821C6.874222-.071731 6.969863-.490162 7.029639-.705355L7.220922-1.470486C7.316563-1.865006 7.364384-2.032379 7.44807-2.391034C7.567621-2.84533 7.591532-2.881196 8.249066-2.893151C8.296887-2.893151 8.440349-2.893151 8.440349-3.120299C8.440349-3.239851 8.320797-3.239851 8.284932-3.239851C8.081694-3.239851 7.854545-3.21594 7.639352-3.21594H6.993773C6.491656-3.21594 5.965629-3.239851 5.475467-3.239851C5.36787-3.239851 5.224408-3.239851 5.224408-3.024658C5.224408-2.905106 5.32005-2.905106 5.32005-2.893151H5.618929C6.563387-2.893151 6.563387-2.797509 6.563387-2.618182C6.563387-2.606227 6.336239-1.398755 6.109091-1.0401C5.654795-.37061 4.710336-.095641 4.004981-.095641C3.084433-.095641 1.590037-.573848 1.590037-2.642092C1.590037-3.443088 1.876961-5.272229 3.036613-6.623163C3.789788-7.483935 4.901619-8.069738 5.953674-8.069738C7.364384-8.069738 7.866501-6.862267 7.866501-5.762391C7.866501-5.571108 7.81868-5.308095 7.81868-5.140722C7.81868-5.033126 7.938232-5.033126 7.974097-5.033126C8.105604-5.033126 8.117559-5.045081 8.16538-5.260274L8.918555-8.308842Z'/>
+<path id='fml3-2-lrtest-g2-96' d='M1.099875-2.032379C.3467-1.291158 .155417-1.111831 .155417-1.06401S.203238-.932503 .286924-.932503C.3467-.932503 1.028144-1.590037 1.123786-1.697634C1.195517-.896638 1.494396 .143462 2.426899 .143462C2.905106 .143462 3.335492-.155417 3.526775-.298879C3.682192-.418431 4.25604-.908593 4.25604-1.016189C4.25604-1.075965 4.196264-1.147696 4.136488-1.147696C4.088667-1.147696 3.90934-.968369 3.861519-.920548C3.443088-.514072 2.917061-.095641 2.438854-.095641C1.793275-.095641 1.709589-1.028144 1.709589-1.673724C1.709589-1.793275 1.709589-2.295392 1.793275-2.391034C2.49863-3.120299 4.710336-5.403736 4.710336-7.519801C4.710336-7.998007 4.531009-8.416438 4.016936-8.416438C2.905106-8.416438 1.936737-5.953674 1.769365-5.499377C1.721544-5.379826 1.028144-3.53873 1.099875-2.032379ZM1.817186-2.773599C1.829141-2.84533 2.367123-5.977584 3.371357-7.651308C3.574595-7.974097 3.777833-8.177335 4.016936-8.177335C4.423412-8.177335 4.447323-7.79477 4.447323-7.531756C4.447323-7.113325 4.327771-6.03736 3.287671-4.531009C2.976837-4.088667 2.49863-3.490909 1.817186-2.773599Z'/>
+</defs>
+<g id='fml3-2-lrtest-page1'>
+<use x='-71.00374' y='-60.931252' xlink:href='#fml3-2-lrtest-g2-71'/>
+<use x='-61.770117' y='-65.867438' xlink:href='#fml3-2-lrtest-g3-50'/>
+<use x='-53.716973' y='-60.931252' xlink:href='#fml3-2-lrtest-g4-61'/>
+<use x='-41.291492' y='-60.931252' xlink:href='#fml3-2-lrtest-g4-50'/>
+<use x='-33.446004' y='-60.931252' xlink:href='#fml3-2-lrtest-g4-40'/>
+<use x='-28.893678' y='-60.931252' xlink:href='#fml3-2-lrtest-g2-96'/>
+<use x='-23.981572' y='-59.137989' xlink:href='#fml3-2-lrtest-g3-12'/>
+<use x='-19.276924' y='-59.137989' xlink:href='#fml3-2-lrtest-g3-116'/>
+<use x='-15.983671' y='-59.137989' xlink:href='#fml3-2-lrtest-g3-116'/>
+<use x='-12.690418' y='-59.137989' xlink:href='#fml3-2-lrtest-g3-101'/>
+<use x='-8.926699' y='-59.137989' xlink:href='#fml3-2-lrtest-g3-100'/>
+<use x='-1.067256' y='-60.931252' xlink:href='#fml3-2-lrtest-g0-0'/>
+<use x='10.887904' y='-60.931252' xlink:href='#fml3-2-lrtest-g2-96'/>
+<use x='15.800011' y='-59.137989' xlink:href='#fml3-2-lrtest-g3-110'/>
+<use x='20.269426' y='-59.137989' xlink:href='#fml3-2-lrtest-g3-117'/>
+<use x='24.974073' y='-59.137989' xlink:href='#fml3-2-lrtest-g3-108'/>
+<use x='27.326397' y='-59.137989' xlink:href='#fml3-2-lrtest-g3-108'/>
+<use x='30.176853' y='-60.931252' xlink:href='#fml3-2-lrtest-g4-41'/>
+<use x='41.37083' y='-60.931252' xlink:href='#fml3-2-lrtest-g0-24'/>
+<use x='57.310986' y='-60.931252' xlink:href='#fml3-2-lrtest-g2-31'/>
+<use x='64.644542' y='-65.867438' xlink:href='#fml3-2-lrtest-g3-50'/>
+<use x='64.644542' y='-57.975737' xlink:href='#fml3-2-lrtest-g1-107'/>
+</g>
+</svg></div>
+  <figcaption class="plib-formula-caption">The same test as Tuesday. The only thing that grew is the degrees of freedom, which count the parameters past the intercept.</figcaption>
+</figure>
+
+<div class="plib-narration">
+  <p>The intercept and the coefficients are chosen by maximum likelihood, which picks the values that make the responses you actually observed as likely as the model can make them. You will not compute it by hand today or any other day.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-12">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1001px" role="img" aria-label="A State column of labels beside two new columns, one for California and one for Montana, carrying ones and zeros, with the Wyoming row carrying minus one in both."><?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1000.8pt" height="360pt" viewBox="0 0 1000.8 360" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-09-10T02:33:15.906844</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.9, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 360 
+L 1000.8 360 
+L 1000.8 0 
+L 0 0 
+z
+" style="fill: #faf7f8"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 47.52 161.0496 
+L 169.92 161.0496 
+L 169.92 127.2096 
+L 47.52 127.2096 
+z
+" clip-path="url(#p5cd167e18f)" style="fill: #ffffff; stroke: #6b6b6b; stroke-width: 0.9; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 324.96 161.0496 
+L 447.36 161.0496 
+L 447.36 127.2096 
+L 324.96 127.2096 
+z
+" clip-path="url(#p5cd167e18f)" style="fill: #ffffff; stroke: #6b6b6b; stroke-width: 0.9; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 512.64 161.0496 
+L 635.04 161.0496 
+L 635.04 127.2096 
+L 512.64 127.2096 
+z
+" clip-path="url(#p5cd167e18f)" style="fill: #ffffff; stroke: #6b6b6b; stroke-width: 0.9; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 47.52 203.0112 
+L 169.92 203.0112 
+L 169.92 169.1712 
+L 47.52 169.1712 
+z
+" clip-path="url(#p5cd167e18f)" style="fill: #ffffff; stroke: #6b6b6b; stroke-width: 0.9; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 324.96 203.0112 
+L 447.36 203.0112 
+L 447.36 169.1712 
+L 324.96 169.1712 
+z
+" clip-path="url(#p5cd167e18f)" style="fill: #ffffff; stroke: #630031; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 512.64 203.0112 
+L 635.04 203.0112 
+L 635.04 169.1712 
+L 512.64 169.1712 
+z
+" clip-path="url(#p5cd167e18f)" style="fill: #ffffff; stroke: #6b6b6b; stroke-width: 0.9; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 47.52 244.9728 
+L 169.92 244.9728 
+L 169.92 211.1328 
+L 47.52 211.1328 
+z
+" clip-path="url(#p5cd167e18f)" style="fill: #ffffff; stroke: #6b6b6b; stroke-width: 0.9; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 324.96 244.9728 
+L 447.36 244.9728 
+L 447.36 211.1328 
+L 324.96 211.1328 
+z
+" clip-path="url(#p5cd167e18f)" style="fill: #ffffff; stroke: #6b6b6b; stroke-width: 0.9; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 512.64 244.9728 
+L 635.04 244.9728 
+L 635.04 211.1328 
+L 512.64 211.1328 
+z
+" clip-path="url(#p5cd167e18f)" style="fill: #ffffff; stroke: #630031; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 47.52 286.9344 
+L 169.92 286.9344 
+L 169.92 253.0944 
+L 47.52 253.0944 
+z
+" clip-path="url(#p5cd167e18f)" style="fill: #ffffff; stroke: #6b6b6b; stroke-width: 0.9; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 324.96 286.9344 
+L 447.36 286.9344 
+L 447.36 253.0944 
+L 324.96 253.0944 
+z
+" clip-path="url(#p5cd167e18f)" style="fill: #ffffff; stroke: #cf4420; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 512.64 286.9344 
+L 635.04 286.9344 
+L 635.04 253.0944 
+L 512.64 253.0944 
+z
+" clip-path="url(#p5cd167e18f)" style="fill: #ffffff; stroke: #cf4420; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 18px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #2b2b2b" x="500.4" y="37.872" transform="rotate(-0 500.4 37.872)">One column of labels becomes one column for each level</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="108.72" y="93.3696" transform="rotate(-0 108.72 93.3696)">State</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="386.16" y="93.3696" transform="rotate(-0 386.16 93.3696)">State[CA]</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="573.84" y="93.3696" transform="rotate(-0 573.84 93.3696)">State[MT]</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="761.52" y="93.3696" transform="rotate(-0 761.52 93.3696)">...</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #2b2b2b" x="108.72" y="150.299063" transform="rotate(-0 108.72 150.299063)">KS</text>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="386.16" y="150.299063" transform="rotate(-0 386.16 150.299063)">0</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="573.84" y="150.299063" transform="rotate(-0 573.84 150.299063)">0</text>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="761.52" y="150.299063" transform="rotate(-0 761.52 150.299063)">...</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #2b2b2b" x="108.72" y="192.260662" transform="rotate(-0 108.72 192.260662)">CA</text>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #630031" x="386.16" y="192.260662" transform="rotate(-0 386.16 192.260662)">1</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="573.84" y="192.260662" transform="rotate(-0 573.84 192.260662)">0</text>
+   </g>
+   <g id="text_13">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="761.52" y="192.260662" transform="rotate(-0 761.52 192.260662)">...</text>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #2b2b2b" x="108.72" y="234.222262" transform="rotate(-0 108.72 234.222262)">MT</text>
+   </g>
+   <g id="text_15">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="386.16" y="234.222262" transform="rotate(-0 386.16 234.222262)">0</text>
+   </g>
+   <g id="text_16">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #630031" x="573.84" y="234.222262" transform="rotate(-0 573.84 234.222262)">1</text>
+   </g>
+   <g id="text_17">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="761.52" y="234.222262" transform="rotate(-0 761.52 234.222262)">...</text>
+   </g>
+   <g id="text_18">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #2b2b2b" x="108.72" y="276.183862" transform="rotate(-0 108.72 276.183862)">WY</text>
+   </g>
+   <g id="text_19">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #cf4420" x="386.16" y="276.183862" transform="rotate(-0 386.16 276.183862)">-1</text>
+   </g>
+   <g id="text_20">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #cf4420" x="573.84" y="276.183862" transform="rotate(-0 573.84 276.183862)">-1</text>
+   </g>
+   <g id="text_21">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="761.52" y="276.183862" transform="rotate(-0 761.52 276.183862)">...</text>
+   </g>
+   <g id="text_22">
+    <text style="font-size: 14px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="500.4" y="318.744" transform="rotate(-0 500.4 318.744)">One level is left without a column of its own, and the report names it.</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p5cd167e18f">
+   <rect x="10.8" y="10.8" width="979.2" height="338.4"/>
+  </clipPath>
+ </defs>
+</svg></div>
+    <figcaption class="plib-tile-caption">A column of labels contributes one column for each level, which is what lets a single level carry its own p-value.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-13">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1001px" role="img" aria-label="A two by two table with actual in the rows and predicted in the columns. True positive and false negative on the top row, false positive and true negative on the bottom."><?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1000.8pt" height="475.2pt" viewBox="0 0 1000.8 475.2" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-09-10T02:33:15.840649</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.9, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 475.2 
+L 1000.8 475.2 
+L 1000.8 0 
+L 0 0 
+z
+" style="fill: #faf7f8"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 214.030189 271.62 
+L 491.162264 271.62 
+L 491.162264 150.66 
+L 214.030189 150.66 
+z
+" clip-path="url(#p2fd3d092df)" style="fill: #ffffff; stroke: #630031; stroke-width: 2.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 509.637736 271.62 
+L 786.769811 271.62 
+L 786.769811 150.66 
+L 509.637736 150.66 
+z
+" clip-path="url(#p2fd3d092df)" style="fill: #ffffff; stroke: #cf4420; stroke-width: 2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 214.030189 407.7 
+L 491.162264 407.7 
+L 491.162264 286.74 
+L 214.030189 286.74 
+z
+" clip-path="url(#p2fd3d092df)" style="fill: #ffffff; stroke: #cf4420; stroke-width: 2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 509.637736 407.7 
+L 786.769811 407.7 
+L 786.769811 286.74 
+L 509.637736 286.74 
+z
+" clip-path="url(#p2fd3d092df)" style="fill: #ffffff; stroke: #630031; stroke-width: 2.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 19px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #630031" x="352.596226" y="194.508" transform="rotate(-0 352.596226 194.508)">True positive</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 14px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="352.596226" y="241.38" transform="rotate(-0 352.596226 241.38)">caught it</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 19px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #cf4420" x="648.203774" y="194.508" transform="rotate(-0 648.203774 194.508)">False negative</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 14px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="648.203774" y="241.38" transform="rotate(-0 648.203774 241.38)">missed it</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 19px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #cf4420" x="352.596226" y="330.588" transform="rotate(-0 352.596226 330.588)">False positive</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 14px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="352.596226" y="377.46" transform="rotate(-0 352.596226 377.46)">false alarm</text>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 700; font-size: 19px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #630031" x="648.203774" y="330.588" transform="rotate(-0 648.203774 330.588)">True negative</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 14px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="648.203774" y="377.46" transform="rotate(-0 648.203774 377.46)">left alone</text>
+   </g>
+   <g id="text_9">
+    <text style="font-weight: 700; font-size: 18px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #2b2b2b" x="500.4" y="41.04" transform="rotate(-0 500.4 41.04)">Actual against predicted</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="500.4" y="93.96" transform="rotate(-0 500.4 93.96)">predicted</text>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #2b2b2b" x="352.596226" y="139.32" transform="rotate(-0 352.596226 139.32)">event</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #2b2b2b" x="648.203774" y="139.32" transform="rotate(-0 648.203774 139.32)">not the event</text>
+   </g>
+   <g id="text_13">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; fill: #6b6b6b" transform="translate(47.271138 294.712969) rotate(-90)">actual</text>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #2b2b2b" x="200.173585" y="215.279063" transform="rotate(-0 200.173585 215.279063)">event</text>
+   </g>
+   <g id="text_15">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #2b2b2b" x="200.173585" y="351.359062" transform="rotate(-0 200.173585 351.359062)">not the event</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p2fd3d092df">
+   <rect x="10.8" y="10.8" width="979.2" height="453.6"/>
+  </clipPath>
+ </defs>
+</svg></div>
+    <figcaption class="plib-tile-caption">A fitted probability becomes a decision only after you pick a cutoff. Actual is in the rows, so a row percentage is about the customers who really did the thing.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-discussion">
+  <div class="plib-discussion-label">&#128172; Discussion</div>
+  <p class="plib-discussion-intro">Two questions before we look at a fitted model:</p>
+  <ul class="plib-discussion-list">
+    <li>Fifty levels of one column cost fifty parameters in the whole-model test. What would you want back in return?</li>
+    <li>A row percentage on the top row and a row percentage on the bottom row answer different business questions. Which one costs money when it is wrong?</li>
+</ul>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 2 of 5</div><div class="plib-section-t">DEMONSTRATION</div></div>
+
+<div class="plib-narration">
+  <p>One model, fitted to a real file with 3,333 customers and fifteen candidate inputs. This is the same file you run in section 4, so every number here is a number your own tool has to reproduce.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-17">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1001px" role="img" aria-label="A horizontal bar chart of the fifteen terms whose p-value falls below 0.05, tallest first, with international plan at 45.50 and customer service calls at 38.56. Six single states appear in orange near the bottom of the chart."><?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1000.8pt" height="547.2pt" viewBox="0 0 1000.8 547.2" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-09-10T02:33:15.790361</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.9, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 547.2 
+L 1000.8 547.2 
+L 1000.8 0 
+L 0 0 
+z
+" style="fill: #faf7f8"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 133 498.04 
+L 990 498.04 
+L 990 36.32 
+L 133 36.32 
+z
+" style="fill: #faf7f8"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 133 60.0656 
+L 871.793103 60.0656 
+L 871.793103 80.000178 
+L 133 80.000178 
+z
+" clip-path="url(#pfe3b26cf85)" style="fill: #630031"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 133 89.381156 
+L 759.099551 89.381156 
+L 759.099551 109.315733 
+L 133 109.315733 
+z
+" clip-path="url(#pfe3b26cf85)" style="fill: #630031"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 133 118.696711 
+L 645.205049 118.696711 
+L 645.205049 138.631289 
+L 133 138.631289 
+z
+" clip-path="url(#pfe3b26cf85)" style="fill: #630031"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 133 148.012267 
+L 299.759945 148.012267 
+L 299.759945 167.946844 
+L 133 167.946844 
+z
+" clip-path="url(#pfe3b26cf85)" style="fill: #630031"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 133 177.327822 
+L 200.186835 177.327822 
+L 200.186835 197.2624 
+L 133 197.2624 
+z
+" clip-path="url(#pfe3b26cf85)" style="fill: #630031"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 133 206.643378 
+L 188.478287 206.643378 
+L 188.478287 226.577956 
+L 133 226.577956 
+z
+" clip-path="url(#pfe3b26cf85)" style="fill: #630031"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 133 235.958933 
+L 186.721082 235.958933 
+L 186.721082 255.893511 
+L 133 255.893511 
+z
+" clip-path="url(#pfe3b26cf85)" style="fill: #630031"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 133 265.274489 
+L 184.763748 265.274489 
+L 184.763748 285.209067 
+L 133 285.209067 
+z
+" clip-path="url(#pfe3b26cf85)" style="fill: #630031"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 133 294.590044 
+L 182.901385 294.590044 
+L 182.901385 314.524622 
+L 133 314.524622 
+z
+" clip-path="url(#pfe3b26cf85)" style="fill: #cf4420"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 133 323.9056 
+L 171.086351 323.9056 
+L 171.086351 343.840178 
+L 133 343.840178 
+z
+" clip-path="url(#pfe3b26cf85)" style="fill: #cf4420"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 133 353.221156 
+L 168.794208 353.221156 
+L 168.794208 373.155733 
+L 133 373.155733 
+z
+" clip-path="url(#pfe3b26cf85)" style="fill: #cf4420"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 133 382.536711 
+L 166.570554 382.536711 
+L 166.570554 402.471289 
+L 133 402.471289 
+z
+" clip-path="url(#pfe3b26cf85)" style="fill: #cf4420"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 133 411.852267 
+L 161.251853 411.852267 
+L 161.251853 431.786844 
+L 133 431.786844 
+z
+" clip-path="url(#pfe3b26cf85)" style="fill: #cf4420"/>
+   </g>
+   <g id="patch_16">
+    <path d="M 133 441.167822 
+L 160.953404 441.167822 
+L 160.953404 461.1024 
+L 133 461.1024 
+z
+" clip-path="url(#pfe3b26cf85)" style="fill: #cf4420"/>
+   </g>
+   <g id="patch_17">
+    <path d="M 133 470.483378 
+L 155.058314 470.483378 
+L 155.058314 490.417956 
+L 133 490.417956 
+z
+" clip-path="url(#pfe3b26cf85)" style="fill: #630031"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <defs>
+       <path id="me7d316e0c9" d="M 0 0 
+L 0 3.5 
+" style="stroke: #6b6b6b; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#me7d316e0c9" x="133" y="498.04" style="fill: #6b6b6b; stroke: #6b6b6b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="133" y="514.917969" transform="rotate(-0 133 514.917969)">0</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2">
+      <g>
+       <use xlink:href="#me7d316e0c9" x="295.373722" y="498.04" style="fill: #6b6b6b; stroke: #6b6b6b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="295.373722" y="514.917969" transform="rotate(-0 295.373722 514.917969)">10</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_3">
+      <g>
+       <use xlink:href="#me7d316e0c9" x="457.747444" y="498.04" style="fill: #6b6b6b; stroke: #6b6b6b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="457.747444" y="514.917969" transform="rotate(-0 457.747444 514.917969)">20</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#me7d316e0c9" x="620.121165" y="498.04" style="fill: #6b6b6b; stroke: #6b6b6b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="620.121165" y="514.917969" transform="rotate(-0 620.121165 514.917969)">30</text>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_5">
+      <g>
+       <use xlink:href="#me7d316e0c9" x="782.494887" y="498.04" style="fill: #6b6b6b; stroke: #6b6b6b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="782.494887" y="514.917969" transform="rotate(-0 782.494887 514.917969)">40</text>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#me7d316e0c9" x="944.868609" y="498.04" style="fill: #6b6b6b; stroke: #6b6b6b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="944.868609" y="514.917969" transform="rotate(-0 944.868609 514.917969)">50</text>
+     </g>
+    </g>
+    <g id="text_7">
+     <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #2b2b2b" x="561.5" y="533.019219" transform="rotate(-0 561.5 533.019219)">logworth, minus the base ten logarithm of the p-value</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_7">
+      <defs>
+       <path id="mbcf4a967e0" d="M 0 0 
+L -3.5 0 
+" style="stroke: #6b6b6b; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#mbcf4a967e0" x="133" y="70.032889" style="fill: #6b6b6b; stroke: #6b6b6b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #6b6b6b" x="126" y="74.971873" transform="rotate(-0 126 74.971873)">Intl_Plan[no]</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_8">
+      <g>
+       <use xlink:href="#mbcf4a967e0" x="133" y="99.348444" style="fill: #6b6b6b; stroke: #6b6b6b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_9">
+      <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #6b6b6b" x="126" y="104.287429" transform="rotate(-0 126 104.287429)">CustServ_Call</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_9">
+      <g>
+       <use xlink:href="#mbcf4a967e0" x="133" y="128.664" style="fill: #6b6b6b; stroke: #6b6b6b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_10">
+      <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #6b6b6b" x="126" y="133.602984" transform="rotate(-0 126 133.602984)">Day_Mins</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_10">
+      <g>
+       <use xlink:href="#mbcf4a967e0" x="133" y="157.979556" style="fill: #6b6b6b; stroke: #6b6b6b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_11">
+      <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #6b6b6b" x="126" y="162.91854" transform="rotate(-0 126 162.91854)">Eve_Mins</text>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_11">
+      <g>
+       <use xlink:href="#mbcf4a967e0" x="133" y="187.295111" style="fill: #6b6b6b; stroke: #6b6b6b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_12">
+      <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #6b6b6b" x="126" y="192.234095" transform="rotate(-0 126 192.234095)">Intl_Mins</text>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_12">
+      <g>
+       <use xlink:href="#mbcf4a967e0" x="133" y="216.610667" style="fill: #6b6b6b; stroke: #6b6b6b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_13">
+      <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #6b6b6b" x="126" y="221.549651" transform="rotate(-0 126 221.549651)">D_VMAIL_PLAN[0]</text>
+     </g>
+    </g>
+    <g id="ytick_7">
+     <g id="line2d_13">
+      <g>
+       <use xlink:href="#mbcf4a967e0" x="133" y="245.926222" style="fill: #6b6b6b; stroke: #6b6b6b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_14">
+      <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #6b6b6b" x="126" y="250.865207" transform="rotate(-0 126 250.865207)">Intl_Calls</text>
+     </g>
+    </g>
+    <g id="ytick_8">
+     <g id="line2d_14">
+      <g>
+       <use xlink:href="#mbcf4a967e0" x="133" y="275.241778" style="fill: #6b6b6b; stroke: #6b6b6b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_15">
+      <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #6b6b6b" x="126" y="280.180762" transform="rotate(-0 126 280.180762)">Night_Mins</text>
+     </g>
+    </g>
+    <g id="ytick_9">
+     <g id="line2d_15">
+      <g>
+       <use xlink:href="#mbcf4a967e0" x="133" y="304.557333" style="fill: #6b6b6b; stroke: #6b6b6b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_16">
+      <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #6b6b6b" x="126" y="309.496318" transform="rotate(-0 126 309.496318)">State[MT]</text>
+     </g>
+    </g>
+    <g id="ytick_10">
+     <g id="line2d_16">
+      <g>
+       <use xlink:href="#mbcf4a967e0" x="133" y="333.872889" style="fill: #6b6b6b; stroke: #6b6b6b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_17">
+      <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #6b6b6b" x="126" y="338.811873" transform="rotate(-0 126 338.811873)">State[TX]</text>
+     </g>
+    </g>
+    <g id="ytick_11">
+     <g id="line2d_17">
+      <g>
+       <use xlink:href="#mbcf4a967e0" x="133" y="363.188444" style="fill: #6b6b6b; stroke: #6b6b6b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_18">
+      <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #6b6b6b" x="126" y="368.127429" transform="rotate(-0 126 368.127429)">State[SC]</text>
+     </g>
+    </g>
+    <g id="ytick_12">
+     <g id="line2d_18">
+      <g>
+       <use xlink:href="#mbcf4a967e0" x="133" y="392.504" style="fill: #6b6b6b; stroke: #6b6b6b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_19">
+      <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #6b6b6b" x="126" y="397.442984" transform="rotate(-0 126 397.442984)">State[NJ]</text>
+     </g>
+    </g>
+    <g id="ytick_13">
+     <g id="line2d_19">
+      <g>
+       <use xlink:href="#mbcf4a967e0" x="133" y="421.819556" style="fill: #6b6b6b; stroke: #6b6b6b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_20">
+      <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #6b6b6b" x="126" y="426.75854" transform="rotate(-0 126 426.75854)">State[CA]</text>
+     </g>
+    </g>
+    <g id="ytick_14">
+     <g id="line2d_20">
+      <g>
+       <use xlink:href="#mbcf4a967e0" x="133" y="451.135111" style="fill: #6b6b6b; stroke: #6b6b6b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_21">
+      <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #6b6b6b" x="126" y="456.074095" transform="rotate(-0 126 456.074095)">State[VA]</text>
+     </g>
+    </g>
+    <g id="ytick_15">
+     <g id="line2d_21">
+      <g>
+       <use xlink:href="#mbcf4a967e0" x="133" y="480.450667" style="fill: #6b6b6b; stroke: #6b6b6b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_22">
+      <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #6b6b6b" x="126" y="485.389651" transform="rotate(-0 126 485.389651)">VMail_Message</text>
+     </g>
+    </g>
+   </g>
+   <g id="line2d_22">
+    <path d="M 154.125308 498.04 
+L 154.125308 36.32 
+" clip-path="url(#pfe3b26cf85)" style="fill: none; stroke-dasharray: 5.55,2.4; stroke-dashoffset: 0; stroke: #2b2b2b; stroke-width: 1.5"/>
+   </g>
+   <g id="patch_18">
+    <path d="M 133 498.04 
+L 133 36.32 
+" style="fill: none; stroke: #6b6b6b; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_19">
+    <path d="M 133 498.04 
+L 990 498.04 
+" style="fill: none; stroke: #6b6b6b; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_23">
+    <text style="font-size: 14px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #2b2b2b" x="162.243994" y="39.271549" transform="rotate(-0 162.243994 39.271549)">p = 0.05</text>
+   </g>
+   <g id="text_24">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b6b6b" x="883.159264" y="73.620076" transform="rotate(-0 883.159264 73.620076)">45.50</text>
+   </g>
+   <g id="text_25">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b6b6b" x="770.465711" y="102.935632" transform="rotate(-0 770.465711 102.935632)">38.56</text>
+   </g>
+   <g id="text_26">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b6b6b" x="656.571209" y="132.251188" transform="rotate(-0 656.571209 132.251188)">31.54</text>
+   </g>
+   <g id="text_27">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b6b6b" x="311.126105" y="161.566743" transform="rotate(-0 311.126105 161.566743)">10.27</text>
+   </g>
+   <g id="text_28">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b6b6b" x="211.552996" y="190.882299" transform="rotate(-0 211.552996 190.882299)">4.14</text>
+   </g>
+   <g id="text_29">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b6b6b" x="199.844448" y="220.197854" transform="rotate(-0 199.844448 220.197854)">3.42</text>
+   </g>
+   <g id="text_30">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b6b6b" x="198.087242" y="249.51341" transform="rotate(-0 198.087242 249.51341)">3.31</text>
+   </g>
+   <g id="text_31">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b6b6b" x="196.129909" y="278.828965" transform="rotate(-0 196.129909 278.828965)">3.19</text>
+   </g>
+   <g id="text_32">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b6b6b" x="194.267545" y="308.144521" transform="rotate(-0 194.267545 308.144521)">3.07</text>
+   </g>
+   <g id="text_33">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b6b6b" x="182.452511" y="337.460076" transform="rotate(-0 182.452511 337.460076)">2.35</text>
+   </g>
+   <g id="text_34">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b6b6b" x="180.160369" y="366.775632" transform="rotate(-0 180.160369 366.775632)">2.20</text>
+   </g>
+   <g id="text_35">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b6b6b" x="177.936715" y="396.091187" transform="rotate(-0 177.936715 396.091187)">2.07</text>
+   </g>
+   <g id="text_36">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b6b6b" x="172.618014" y="425.406743" transform="rotate(-0 172.618014 425.406743)">1.74</text>
+   </g>
+   <g id="text_37">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b6b6b" x="172.319564" y="454.722299" transform="rotate(-0 172.319564 454.722299)">1.72</text>
+   </g>
+   <g id="text_38">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b6b6b" x="166.424474" y="484.037854" transform="rotate(-0 166.424474 484.037854)">1.36</text>
+   </g>
+   <g id="text_39">
+    <text style="font-size: 16px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #2b2b2b" x="561.5" y="22.32" transform="rotate(-0 561.5 22.32)">Terms below p = 0.05, tallest first. Orange bars are single states.</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pfe3b26cf85">
+   <rect x="133" y="36.32" width="857" height="461.72"/>
+  </clipPath>
+ </defs>
+</svg></div>
+    <figcaption class="plib-tile-caption">Fifteen terms out of sixty-five cleared p = 0.05. Six of them are single states, and the state column spent fifty parameters to produce them.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>The whole model returns a likelihood ratio chi-square of 686.5406 on 65 degrees of freedom, which is where the state column went. Fifty levels contribute fifty parameters AND the four remaining categorical levels contribute four more AND the eleven numeric inputs contribute eleven.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-19">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1001px" role="img" aria-label="The two by two for this model at a 0.5 cutoff. 127 caught and 356 missed on the actual event row, 84 false alarms and 2,766 left alone on the other row."><?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1000.8pt" height="475.2pt" viewBox="0 0 1000.8 475.2" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-09-10T02:33:15.876863</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.9, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 475.2 
+L 1000.8 475.2 
+L 1000.8 0 
+L 0 0 
+z
+" style="fill: #faf7f8"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 214.030189 271.62 
+L 491.162264 271.62 
+L 491.162264 150.66 
+L 214.030189 150.66 
+z
+" clip-path="url(#pf2d048b6c9)" style="fill: #ffffff; stroke: #630031; stroke-width: 2.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 509.637736 271.62 
+L 786.769811 271.62 
+L 786.769811 150.66 
+L 509.637736 150.66 
+z
+" clip-path="url(#pf2d048b6c9)" style="fill: #ffffff; stroke: #cf4420; stroke-width: 2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 214.030189 407.7 
+L 491.162264 407.7 
+L 491.162264 286.74 
+L 214.030189 286.74 
+z
+" clip-path="url(#pf2d048b6c9)" style="fill: #ffffff; stroke: #cf4420; stroke-width: 2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 509.637736 407.7 
+L 786.769811 407.7 
+L 786.769811 286.74 
+L 509.637736 286.74 
+z
+" clip-path="url(#pf2d048b6c9)" style="fill: #ffffff; stroke: #630031; stroke-width: 2.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 24px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #630031" x="352.596226" y="194.508" transform="rotate(-0 352.596226 194.508)">127</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 14px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="352.596226" y="241.38" transform="rotate(-0 352.596226 241.38)">26.3% of the row</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 24px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #cf4420" x="648.203774" y="194.508" transform="rotate(-0 648.203774 194.508)">356</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 14px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="648.203774" y="241.38" transform="rotate(-0 648.203774 241.38)">73.7% of the row</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 24px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #cf4420" x="352.596226" y="330.588" transform="rotate(-0 352.596226 330.588)">84</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 14px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="352.596226" y="377.46" transform="rotate(-0 352.596226 377.46)">2.9% of the row</text>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 700; font-size: 24px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #630031" x="648.203774" y="330.588" transform="rotate(-0 648.203774 330.588)">2766</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 14px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="648.203774" y="377.46" transform="rotate(-0 648.203774 377.46)">97.1% of the row</text>
+   </g>
+   <g id="text_9">
+    <text style="font-weight: 700; font-size: 18px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #2b2b2b" x="500.4" y="41.04" transform="rotate(-0 500.4 41.04)">Actual against predicted, cutoff 0.5</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #6b6b6b" x="500.4" y="93.96" transform="rotate(-0 500.4 93.96)">predicted</text>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #2b2b2b" x="352.596226" y="139.32" transform="rotate(-0 352.596226 139.32)">event</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #2b2b2b" x="648.203774" y="139.32" transform="rotate(-0 648.203774 139.32)">not the event</text>
+   </g>
+   <g id="text_13">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; fill: #6b6b6b" transform="translate(47.271138 294.712969) rotate(-90)">actual</text>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #2b2b2b" x="200.173585" y="215.279063" transform="rotate(-0 200.173585 215.279063)">event</text>
+   </g>
+   <g id="text_15">
+    <text style="font-size: 15px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #2b2b2b" x="200.173585" y="351.359062" transform="rotate(-0 200.173585 351.359062)">not the event</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pf2d048b6c9">
+   <rect x="10.8" y="10.8" width="979.2" height="453.6"/>
+  </clipPath>
+ </defs>
+</svg></div>
+    <figcaption class="plib-tile-caption">A p-value below ten to the minus one hundred and four, and the model finds roughly a quarter of the customers who actually left.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-discussion">
+  <div class="plib-discussion-label">&#128172; Discussion</div>
+  <p class="plib-discussion-intro">Carry these into your own run:</p>
+  <ul class="plib-discussion-list">
+    <li>The whole-model p-value says the model is not nothing. The top row of the table says what it is worth. Why do those two answers feel so different?</li>
+    <li>International plan carries a logworth of 45.50 and Virginia carries 1.72. What would you do differently on the strength of each?</li>
+</ul>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 3 of 5</div><div class="plib-section-t">INTERACTION</div></div>
+
+<div class="plib-prompt-marker" role="region" aria-label="Session Opener">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-marker-id">T</span>
+    <span class="plib-prompt-type-label plib-marker-label">Session Opener</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-marker-instruction">Copy this block and paste it into Hokie AI to begin your session.</p>
+  <div class="plib-prompt-display plib-marker-display">You are an analysis partner for BIT 5534 Applied Business Intelligence and Analytics, a graduate course in business intelligence and analytics at Virginia Tech. The student holds graduate standing, has some statistics background, and is building a small Python tool with your help. Speak to them as a capable adult. Be direct, say when something is uncertain or contested, and do not pad your answers. When a student pushes back on something you said, take the challenge seriously. Do not concede immediately to be agreeable.
+
+---
+**AI Interaction Protocol**
+
+In this session, you will receive blocks of content with the
+following structural pattern:
+
+```
+### &lt;BlockID&gt;
+----------
+&lt;content&gt;
+----------
+###
+```
+
+Some blocks include an interaction-mode directive on a separate
+line inside the dashed envelope:
+
+```
+### &lt;BlockID&gt;
+----------
+[ai_interaction=&lt;mode&gt;]
+&lt;content&gt;
+----------
+###
+```
+
+Three modes determine your response:
+
+  - **respond**: Engage substantively with the block content.
+    Treat it as a prompt, question, or task that wants your
+    analytical response. Default for S blocks (prompts) and X
+    blocks (free exploration).
+
+  - **acknowledge**: Confirm receipt with one brief sentence
+    naming the block ID. Do not analyze, comment on, or expand on
+    the content. The student is filing the block for the record,
+    not asking for engagement. Default for T blocks (this opener),
+    R blocks (reflections), M CLOSE blocks (closing markers), Q
+    blocks (structured selections), and O blocks (ordering
+    selections).
+
+  - **archive**: Respond with only the block ID and nothing else.
+    Used for batched archival pastes where even brief
+    acknowledgment would clutter the thread.
+
+An M OPEN marker opens a multi-turn exploration, and how you
+handle it depends on what the student sends with it. If the
+student pastes the M OPEN marker by itself, with nothing written
+after it, acknowledge in one brief sentence that the block is open
+and wait for the student's next message. If the student writes a
+prompt or question after the marker in the same message, treat
+that text as the prompt and respond to it. Always acknowledge an
+M CLOSE marker.
+
+If a block has no explicit `[ai_interaction=...]` directive, apply
+the block-type default per the list above.
+
+This protocol applies for the remainder of this session.
+---</div>
+  <div class="plib-prompt-text" id="text_prompt_22" data-copy="### T&#10;----------&#10;You are an analysis partner for BIT 5534 Applied Business Intelligence and Analytics, a graduate course in business intelligence and analytics at Virginia Tech. The student holds graduate standing, has some statistics background, and is building a small Python tool with your help. Speak to them as a capable adult. Be direct, say when something is uncertain or contested, and do not pad your answers. When a student pushes back on something you said, take the challenge seriously. Do not concede immediately to be agreeable.&#10;&#10;---&#10;**AI Interaction Protocol**&#10;&#10;In this session, you will receive blocks of content with the&#10;following structural pattern:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Some blocks include an interaction-mode directive on a separate&#10;line inside the dashed envelope:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;[ai_interaction=&lt;mode&gt;]&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Three modes determine your response:&#10;&#10;  - **respond**: Engage substantively with the block content.&#10;    Treat it as a prompt, question, or task that wants your&#10;    analytical response. Default for S blocks (prompts) and X&#10;    blocks (free exploration).&#10;&#10;  - **acknowledge**: Confirm receipt with one brief sentence&#10;    naming the block ID. Do not analyze, comment on, or expand on&#10;    the content. The student is filing the block for the record,&#10;    not asking for engagement. Default for T blocks (this opener),&#10;    R blocks (reflections), M CLOSE blocks (closing markers), Q&#10;    blocks (structured selections), and O blocks (ordering&#10;    selections).&#10;&#10;  - **archive**: Respond with only the block ID and nothing else.&#10;    Used for batched archival pastes where even brief&#10;    acknowledgment would clutter the thread.&#10;&#10;An M OPEN marker opens a multi-turn exploration, and how you&#10;handle it depends on what the student sends with it. If the&#10;student pastes the M OPEN marker by itself, with nothing written&#10;after it, acknowledge in one brief sentence that the block is open&#10;and wait for the student's next message. If the student writes a&#10;prompt or question after the marker in the same message, treat&#10;that text as the prompt and respond to it. Always acknowledge an&#10;M CLOSE marker.&#10;&#10;If a block has no explicit `[ai_interaction=...]` directive, apply&#10;the block-type default per the list above.&#10;&#10;This protocol applies for the remainder of this session.&#10;---&#10;----------&#10;###"></div>
+  <button class="plib-copy-btn plib-copy-btn-marker" onclick="copyPrompt('text_prompt_22', this)"
+          aria-label="Copy session opener to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy session opener
+  </button>
+</div>
+
+<div class="plib-material" id="plib-material-24">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The paragraph you send</div>
+  <pre class="plib-material-box" tabindex="0" id="plib-material-24-prompt" data-copy="I want to build a Python script that fits a logistic regression with many inputs at once, on a data file whose first column is a binary response. It should read either a .csv or an .xlsx. I run it by double clicking, so it should let me choose the file, then ask me which column is the response, which columns to use as inputs, and which of those inputs are categorical. Ask for all of those choices in a single window with selection lists and a Run button, and use that window as the program's main window. Treat every level of a categorical input as an input of its own, using effect coding. Before it reports anything else it must say which value of the response it is treating as the event and which level of each categorical input is left without a column. For the whole model it should report the likelihood ratio chi-square with its degrees of freedom and p-value. For every term it should report the estimate, the standard error, the estimate exponentiated as an odds multiplier, the p-value and the logworth, and it should draw a bar chart of the logworths for the input terms whose p-value is below 0.05, in descending order of logworth, leaving off the intercept and everything above 0.05. Finally it should print a two by two table of actual against predicted at a 0.5 cutoff, actual in the rows, predicted in the columns, positives first, with the counts and the row percentages. Ask me one question at a time about whatever I have left unsettled, at most three, then write the prompt." aria-label="Specification text, scrollable">I want to build a Python script that fits a logistic regression with many inputs at once, on a data file whose first column is a binary response. It should read either a .csv or an .xlsx. I run it by double clicking, so it should let me choose the file, then ask me which column is the response, which columns to use as inputs, and which of those inputs are categorical. Ask for all of those choices in a single window with selection lists and a Run button, and use that window as the program's main window. Treat every level of a categorical input as an input of its own, using effect coding. Before it reports anything else it must say which value of the response it is treating as the event and which level of each categorical input is left without a column. For the whole model it should report the likelihood ratio chi-square with its degrees of freedom and p-value. For every term it should report the estimate, the standard error, the estimate exponentiated as an odds multiplier, the p-value and the logworth, and it should draw a bar chart of the logworths for the input terms whose p-value is below 0.05, in descending order of logworth, leaving off the intercept and everything above 0.05. Finally it should print a two by two table of actual against predicted at a 0.5 cutoff, actual in the rows, predicted in the columns, positives first, with the counts and the row percentages. Ask me one question at a time about whatever I have left unsettled, at most three, then write the prompt.</pre>
+  <button class="plib-copy-btn" onclick="copyPrompt('plib-material-24-prompt', this)" aria-label="Copy the text above to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy the text above
+  </button>
+  <div class="plib-material-note">Paste this into the M block once, unedited. It specifies the tool and it ends by capping the interview at three questions. Everything it asks for was on the board in the first twenty minutes. It puts every choice in one window with a Run button, the way a modelling dialog works, and that window is the program itself.</div>
+</div>
+
+<div class="plib-narration">
+  <p>Open the M block, paste the paragraph, and read what comes back before you answer anything.</p>
+  <p>Three moves, in order.</p>
+  <p>Paste the paragraph and read the reply before you type AND answer what it asks in your own words, saying so plainly whenever a suggestion it makes is not what you want AND take the finished prompt it produces and paste it back so it writes the script. All three.</p>
+  <p>The answer is already on the board, so what you are testing today is the tool rather than the data. A script that returns something other than 686.5406 on 65 degrees of freedom has made a decision you did not ask for, and finding out which one is the exercise.</p>
+  <p>The paragraph asks for at most three questions. If it is still asking after your third answer, tell it to write the prompt now.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-26">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Three boxes joined by AND. Paste and read, answer in your own words, send the prompt back so it writes the script."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 190" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="190" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Your turn, fifteen minutes</text><rect x="21" y="46" width="287" height="122" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Paste and read</text><text x="37" y="122" font-size="14" fill="#6b6b6b">the paragraph, then read the reply</text><text x="37" y="141" font-size="14" fill="#6b6b6b">before typing</text><text x="332" y="112" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="356" y="46" width="287" height="122" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="380" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="380" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="401" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Answer in your own words</text><text x="372" y="122" font-size="14" fill="#6b6b6b">at most three questions, then ask for the</text><text x="372" y="141" font-size="14" fill="#6b6b6b">prompt</text><text x="668" y="112" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="692" y="46" width="287" height="122" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="716" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="716" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="737" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Send the prompt back</text><text x="708" y="122" font-size="14" fill="#6b6b6b">so it writes the script</text></svg></div>
+    <figcaption class="plib-tile-caption">What this block asks of you, in order. The second box is where the work is.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-27">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Three questions then the prompt. If it is still asking after your third answer, tell it to write the prompt now."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 150" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="150" rx="10" fill="#faf7f8"/><rect x="21" y="20" width="958" height="110" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><text x="46" y="58" font-size="18" font-weight="600" fill="#630031">Three questions, then the prompt</text><text x="46" y="86" font-size="16" fill="#2b2b2b">The paragraph asks it for at most three questions. If it is still asking after your third answer, tell it to write the prompt now.</text><text x="46" y="112" font-size="14" fill="#6b6b6b">Six turns is the ceiling for this block, counting the paragraph, three answers, the request, and the paste back.</text></svg></div>
+    <figcaption class="plib-tile-caption">The cap is in the paragraph, and it is yours to enforce.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-28">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:400px" role="img" aria-label="If it writes code before anything is settled, stop it. The specification is not done."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 247" font-family="Segoe UI,-apple-system,sans-serif"><rect width="400" height="247" rx="10" fill="#faf7f8"/><text x="34" y="52" font-size="13" fill="#6b6b6b" letter-spacing="1.2">IF IT WRITES CODE FIRST</text><text x="34" y="104" font-size="25" font-weight="600" fill="#630031">Nothing is settled yet</text><rect x="34" y="144" width="332" height="2" fill="#630031" opacity="0.25"/><text x="34" y="178" font-size="15" fill="#6b6b6b">The specification is not done. Tell it to ask its</text><text x="34" y="199" font-size="15" fill="#6b6b6b">questions before it writes anything.</text></svg></div>
+  </figure>
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:400px" role="img" aria-label="If your build did not finish, take the script from the download in the next section and carry on."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 247" font-family="Segoe UI,-apple-system,sans-serif"><rect width="400" height="247" rx="10" fill="#faf7f8"/><text x="34" y="52" font-size="13" fill="#6b6b6b" letter-spacing="1.2">IF YOUR BUILD DID NOT FINISH</text><text x="34" y="104" font-size="25" font-weight="600" fill="#630031">Take the download</text><rect x="34" y="144" width="332" height="2" fill="#630031" opacity="0.25"/><text x="34" y="178" font-size="15" fill="#6b6b6b">The script is in the next section. A tool you did not</text><text x="34" y="199" font-size="15" fill="#6b6b6b">write still teaches the reading.</text></svg></div>
+  </figure>
+</div>
+<script>(function(){var g=document.getElementById("plib-tiles-28");if(!g)return;var k=[].slice.call(g.children);for(var i=k.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=k[i];k[i]=k[j];k[j]=t;}k.forEach(function(el){g.appendChild(el);});})();</script>
+
+<div class="plib-prompt-m" role="region" aria-label="Multi-turn Block M3.2.1, Begin">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-m-id">M3.2.1</span>
+    <span class="plib-prompt-type-label plib-m-label">Multi-turn · Exploration</span>
+    <span class="plib-m-badge">Formative</span>
+    <span class="plib-ai-badge plib-ai-respond">AI: respond</span>
+  </div>
+  <div class="plib-m-instructions">
+    <div class="plib-m-instructions-label">&#128221; How this block works</div>
+    <ol class="plib-m-steps">
+      <li>Click <strong>Copy opening marker</strong> and paste it into Hokie AI to begin this block.</li>
+      <li>Interact with Hokie AI: ask questions, explore, respond. All of this exchange belongs to this block.</li>
+      <li>When finished, use the <strong>Copy closing marker</strong> button below to close the block in your thread.</li>
+    </ol>
+  </div>
+  <div class="plib-prompt-text" id="text_m_open_29" data-copy="### M3.2.1 OPEN&#10;----------&#10;"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-open" onclick="copyPrompt('text_m_open_29', this)"
+          aria-label="Copy opening marker for block M3.2.1">
+    <span aria-hidden="true">&#9654;</span> Copy opening marker
+  </button>
+</div>
+
+<div class="plib-prompt-m-close" role="region" aria-label="Multi-turn Block M3.2.1, End">
+  <div class="plib-m-close-label">
+    <span class="plib-prompt-id plib-m-id">M3.2.1</span>
+    <span class="plib-prompt-type-label plib-m-label">End of Multi-turn Block</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-m-close-instruction">When you have finished your exchange, copy this closing marker and paste it into Hokie AI to close the block.</p>
+  <div class="plib-prompt-text" id="text_m_close_30" data-copy="&#10;----------&#10;### M3.2.1 CLOSE"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-close" onclick="copyPrompt('text_m_close_30', this)"
+          aria-label="Copy closing marker for block M3.2.1">
+    <span aria-hidden="true">&#9646;&#9646;</span> Copy closing marker
+  </button>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 4 of 5</div><div class="plib-section-t">DISCUSSION</div></div>
+
+<div class="plib-material" id="plib-material-33">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The file</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="churn.csv" download="churn.csv" target="_blank" rel="noopener noreferrer">churn.csv</a>
+    <a class="plib-material-btn" href="churn.xlsx" download="churn.xlsx" target="_blank" rel="noopener noreferrer">churn.xlsx</a>
+  </div>
+  <div class="plib-material-note">The same 3,333 customers in both formats. Use whichever your script asked for. If it wants the workbook and cannot open it, run one line in Command Prompt on Windows, py -m pip install openpyxl, or one line in Terminal on a Mac, python3 -m pip install openpyxl, and try again.</div>
+</div>
+
+<div class="plib-material" id="plib-material-34">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">If your build did not finish</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="multi_logistic.py" download="multi_logistic.py" target="_blank" rel="noopener noreferrer">multi_logistic.py</a>
+  </div>
+  <div class="plib-material-note">Take this and carry on. It came out of a real run of the paragraph above and it does what the paragraph asked for. If the file opens as text in your browser instead of saving, right click the button and choose Save link as. If it will not start, install what it needs with py -m pip install pandas statsmodels scipy matplotlib openpyxl on Windows, or python3 -m pip install pandas statsmodels scipy matplotlib openpyxl on a Mac.</div>
+</div>
+
+<div class="plib-narration">
+  <p>Run it on the churn file. The response is Churn AND every other column is an input AND four of those inputs are categorical, which are State, Area_Code, Intl_Plan and D_VMAIL_PLAN.</p>
+  <p>Area code holds numbers, and they are labels rather than quantities. A tool left to decide for itself will fit one slope across 408, 415 and 510, and nobody would say that sentence out loud.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-36">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Three boxes joined by AND. Read the whole model, then the chart, then the table."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 190" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="190" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Read your output in three passes</text><rect x="21" y="46" width="287" height="122" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The whole model</text><text x="37" y="122" font-size="14" fill="#6b6b6b">chi-square 686.5406 on 65 degrees of</text><text x="37" y="141" font-size="14" fill="#6b6b6b">freedom</text><text x="332" y="112" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="356" y="46" width="287" height="122" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="380" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="380" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="401" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The chart</text><text x="372" y="122" font-size="14" fill="#6b6b6b">fifteen terms clear the line, six are single</text><text x="372" y="141" font-size="14" fill="#6b6b6b">states</text><text x="668" y="112" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="692" y="46" width="287" height="122" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="716" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="716" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="737" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The table</text><text x="708" y="122" font-size="14" fill="#6b6b6b">127 caught, 356 missed, 84 false alarms,</text><text x="708" y="141" font-size="14" fill="#6b6b6b">2766 left alone</text></svg></div>
+    <figcaption class="plib-tile-caption">In that order. Each one answers a different question and the third is the one that decides anything.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>Read your own output in three passes.</p>
+  <p>The whole model first. You are looking for a likelihood ratio chi-square of 686.5406 on 65 degrees of freedom AND a p-value far below anything a table prints. Then the chart, where fifteen terms clear the line and six of them are single states. Then the table, where you are looking for 127 caught, 356 missed, 84 false alarms and 2,766 left alone.</p>
+  <p>If your numbers differ, your tool made a decision you did not ask for. Say which number moved and what the tool announced about the choice behind it.</p>
+</div>
+
+<div class="plib-discussion">
+  <div class="plib-discussion-label">&#128172; Discussion</div>
+  <p class="plib-discussion-intro">Take these into the reflection:</p>
+  <ul class="plib-discussion-list">
+    <li>Your tool announced which value of the response it treated as the event and which level it left without a column. What would you not have known if it had stayed quiet?</li>
+    <li>The whole model is significant beyond argument and the top row of the table catches roughly a quarter. Which of those two numbers would you put in front of somebody deciding whether to fund a retention campaign?</li>
+</ul>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 5 of 5</div><div class="plib-section-t">REFLECTION</div></div>
+
+<div class="plib-tiles" id="plib-tiles-40">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four boxes joined by AND. One term you would repeat out loud, where the degrees of freedom came from, what the top row of the table measures, and which number you would hand to somebody deciding."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 233" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="233" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Respond to all four in your reflection</text><rect x="21" y="46" width="204" height="165" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">One term you</text><text x="66" y="103" font-size="17" font-weight="600" fill="#2b2b2b">would repeat</text><text x="37" y="134" font-size="14" fill="#6b6b6b">and what its odds multiplier</text><text x="37" y="153" font-size="14" fill="#6b6b6b">means in customers</text><text x="248" y="134" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="165" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Where the 65</text><text x="318" y="103" font-size="17" font-weight="600" fill="#2b2b2b">came from</text><text x="288" y="134" font-size="14" fill="#6b6b6b">count the parameters past</text><text x="288" y="153" font-size="14" fill="#6b6b6b">the intercept</text><text x="500" y="134" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="165" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">What the top row</text><text x="569" y="103" font-size="17" font-weight="600" fill="#2b2b2b">measures</text><text x="540" y="134" font-size="14" fill="#6b6b6b">and what it says nothing</text><text x="540" y="153" font-size="14" fill="#6b6b6b">about</text><text x="752" y="134" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="165" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Which number</text><text x="820" y="103" font-size="17" font-weight="600" fill="#2b2b2b">you would hand</text><text x="820" y="124" font-size="17" font-weight="600" fill="#2b2b2b">over</text><text x="792" y="155" font-size="14" fill="#6b6b6b">to somebody deciding</text><text x="792" y="174" font-size="14" fill="#6b6b6b">whether to fund a</text><text x="792" y="193" font-size="14" fill="#6b6b6b">campaign</text></svg></div>
+    <figcaption class="plib-tile-caption">Respond to all four dimensions above in your reflection.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>Now write your reflection, in your own words and without help from the AI.</p>
+  <p>Your reflection needs all four of these. Name one term from your own output that you would repeat out loud to somebody who has to act on it, and say what its odds multiplier means in customers AND say where the 65 degrees of freedom came from AND say what the top row of your two by two measures and what it does not AND say which single number you would hand to somebody deciding whether to fund a retention campaign, and why that one. Respond to all four.</p>
+  <p>The fourth is the one that separates a good reflection from an adequate one. Saying that the model is significant is not enough, because significance was never in doubt. Say what the number you chose would let somebody do.</p>
+  <p>Write 80 to 160 words.</p>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution R3.2.1">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">R3.2.1</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Your reflection</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 80 to 160 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_42" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for R3.2.1"
+            data-maxwords="160" data-maxchars="1280"
+            oninput="updateCounter('prompt_42', 'textarea_42')"></textarea>
+  <div class="plib-counter" id="counter_prompt_42" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_42">0</span> / 160 words&nbsp;·&nbsp;
+    <span id="cc_prompt_42">0</span> / 1280 characters
+    <span class="plib-counter-min">minimum: 80 words</span>
+  </div>
+  <div class="plib-warn" id="warn_prompt_42" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_42"
+       data-prefix="### R3.2.1&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_42"
+       data-maxwords="160"
+       data-maxchars="1280"
+       data-minwords="80"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_42', this)"
+          aria-label="Copy contribution R3.2.1 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-submit">
+  <div class="plib-submit-title">Before you leave</div>
+  <p class="plib-submit-p">Export this thread as a .txt file, then upload it to the Canvas assignment. Your work is not submitted until Canvas shows your file.</p>
+  <a class="plib-submit-btn" href="https://canvas.vt.edu/courses/233475/assignments/2844162" target="_blank" rel="noopener noreferrer">Open the Canvas assignment</a>
+  <div class="plib-submit-note">Opens in a new tab, so this page stays where it is.</div>
+</div>
+
+</div>
+</main>
+<script>
+function countWords(text) {
+  return text.trim() === '' ? 0 : text.trim().split(/[ \t\n\r]+/).length;
+}
+function announce(msg) {
+  var el = document.getElementById('plib-live');
+  if (!el) { el = document.createElement('div'); el.id = 'plib-live';
+    el.setAttribute('aria-live','polite'); el.setAttribute('aria-atomic','true');
+    el.style.cssText='position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;';
+    document.body.appendChild(el); }
+  el.textContent = ''; setTimeout(function(){ el.textContent = msg; }, 50);
+}
+function autoResize(ta) {
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(ta.scrollHeight + 2, 600) + 'px';
+}
+function updateCounter(bid, tid) {
+  var ta = document.getElementById(tid);
+  var textEl = document.getElementById('text_' + bid);
+  var wcEl = document.getElementById('wc_' + bid);
+  var ccEl = document.getElementById('cc_' + bid);
+  var ctrEl = document.getElementById('counter_' + bid);
+  if (!ta) return;
+  autoResize(ta);
+  var maxwords = textEl ? parseInt(textEl.getAttribute('data-maxwords') || '0') : 0;
+  var maxchars = textEl ? parseInt(textEl.getAttribute('data-maxchars') || '0') : 0;
+  var minwords = textEl ? parseInt(textEl.getAttribute('data-minwords') || '0') : 0;
+  var text = ta.value;
+  var words = countWords(text);
+  var chars = text.length;
+  if (maxchars && chars > maxchars) {
+    ta.value = text.substring(0, maxchars);
+    text = ta.value; words = countWords(text); chars = text.length;
+  }
+  if (wcEl) wcEl.textContent = words;
+  if (ccEl) ccEl.textContent = chars;
+  if (ctrEl && maxwords) {
+    var pct = words / maxwords;
+    var cls = pct >= 1.0 ? 'bad' : (pct >= 0.8 || (minwords && words < minwords)) ? 'warn' : 'ok';
+    if (pct >= 1.0) { ctrEl.className = 'plib-counter at-limit'; }
+    else { ctrEl.className = 'plib-counter'; }
+    if (wcEl) wcEl.className = 'plib-count-' + cls;
+    if (ccEl) ccEl.className = 'plib-count-' + cls;
+  }
+}
+function copyPrompt(id, btn) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var text = (el.getAttribute('data-copy') || el.textContent || '').replace(/&#10;/g, '\n');
+  var label = (btn.getAttribute('aria-label') || 'item').replace('Copy ','').replace(' to clipboard','');
+  doCopy(text, btn, label + ' copied.', '&#10003; Copied', 2000);
+}
+function copyWithInput(bid, btn) {
+  var el = document.getElementById('text_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!el) return;
+  var tid = el.getAttribute('data-tid');
+  var inputEl = document.getElementById(tid);
+  var prefix = (el.getAttribute('data-prefix') || '').replace(/&#10;/g, '\n');
+  var suffix = (el.getAttribute('data-suffix') || '').replace(/&#10;/g, '\n');
+  var userText = inputEl ? inputEl.value.trim() : '';
+  if (userText.replace(/[\t\n\r ]/g, '').length < 2) {
+    if (warnEl) warnEl.textContent = 'Please write your response before copying.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  var maxwords = parseInt(el.getAttribute('data-maxwords') || '0');
+  var maxchars = parseInt(el.getAttribute('data-maxchars') || '0');
+  var minwords = parseInt(el.getAttribute('data-minwords') || '0');
+  if (minwords && countWords(userText) < minwords) {
+    if (warnEl) warnEl.textContent = 'Response is below the minimum of ' + minwords + ' words.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  if (maxwords && countWords(userText) > maxwords) {
+    if (warnEl) warnEl.textContent = 'Response exceeds the ' + maxwords + ' word limit.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  if (warnEl) warnEl.textContent = '';
+  doCopy(prefix + userText + suffix, btn, 'Copied. Paste into Hokie AI.', '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+function doCopy(text, btn, announcement, label, duration) {
+  function ok() {
+    var orig = btn.innerHTML; btn.innerHTML = label; btn.classList.add('copied');
+    announce(announcement);
+    setTimeout(function() { btn.innerHTML = orig; btn.classList.remove('copied'); }, duration);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(ok).catch(function() { fallback(text, ok); });
+  } else { fallback(text, ok); }
+}
+function fallback(text, cb) {
+  var ta = document.createElement('textarea'); ta.value = text;
+  ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); cb(); } catch(e) {}
+  document.body.removeChild(ta);
+}
+function copyStructured(bid, blockId, btn) {
+  var container = document.getElementById('qitems_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!container) return;
+  var outerDiv = container.closest('.plib-prompt-q');
+  var aiDirective = outerDiv ? (outerDiv.getAttribute('data-ai-directive') || '') : '';
+  var items = container.querySelectorAll('.plib-q-item');
+  var lines = [];
+  var emptyItems = [];
+
+  items.forEach(function(itemEl) {
+    var n = itemEl.getAttribute('data-item-n');
+    var render = itemEl.getAttribute('data-render');
+    var selections = [];
+
+    if (render === 'dropdown') {
+      var sel = itemEl.querySelector('select');
+      if (sel && sel.value) selections.push(sel.value);
+    } else if (render === 'likert') {
+      var checkedRadio = itemEl.querySelector('input[type="radio"]:checked');
+      if (checkedRadio) selections.push(checkedRadio.value);
+    } else if (render === 'checkbox') {
+      var checks = itemEl.querySelectorAll('input[type="checkbox"]:checked');
+      checks.forEach(function(c) { selections.push(c.value); });
+    }
+
+    if (selections.length === 0) {
+      emptyItems.push(n);
+    } else {
+      lines.push('ITEM ' + n + ': ' + selections.join(', '));
+    }
+  });
+
+  if (emptyItems.length > 0) {
+    if (warnEl) {
+      warnEl.textContent = 'Please make a selection for ITEM '
+        + emptyItems.join(', ITEM ') + ' before copying.';
+    }
+    return;
+  }
+
+  if (warnEl) warnEl.textContent = '';
+
+  var directiveLine = aiDirective ? aiDirective + '\n' : '';
+  var envelope = '### ' + blockId + '\n----------\n' + directiveLine + 'RESPONSE:\n'
+    + lines.join('\n') + '\n----------\n###';
+  doCopy(envelope, btn,
+    'Structured response copied. Paste into Hokie AI.',
+    '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+function enforceCheckboxCap(itemEl) {
+  var max = parseInt(itemEl.getAttribute('data-max-select') || '0', 10);
+  if (!max || max < 2) return;
+  var checks = itemEl.querySelectorAll('input[type="checkbox"]');
+  var checked = itemEl.querySelectorAll('input[type="checkbox"]:checked');
+  var atCap = checked.length >= max;
+  checks.forEach(function(c) {
+    if (!c.checked) c.disabled = atCap;
+  });
+}
+function moveItem(btn, direction) {
+  var li = btn.closest('.plib-o-item');
+  if (!li) return;
+  var list = li.parentElement;
+  if (!list) return;
+  if (direction === 'up') {
+    var prev = li.previousElementSibling;
+    if (prev) list.insertBefore(li, prev);
+  } else if (direction === 'down') {
+    var next = li.nextElementSibling;
+    if (next) list.insertBefore(next, li);
+  }
+  updateArrowStates(list);
+}
+function updateArrowStates(list) {
+  var items = list.querySelectorAll('.plib-o-item');
+  items.forEach(function(li, idx) {
+    var rankEl = li.querySelector('.plib-o-rank');
+    if (rankEl) rankEl.textContent = (idx + 1) + '.';
+    var upBtn = li.querySelector('.plib-o-arrow-up');
+    var downBtn = li.querySelector('.plib-o-arrow-down');
+    if (upBtn) upBtn.disabled = (idx === 0);
+    if (downBtn) downBtn.disabled = (idx === items.length - 1);
+    var itemText = li.getAttribute('data-item-text') || '';
+    if (upBtn) upBtn.setAttribute('aria-label', 'Move ' + itemText + ' up');
+    if (downBtn) downBtn.setAttribute('aria-label', 'Move ' + itemText + ' down');
+  });
+}
+function copyOrdered(bid, blockId, btn) {
+  var list = document.getElementById('oitems_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!list) return;
+  var outerDiv = list.closest('.plib-prompt-o');
+  var aiDirective = outerDiv ? (outerDiv.getAttribute('data-ai-directive') || '') : '';
+  var question = list.getAttribute('data-question') || '';
+  var items = list.querySelectorAll('.plib-o-item');
+  var lines = [];
+  items.forEach(function(li, idx) {
+    var itemText = li.getAttribute('data-item-text') || '';
+    lines.push((idx + 1) + '. ' + itemText);
+  });
+  if (warnEl) warnEl.textContent = '';
+  var directiveLine = aiDirective ? aiDirective + '\n' : '';
+  var envelope = '### ' + blockId + '\n----------\n' + directiveLine + 'RESPONSE:\nQuestion: '
+    + question + '\n' + lines.join('\n') + '\n----------\n###';
+  doCopy(envelope, btn,
+    'Ordered response copied. Paste into Hokie AI.',
+    '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var checkboxItems = document.querySelectorAll('.plib-q-item[data-render="checkbox"]');
+  checkboxItems.forEach(function(itemEl) {
+    var checks = itemEl.querySelectorAll('input[type="checkbox"]');
+    checks.forEach(function(c) {
+      c.addEventListener('change', function() { enforceCheckboxCap(itemEl); });
+    });
+  });
+  var oLists = document.querySelectorAll('.plib-o-list');
+  oLists.forEach(function(list) {
+    updateArrowStates(list);
+  });
+});
+</script>
+</body>
+</html>
