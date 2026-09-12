@@ -1,0 +1,1001 @@
+Approved,Credit_Score,Annual_Income,Debt_To_Income_Ratio,Loan_Amount,Employment_Status,Housing_Status,Loan_Purpose
+0,587,25400,26.5,18700,Part-time,Rent,Auto
+1,756,135300,52.8,35000,Full-time,Mortgage,Auto
+0,677,55200,35.9,12500,Full-time,Rent,Debt consolidation
+0,660,61400,16.2,18400,Self-employed,Mortgage,Debt consolidation
+0,636,18000,31.7,8500,Part-time,Rent,Debt consolidation
+0,716,140300,21.1,54900,Full-time,Own,Debt consolidation
+1,677,75300,42.9,27900,Self-employed,Mortgage,Debt consolidation
+0,638,34400,43.6,12600,Full-time,Mortgage,Home improvement
+1,730,91000,38.5,18700,Full-time,Mortgage,Home improvement
+1,682,51700,10.9,17400,Full-time,Own,Medical
+0,635,70300,44,16900,Self-employed,Rent,Debt consolidation
+0,668,40400,40.1,15500,Part-time,Mortgage,Auto
+0,651,48400,29.9,13000,Full-time,Rent,Debt consolidation
+0,682,46400,24.3,24900,Full-time,Rent,Debt consolidation
+0,672,65600,18,34800,Self-employed,Rent,Home improvement
+1,675,117000,23.1,15000,Full-time,Rent,Home improvement
+1,763,170900,17.5,40100,Self-employed,Mortgage,Debt consolidation
+0,717,59500,20.6,18600,Part-time,Rent,Home improvement
+0,655,71600,47.1,15200,Full-time,Rent,Home improvement
+0,582,36000,32.2,15100,Full-time,Rent,Auto
+1,786,95500,44.1,52800,Self-employed,Rent,Medical
+1,697,63100,24.8,18300,Self-employed,Own,Debt consolidation
+0,636,71900,45.1,24600,Full-time,Own,Medical
+0,616,70500,54.7,14500,Full-time,Own,Home improvement
+0,723,43000,16.2,39800,Retired,Rent,Debt consolidation
+1,763,75400,42.9,20900,Full-time,Own,Debt consolidation
+0,619,49100,38.2,12400,Full-time,Rent,Home improvement
+0,621,52100,43.9,31100,Full-time,Rent,Home improvement
+1,600,46700,20.9,10600,Full-time,Own,Debt consolidation
+1,719,77700,12.5,13000,Self-employed,Rent,Debt consolidation
+0,646,54600,21.1,25200,Part-time,Rent,Debt consolidation
+0,663,18000,16.2,9500,Part-time,Rent,Debt consolidation
+0,647,96200,31.2,45700,Full-time,Mortgage,Debt consolidation
+1,703,74500,33.7,11200,Self-employed,Own,Home improvement
+0,653,57400,23.4,16600,Self-employed,Rent,Medical
+0,671,90500,30.2,35100,Part-time,Mortgage,Medical
+0,634,73800,36.2,19700,Full-time,Mortgage,Home improvement
+1,630,65500,28,14800,Full-time,Mortgage,Debt consolidation
+0,673,36600,42.1,6700,Retired,Mortgage,Debt consolidation
+1,670,67400,29.4,24400,Full-time,Rent,Debt consolidation
+1,620,55900,41,15800,Full-time,Rent,Debt consolidation
+0,650,58800,22.9,19700,Full-time,Rent,Debt consolidation
+1,712,52600,30.9,27000,Self-employed,Own,Auto
+1,659,49000,20.4,22100,Retired,Mortgage,Home improvement
+1,714,35900,15.4,10700,Full-time,Mortgage,Debt consolidation
+0,720,26300,62,10900,Part-time,Rent,Auto
+0,711,56100,41.3,10700,Self-employed,Own,Auto
+0,605,96600,47.9,11500,Self-employed,Own,Home improvement
+0,621,73600,28,11300,Full-time,Mortgage,Auto
+0,569,18300,42.4,11100,Part-time,Rent,Debt consolidation
+0,661,42700,17.9,17900,Part-time,Own,Home improvement
+1,720,46400,45.2,21500,Full-time,Mortgage,Auto
+0,690,71300,22.6,25100,Self-employed,Rent,Home improvement
+1,805,130600,24,19300,Self-employed,Rent,Debt consolidation
+0,726,52100,38,29500,Retired,Rent,Debt consolidation
+1,680,44900,29.4,33600,Full-time,Rent,Auto
+1,623,75700,26.2,17000,Full-time,Rent,Debt consolidation
+0,595,34700,42.8,22500,Full-time,Rent,Home improvement
+0,686,50200,62,15400,Part-time,Rent,Debt consolidation
+1,688,64400,14.9,24000,Full-time,Rent,Debt consolidation
+0,618,80500,26.2,12700,Full-time,Rent,Home improvement
+1,791,48900,28.8,20600,Part-time,Own,Debt consolidation
+0,569,29100,23,17100,Part-time,Rent,Debt consolidation
+0,715,65200,23.3,38100,Full-time,Mortgage,Debt consolidation
+1,705,88200,41.3,39400,Full-time,Rent,Auto
+1,722,62000,55.5,8000,Full-time,Rent,Home improvement
+0,677,55000,26.5,11300,Self-employed,Mortgage,Auto
+1,793,111100,24.8,21700,Full-time,Rent,Debt consolidation
+1,698,83200,40.1,11600,Self-employed,Rent,Auto
+0,581,38100,42,18300,Full-time,Rent,Auto
+1,690,167100,27.2,24600,Full-time,Own,Auto
+0,651,42900,52.8,9000,Full-time,Rent,Home improvement
+0,588,22500,47,21300,Retired,Rent,Medical
+1,616,59200,36.1,21000,Full-time,Mortgage,Debt consolidation
+1,704,76300,40.8,46800,Full-time,Mortgage,Auto
+1,669,84200,24.4,31300,Full-time,Own,Debt consolidation
+0,620,26100,23.4,6600,Part-time,Rent,Home improvement
+0,607,18000,32.2,9500,Part-time,Rent,Home improvement
+1,719,66400,28.1,23000,Full-time,Mortgage,Home improvement
+0,615,61000,42.1,18600,Self-employed,Rent,Auto
+1,723,45200,15.3,18300,Full-time,Rent,Auto
+1,704,157500,25.9,71600,Full-time,Mortgage,Debt consolidation
+0,713,47200,35.7,12800,Full-time,Rent,Debt consolidation
+0,681,79200,20.2,21300,Self-employed,Mortgage,Debt consolidation
+0,705,80400,30.9,45400,Self-employed,Own,Debt consolidation
+0,648,44200,30.4,11400,Part-time,Rent,Auto
+0,658,27600,44.4,10600,Retired,Rent,Home improvement
+0,709,49500,42.7,17300,Full-time,Mortgage,Debt consolidation
+0,685,56100,18.3,17400,Full-time,Rent,Debt consolidation
+1,788,75500,46,35900,Full-time,Mortgage,Home improvement
+1,725,72200,42.8,31300,Full-time,Rent,Auto
+0,651,75800,41.7,27200,Full-time,Rent,Debt consolidation
+1,708,42500,33.6,13300,Full-time,Own,Home improvement
+0,736,51100,49.3,29800,Self-employed,Rent,Auto
+0,550,25200,40.6,6200,Full-time,Rent,Auto
+0,670,81000,38.9,40600,Retired,Own,Home improvement
+0,565,48800,32,14300,Full-time,Mortgage,Auto
+0,658,29700,26.3,7500,Self-employed,Rent,Home improvement
+1,670,97600,9.5,44800,Retired,Mortgage,Auto
+1,629,86900,19.3,41100,Full-time,Mortgage,Auto
+1,698,74400,19.3,25000,Full-time,Rent,Debt consolidation
+0,679,77700,50.8,14100,Full-time,Own,Auto
+1,631,84300,32.6,16700,Full-time,Mortgage,Home improvement
+0,652,89400,32.2,19300,Full-time,Rent,Auto
+0,579,38100,23.4,47200,Full-time,Rent,Home improvement
+0,651,68500,55.2,21800,Self-employed,Mortgage,Home improvement
+1,666,34700,10.5,12500,Retired,Mortgage,Debt consolidation
+1,721,101000,38.7,37500,Full-time,Own,Debt consolidation
+1,785,69500,27,18500,Full-time,Rent,Home improvement
+1,716,72200,25.7,24400,Full-time,Mortgage,Debt consolidation
+0,701,102900,27,20700,Full-time,Own,Debt consolidation
+1,608,105600,26.5,28800,Full-time,Own,Debt consolidation
+0,673,26300,37.2,6900,Self-employed,Rent,Auto
+0,669,29200,12.2,12900,Part-time,Rent,Debt consolidation
+0,699,31900,25,18200,Part-time,Rent,Debt consolidation
+0,683,48100,51.1,7000,Part-time,Rent,Auto
+1,771,101000,50.1,38900,Full-time,Mortgage,Home improvement
+0,688,55300,39,12500,Part-time,Own,Medical
+0,657,48700,16,10000,Full-time,Own,Auto
+0,599,39700,36.3,16600,Retired,Rent,Debt consolidation
+1,758,144300,12.1,57900,Full-time,Rent,Auto
+1,680,86900,61.7,23400,Full-time,Rent,Auto
+1,645,124900,51.8,18900,Full-time,Rent,Debt consolidation
+0,633,32000,54.2,13100,Retired,Rent,Auto
+0,670,58800,39.2,18800,Self-employed,Rent,Debt consolidation
+1,708,44500,26.6,8000,Full-time,Own,Debt consolidation
+0,689,62000,51.6,22700,Full-time,Rent,Home improvement
+0,673,76400,30.5,17700,Full-time,Mortgage,Auto
+1,683,78100,25,18000,Full-time,Own,Debt consolidation
+0,680,73300,32.4,14200,Self-employed,Rent,Auto
+0,577,33800,32,8400,Retired,Mortgage,Auto
+1,651,62600,18.1,13800,Self-employed,Own,Home improvement
+0,681,123800,39.3,34500,Full-time,Rent,Debt consolidation
+0,647,48300,34.6,7500,Part-time,Mortgage,Home improvement
+0,715,89800,24,14400,Full-time,Mortgage,Auto
+1,613,60800,36.5,13100,Full-time,Mortgage,Auto
+0,673,52000,26.9,16500,Retired,Mortgage,Debt consolidation
+0,630,49000,28.4,17900,Full-time,Mortgage,Auto
+1,705,87700,14.9,29000,Full-time,Own,Home improvement
+0,672,77300,47.9,64000,Self-employed,Rent,Auto
+0,666,64900,28.8,15400,Full-time,Mortgage,Home improvement
+0,616,78200,29.9,33700,Full-time,Rent,Home improvement
+0,743,118000,32,35500,Self-employed,Own,Debt consolidation
+1,722,61900,34.1,16000,Full-time,Rent,Home improvement
+1,643,90100,34.2,28100,Full-time,Own,Debt consolidation
+1,732,33400,38.6,8900,Part-time,Rent,Debt consolidation
+1,685,74500,23.6,11300,Full-time,Own,Medical
+0,626,23400,23.4,11900,Retired,Rent,Home improvement
+0,616,87400,46.3,39800,Self-employed,Own,Home improvement
+1,694,71100,39.9,20300,Full-time,Rent,Debt consolidation
+0,702,70600,52.5,29000,Full-time,Own,Auto
+0,572,91700,33.2,25500,Full-time,Mortgage,Auto
+0,707,56300,57.6,9700,Full-time,Rent,Medical
+0,712,48600,19.1,19400,Part-time,Rent,Debt consolidation
+0,645,32200,45.2,8100,Part-time,Rent,Debt consolidation
+0,662,55700,29.2,22300,Full-time,Rent,Medical
+0,568,43300,26.7,13900,Full-time,Rent,Home improvement
+0,629,30500,29.5,12900,Retired,Rent,Debt consolidation
+1,710,54200,28.3,23300,Self-employed,Own,Medical
+1,726,89300,40.7,11700,Full-time,Mortgage,Medical
+1,728,83400,45.5,21200,Full-time,Mortgage,Auto
+0,565,30600,32.7,7000,Full-time,Rent,Home improvement
+0,714,50200,15.4,9000,Full-time,Rent,Home improvement
+1,695,102100,27.7,24300,Self-employed,Own,Debt consolidation
+0,664,90500,42.3,17600,Self-employed,Mortgage,Medical
+0,580,43900,21.9,11400,Full-time,Rent,Home improvement
+1,698,70300,16.9,28200,Full-time,Rent,Debt consolidation
+1,620,59400,28.6,17900,Full-time,Mortgage,Debt consolidation
+0,641,43300,13.6,19000,Self-employed,Own,Medical
+0,629,51600,44.4,20600,Self-employed,Rent,Debt consolidation
+0,665,57600,48.3,25500,Full-time,Mortgage,Auto
+1,766,66800,22,29400,Full-time,Own,Debt consolidation
+1,729,43200,15.4,29100,Part-time,Rent,Debt consolidation
+0,694,35200,32.4,19900,Retired,Rent,Debt consolidation
+0,767,54000,40.9,21100,Part-time,Mortgage,Home improvement
+1,734,90700,30.8,25500,Full-time,Rent,Auto
+0,663,60200,43.1,14300,Self-employed,Rent,Auto
+0,647,53400,39.7,25200,Full-time,Rent,Debt consolidation
+1,658,54600,31.2,16700,Full-time,Rent,Debt consolidation
+0,535,60100,30.8,15600,Full-time,Rent,Medical
+0,747,129200,62,34300,Full-time,Own,Debt consolidation
+0,675,78800,26.9,61900,Full-time,Rent,Debt consolidation
+0,658,67100,30.4,19300,Full-time,Rent,Home improvement
+1,650,48000,34.2,9900,Full-time,Rent,Auto
+0,610,40400,36.1,9400,Full-time,Rent,Debt consolidation
+0,624,20200,28.7,5700,Part-time,Mortgage,Debt consolidation
+1,605,39900,34,16800,Full-time,Own,Debt consolidation
+0,644,35700,43.9,32900,Part-time,Mortgage,Home improvement
+1,628,68800,20.8,21800,Full-time,Own,Auto
+1,742,43600,24.5,14300,Part-time,Rent,Auto
+1,689,91300,15.3,52900,Self-employed,Mortgage,Auto
+0,487,43400,41,8800,Self-employed,Rent,Debt consolidation
+0,526,21100,21.1,6900,Part-time,Rent,Auto
+0,568,31800,31.1,7500,Full-time,Rent,Debt consolidation
+1,722,49400,34.1,15200,Full-time,Mortgage,Debt consolidation
+0,597,31900,37.3,10200,Retired,Rent,Debt consolidation
+1,615,54300,14,9400,Retired,Mortgage,Home improvement
+1,635,91700,24.5,40000,Self-employed,Mortgage,Medical
+0,753,104600,40,48900,Full-time,Own,Auto
+0,572,52000,23.2,19100,Full-time,Rent,Auto
+0,685,38400,18.5,21700,Full-time,Rent,Auto
+0,643,60400,40.7,42800,Full-time,Mortgage,Auto
+0,583,82300,38.6,13600,Full-time,Own,Auto
+1,739,110500,22.6,45100,Full-time,Rent,Medical
+1,701,79300,35,21400,Full-time,Mortgage,Auto
+0,644,18800,52.1,8500,Part-time,Rent,Medical
+1,706,65200,27.4,18800,Full-time,Rent,Auto
+1,752,80700,19,23600,Full-time,Mortgage,Debt consolidation
+0,513,65300,32.8,39900,Full-time,Mortgage,Medical
+0,687,46500,16.6,21700,Self-employed,Rent,Debt consolidation
+1,718,45800,27.3,13400,Full-time,Mortgage,Auto
+0,670,53100,24.1,20200,Retired,Rent,Home improvement
+0,617,121300,27.5,36000,Full-time,Mortgage,Auto
+0,654,48700,35.6,16700,Full-time,Rent,Medical
+1,811,114700,27.7,45200,Full-time,Mortgage,Home improvement
+0,661,60200,24.4,82200,Full-time,Rent,Debt consolidation
+0,635,88700,46.3,9800,Full-time,Mortgage,Debt consolidation
+1,679,51800,9.2,12900,Full-time,Rent,Auto
+0,628,51800,43.5,17500,Self-employed,Rent,Debt consolidation
+1,672,32400,17.8,3000,Part-time,Mortgage,Home improvement
+0,562,25300,36.3,13900,Part-time,Mortgage,Auto
+1,781,133500,40.1,18200,Full-time,Mortgage,Home improvement
+1,703,101000,50.9,29700,Full-time,Own,Debt consolidation
+1,682,71800,36.2,10900,Self-employed,Own,Home improvement
+1,651,41500,17.6,25000,Retired,Own,Medical
+0,645,18200,34.2,8500,Part-time,Mortgage,Debt consolidation
+0,646,37900,21.9,13800,Retired,Rent,Debt consolidation
+1,656,54100,17,29000,Full-time,Mortgage,Medical
+0,769,153800,21.5,24900,Self-employed,Own,Debt consolidation
+1,674,28200,28.9,7400,Part-time,Rent,Auto
+1,678,93500,35.1,46100,Full-time,Rent,Debt consolidation
+1,727,71900,19.9,9100,Full-time,Mortgage,Auto
+0,722,77300,12.5,13000,Self-employed,Mortgage,Home improvement
+0,703,27800,44,16100,Part-time,Rent,Debt consolidation
+1,708,47000,35.9,8200,Full-time,Mortgage,Home improvement
+1,746,98000,34.6,19600,Full-time,Mortgage,Debt consolidation
+1,761,66800,37.9,13500,Full-time,Mortgage,Auto
+0,625,66300,28.2,41000,Full-time,Mortgage,Debt consolidation
+0,637,38500,45.8,17900,Retired,Rent,Debt consolidation
+1,666,45100,36,27300,Full-time,Rent,Medical
+1,690,119100,45.8,22700,Full-time,Mortgage,Debt consolidation
+1,698,86200,15.6,43400,Full-time,Own,Home improvement
+1,755,117700,41.9,25800,Full-time,Mortgage,Auto
+1,718,26500,36.4,10900,Part-time,Rent,Home improvement
+1,642,52200,22.6,10800,Full-time,Rent,Home improvement
+0,632,35000,18.3,8100,Full-time,Rent,Medical
+0,635,27600,38.7,17800,Retired,Rent,Debt consolidation
+0,735,41600,50.3,24900,Retired,Rent,Debt consolidation
+0,564,70200,28.8,19600,Full-time,Mortgage,Auto
+1,661,94400,21.7,26700,Full-time,Mortgage,Debt consolidation
+1,630,40800,36.9,4100,Full-time,Own,Medical
+1,746,131100,40.1,29400,Self-employed,Own,Home improvement
+0,701,41600,28.5,6600,Part-time,Mortgage,Medical
+1,706,69200,30.7,17300,Full-time,Rent,Home improvement
+1,677,80700,22.6,20200,Self-employed,Mortgage,Debt consolidation
+0,671,26200,23,6900,Part-time,Rent,Auto
+0,697,36400,20.4,19400,Full-time,Mortgage,Home improvement
+0,614,61200,33.1,17400,Full-time,Mortgage,Home improvement
+0,552,18000,25,11500,Part-time,Rent,Auto
+0,613,47300,52.1,13600,Full-time,Mortgage,Auto
+0,678,76600,48.7,39900,Full-time,Rent,Debt consolidation
+1,765,121500,27.6,28300,Self-employed,Mortgage,Auto
+1,750,54400,51.2,15200,Full-time,Rent,Debt consolidation
+1,604,29300,21.5,8400,Retired,Rent,Home improvement
+0,720,51800,34.7,10800,Self-employed,Mortgage,Debt consolidation
+1,737,58700,17.1,16600,Part-time,Rent,Auto
+1,717,87100,21.2,22000,Full-time,Mortgage,Home improvement
+0,622,102100,39.4,20500,Full-time,Rent,Auto
+0,591,49300,47.9,28400,Self-employed,Rent,Home improvement
+0,637,39700,17.7,18300,Full-time,Rent,Home improvement
+0,682,81000,9,71200,Full-time,Own,Home improvement
+0,612,27900,43.1,6500,Part-time,Rent,Debt consolidation
+1,739,39700,14.4,14500,Full-time,Own,Home improvement
+1,634,92700,31.8,13300,Full-time,Mortgage,Home improvement
+1,680,50200,18.3,22300,Part-time,Own,Debt consolidation
+1,745,114100,55.9,20700,Full-time,Own,Debt consolidation
+1,774,87600,50.1,19800,Self-employed,Rent,Home improvement
+0,579,34700,32.6,17400,Retired,Rent,Home improvement
+0,633,64400,52.2,33600,Full-time,Rent,Debt consolidation
+0,666,29300,21.7,8900,Retired,Rent,Auto
+0,584,36900,28.9,13400,Full-time,Rent,Home improvement
+0,538,43400,18.5,17500,Full-time,Mortgage,Auto
+0,623,85600,49,42500,Full-time,Own,Debt consolidation
+0,643,37900,40.9,10600,Part-time,Mortgage,Debt consolidation
+0,628,49300,37.3,16100,Self-employed,Rent,Home improvement
+0,599,59900,39.2,16300,Full-time,Rent,Debt consolidation
+0,764,42300,33.9,12700,Part-time,Rent,Home improvement
+0,696,89500,21,25500,Full-time,Own,Auto
+0,668,111300,38.5,30000,Full-time,Mortgage,Auto
+0,673,67600,47.1,27400,Self-employed,Own,Debt consolidation
+0,600,32000,19.6,32800,Full-time,Mortgage,Home improvement
+0,673,56900,51.2,16900,Full-time,Rent,Home improvement
+0,598,38700,22.6,18400,Retired,Rent,Debt consolidation
+0,720,42800,13,18200,Retired,Own,Medical
+0,641,38300,40.5,10400,Retired,Mortgage,Debt consolidation
+1,748,88000,24.5,23100,Full-time,Own,Medical
+0,628,33800,28,12600,Self-employed,Own,Auto
+0,667,36000,17.2,36600,Retired,Rent,Medical
+0,584,35700,28,12500,Part-time,Rent,Auto
+1,782,92000,12.8,23000,Full-time,Mortgage,Auto
+1,647,157600,23.1,25900,Full-time,Own,Debt consolidation
+1,612,72500,47.1,18200,Full-time,Mortgage,Debt consolidation
+0,592,53200,25.3,20300,Full-time,Rent,Home improvement
+1,726,63400,30.3,11900,Retired,Mortgage,Auto
+1,744,44500,23.6,16000,Full-time,Mortgage,Debt consolidation
+0,643,87500,39.5,23800,Full-time,Mortgage,Medical
+1,666,51700,34.2,16100,Full-time,Rent,Debt consolidation
+1,617,27000,17.6,20600,Self-employed,Rent,Medical
+0,675,65300,35.9,21700,Part-time,Rent,Medical
+0,666,30500,43,19000,Part-time,Rent,Debt consolidation
+1,722,69900,42.5,19100,Full-time,Own,Debt consolidation
+1,771,45400,26.1,17200,Full-time,Rent,Debt consolidation
+1,675,67700,15.9,15000,Full-time,Mortgage,Medical
+1,667,70200,30.4,10700,Full-time,Own,Debt consolidation
+1,659,98100,15.3,8800,Full-time,Rent,Debt consolidation
+0,695,68100,34.5,28300,Retired,Own,Debt consolidation
+0,651,62200,32.6,24600,Self-employed,Own,Debt consolidation
+0,708,58400,11,28100,Self-employed,Mortgage,Debt consolidation
+1,677,93900,32.5,29500,Full-time,Rent,Debt consolidation
+0,656,20100,57.2,13800,Part-time,Rent,Home improvement
+0,665,66000,54.9,15800,Full-time,Rent,Home improvement
+0,691,46900,39.4,11100,Self-employed,Mortgage,Debt consolidation
+1,656,37000,22.5,16500,Retired,Own,Home improvement
+1,683,137700,25.4,20300,Full-time,Mortgage,Auto
+0,524,70500,21.6,38900,Full-time,Rent,Debt consolidation
+0,561,27100,56.4,4900,Full-time,Mortgage,Home improvement
+1,638,131800,23.4,58300,Full-time,Rent,Home improvement
+1,706,34800,35,14600,Retired,Rent,Auto
+1,698,48400,37,29200,Part-time,Mortgage,Debt consolidation
+1,595,128100,40.5,19800,Full-time,Mortgage,Debt consolidation
+1,642,117400,37.4,23600,Full-time,Own,Home improvement
+0,693,57300,32.8,9700,Full-time,Mortgage,Home improvement
+0,577,61200,37.5,9400,Full-time,Own,Auto
+0,665,71200,48,6500,Full-time,Own,Auto
+0,682,73800,37.2,21700,Full-time,Own,Medical
+0,626,29700,27,14400,Part-time,Mortgage,Auto
+1,657,109800,42.1,20500,Full-time,Own,Auto
+1,645,67700,24,16900,Full-time,Own,Medical
+1,717,86700,32,47800,Full-time,Own,Home improvement
+1,673,51200,23.5,18100,Self-employed,Rent,Auto
+1,709,111000,35.9,29300,Full-time,Mortgage,Auto
+0,539,22700,18.2,17700,Part-time,Mortgage,Auto
+1,668,65900,36.1,18500,Full-time,Own,Medical
+0,567,22700,31,6800,Part-time,Rent,Home improvement
+0,615,55800,31.4,17500,Part-time,Rent,Auto
+1,728,90100,38.4,31400,Full-time,Mortgage,Medical
+0,698,34200,32.7,17700,Part-time,Rent,Auto
+0,692,124600,25.2,55200,Full-time,Own,Auto
+0,642,81100,52.7,13200,Self-employed,Rent,Auto
+1,721,99100,30.4,28700,Full-time,Mortgage,Debt consolidation
+1,685,116000,11.2,73000,Full-time,Rent,Home improvement
+1,717,72400,29.3,12600,Part-time,Rent,Home improvement
+0,675,65600,37.4,13500,Full-time,Rent,Home improvement
+1,727,60600,26,17400,Full-time,Rent,Debt consolidation
+0,658,65700,32.5,15500,Retired,Rent,Medical
+0,657,80200,16.9,29800,Self-employed,Rent,Home improvement
+0,639,59100,32.6,31200,Self-employed,Rent,Debt consolidation
+0,639,73000,34.8,33100,Full-time,Rent,Auto
+0,637,145900,22.2,45700,Full-time,Own,Auto
+1,723,185500,19.2,64600,Self-employed,Own,Debt consolidation
+0,668,71100,46.5,18600,Full-time,Mortgage,Debt consolidation
+1,668,157300,20.7,19100,Self-employed,Own,Debt consolidation
+0,671,35400,32.8,17200,Full-time,Rent,Medical
+0,633,52700,55.8,12900,Self-employed,Rent,Auto
+1,650,113600,28,21300,Full-time,Own,Medical
+1,709,83500,31.8,21000,Full-time,Mortgage,Auto
+1,724,46600,39.7,29700,Part-time,Mortgage,Home improvement
+0,592,73800,26.3,8100,Full-time,Mortgage,Home improvement
+1,685,61800,40.2,18300,Full-time,Rent,Home improvement
+1,674,38000,27.7,12400,Full-time,Rent,Debt consolidation
+0,669,96000,32.4,20800,Self-employed,Own,Medical
+0,541,24000,49.6,12800,Part-time,Mortgage,Auto
+0,656,48300,39.3,25800,Full-time,Rent,Debt consolidation
+1,703,105500,18,30400,Full-time,Own,Auto
+1,663,70900,27.3,17100,Self-employed,Mortgage,Medical
+1,698,90500,30.6,16100,Full-time,Mortgage,Auto
+0,623,81400,46,23100,Full-time,Own,Medical
+1,659,64700,15.3,28000,Full-time,Rent,Debt consolidation
+0,739,107700,30.8,14900,Full-time,Mortgage,Debt consolidation
+0,710,84600,28.7,20900,Self-employed,Mortgage,Auto
+1,668,95100,35.1,30800,Full-time,Own,Home improvement
+0,704,69000,27.8,20700,Full-time,Rent,Medical
+1,666,74300,15.8,20800,Full-time,Mortgage,Debt consolidation
+0,675,93400,49.7,46200,Full-time,Mortgage,Debt consolidation
+1,711,66800,35.8,11700,Full-time,Rent,Home improvement
+0,679,50300,23.7,13100,Full-time,Mortgage,Medical
+0,702,43300,33.3,23600,Self-employed,Mortgage,Home improvement
+1,680,79200,13.6,21800,Self-employed,Own,Auto
+1,634,96300,35.4,21200,Full-time,Rent,Home improvement
+0,642,44400,37.5,22700,Retired,Rent,Debt consolidation
+1,679,23000,32.9,10700,Part-time,Rent,Debt consolidation
+1,690,93900,18.2,16500,Full-time,Mortgage,Auto
+1,749,142400,32.2,36900,Full-time,Mortgage,Debt consolidation
+1,702,62700,30.1,18800,Full-time,Own,Auto
+1,683,52600,16.7,30500,Retired,Mortgage,Home improvement
+0,701,58600,27.3,22700,Full-time,Rent,Home improvement
+1,759,68000,17.5,37800,Full-time,Rent,Auto
+0,649,33000,20.1,11100,Self-employed,Rent,Medical
+1,753,60500,8.9,21500,Self-employed,Mortgage,Debt consolidation
+1,615,46700,18.4,32700,Full-time,Mortgage,Auto
+0,642,31600,15,16000,Retired,Rent,Home improvement
+1,702,68800,47.3,33600,Full-time,Rent,Home improvement
+0,682,90500,38.2,30200,Full-time,Rent,Debt consolidation
+1,645,71000,32.2,14900,Full-time,Rent,Auto
+1,760,75100,39.9,27200,Full-time,Rent,Auto
+1,750,69300,32.5,26600,Full-time,Rent,Debt consolidation
+1,678,54300,40.3,16400,Full-time,Own,Auto
+1,698,60300,28,42800,Full-time,Mortgage,Debt consolidation
+0,678,29500,50.4,22300,Self-employed,Mortgage,Debt consolidation
+1,757,45800,37.1,18700,Self-employed,Own,Debt consolidation
+1,666,89700,42,46400,Full-time,Own,Debt consolidation
+0,661,55400,52.9,20000,Full-time,Rent,Debt consolidation
+1,689,56900,28.9,14900,Full-time,Mortgage,Auto
+1,764,137200,34.9,9000,Full-time,Mortgage,Debt consolidation
+0,644,66600,30.5,15500,Self-employed,Mortgage,Debt consolidation
+1,683,103600,17.6,20300,Full-time,Mortgage,Home improvement
+0,704,71700,37.9,17400,Full-time,Rent,Home improvement
+0,704,92500,56.4,16400,Full-time,Rent,Home improvement
+0,569,32300,56.8,13800,Self-employed,Rent,Home improvement
+1,682,89400,28.3,29500,Full-time,Rent,Debt consolidation
+1,742,68600,28.1,23500,Full-time,Own,Debt consolidation
+0,687,39300,19.6,21200,Full-time,Mortgage,Home improvement
+1,609,35200,14.6,9700,Part-time,Rent,Home improvement
+1,689,41400,17.1,17400,Part-time,Rent,Auto
+0,706,75700,50.1,14300,Full-time,Rent,Medical
+0,663,48200,19.6,12400,Self-employed,Rent,Home improvement
+1,685,54800,29.4,8600,Full-time,Rent,Home improvement
+0,625,50600,34.3,9100,Self-employed,Mortgage,Auto
+1,664,67400,25.6,13500,Full-time,Own,Debt consolidation
+0,682,77900,21.5,8700,Full-time,Rent,Medical
+0,654,46700,28.4,26800,Full-time,Rent,Debt consolidation
+0,636,74800,42.4,17700,Full-time,Own,Home improvement
+0,634,81500,34.9,23800,Self-employed,Mortgage,Auto
+0,557,21400,21.9,8000,Part-time,Mortgage,Auto
+1,714,74700,41.9,10800,Full-time,Own,Auto
+1,736,165300,29.9,30000,Self-employed,Own,Auto
+1,654,69800,17.8,14100,Full-time,Rent,Auto
+0,526,34400,28,16300,Retired,Rent,Debt consolidation
+0,560,39300,46.8,14600,Part-time,Mortgage,Debt consolidation
+1,688,53500,14.9,25100,Full-time,Rent,Auto
+0,678,38500,26.4,15700,Self-employed,Mortgage,Debt consolidation
+1,713,97400,36.4,37500,Full-time,Mortgage,Debt consolidation
+0,705,117100,45,22100,Full-time,Mortgage,Debt consolidation
+1,584,42100,17.3,15400,Retired,Rent,Debt consolidation
+0,651,62300,48.5,21500,Self-employed,Own,Debt consolidation
+0,649,118100,23.9,38800,Full-time,Rent,Medical
+0,639,54000,35.9,18000,Full-time,Rent,Debt consolidation
+0,649,53400,52.4,12200,Full-time,Own,Debt consolidation
+1,648,59400,24,37500,Full-time,Mortgage,Home improvement
+0,672,23000,25.6,12200,Full-time,Own,Debt consolidation
+1,705,43400,37.4,13900,Full-time,Mortgage,Medical
+1,690,97600,44.9,12600,Full-time,Own,Debt consolidation
+0,631,24000,44.6,6800,Self-employed,Rent,Debt consolidation
+1,685,45800,33.3,25000,Self-employed,Mortgage,Debt consolidation
+1,771,80200,60.3,9900,Full-time,Own,Home improvement
+1,677,50200,27.2,17300,Full-time,Mortgage,Home improvement
+1,614,59100,25.8,8500,Full-time,Rent,Auto
+1,634,46800,42.2,14200,Part-time,Own,Home improvement
+0,722,85100,28.9,34000,Retired,Own,Auto
+1,726,88500,15.1,21400,Full-time,Own,Debt consolidation
+0,708,45400,42.1,13800,Part-time,Rent,Debt consolidation
+1,769,129100,25.2,19300,Full-time,Mortgage,Debt consolidation
+0,608,74300,29.7,25300,Self-employed,Own,Debt consolidation
+0,746,84600,23.7,13300,Self-employed,Rent,Debt consolidation
+0,493,43700,43.8,24500,Full-time,Own,Medical
+0,637,74400,20.9,33500,Full-time,Mortgage,Debt consolidation
+1,627,95100,20.7,21800,Full-time,Own,Home improvement
+1,672,135200,31.7,26600,Full-time,Own,Debt consolidation
+0,682,68500,47.3,13400,Self-employed,Rent,Debt consolidation
+0,681,42800,28.4,37000,Full-time,Mortgage,Home improvement
+1,647,45600,44.1,10300,Full-time,Mortgage,Auto
+1,721,93300,26.4,26400,Full-time,Mortgage,Debt consolidation
+1,695,93500,27.5,26300,Full-time,Rent,Debt consolidation
+1,692,60500,27.1,10700,Self-employed,Own,Medical
+1,665,57500,31,22800,Full-time,Own,Home improvement
+0,634,33600,34.9,13100,Full-time,Rent,Debt consolidation
+0,601,37300,43,10200,Retired,Rent,Medical
+1,755,56000,17,13900,Full-time,Own,Auto
+0,622,42100,51.2,21300,Full-time,Own,Home improvement
+1,714,50800,34,18800,Full-time,Own,Auto
+1,678,64800,35.2,11200,Full-time,Mortgage,Debt consolidation
+0,643,64400,47.7,49100,Retired,Rent,Medical
+1,691,74400,39.4,19900,Full-time,Mortgage,Auto
+1,688,78100,27.3,19000,Full-time,Mortgage,Debt consolidation
+1,680,71800,8.4,27800,Self-employed,Rent,Auto
+1,654,72600,22.2,33200,Full-time,Rent,Debt consolidation
+0,681,60300,42.8,37700,Full-time,Rent,Auto
+0,716,68600,28.1,26700,Part-time,Own,Debt consolidation
+1,700,71700,36.4,29500,Full-time,Own,Auto
+0,541,19100,48.9,6700,Part-time,Rent,Home improvement
+1,662,69600,12.2,11300,Full-time,Mortgage,Home improvement
+0,618,85800,46.2,23900,Full-time,Own,Medical
+1,659,114200,21.9,22400,Full-time,Mortgage,Auto
+1,703,83600,23.5,23200,Full-time,Own,Home improvement
+0,628,57200,25.5,17600,Full-time,Own,Auto
+0,684,128500,9.9,28900,Full-time,Own,Debt consolidation
+0,638,62300,24.4,15300,Retired,Own,Debt consolidation
+0,646,39700,41.7,15200,Retired,Rent,Debt consolidation
+0,677,61600,54.3,21000,Full-time,Rent,Home improvement
+1,700,78300,62,18600,Full-time,Own,Home improvement
+1,746,97600,19.3,21200,Full-time,Mortgage,Debt consolidation
+1,672,29700,33.2,13700,Full-time,Own,Debt consolidation
+1,660,89400,21.9,32700,Full-time,Mortgage,Debt consolidation
+0,629,42200,47.7,20300,Retired,Rent,Home improvement
+1,698,35100,18.7,23500,Part-time,Rent,Debt consolidation
+0,602,40500,36.4,23900,Self-employed,Rent,Auto
+1,760,75200,42.9,25600,Full-time,Mortgage,Debt consolidation
+1,773,83200,27.3,27200,Full-time,Mortgage,Debt consolidation
+0,658,81200,41.5,33500,Self-employed,Rent,Medical
+0,650,49600,49.9,12000,Full-time,Own,Home improvement
+1,688,58900,32.5,15700,Full-time,Mortgage,Home improvement
+0,636,62200,54.3,34700,Full-time,Mortgage,Debt consolidation
+1,747,49300,46.6,15100,Full-time,Mortgage,Debt consolidation
+0,647,110800,18.8,26800,Full-time,Rent,Auto
+0,635,77000,61.2,16300,Full-time,Rent,Medical
+0,605,24400,25.9,9500,Full-time,Rent,Auto
+1,699,48100,24.7,13100,Full-time,Own,Home improvement
+0,674,28000,62,12500,Part-time,Rent,Debt consolidation
+1,640,47100,26.8,15800,Full-time,Rent,Debt consolidation
+1,713,149300,19.2,29000,Full-time,Own,Auto
+0,628,25700,44.2,8800,Self-employed,Mortgage,Home improvement
+0,624,72800,57.1,23000,Retired,Mortgage,Debt consolidation
+1,684,82100,27.8,24600,Full-time,Rent,Medical
+0,613,24900,20.5,5500,Part-time,Mortgage,Debt consolidation
+0,597,18000,60.1,14700,Retired,Rent,Home improvement
+0,656,32000,23.6,14400,Part-time,Rent,Debt consolidation
+1,665,80000,45.2,14200,Full-time,Own,Debt consolidation
+1,680,49100,37.4,14000,Full-time,Mortgage,Home improvement
+1,718,88500,27.9,12400,Full-time,Mortgage,Auto
+0,610,65600,38.7,21300,Full-time,Own,Medical
+0,608,45200,49.3,20400,Part-time,Mortgage,Debt consolidation
+0,708,51200,47.9,19200,Full-time,Mortgage,Debt consolidation
+0,679,79100,24.3,22100,Full-time,Rent,Auto
+1,720,60500,13.6,18100,Full-time,Mortgage,Debt consolidation
+1,671,60100,38.8,23000,Full-time,Own,Home improvement
+0,692,71100,19.4,23400,Self-employed,Mortgage,Auto
+1,702,46600,25.4,17300,Full-time,Own,Home improvement
+0,687,34900,40.2,11300,Retired,Rent,Home improvement
+0,674,36700,27.6,16100,Full-time,Rent,Debt consolidation
+1,696,104000,13.7,22300,Full-time,Own,Home improvement
+0,740,39700,33.1,18500,Retired,Rent,Home improvement
+1,743,81000,31,14900,Self-employed,Own,Auto
+0,634,44800,32.1,15900,Full-time,Mortgage,Medical
+1,639,47000,26.1,13200,Full-time,Rent,Debt consolidation
+0,655,67300,53.5,37900,Full-time,Mortgage,Home improvement
+0,667,85900,19.8,20700,Self-employed,Rent,Debt consolidation
+1,723,57100,22.5,16300,Full-time,Rent,Auto
+0,634,54400,35.7,25300,Full-time,Rent,Medical
+1,720,78000,23.3,13700,Retired,Mortgage,Home improvement
+0,615,34100,39.6,9800,Retired,Rent,Debt consolidation
+1,776,59200,30.9,23900,Self-employed,Rent,Auto
+0,706,46200,16.5,33200,Full-time,Rent,Home improvement
+0,701,91000,40.5,18200,Full-time,Rent,Debt consolidation
+1,681,43900,12.6,29600,Full-time,Rent,Auto
+1,728,113400,32.7,25700,Full-time,Mortgage,Auto
+1,754,66500,39.9,21600,Full-time,Mortgage,Auto
+1,678,111100,16.7,24100,Full-time,Mortgage,Debt consolidation
+0,591,71000,19.2,18700,Self-employed,Mortgage,Medical
+0,569,100700,62,43200,Full-time,Rent,Auto
+0,641,44000,46.3,11500,Retired,Rent,Auto
+1,660,97100,16.7,25700,Full-time,Own,Home improvement
+0,587,95800,34,31300,Full-time,Mortgage,Debt consolidation
+1,546,30100,15.2,11000,Full-time,Mortgage,Debt consolidation
+0,650,79600,36.1,42000,Full-time,Rent,Debt consolidation
+1,609,65700,24.5,17300,Self-employed,Mortgage,Auto
+0,657,37700,29.1,9800,Self-employed,Rent,Debt consolidation
+0,527,27000,48.6,19900,Part-time,Rent,Auto
+0,570,30800,21.7,10200,Part-time,Mortgage,Medical
+0,584,45200,30.3,9700,Retired,Rent,Debt consolidation
+0,620,69900,41,17200,Full-time,Mortgage,Auto
+0,623,38500,19.7,22400,Part-time,Mortgage,Debt consolidation
+0,650,71000,46.4,17900,Self-employed,Rent,Medical
+0,660,60900,29.5,23300,Retired,Rent,Debt consolidation
+1,757,64900,47.4,16200,Self-employed,Mortgage,Home improvement
+0,612,76300,46.9,15700,Full-time,Rent,Debt consolidation
+1,691,61800,42.5,22300,Full-time,Mortgage,Home improvement
+0,642,59600,31.2,27900,Full-time,Rent,Home improvement
+1,665,75200,23,32600,Full-time,Rent,Home improvement
+0,661,60000,22.4,19700,Full-time,Rent,Debt consolidation
+1,714,78600,22.6,15200,Full-time,Rent,Debt consolidation
+0,688,53800,19.8,20600,Self-employed,Mortgage,Debt consolidation
+0,706,34400,30.3,15300,Part-time,Mortgage,Debt consolidation
+0,580,28600,30.3,13400,Part-time,Rent,Debt consolidation
+0,621,87200,56.2,41300,Part-time,Mortgage,Home improvement
+0,672,94500,38.9,42900,Self-employed,Rent,Medical
+0,630,53200,31.5,29200,Self-employed,Rent,Auto
+1,717,67300,23.7,12600,Part-time,Mortgage,Auto
+0,636,160300,44.8,45100,Full-time,Own,Home improvement
+1,678,62900,20.1,28800,Full-time,Mortgage,Auto
+0,673,46600,59.2,19500,Full-time,Own,Debt consolidation
+1,783,70700,28.2,13200,Full-time,Own,Home improvement
+1,685,54400,46.6,22600,Part-time,Rent,Medical
+1,656,60100,22.8,17600,Full-time,Rent,Medical
+1,684,158300,41.4,32700,Full-time,Own,Auto
+0,463,43100,47.3,14900,Retired,Mortgage,Auto
+1,671,42900,17.7,20200,Full-time,Rent,Home improvement
+1,705,61600,37.8,14500,Full-time,Mortgage,Debt consolidation
+1,710,81000,27.2,29000,Full-time,Rent,Debt consolidation
+1,719,126900,38.2,25600,Full-time,Own,Auto
+0,664,82600,43.8,32000,Self-employed,Mortgage,Auto
+1,708,32800,17.9,34300,Self-employed,Mortgage,Debt consolidation
+0,670,58300,40.3,37700,Full-time,Rent,Debt consolidation
+0,529,37600,24.5,11600,Part-time,Mortgage,Home improvement
+0,617,31900,19.4,16400,Part-time,Rent,Home improvement
+0,651,25200,33.5,7200,Retired,Rent,Auto
+1,662,24700,29.1,24000,Part-time,Rent,Debt consolidation
+1,737,47700,51.9,25000,Self-employed,Rent,Debt consolidation
+1,751,75500,29.7,25700,Full-time,Mortgage,Auto
+1,706,50100,31.4,16600,Full-time,Mortgage,Auto
+1,691,63300,20.6,19700,Self-employed,Own,Auto
+1,721,71700,33.2,13300,Self-employed,Rent,Medical
+0,569,90800,40.3,31400,Full-time,Own,Debt consolidation
+0,707,96500,43.9,31300,Full-time,Mortgage,Auto
+1,701,125000,32.9,14200,Full-time,Own,Auto
+0,693,53100,48.8,20400,Retired,Rent,Auto
+0,657,104000,20.2,28900,Self-employed,Own,Debt consolidation
+0,663,44100,23.4,17400,Self-employed,Rent,Medical
+1,756,87700,33.2,19200,Full-time,Own,Debt consolidation
+0,610,38500,25.3,10200,Part-time,Rent,Home improvement
+1,687,86300,22.2,17800,Self-employed,Own,Auto
+1,621,81100,15.2,25900,Full-time,Own,Debt consolidation
+1,703,38400,19.1,18300,Full-time,Rent,Debt consolidation
+0,687,58200,41.9,23100,Part-time,Mortgage,Home improvement
+1,745,78600,27.8,21600,Full-time,Own,Home improvement
+0,598,43400,25.3,13000,Full-time,Rent,Debt consolidation
+0,675,46100,32.3,43300,Self-employed,Rent,Auto
+0,645,55700,24.5,15700,Retired,Rent,Home improvement
+0,725,121900,32.1,44000,Full-time,Mortgage,Auto
+0,643,78900,58.2,18100,Full-time,Rent,Debt consolidation
+0,554,18700,38.2,5100,Part-time,Rent,Home improvement
+1,699,117100,31.9,36400,Full-time,Own,Home improvement
+0,600,85600,34.2,34500,Full-time,Mortgage,Auto
+1,570,81700,21.5,24900,Full-time,Own,Debt consolidation
+1,685,130300,29.4,13900,Full-time,Own,Home improvement
+0,656,54000,13,37600,Full-time,Rent,Auto
+0,607,45500,62,17100,Self-employed,Rent,Debt consolidation
+1,757,63900,29.6,9200,Retired,Own,Medical
+0,607,59300,47.4,15400,Self-employed,Mortgage,Auto
+1,702,49400,24.4,11500,Full-time,Rent,Medical
+0,682,46300,30.3,25700,Retired,Rent,Medical
+0,482,40900,21,24500,Self-employed,Rent,Debt consolidation
+1,739,107300,25.9,26800,Full-time,Own,Debt consolidation
+1,701,102100,8.8,19300,Full-time,Rent,Medical
+0,677,89300,29.1,36900,Full-time,Rent,Auto
+1,701,69000,45.9,29000,Full-time,Rent,Debt consolidation
+1,715,180100,24.7,41900,Full-time,Mortgage,Medical
+1,702,54100,31.7,14400,Part-time,Rent,Home improvement
+1,821,103800,19,23200,Full-time,Rent,Home improvement
+1,731,79400,21.9,27800,Full-time,Own,Debt consolidation
+1,659,26000,19,6800,Retired,Rent,Debt consolidation
+1,683,91000,43.2,23500,Full-time,Mortgage,Home improvement
+0,662,28400,19.2,8000,Part-time,Mortgage,Debt consolidation
+0,674,97200,18.8,66200,Self-employed,Mortgage,Auto
+1,646,56100,22.9,8700,Self-employed,Rent,Debt consolidation
+0,594,53500,41.8,39500,Full-time,Mortgage,Debt consolidation
+1,688,70900,23.3,13800,Full-time,Rent,Medical
+0,570,29700,40.5,7000,Part-time,Rent,Debt consolidation
+0,645,70300,27.9,44700,Full-time,Rent,Debt consolidation
+1,668,94100,24.4,27100,Full-time,Mortgage,Home improvement
+0,511,23700,56,12000,Part-time,Own,Debt consolidation
+0,717,48100,39.1,16500,Full-time,Rent,Home improvement
+1,699,42800,22.6,4000,Retired,Rent,Auto
+1,730,75600,19.5,9400,Full-time,Rent,Debt consolidation
+1,715,44100,48.5,21100,Full-time,Mortgage,Home improvement
+1,722,63900,40.9,26600,Full-time,Own,Auto
+0,658,39400,29.8,24300,Retired,Mortgage,Debt consolidation
+0,732,60500,40.3,19700,Full-time,Mortgage,Debt consolidation
+1,672,53600,39.1,21800,Retired,Own,Auto
+1,678,52600,23.5,8000,Self-employed,Rent,Debt consolidation
+0,745,28400,32.7,18300,Full-time,Rent,Auto
+1,685,61100,47.9,28200,Part-time,Rent,Debt consolidation
+1,701,101000,46.8,25700,Full-time,Mortgage,Debt consolidation
+1,669,49700,19.1,14600,Self-employed,Own,Debt consolidation
+0,606,21600,22.4,13300,Part-time,Rent,Debt consolidation
+0,668,26000,36.8,7700,Retired,Rent,Medical
+0,631,43100,25.8,16200,Self-employed,Rent,Debt consolidation
+0,709,83400,40.5,35200,Self-employed,Mortgage,Auto
+0,648,35900,42,20200,Retired,Rent,Medical
+1,748,46400,41.1,22800,Full-time,Own,Auto
+0,679,40200,32.5,17300,Full-time,Rent,Medical
+0,671,46700,32.6,15000,Retired,Rent,Debt consolidation
+1,696,124400,47.8,39500,Full-time,Mortgage,Home improvement
+1,651,41100,27.5,12300,Self-employed,Rent,Debt consolidation
+0,574,83600,38.9,19900,Full-time,Rent,Home improvement
+1,690,77800,24.7,17100,Full-time,Mortgage,Home improvement
+0,633,29200,34.4,16300,Part-time,Rent,Debt consolidation
+0,717,27600,15.6,17900,Retired,Mortgage,Home improvement
+1,689,80600,53.3,39600,Self-employed,Own,Home improvement
+0,625,98100,30.7,29100,Full-time,Mortgage,Home improvement
+1,660,58400,23.8,18200,Full-time,Rent,Home improvement
+1,756,67800,28.7,29900,Self-employed,Own,Debt consolidation
+1,772,221700,40.3,26000,Full-time,Mortgage,Home improvement
+0,578,38200,24.8,17400,Part-time,Mortgage,Medical
+1,651,130100,27,25700,Full-time,Mortgage,Home improvement
+1,724,91700,22.1,33400,Full-time,Own,Home improvement
+0,644,18000,61.1,9200,Retired,Rent,Home improvement
+1,636,107800,38.9,53500,Full-time,Rent,Debt consolidation
+0,607,37800,34.9,11700,Part-time,Mortgage,Debt consolidation
+1,686,81700,35.1,22500,Full-time,Own,Medical
+1,651,87600,37,26000,Full-time,Mortgage,Debt consolidation
+0,679,25900,15.8,16200,Part-time,Rent,Debt consolidation
+1,736,48200,32.1,19600,Retired,Mortgage,Medical
+0,677,62600,29.9,29400,Part-time,Rent,Medical
+1,652,40100,33.1,18600,Full-time,Rent,Auto
+0,719,78300,27,62400,Retired,Mortgage,Home improvement
+1,649,115500,25.7,42000,Full-time,Own,Debt consolidation
+0,644,69300,34.5,14600,Full-time,Mortgage,Debt consolidation
+0,720,139800,27.7,31500,Full-time,Rent,Auto
+1,684,66900,27.7,16500,Full-time,Mortgage,Home improvement
+0,585,22100,50.2,10300,Part-time,Rent,Auto
+1,650,39400,22.3,12000,Retired,Mortgage,Debt consolidation
+0,653,45300,28.4,6100,Full-time,Own,Auto
+0,568,39100,36.3,11800,Full-time,Rent,Home improvement
+1,588,42700,20.7,14000,Self-employed,Rent,Home improvement
+0,608,64400,38.5,19800,Full-time,Own,Debt consolidation
+0,703,33600,25.5,10000,Part-time,Mortgage,Auto
+1,658,51100,22.4,13300,Full-time,Rent,Home improvement
+0,656,27900,62,15100,Retired,Mortgage,Medical
+0,598,24400,29.4,24000,Part-time,Rent,Medical
+1,669,39200,34.5,9100,Part-time,Own,Auto
+1,685,58400,26.9,14500,Full-time,Mortgage,Auto
+1,707,54000,20,33100,Full-time,Own,Debt consolidation
+1,697,102000,15.4,48900,Full-time,Own,Home improvement
+0,641,62100,27.2,25100,Full-time,Own,Debt consolidation
+0,694,51800,46.8,14000,Retired,Rent,Debt consolidation
+0,577,79400,59.8,11800,Full-time,Rent,Home improvement
+1,690,77800,36.4,51900,Full-time,Own,Debt consolidation
+1,707,83500,23.5,29600,Full-time,Mortgage,Debt consolidation
+0,649,57500,42.8,11000,Self-employed,Own,Auto
+1,636,77200,31.7,14100,Full-time,Own,Debt consolidation
+1,656,44800,18.4,12300,Part-time,Rent,Home improvement
+1,667,72600,20.9,24500,Full-time,Own,Debt consolidation
+0,676,109300,42.3,17700,Full-time,Own,Debt consolidation
+0,630,54600,45.4,14100,Part-time,Rent,Debt consolidation
+1,732,101200,11.3,9900,Full-time,Own,Auto
+0,728,51900,61.3,17800,Full-time,Rent,Auto
+0,689,41000,38.1,25900,Self-employed,Rent,Debt consolidation
+0,609,59900,48.2,10400,Full-time,Mortgage,Home improvement
+0,687,37700,26.4,11500,Self-employed,Rent,Auto
+1,695,37600,20.9,12000,Full-time,Rent,Debt consolidation
+1,692,121500,38.5,46500,Full-time,Own,Debt consolidation
+0,660,74700,23.3,21900,Full-time,Mortgage,Debt consolidation
+0,706,112800,29.1,18700,Full-time,Own,Debt consolidation
+0,645,33100,29.4,15200,Retired,Rent,Debt consolidation
+0,629,64900,48.6,25000,Self-employed,Own,Debt consolidation
+0,580,29100,49.4,19400,Part-time,Rent,Home improvement
+1,673,82900,30.7,23300,Full-time,Own,Home improvement
+0,684,56600,21.8,29200,Full-time,Rent,Medical
+0,665,60000,40.4,11600,Self-employed,Own,Debt consolidation
+0,648,22200,51.7,17200,Part-time,Mortgage,Debt consolidation
+0,685,84000,33.6,20300,Full-time,Rent,Auto
+1,652,45500,31.8,11800,Self-employed,Rent,Debt consolidation
+0,613,35200,28.3,15100,Self-employed,Own,Home improvement
+1,635,31400,17.7,7400,Part-time,Rent,Home improvement
+1,748,65000,17.8,20900,Part-time,Mortgage,Debt consolidation
+1,686,100900,31.7,15900,Full-time,Own,Home improvement
+0,714,83400,62,14300,Full-time,Rent,Home improvement
+1,724,106300,30.8,49300,Full-time,Rent,Debt consolidation
+1,638,26000,39.8,4300,Full-time,Rent,Auto
+0,646,44100,32.9,10500,Self-employed,Mortgage,Debt consolidation
+0,678,29500,35.8,5900,Part-time,Rent,Debt consolidation
+1,640,58800,23.8,16400,Full-time,Mortgage,Auto
+1,634,63800,29.1,12100,Full-time,Own,Auto
+0,672,37100,24,8000,Full-time,Mortgage,Medical
+1,674,47700,28.7,20300,Full-time,Mortgage,Medical
+0,556,33300,51.3,14500,Self-employed,Rent,Home improvement
+0,662,64600,19.5,39000,Full-time,Mortgage,Home improvement
+0,617,68200,30.6,12800,Full-time,Mortgage,Debt consolidation
+0,630,38600,54.1,17500,Full-time,Rent,Auto
+0,630,97000,36.9,23400,Full-time,Own,Debt consolidation
+0,503,38200,24.8,30000,Retired,Rent,Auto
+1,739,60600,42.6,24400,Self-employed,Own,Debt consolidation
+0,602,44700,49.6,13200,Full-time,Rent,Debt consolidation
+0,653,57000,41.3,26600,Retired,Own,Debt consolidation
+1,743,117700,29.5,23900,Full-time,Own,Auto
+1,712,47600,14.6,13900,Full-time,Rent,Auto
+1,673,68400,8.3,18500,Full-time,Own,Auto
+0,556,54100,33.1,13500,Full-time,Mortgage,Auto
+1,677,49700,21.8,25400,Self-employed,Rent,Debt consolidation
+0,693,56800,40.8,25300,Full-time,Rent,Medical
+0,679,30900,48.2,6200,Retired,Rent,Home improvement
+1,652,82300,30.3,24100,Full-time,Rent,Debt consolidation
+1,723,81700,14.9,28100,Full-time,Own,Medical
+0,649,21700,18,6500,Part-time,Rent,Medical
+0,631,109200,37.6,20400,Full-time,Mortgage,Home improvement
+1,688,107200,22.6,21500,Full-time,Mortgage,Debt consolidation
+1,620,94700,42.6,35200,Full-time,Mortgage,Auto
+0,611,19000,40.1,13500,Part-time,Rent,Debt consolidation
+1,718,104900,26.1,50000,Full-time,Mortgage,Debt consolidation
+1,824,144000,23,39600,Full-time,Mortgage,Debt consolidation
+0,689,67700,40.1,46000,Self-employed,Mortgage,Auto
+0,575,44200,31.2,10900,Part-time,Rent,Home improvement
+1,717,66900,17.4,16900,Self-employed,Rent,Debt consolidation
+0,586,32200,36.8,6100,Part-time,Rent,Medical
+0,673,117600,43.2,30800,Full-time,Rent,Home improvement
+0,711,33800,54.2,20900,Part-time,Rent,Debt consolidation
+0,671,39500,34.3,14100,Part-time,Mortgage,Debt consolidation
+0,616,25600,30.4,9600,Part-time,Rent,Auto
+1,630,35700,33.3,10800,Full-time,Rent,Auto
+0,643,49600,35.5,34000,Part-time,Mortgage,Auto
+0,602,60400,50.5,8000,Full-time,Rent,Debt consolidation
+0,693,37700,39.9,16000,Part-time,Rent,Medical
+0,636,37000,43.8,10800,Full-time,Mortgage,Home improvement
+0,596,48200,26.4,14400,Full-time,Rent,Auto
+0,539,53700,19.1,16800,Full-time,Own,Auto
+0,631,24400,44.7,13100,Part-time,Mortgage,Medical
+0,651,45000,34.4,22600,Self-employed,Rent,Auto
+0,617,43000,28.6,30200,Part-time,Rent,Medical
+0,612,79800,38.2,30100,Full-time,Rent,Debt consolidation
+0,656,43500,26.8,24200,Full-time,Rent,Debt consolidation
+0,628,31500,37.6,28000,Full-time,Mortgage,Home improvement
+1,787,52500,30,9400,Full-time,Rent,Debt consolidation
+0,668,53100,18.9,29100,Part-time,Rent,Home improvement
+1,830,116300,16.5,21500,Full-time,Own,Home improvement
+1,667,51900,21.3,15700,Full-time,Mortgage,Medical
+0,635,106700,50.4,41200,Full-time,Mortgage,Home improvement
+0,555,49800,28.8,24700,Full-time,Own,Debt consolidation
+0,587,24000,34,4000,Retired,Rent,Debt consolidation
+1,706,96500,24,12300,Full-time,Mortgage,Home improvement
+0,730,138900,19.6,44600,Full-time,Rent,Auto
+1,659,51200,27.2,16900,Retired,Mortgage,Home improvement
+0,705,112300,18.6,85600,Full-time,Mortgage,Home improvement
+0,641,45900,26,27300,Full-time,Rent,Debt consolidation
+1,708,85900,19.6,29800,Self-employed,Own,Medical
+0,628,45100,15.1,28800,Full-time,Mortgage,Home improvement
+1,688,83100,30.6,16700,Self-employed,Rent,Debt consolidation
+0,680,105000,26.1,13100,Full-time,Rent,Auto
+0,614,23200,18.2,8800,Part-time,Rent,Home improvement
+1,762,57600,16.7,11400,Self-employed,Mortgage,Auto
+0,647,28700,32.1,5600,Full-time,Rent,Debt consolidation
+1,739,82500,26.7,12700,Self-employed,Own,Home improvement
+0,633,85200,28.6,22900,Full-time,Rent,Debt consolidation
+1,678,87700,29.1,30800,Full-time,Own,Home improvement
+0,713,93500,46,69200,Self-employed,Mortgage,Debt consolidation
+1,676,58100,21.5,23700,Full-time,Mortgage,Debt consolidation
+0,675,39400,25.7,11900,Self-employed,Mortgage,Debt consolidation
+0,615,47900,16.6,24300,Full-time,Mortgage,Auto
+0,724,47200,46.6,28100,Full-time,Rent,Auto
+1,677,91200,35.1,26900,Self-employed,Own,Auto
+1,619,41700,14.9,17800,Part-time,Own,Auto
+1,673,39400,47.7,27200,Self-employed,Own,Debt consolidation
+1,618,67300,23.8,37900,Full-time,Mortgage,Debt consolidation
+0,651,43400,26.1,14900,Retired,Mortgage,Debt consolidation
+0,622,18800,61.8,7000,Part-time,Rent,Medical
+0,699,43000,33.9,19600,Full-time,Mortgage,Debt consolidation
+1,692,69800,26.9,29900,Full-time,Mortgage,Debt consolidation
+0,621,55800,27.3,13000,Full-time,Rent,Home improvement
+0,601,64900,43.3,24100,Full-time,Mortgage,Auto
+1,724,94300,36.4,28500,Full-time,Own,Home improvement
+0,637,27900,54.9,8500,Retired,Rent,Debt consolidation
+1,705,113100,31.8,26200,Self-employed,Own,Debt consolidation
+0,707,33100,20.4,12600,Retired,Rent,Debt consolidation
+0,636,93500,51.5,25400,Full-time,Own,Debt consolidation
+0,719,24800,35.4,8700,Part-time,Rent,Home improvement
+0,572,43200,26.4,11300,Full-time,Mortgage,Auto
+0,654,58100,26.4,25300,Full-time,Rent,Debt consolidation
+0,718,63900,32,16600,Self-employed,Mortgage,Debt consolidation
+0,620,68200,47.1,12300,Full-time,Mortgage,Auto
+0,679,37800,49.1,20300,Full-time,Mortgage,Home improvement
+1,750,34500,11.3,29400,Part-time,Own,Auto
+0,703,46400,23.4,14900,Part-time,Rent,Auto
+0,598,54000,20.5,49200,Full-time,Rent,Home improvement
+0,682,68100,26.3,15700,Full-time,Mortgage,Debt consolidation
+0,567,39200,48.3,19600,Full-time,Rent,Home improvement
+1,669,140900,33.2,46700,Full-time,Rent,Auto
+0,658,42300,50.2,30500,Full-time,Mortgage,Auto
+0,636,41000,21.9,12400,Retired,Mortgage,Debt consolidation
+0,550,35500,37.6,15300,Full-time,Rent,Debt consolidation
+0,594,28500,22.6,10500,Part-time,Mortgage,Home improvement
+0,712,64000,30.6,38000,Full-time,Rent,Auto
+0,629,56200,18.7,21000,Self-employed,Mortgage,Auto
+1,744,91200,20.6,33300,Full-time,Own,Medical
+0,676,60200,44.6,12200,Full-time,Rent,Debt consolidation
+1,750,71700,18.8,18300,Full-time,Mortgage,Auto
+1,716,84700,41.7,21100,Full-time,Own,Auto
+1,733,44900,12.8,13100,Full-time,Mortgage,Debt consolidation
+0,598,59400,30.3,7500,Full-time,Rent,Home improvement
+1,768,71800,26.7,69600,Full-time,Own,Home improvement
+0,639,119300,44.8,52600,Self-employed,Rent,Home improvement
+1,701,70100,18.2,34200,Self-employed,Mortgage,Home improvement
+0,620,38000,42.1,12900,Full-time,Mortgage,Auto
+1,663,63600,23.7,24200,Full-time,Own,Debt consolidation
+0,654,48400,24.6,24800,Full-time,Rent,Debt consolidation
+1,746,69900,49.3,29600,Full-time,Own,Debt consolidation
+0,697,18000,17.6,8400,Part-time,Rent,Home improvement
+0,698,62800,22.5,19500,Full-time,Rent,Home improvement
+1,734,84400,22.6,12400,Full-time,Mortgage,Home improvement
+0,643,43200,36.7,18900,Full-time,Rent,Home improvement
+1,598,34100,21.4,13500,Part-time,Rent,Auto
+1,759,131100,22.6,27100,Self-employed,Mortgage,Debt consolidation
+1,685,36900,33.1,10500,Retired,Mortgage,Home improvement
+0,639,60300,32.7,17600,Self-employed,Mortgage,Medical
+0,693,38000,36.9,13900,Full-time,Rent,Home improvement
+1,688,105300,35.5,23500,Self-employed,Rent,Debt consolidation
+0,610,33300,37,16200,Part-time,Rent,Auto
+0,650,87200,27.3,33200,Full-time,Rent,Auto
+0,684,60200,25.1,8800,Full-time,Rent,Auto
+0,651,92400,27.8,24900,Self-employed,Own,Debt consolidation
+0,743,42800,23.5,27600,Part-time,Rent,Debt consolidation
+1,710,93100,31.6,28400,Self-employed,Own,Auto
+0,630,86700,41.7,10300,Full-time,Rent,Medical
+1,690,43900,23.8,22800,Retired,Own,Home improvement
+1,719,115000,17.9,16300,Full-time,Mortgage,Home improvement
+0,590,87700,24.3,18500,Full-time,Mortgage,Auto
+0,612,47700,33.1,13000,Self-employed,Rent,Medical
+1,679,85600,16.6,24800,Full-time,Mortgage,Debt consolidation
+1,768,119500,43.4,35200,Self-employed,Own,Home improvement
+0,667,116900,59.8,31500,Full-time,Rent,Home improvement
+0,658,57200,30.4,15600,Part-time,Rent,Debt consolidation
+0,614,54400,19,29400,Full-time,Rent,Auto
+0,664,32600,38.2,12500,Retired,Rent,Debt consolidation
+1,635,45300,29.7,13500,Full-time,Mortgage,Auto
+0,632,30500,26,14600,Part-time,Rent,Debt consolidation
+0,658,34900,59.5,35500,Part-time,Rent,Debt consolidation
+0,662,63300,40.4,30700,Retired,Rent,Home improvement
+0,632,41600,24.3,12500,Part-time,Rent,Auto
+1,622,63100,26.2,20600,Full-time,Own,Debt consolidation
+0,697,53900,24.9,19600,Self-employed,Rent,Home improvement
+0,679,47300,23.7,22600,Part-time,Rent,Debt consolidation
+0,624,71700,33.8,24600,Retired,Own,Debt consolidation
+0,693,70600,40.7,36300,Full-time,Rent,Home improvement
+1,755,91000,27.9,15500,Full-time,Mortgage,Auto
+0,630,22000,42.8,6500,Retired,Rent,Medical
+0,580,55000,37.1,7900,Part-time,Mortgage,Home improvement
+0,633,47700,21.2,38900,Part-time,Mortgage,Debt consolidation
+0,635,61200,41.3,22100,Full-time,Rent,Medical
+1,687,44800,24.3,11200,Full-time,Rent,Debt consolidation
+0,564,42400,35.8,18600,Part-time,Rent,Home improvement
+1,616,61400,35.7,20000,Retired,Own,Auto
+1,739,109900,32.3,54200,Full-time,Mortgage,Auto
+0,644,95100,34.6,18100,Self-employed,Rent,Debt consolidation
+1,663,40900,12.9,9300,Full-time,Mortgage,Auto
+1,673,52800,25.7,6300,Full-time,Own,Medical
+0,682,54700,30.5,13900,Full-time,Mortgage,Auto
+0,623,33900,15.6,13500,Full-time,Rent,Auto
+1,764,99000,20.4,22900,Full-time,Mortgage,Debt consolidation
+1,799,79800,52.9,14100,Full-time,Mortgage,Debt consolidation
+0,719,102100,54,13500,Self-employed,Own,Debt consolidation
+0,627,61100,51.3,15900,Full-time,Own,Medical
+0,687,58000,32.9,23000,Self-employed,Own,Auto
+1,714,114800,27.7,20200,Self-employed,Mortgage,Debt consolidation
+0,656,41300,55.5,9300,Retired,Rent,Debt consolidation
+1,783,65100,27.7,13700,Full-time,Mortgage,Debt consolidation
+0,512,59000,40.5,21900,Full-time,Mortgage,Medical
+0,570,47300,27.6,17700,Retired,Mortgage,Debt consolidation
+1,668,47400,21.1,12600,Full-time,Rent,Medical
+0,613,51300,34.8,29100,Full-time,Rent,Debt consolidation
+0,608,46500,54.6,16300,Part-time,Rent,Auto
+0,629,93800,26.7,33900,Full-time,Rent,Auto
+1,653,77100,12,42300,Full-time,Own,Debt consolidation
+0,709,42800,33.8,19600,Part-time,Rent,Debt consolidation
+0,572,100800,29.4,68900,Full-time,Mortgage,Debt consolidation
+1,726,61700,26.3,35200,Full-time,Rent,Debt consolidation
+1,624,42900,19.3,7000,Full-time,Mortgage,Debt consolidation
+0,732,116500,21.3,46400,Self-employed,Mortgage,Auto
+1,657,59300,36.7,13800,Part-time,Rent,Debt consolidation
+1,633,55400,21.5,21400,Full-time,Rent,Auto
+0,650,88500,27.8,15800,Full-time,Mortgage,Home improvement
+0,638,52000,38.7,17700,Full-time,Mortgage,Debt consolidation
+0,643,72000,44.1,36100,Retired,Rent,Medical
+1,646,111400,24.1,27800,Full-time,Own,Debt consolidation
+0,564,32300,37.8,12000,Part-time,Mortgage,Debt consolidation
+0,664,109400,32.7,29000,Full-time,Own,Home improvement
+0,653,35700,22.8,16100,Part-time,Rent,Medical
+0,618,70000,33.6,35400,Full-time,Own,Debt consolidation
+0,726,58500,62,15600,Retired,Mortgage,Medical
+1,684,65000,33.8,12400,Full-time,Mortgage,Debt consolidation
+0,668,31400,35.1,6200,Part-time,Mortgage,Auto
+0,656,52300,14.9,32600,Full-time,Rent,Home improvement
+0,674,35300,49.1,15300,Part-time,Mortgage,Home improvement
+0,604,45800,17.7,14800,Full-time,Rent,Medical
+1,751,106800,19.4,41700,Full-time,Own,Auto
+1,632,132300,40.5,26200,Full-time,Own,Debt consolidation
+0,677,36500,49.5,15300,Retired,Rent,Home improvement
+0,647,60700,62,24100,Self-employed,Mortgage,Debt consolidation
+0,639,81800,27.9,23800,Full-time,Mortgage,Home improvement
+1,548,66400,25.3,31900,Full-time,Mortgage,Debt consolidation
+0,653,42500,12.4,11900,Full-time,Own,Medical
+1,632,81000,24.6,30900,Full-time,Own,Home improvement
+1,766,88500,41.9,16800,Full-time,Mortgage,Debt consolidation
+1,701,105700,19.6,56300,Full-time,Own,Auto
+0,674,44200,50.9,7400,Retired,Rent,Debt consolidation
+1,727,57100,51.6,19500,Self-employed,Own,Medical
+1,744,112800,43.6,42400,Full-time,Mortgage,Debt consolidation
+0,702,57500,37.4,45800,Full-time,Rent,Auto
+0,587,68800,52.2,31900,Full-time,Rent,Debt consolidation
+0,593,36500,40.3,7700,Full-time,Rent,Auto
+1,630,69500,20.9,8000,Full-time,Own,Debt consolidation
+0,597,34500,38.5,8600,Full-time,Rent,Home improvement
+1,687,47900,34.6,32400,Full-time,Mortgage,Debt consolidation
+0,670,87300,38.3,25300,Self-employed,Rent,Debt consolidation
+0,533,30800,62,17800,Part-time,Rent,Debt consolidation
+1,671,76100,32.1,16300,Full-time,Mortgage,Debt consolidation
+0,730,111400,15.1,27200,Full-time,Own,Debt consolidation
+0,639,40700,32.8,28200,Full-time,Rent,Medical
+0,657,76500,30,22600,Self-employed,Own,Home improvement
+0,631,31900,40.1,9400,Part-time,Rent,Auto
+0,594,91000,36.7,36300,Full-time,Rent,Medical
+1,697,75000,12.5,28400,Full-time,Own,Debt consolidation
+0,685,52000,31.9,14500,Retired,Mortgage,Home improvement
