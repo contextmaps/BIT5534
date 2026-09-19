@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reading a Principal Component Analysis and Exporting Its Scores and Loadings</title>
+<title>Reading a Principal Component Analysis and Exporting Its Scores, Loadings and Eigenvalues</title>
 <style>
 :root {
   --c-text:#1a1a1a; --c-muted:#4a4a4a;
@@ -243,7 +243,7 @@
 <div class="plib-meta">
   <div class="plib-meta-course">BIT 5534 Applied Business Intelligence and Analytics</div>
   <div class="plib-meta-week">Week 4 · Homework 3 · Part 1 of 2</div>
-  <div class="plib-meta-title">Reading a Principal Component Analysis and Exporting Its Scores and Loadings</div>
+  <div class="plib-meta-title">Reading a Principal Component Analysis and Exporting Its Scores, Loadings and Eigenvalues</div>
   <div class="plib-meta-details"><span><strong>Platform:</strong> Hokie AI (build) + local Python (run)</span>&ensp;·&ensp;<span><strong>Submission:</strong> Thread exported as a .txt and uploaded to Canvas</span></div>
 </div>
 
@@ -396,7 +396,7 @@ This protocol applies for the remainder of this session.
   <p>Then make the four claims, all in that same message. Set the axis boxes to PC1 across and PC2 up first. From the loadings plot, which draws an arrow for each variable: how many clusters of arrows you count and which of the variables S01 through S12 are in each, which one of those clusters points along the PC2 axis, and which single variable has the shortest arrow. From the score plot, which draws a point for each pass: whether any point sits far enough from the rest to call an outlier.</p>
   <p>Move two is where the exchange earns its place. Read the verdict claim by claim. Where it says you are overstating, ask what in the data makes it an overstatement and what a correctly stated version would be. Where you think it is wrong, say so and hold your ground until it gives you a number. You ran the analysis and it is reading the file, so a disagreement is worth settling and not worth conceding.</p>
   <p>Move three is your own check, put through the same test. Set the boxes to PC1 across and PC3 up, look at both plots, then set them to PC2 across and PC3 up and look again. Write what you saw, naming variables, and ask it to check that report against the data the same way, right, wrong, overstating or understating.</p>
-  <p>Move four is the task. Say which of your claims were correctly stated, which you overstated and in what direction, and what you now say about the variable whose arrow was shortest at PC1 and PC2. Then compare its eigenvalue table against the one pca_explorer printed. If they differ, say by how much and whether any retained count you reported changes, and say which of the two you are treating as the authority for this homework.</p>
+  <p>Move four is the task. Say which of your claims were correctly stated, which you overstated and in what direction, and what you now say about the variable whose arrow was shortest at PC1 and PC2. Then compare its eigenvalue table against the one pca_explorer printed. If they differ, say by how much and whether any retained count you reported changes, and say whether you are treating Hokie AI's table or the tool's table as the authority for this homework.</p>
   <p>One move is not one message. Ten messages inside the block is the ceiling, and a ceiling is not a target.</p>
 </div>
 
@@ -566,7 +566,7 @@ This protocol applies for the remainder of this session.
 <div class="plib-narration">
   <p>Now write your reflection for case two, in your own words and without help from the AI.</p>
   <p>Your reflection needs all four parts below. Say what your paragraph specified and what Hokie AI had to ask you for AND name one thing that is the same and one thing that is different between your Excel scatter of the first two score columns and the tool's score plot AND do the same for the loadings AND say what the three exported files let you do that the tool's own output does not. Respond to all four parts.</p>
-  <p>The fourth part is where a reflection separates itself. Part 2 of this homework uses one of those two files as regression input, so say what having the numbers on disk makes possible.</p>
+  <p>The fourth part is where a reflection separates itself. Part 2 of this homework uses scores.csv as regression input and eigenvalues.csv to decide how many of its columns to keep, so say what having the numbers on disk makes possible.</p>
   <p>Write 100 to 200 words.</p>
 </div>
 
