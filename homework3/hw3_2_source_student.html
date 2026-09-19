@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regression on Satellite Readings and on Their Principal Components</title>
+<style>
+:root {
+  --c-text:#1a1a1a; --c-muted:#4a4a4a;
+  --c-meta-bg:#f4f6f9; --c-meta-border:#d0d7e2;
+  --c-obj-bg:#eef4fb; --c-obj-accent:#1a5da0;
+  --c-ctx-bg:#fffbf0; --c-ctx-border:#e8d8a0; --c-ctx-label:#5c4400;
+  --c-ctx-s-bg:#f0f7ff; --c-ctx-s-border:#a0c8f0; --c-ctx-s-label:#1a4a80;
+  --c-nar-bg:#f9f9f9; --c-nar-border:#bbb;
+  --c-dis-bg:#f0f4ff; --c-dis-border:#8090cc; --c-dis-label:#1e2e80;
+  --c-sys-bg:#f3f0ff; --c-sys-border:#9080d0; --c-sys-label:#3a2090;
+  --c-scr-bg:#fff8e8; --c-scr-border:#d0a030; --c-scr-label:#6b4a00;
+  --c-s-bg:#f0faf4; --c-s-border:#70c090; --c-s-id:#14552f;
+  --c-r-bg:#fff8f0; --c-r-border:#d0a040; --c-r-id:#6b3e00;
+  --c-mk-bg:#f0f0ff; --c-mk-border:#8080c8; --c-mk-id:#2a2a80;
+  --c-m-bg:#f0f8ff; --c-m-border:#70a8d0; --c-m-id:#0a4a70;
+  --c-mc-bg:#f8f8ff; --c-mc-border:#a0a0d0;
+  --c-btn:#14552f; --c-btn-r:#6b3e00; --c-btn-mk:#2a2a80;
+  --c-btn-mo:#0a4a70; --c-btn-mc:#3a3a6a;
+  --c-q-bg:#f0fafd; --c-q-border:#70b8d0; --c-q-id:#0a5070;
+  --c-btn-q:#0a5070;
+  --c-o-bg:#fef6f0; --c-o-border:#e89870; --c-o-id:#a04510;
+  --c-btn-o:#a04510;
+  --radius:8px; --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --page:1100px;
+}
+/* Two layers. The wrapper takes the width Canvas gives it, up to --page, so it
+   never overflows a narrow frame and never needs a per-machine number. Everything
+   inside fills the block it sits in. */
+.plib-wrap{font-family:var(--font);color:var(--c-text);max-width:min(var(--page),100% - 2rem);margin:0 auto;padding:1rem 0}
+/* Every block spans the page so their left and right edges line up down the
+   column, and the text inside fills the block.
+
+   There is no reading column. D-032 put prose in a 720px column inside a 1100px
+   wrapper, and on 2026-09-02 the instructor read the rendered result and rejected
+   it: every text block stopped two thirds of the way across its own card and
+   stranded the rest, and a bordered box that stops short of the card it sits in
+   reads as broken rather than as typography. The wrapper's own
+   min(1100px, 100% - 2rem) is now the only bound, so a line never exceeds about
+   1055px. The cost is real and is worth stating. A long paragraph at 1055px reads
+   worse than the same paragraph at 800, and what pays for it is the writing
+   standard's rule on paragraph length, which now carries the load the column used
+   to carry. Recorded as D-043, amending D-032. */
+.plib-wrap > *{max-width:100%}
+.plib-submit{margin:2rem 0 1rem;padding:1.4rem 1.6rem;border-radius:var(--radius);background:var(--c-obj-bg);border:2px solid var(--c-obj-accent)}
+.plib-submit-title{font-size:13px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--c-obj-accent)}
+.plib-submit-p{margin:.5rem 0 1rem;font-size:15px;line-height:1.65}
+.plib-submit-btn{display:inline-block;background:var(--c-obj-accent);color:#fff;text-decoration:none;font-size:16px;font-weight:600;padding:.7rem 1.4rem;border-radius:var(--radius)}
+.plib-submit-btn:hover{filter:brightness(1.12)}
+.plib-submit-btn:focus{outline:3px solid var(--c-obj-accent);outline-offset:3px}
+.plib-submit-note{margin-top:.55rem;font-size:13px;color:var(--c-muted)}
+.plib-material{margin:1.6rem 0;padding:1.2rem 1.4rem;border-radius:var(--radius);background:var(--c-s-bg);border:1px solid var(--c-s-border)}
+.plib-material-tag{font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--c-s-id)}
+.plib-material-title{margin-top:.3rem;font-size:17px;font-weight:600;color:var(--c-text)}
+.plib-material-box{margin:.9rem 0 1.1rem;padding:.9rem 1rem;max-height:22rem;overflow:auto;background:#fff;border:1px solid var(--c-s-border);border-radius:6px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;color:var(--c-text)}
+.plib-material-box:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+.plib-material-btns{display:flex;flex-wrap:wrap;gap:.6rem}
+.plib-material-copies{margin:.9rem 0 0;display:flex;flex-wrap:wrap;gap:.8rem}
+.plib-copyrow{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;padding:.55rem .7rem;background:#fff;border:1px solid var(--c-s-border);border-radius:6px}
+.plib-copyrow-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-s-id)}
+.plib-copyrow-code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;color:var(--c-text)}
+.plib-copy-btn-row{padding:.3rem .6rem;font-size:12px}
+.plib-material-btn{display:inline-block;background:var(--c-s-id);color:#fff;text-decoration:none;font-size:15px;font-weight:600;padding:.6rem 1.2rem;border-radius:var(--radius)}
+.plib-material-btn:hover{filter:brightness(1.25)}
+.plib-material-btn:focus{outline:3px solid var(--c-s-id);outline-offset:3px}
+.plib-material-note{margin-top:.55rem;font-size:13px;color:var(--c-muted)}
+.plib-section{margin:2.25rem 0 1.1rem;padding-top:.9rem;border-top:3px solid var(--c-obj-accent)}
+.plib-section-n{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--c-muted)}
+.plib-section-t{font-size:23px;font-weight:700;letter-spacing:.04em;color:var(--c-obj-accent);margin-top:2px}
+.plib-wrap > .plib-section:first-child{margin-top:.5rem}
+.plib-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;margin-bottom:1.25rem}
+.plib-tile{background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);padding:.9rem;display:flex;flex-direction:column}
+.plib-tile img{width:100%;height:auto;border-radius:4px;background:#faf7f8}
+.plib-tile figure,.plib-tile{margin:0}
+/* A drawing narrower than its grid cell is centred in it. render_tiles caps the
+   wrapper at the SVG's own viewBox width so a 400px card is not blown up to the
+   full row, and without this the drawing sat against the left edge with the slack
+   stranded on the right, which is the same fault D-043 removed from the prose. */
+.plib-tile-svg{width:100%;margin-left:auto;margin-right:auto}
+.plib-tile-svg svg{width:100%;height:auto;display:block}
+.plib-tile-caption{font-size:13px;line-height:1.55;color:var(--c-text);margin-top:auto;padding-top:.6rem}
+.plib-meta{background:var(--c-meta-bg);border:1px solid var(--c-meta-border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1.5rem}
+.plib-meta-course{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--c-muted);margin-bottom:4px}
+.plib-meta-title{font-size:20px;font-weight:600;margin:4px 0 8px}
+.plib-meta-week{font-size:13px;color:var(--c-muted);margin-bottom:2px}
+.plib-meta-details{font-size:12px;color:var(--c-muted);margin-top:8px}
+.plib-objectives{background:var(--c-obj-bg);border-left:4px solid var(--c-obj-accent);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.5rem}
+.plib-objectives-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-obj-accent);font-weight:700;margin-bottom:8px}
+.plib-objectives-intro{margin:0 0 8px;font-size:14px;line-height:1.6;font-style:italic;color:var(--c-muted)}
+.plib-objectives-list{margin:0;padding-left:1.25rem}
+.plib-objectives-list li{margin-bottom:6px;font-size:14px;line-height:1.6}
+.plib-context{background:var(--c-ctx-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-context-student{background:var(--c-ctx-s-bg);border-color:var(--c-ctx-s-border)}
+.plib-context-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-ctx-label);font-weight:700;margin-bottom:8px}
+.plib-context-student .plib-context-label{color:var(--c-ctx-s-label)}
+.plib-context-body p{margin:4px 0;font-size:13px;line-height:1.6;color:var(--c-muted)}
+.plib-formula{margin:1rem 0;padding:1rem 1.25rem;background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);text-align:center}
+.plib-formula-body{overflow-x:auto;color:var(--c-text);padding:2px 0}
+.plib-formula-svg{max-width:100%;height:auto}
+.plib-formula-caption{margin-top:.85rem;font-size:13px;line-height:1.6;color:var(--c-muted);text-align:left}
+.plib-formula-missing{font-size:13px;color:var(--c-muted);text-align:left}
+.plib-formula-note{font-size:12px;margin-top:6px}
+.plib-formula-source{margin-top:.85rem;text-align:left}
+.plib-formula-source summary{font-size:12px;color:var(--c-muted);cursor:pointer}
+.plib-formula-latex{margin:6px 0 0;padding:8px 10px;background:var(--c-ctx-bg);border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.5;white-space:pre-wrap;color:var(--c-muted)}
+.plib-context-pre{margin:8px 0;padding:10px 12px;background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.55;color:var(--c-text);white-space:pre;overflow-x:auto}
+.plib-context-bullet{font-size:13px;color:var(--c-muted);padding-left:1rem;position:relative;margin-bottom:3px}
+.plib-context-bullet::before{content:"\2022";position:absolute;left:0}
+.plib-script{background:var(--c-scr-bg);border:1px solid var(--c-scr-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-script-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-scr-label);font-weight:700;margin-bottom:10px}
+.plib-script-list{margin:0;padding-left:1.25rem}
+.plib-script-list li{font-size:14px;line-height:1.6;margin-bottom:8px}
+.plib-script-time{font-weight:700;color:var(--c-scr-label);font-family:monospace;background:rgba(208,160,48,.15);padding:1px 6px;border-radius:3px}
+.plib-narration{background:var(--c-nar-bg);border-left:3px solid var(--c-nar-border);padding:.9rem 1.25rem;margin-bottom:1rem;border-radius:0 var(--radius) var(--radius) 0}
+.plib-narration p{margin:0 0 8px;font-size:14px;line-height:1.7}
+.plib-narration p:last-child{margin-bottom:0}
+.plib-narration-list{margin:4px 0;padding-left:1.25rem}
+.plib-narration-list li{font-size:14px;line-height:1.6;margin-bottom:4px}
+.plib-discussion{background:var(--c-dis-bg);border:1px solid var(--c-dis-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-slide{margin:0 0 1.25rem;text-align:center}
+.plib-slide-img{max-width:100%;height:auto;border:1px solid var(--c-dis-border);border-radius:var(--radius);box-shadow:0 1px 4px rgba(0,0,0,.08);background:#faf7f8;min-height:60px}
+.plib-slide-caption{font-size:13px;color:var(--c-muted);margin-top:.4rem}
+.plib-slide-script{margin-top:.6rem;text-align:left;font-size:13px;color:var(--c-muted)}
+.plib-slide-script summary{cursor:pointer;font-weight:600}
+.plib-slide-script-body{white-space:pre-wrap;background:rgba(0,0,0,.04);border-radius:var(--radius);padding:.6rem .8rem;margin-top:.4rem}
+.plib-discussion-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-dis-label);font-weight:700;margin-bottom:8px}
+.plib-discussion-intro{margin:0 0 8px;font-size:14px;line-height:1.6;font-style:italic;color:var(--c-dis-label)}
+.plib-discussion-list{margin:0;padding-left:1.25rem}
+.plib-discussion-list li{font-size:14px;line-height:1.6;margin-bottom:6px;color:var(--c-dis-label)}
+.plib-scenarios{margin-bottom:1rem}
+.plib-scenarios-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:#630031;font-weight:700;margin-bottom:8px}
+.plib-scenario-card{background:var(--c-ctx-s-bg);border:1px solid var(--c-ctx-s-border);border-left:4px solid #630031;border-radius:var(--radius);padding:.7rem 1rem;margin-bottom:.6rem}
+.plib-scenario-title{font-weight:700;font-size:14px;color:#630031;margin-bottom:4px}
+.plib-scenario-body{margin:0 0 4px;font-size:14px;line-height:1.6}
+.plib-scenario-line{font-size:13px;line-height:1.55;margin:2px 0 0;padding-left:1rem;position:relative}
+.plib-scenario-line::before{content:"›";position:absolute;left:.2rem;color:#CF4420;font-weight:700}
+.plib-system{background:var(--c-sys-bg);border:1px solid var(--c-sys-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-system-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-sys-label);font-weight:700;margin-bottom:8px}
+.plib-system-note{font-weight:400;text-transform:none;letter-spacing:0;font-style:italic}
+.plib-prompt-s-ref{opacity:.92;border-style:dashed}
+.plib-ref-note{font-size:12px;color:var(--c-muted);font-style:italic;margin-top:6px}
+.plib-prompt-text{display:none}
+.plib-prompt-display{font-size:14px;line-height:1.7;white-space:pre-wrap;background:rgba(255,255,255,.6);border-radius:4px;padding:.6rem .8rem;margin-bottom:10px}
+.plib-prompt-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.plib-prompt-id{font-size:12px;font-weight:700;font-family:monospace;padding:2px 7px;border-radius:4px}
+.plib-prompt-type-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-muted);font-weight:600}
+.plib-prompt-s{background:var(--c-s-bg);border:1px solid var(--c-s-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-prompt-s .plib-prompt-id{color:var(--c-s-id);background:rgba(20,85,47,.1)}
+.plib-prompt-r{background:var(--c-r-bg);border:1px solid var(--c-r-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-r-id{color:var(--c-r-id)!important;background:rgba(107,62,0,.1)!important}
+.plib-reflect-label{color:var(--c-r-id)!important}
+.plib-reflect-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-prompt-marker{background:var(--c-mk-bg);border:2px solid var(--c-mk-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-marker-id{color:var(--c-mk-id)!important;background:rgba(42,42,128,.1)!important}
+.plib-marker-label{color:var(--c-mk-id)!important}
+.plib-marker-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-marker-display{border-left:3px solid var(--c-mk-border);max-height:18em;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;box-shadow:inset 0 -10px 10px -10px rgba(0,0,0,.18)}
+.plib-prompt-m{background:var(--c-m-bg);border:1.5px solid var(--c-m-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:.5rem}
+.plib-m-id{color:var(--c-m-id)!important;background:rgba(10,74,112,.1)!important}
+.plib-m-label{color:var(--c-m-id)!important}
+.plib-m-badge{font-size:11px;background:var(--c-m-id);color:#fff;padding:2px 8px;border-radius:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.plib-m-instructions{background:rgba(255,255,255,.7);border-radius:6px;padding:10px 14px;margin-bottom:12px}
+.plib-m-instructions-label{font-size:12px;font-weight:700;color:var(--c-m-id);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.plib-m-steps{margin:0;padding-left:1.25rem}
+.plib-m-steps li{font-size:13px;line-height:1.6;margin-bottom:4px}
+.plib-m-seed{background:rgba(255,255,255,.5);border-left:3px solid var(--c-m-border);padding:8px 12px;margin-bottom:12px;border-radius:0 4px 4px 0}
+.plib-m-seed-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-m-id);margin-bottom:4px}
+.plib-m-seed-text{font-size:13px;line-height:1.6;white-space:pre-wrap}
+.plib-prompt-m-close{background:var(--c-mc-bg);border:1px dashed var(--c-mc-border);border-radius:var(--radius);padding:.75rem 1.25rem;margin-bottom:1.25rem}
+.plib-m-close-label{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.plib-m-close-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-copy-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;font-size:13px;font-weight:500;border:1.5px solid var(--c-btn);background:transparent;color:var(--c-btn);border-radius:6px;cursor:pointer;transition:background .15s,color .15s}
+.plib-copy-btn:hover{background:var(--c-btn);color:#fff}
+.plib-copy-btn:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+.plib-copy-btn.copied{background:#333;color:#fff;border-color:#333}
+.plib-copy-btn-reflect{border-color:var(--c-btn-r);color:var(--c-btn-r)}
+.plib-copy-btn-reflect:hover{background:var(--c-btn-r);color:#fff}
+.plib-copy-btn-marker{border-color:var(--c-btn-mk);color:var(--c-btn-mk)}
+.plib-copy-btn-marker:hover{background:var(--c-btn-mk);color:#fff}
+.plib-copy-btn-m-open{border-color:var(--c-btn-mo);color:var(--c-btn-mo)}
+.plib-copy-btn-m-open:hover{background:var(--c-btn-mo);color:#fff}
+.plib-copy-btn-m-close{border-color:var(--c-btn-mc);color:var(--c-btn-mc)}
+.plib-copy-btn-m-close:hover{background:var(--c-btn-mc);color:#fff}
+.plib-textarea{display:block;width:100%;box-sizing:border-box;padding:10px 12px;font-size:14px;font-family:var(--font);line-height:1.6;border:1.5px solid var(--c-r-border);border-radius:6px;margin-bottom:10px;background:#fff;color:var(--c-text);resize:vertical;min-height:120px}
+.plib-prompt-input{min-height:0;margin:10px 0 6px}
+.plib-textarea:focus{outline:3px solid #005fcc;outline-offset:2px;border-color:#005fcc}
+.plib-counter{font-size:13px;color:var(--c-muted);margin-bottom:8px;font-variant-numeric:tabular-nums}
+.plib-counter.at-limit{color:#b00020;font-weight:600}
+.plib-counter .plib-count-ok{color:#14552f}
+.plib-counter .plib-count-warn{color:#8a4a00}
+.plib-counter .plib-count-bad{color:#b00020;font-weight:600}
+.plib-counter-min{font-size:12px;color:var(--c-muted);margin-left:8px}
+.plib-warn{font-size:13px;color:#b00020;font-weight:600;margin-bottom:8px;min-height:20px}
+.plib-prompt-q{background:var(--c-q-bg);border:1px solid var(--c-q-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-q-id{color:var(--c-q-id)!important;background:rgba(10,80,112,.1)!important}
+.plib-q-label{color:var(--c-q-id)!important}
+.plib-q-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-q-items{display:flex;flex-direction:column;gap:14px;margin-bottom:10px}
+.plib-q-item{background:rgba(255,255,255,.6);border-radius:6px;padding:10px 12px}
+.plib-q-question{font-size:14px;font-weight:500;display:block;margin-bottom:8px;line-height:1.5}
+.plib-q-item-num{font-family:monospace;font-weight:700;color:var(--c-q-id);margin-right:6px}
+.plib-q-cap-note{font-weight:400;font-style:italic;color:var(--c-muted);margin-left:6px;font-size:13px}
+.plib-q-select{width:100%;padding:6px 8px;font-size:14px;border:1px solid var(--c-q-border);border-radius:4px;background:#fff}
+.plib-q-likert{display:flex;flex-wrap:wrap;gap:10px}
+.plib-q-likert-opt{display:flex;align-items:center;gap:5px;font-size:14px;cursor:pointer}
+.plib-q-checkboxes{display:flex;flex-direction:column;gap:6px}
+.plib-q-check-opt{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.plib-q-check-opt input[disabled] + span{opacity:.5}
+.plib-copy-btn-q{border-color:var(--c-btn-q);color:var(--c-btn-q)}
+.plib-copy-btn-q:hover{background:var(--c-btn-q);color:#fff}
+.plib-prompt-o{background:var(--c-o-bg);border:1px solid var(--c-o-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-o-id{color:var(--c-o-id)!important;background:rgba(160,69,16,.1)!important}
+.plib-o-label{color:var(--c-o-id)!important}
+.plib-o-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-o-question{font-size:14px;font-weight:500;margin-bottom:10px;line-height:1.5}
+.plib-o-list{list-style:none;padding:0;margin:0 0 10px 0;display:flex;flex-direction:column;gap:6px}
+.plib-o-item{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.7);border-radius:6px;padding:8px 10px;font-size:14px}
+.plib-o-rank{font-family:monospace;font-weight:700;color:var(--c-o-id);min-width:1.5em;text-align:right}
+.plib-o-item-text{flex:1}
+.plib-o-controls{display:flex;flex-direction:column;gap:2px}
+.plib-o-arrow{background:transparent;border:1px solid var(--c-o-border);color:var(--c-o-id);width:28px;height:22px;font-size:14px;line-height:1;cursor:pointer;border-radius:3px;padding:0}
+.plib-o-arrow:hover:not([disabled]){background:var(--c-o-border);color:#fff}
+.plib-o-arrow[disabled]{opacity:.25;cursor:default}
+.plib-copy-btn-o{border-color:var(--c-btn-o);color:var(--c-btn-o)}
+.plib-copy-btn-o:hover{background:var(--c-btn-o);color:#fff}
+.plib-demo-badge{font-size:11px;color:var(--c-muted);background:rgba(0,0,0,.05);padding:2px 8px;border-radius:3px;font-style:italic;margin-left:8px}
+.plib-ai-badge{font-size:11px;padding:2px 8px;border-radius:3px;font-family:monospace;margin-left:8px}
+.plib-ai-respond{background:#e8f5e8;color:#2c5e2c}
+.plib-ai-acknowledge{background:#fef0e6;color:#8c4a1a}
+.plib-ai-archive{background:#f0e8f5;color:#5a2c8c}
+</style>
+</head>
+<body>
+<a href="#main-content" class="plib-skip-link">Skip to main content</a>
+<style>.plib-skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;}.plib-skip-link:focus{position:static;width:auto;height:auto;background:#005fcc;color:#fff;padding:8px 16px;font-size:14px;font-weight:600;border-radius:4px;text-decoration:none;display:inline-block;margin:8px;}</style>
+<main id="main-content">
+<div class="plib-wrap">
+<div class="plib-meta">
+  <div class="plib-meta-course">BIT 5534 Applied Business Intelligence and Analytics</div>
+  <div class="plib-meta-week">Week 4 · Homework 3 · Part 2 of 2</div>
+  <div class="plib-meta-title">Regression on Satellite Readings and on Their Principal Components</div>
+  <div class="plib-meta-details"><span><strong>Platform:</strong> Hokie AI (build) + local Python (run)</span>&ensp;·&ensp;<span><strong>Submission:</strong> Thread exported as a .txt and uploaded to Canvas</span></div>
+</div>
+
+<div class="plib-objectives">
+  <div class="plib-objectives-label">Learning Objectives</div>
+  <p class="plib-objectives-intro">By the end of this part, students will be able to:</p>
+  <ol class="plib-objectives-list">
+    <li>Assemble a regression file from a response column and a set of input columns, with the response in the first column.</li>
+    <li>Run a multiple regression, report the R squared and the adjusted R squared, and read a logworth plot for the inputs that reach significance.</li>
+    <li>Reduce a model to its significant inputs, run it again, and say what each of the two numbers did.</li>
+    <li>Check a summary an assistant gives back against the paragraph it was built from, and correct what it changed, dropped or added.</li>
+    <li>Say whether the inputs a regression keeps resemble the components a principal component analysis retains, and say why a count of significant columns and a count of retained components are not the same quantity.</li>
+    <li>Name a group of correlated readings where one member survived a reduction and another was dropped, and say what that tells you about those columns.</li>
+    <li>Run the same response against the principal components of the same inputs, and compare the two full models.</li>
+    <li>Say why a model on all the components returns what a model on all the original columns returns.</li>
+    <li>Reduce the component model by the eigenvalue rule and compare it against the reduced original model.</li>
+    <li>Read the variance inflation factor column of a regression report and say what it says about the inputs of that model.</li>
+    <li>Weigh three properties of a component model, which are inputs that are uncorrelated with each other, a reduction small enough to plot, and a reduction computed without seeing the response, against the named inputs of a reading model.</li>
+    <li>Choose between two reduced models and defend the choice on something other than fit.</li>
+  </ol>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 1 of 4</div><div class="plib-section-t">ORIENTATION</div></div>
+
+<div class="plib-context plib-context-student">
+  <div class="plib-context-label">&#128203; Note for Students</div>
+  <div class="plib-context-body">
+    <p>Part 2 of homework 3 runs in one Hokie AI thread and holds two cases. Both cases use a response column this course has not used before, and case two uses the scores and eigenvalue files you exported in part 1, so finish part 1 first.</p>
+    <p>Make a folder for it inside the HomeWork folder.</p>
+    <pre class="plib-context-pre">BIT5534/
+    HomeWork/
+        hw3_2/</pre>
+    <p>Put target.csv and the regression script in there, and copy Satellites.csv, scores.csv and eigenvalues.csv across from your hw3_1 folder. Case one uses Satellites.csv, and case two uses scores.csv and eigenvalues.csv.</p>
+  </div>
+</div>
+
+<div class="plib-narration">
+  <p>The twelve satellite readings you decomposed in part 1 now have something to predict. A ground station recorded a signal strength for each of the one thousand passes, and that column is in target.csv.</p>
+  <p>Case one regresses the signal strength on the twelve readings. Case two regresses the same signal strength on the principal components of those same readings. The two cases are the same data twice and the comparison is the work.</p>
+  <p>Part 2 is worth 100 points. Each case is worth 50, 35 for the exchange in the M block and 15 for the reflection. Pasting a prompt earns nothing, because it is not work.</p>
+  <p>Work alone. Your notes, the two week 4 lectures on principal component analysis and the week 2 regression lecture are open to you. Do not ask Hokie AI to write your reflections. Take as long as you need.</p>
+</div>
+
+<div class="plib-material" id="plib-material-6">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The response column</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="target.csv" download="target.csv" target="_blank" rel="noopener noreferrer">Download target.csv</a>
+  </div>
+  <div class="plib-material-note">One column headed Signal_Strength and one thousand rows, in the same row order as Satellites.csv. Save it into your hw3_2 folder.</div>
+</div>
+
+<div class="plib-material" id="plib-material-7">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The tool for both cases</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="multivariate_regression.py" download="multivariate_regression.py" target="_blank" rel="noopener noreferrer">Download multivariate_regression.py</a>
+  </div>
+  <div class="plib-material-note">The multiple regression script from the week 2 regression lecture, unchanged. It needs pandas, statsmodels and matplotlib, and it names the install command for you if one is missing. It reads the first column of the file as the response and every column after it as an input, so the response goes first every time. It writes a folder beside your data file holding report.txt, logworth.png and residuals.png, and it shows the R squared and the adjusted R squared on screen when it finishes.</div>
+</div>
+
+<div class="plib-narration">
+  <p>Paste the block below into a new Hokie AI thread and wait for it to acknowledge. Do not write anything else in that message. Everything after this goes in the same thread.</p>
+</div>
+
+<div class="plib-prompt-marker" role="region" aria-label="Session Opener">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-marker-id">TH3.2</span>
+    <span class="plib-prompt-type-label plib-marker-label">Session Opener</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-marker-instruction">Copy this block and paste it into Hokie AI to begin your session.</p>
+  <div class="plib-prompt-display plib-marker-display">You are an analysis partner for BIT 5534 Applied Business Intelligence and Analytics, a graduate course at Virginia Tech. The student holds graduate standing, has some statistics background, and is working through a homework case on their own with no instructor present. Speak to them as a capable adult. Be direct, say when something is uncertain or contested, and do not pad your answers. When a student pushes back on something you said, take the challenge seriously and do not concede immediately to be agreeable. When they ask about your reasoning, say what you assumed and what you cannot settle for them because it depends on something you were not told.
+
+---
+**AI Interaction Protocol**
+
+In this session, you will receive blocks of content with the
+following structural pattern:
+
+```
+### &lt;BlockID&gt;
+----------
+&lt;content&gt;
+----------
+###
+```
+
+Some blocks include an interaction-mode directive on a separate
+line inside the dashed envelope:
+
+```
+### &lt;BlockID&gt;
+----------
+[ai_interaction=&lt;mode&gt;]
+&lt;content&gt;
+----------
+###
+```
+
+Three modes determine your response:
+
+  - **respond**: Engage substantively with the block content.
+    Treat it as a prompt, question, or task that wants your
+    analytical response. Default for S blocks (prompts) and X
+    blocks (free exploration).
+
+  - **acknowledge**: Confirm receipt with one brief sentence
+    naming the block ID. Do not analyze, comment on, or expand on
+    the content. The student is filing the block for the record,
+    not asking for engagement. Default for T blocks (this opener),
+    R blocks (reflections), M CLOSE blocks (closing markers), Q
+    blocks (structured selections), and O blocks (ordering
+    selections).
+
+  - **archive**: Respond with only the block ID and nothing else.
+    Used for batched archival pastes where even brief
+    acknowledgment would clutter the thread.
+
+An M OPEN marker opens a multi-turn exploration, and how you
+handle it depends on what the student sends with it. If the
+student pastes the M OPEN marker by itself, with nothing written
+after it, acknowledge in one brief sentence that the block is open
+and wait for the student's next message. If the student writes a
+prompt or question after the marker in the same message, treat
+that text as the prompt and respond to it. Always acknowledge an
+M CLOSE marker.
+
+If a block has no explicit `[ai_interaction=...]` directive, apply
+the block-type default per the list above.
+
+This protocol applies for the remainder of this session.
+---</div>
+  <div class="plib-prompt-text" id="text_prompt_9" data-copy="### TH3.2&#10;----------&#10;You are an analysis partner for BIT 5534 Applied Business Intelligence and Analytics, a graduate course at Virginia Tech. The student holds graduate standing, has some statistics background, and is working through a homework case on their own with no instructor present. Speak to them as a capable adult. Be direct, say when something is uncertain or contested, and do not pad your answers. When a student pushes back on something you said, take the challenge seriously and do not concede immediately to be agreeable. When they ask about your reasoning, say what you assumed and what you cannot settle for them because it depends on something you were not told.&#10;&#10;---&#10;**AI Interaction Protocol**&#10;&#10;In this session, you will receive blocks of content with the&#10;following structural pattern:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Some blocks include an interaction-mode directive on a separate&#10;line inside the dashed envelope:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;[ai_interaction=&lt;mode&gt;]&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Three modes determine your response:&#10;&#10;  - **respond**: Engage substantively with the block content.&#10;    Treat it as a prompt, question, or task that wants your&#10;    analytical response. Default for S blocks (prompts) and X&#10;    blocks (free exploration).&#10;&#10;  - **acknowledge**: Confirm receipt with one brief sentence&#10;    naming the block ID. Do not analyze, comment on, or expand on&#10;    the content. The student is filing the block for the record,&#10;    not asking for engagement. Default for T blocks (this opener),&#10;    R blocks (reflections), M CLOSE blocks (closing markers), Q&#10;    blocks (structured selections), and O blocks (ordering&#10;    selections).&#10;&#10;  - **archive**: Respond with only the block ID and nothing else.&#10;    Used for batched archival pastes where even brief&#10;    acknowledgment would clutter the thread.&#10;&#10;An M OPEN marker opens a multi-turn exploration, and how you&#10;handle it depends on what the student sends with it. If the&#10;student pastes the M OPEN marker by itself, with nothing written&#10;after it, acknowledge in one brief sentence that the block is open&#10;and wait for the student's next message. If the student writes a&#10;prompt or question after the marker in the same message, treat&#10;that text as the prompt and respond to it. Always acknowledge an&#10;M CLOSE marker.&#10;&#10;If a block has no explicit `[ai_interaction=...]` directive, apply&#10;the block-type default per the list above.&#10;&#10;This protocol applies for the remainder of this session.&#10;---&#10;----------&#10;###"></div>
+  <button class="plib-copy-btn plib-copy-btn-marker" onclick="copyPrompt('text_prompt_9', this)"
+          aria-label="Copy session opener to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy session opener
+  </button>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 2 of 4</div><div class="plib-section-t">CASE ONE</div></div>
+
+<div class="plib-narration">
+  <p>Case one is worth 50 points, 35 for the exchange in the M block and 15 for the reflection.</p>
+  <p>Build the file first. Open target.csv in Excel, open Satellites.csv beside it, copy all twelve columns of Satellites.csv with their headings S01 through S12, and paste them into the columns to the right of Signal_Strength. Save the result as original_regression.csv. Thirteen columns, with Signal_Strength first, because the script reads the first column as the response and everything after it as an input.</p>
+  <p>Double-click multivariate_regression.py and choose original_regression.csv when it asks for a file. Then check two numbers, which the script shows in the box it puts up when it finishes and also writes into report.txt. The R squared is 0.8018 and the adjusted R squared is 0.7994. If your run agrees, the paste landed in the right place and the rows line up. If it does not, the columns are out of order or a row is offset, and nothing below will mean anything until that is fixed.</p>
+  <p>The script writes its output into a folder called original_regression_outputs, beside the file you ran it on. Open logworth.png in there and read which inputs clear significance. The plot draws one horizontal bar for each of the twelve readings and a dashed red line labelled p = 0.05, which stands at a logworth of 1.3. The script caps a bar at 16, so a bar that reaches the right edge is at the cap and not at its true value. Write down which of S01 through S12 have bars past the dashed line, and how many there are.</p>
+  <p>Save a copy of the file as original_regression_reduced.csv, delete the reading columns that did not clear the line, keep Signal_Strength first, and save. Run the script on that file and write down both numbers. The second run writes its own folder, original_regression_reduced_outputs, which case two asks you to open.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-13">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Signal_Strength first, then the twelve readings pasted to its right, saved as original_regression.csv. The script reads the first column as the response. Check R squared 0.8018 and adjusted R squared 0.7994 before you read anything else."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 191" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="191" rx="10" fill="#faf7f8"/><rect x="21" y="20" width="958" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><text x="46" y="58" font-size="18" font-weight="600" fill="#630031">Signal_Strength goes in the first column, every time</text><text x="46" y="86" font-size="16" fill="#2b2b2b">Paste the twelve reading columns to the right of it and save as original_regression.csv. The script reads column one as the</text><text x="46" y="108" font-size="16" fill="#2b2b2b">response and everything after it as an input.</text><text x="46" y="134" font-size="14" fill="#6b6b6b">Check R squared 0.8018 and adjusted R squared 0.7994 before you read anything else. If your run disagrees, the paste is out of order or a row is</text><text x="46" y="153" font-size="14" fill="#6b6b6b">offset.</text></svg></div>
+    <figcaption class="plib-tile-caption">The response goes in the first column every time, in this case and in the next one.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>Now open the M block and put four things to Hokie AI, in order. The card below carries them.</p>
+  <p>Move one is a paragraph you write. Say what the dataset is, what Signal_Strength is, what the twelve inputs are, which are the readings S01 through S12, give the R squared and the adjusted R squared of the full twelve reading model, say how many inputs cleared significance and name them, give the R squared and the adjusted R squared of the reduced model, and close by asking Hokie AI to say back what it understood AND move two reads that summary against your paragraph and corrects anything it got wrong AND move three asks whether the inputs that survived resemble the principal components you found in part 1 AND move four asks whether the number of significant inputs resembles the number of components the eigenvalue rule retained. All four.</p>
+  <p>Move one is where the care goes. Everything Hokie AI knows about your models is what that paragraph carries, so a number you leave out is a number it will invent or avoid.</p>
+  <p>Move two is the move students skip. A summary that sounds right is not the same as a summary that is right, so read it against your own paragraph and say what it changed, dropped or added. If it got everything right, say that and say what you checked.</p>
+  <p>Moves three and four are the task. They are comparison questions and the honest answer to both may be no. The reduced model kept some members of a correlated group and dropped others, and those groups are the clusters of arrows you counted in the loadings plot of pca_explorer.py in part 1. A principal component is a weighted combination of all twelve readings. Push on the difference and do not settle for a yes.</p>
+  <p>Ten messages inside the block is the ceiling, and a ceiling is not a target.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-15">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four moves joined by AND. Write the paragraph carrying both models and their numbers and ask it to say back what it understood, read that summary against your paragraph and correct it, ask whether the surviving inputs resemble the principal components, then ask whether the count of significant inputs resembles the count the eigenvalue rule retained."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 231" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="231" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Four moves, and each one uses the answer before it</text><rect x="21" y="46" width="204" height="163" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Write the</text><text x="66" y="103" font-size="17" font-weight="600" fill="#2b2b2b">paragraph</text><text x="37" y="134" font-size="14" fill="#6b6b6b">both models, all four</text><text x="37" y="153" font-size="14" fill="#6b6b6b">numbers, and the readings</text><text x="37" y="172" font-size="14" fill="#6b6b6b">that cleared the line</text><text x="248" y="132" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="163" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Read its summary</text><text x="318" y="103" font-size="17" font-weight="600" fill="#2b2b2b">back</text><text x="288" y="134" font-size="14" fill="#6b6b6b">against your paragraph,</text><text x="288" y="153" font-size="14" fill="#6b6b6b">and correct what it</text><text x="288" y="172" font-size="14" fill="#6b6b6b">changed</text><text x="500" y="132" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="163" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Ask about the</text><text x="569" y="103" font-size="17" font-weight="600" fill="#2b2b2b">survivors</text><text x="540" y="134" font-size="14" fill="#6b6b6b">do the readings that</text><text x="540" y="153" font-size="14" fill="#6b6b6b">cleared resemble the</text><text x="540" y="172" font-size="14" fill="#6b6b6b">components of part 1</text><text x="752" y="132" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="163" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Ask about the</text><text x="820" y="103" font-size="17" font-weight="600" fill="#2b2b2b">counts</text><text x="792" y="134" font-size="14" fill="#6b6b6b">does the number that</text><text x="792" y="153" font-size="14" fill="#6b6b6b">cleared resemble the</text><text x="792" y="172" font-size="14" fill="#6b6b6b">number the eigenvalue rule</text><text x="792" y="191" font-size="14" fill="#6b6b6b">kept</text></svg></div>
+    <figcaption class="plib-tile-caption">Four moves, in order. Each one uses the answer before it, and move three and move four are the task.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-prompt-m" role="region" aria-label="Multi-turn Block MH3.2.1, Begin">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-m-id">MH3.2.1</span>
+    <span class="plib-prompt-type-label plib-m-label">Multi-turn · Consolidation</span>
+    <span class="plib-m-badge">Summative</span>
+    <span class="plib-ai-badge plib-ai-respond">AI: respond</span>
+  </div>
+  <div class="plib-m-instructions">
+    <div class="plib-m-instructions-label">&#128221; How this block works</div>
+    <ol class="plib-m-steps">
+      <li>Click <strong>Copy opening marker</strong> and paste it into Hokie AI to begin this block.</li>
+      <li>Interact with Hokie AI: ask questions, explore, respond. All of this exchange belongs to this block.</li>
+      <li>When finished, use the <strong>Copy closing marker</strong> button below to close the block in your thread.</li>
+    </ol>
+  </div>
+  <div class="plib-prompt-text" id="text_m_open_16" data-copy="### MH3.2.1 OPEN&#10;----------&#10;"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-open" onclick="copyPrompt('text_m_open_16', this)"
+          aria-label="Copy opening marker for block MH3.2.1">
+    <span aria-hidden="true">&#9654;</span> Copy opening marker
+  </button>
+</div>
+
+<div class="plib-prompt-m-close" role="region" aria-label="Multi-turn Block MH3.2.1, End">
+  <div class="plib-m-close-label">
+    <span class="plib-prompt-id plib-m-id">MH3.2.1</span>
+    <span class="plib-prompt-type-label plib-m-label">End of Multi-turn Block</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-m-close-instruction">When you have finished your exchange, copy this closing marker and paste it into Hokie AI to close the block.</p>
+  <div class="plib-prompt-text" id="text_m_close_17" data-copy="&#10;----------&#10;### MH3.2.1 CLOSE"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-close" onclick="copyPrompt('text_m_close_17', this)"
+          aria-label="Copy closing marker for block MH3.2.1">
+    <span aria-hidden="true">&#9646;&#9646;</span> Copy closing marker
+  </button>
+</div>
+
+<div class="plib-narration">
+  <p>Now write your reflection for case one, in your own words and without help from the AI.</p>
+  <p>Your reflection needs all four parts below. Give the R squared and the adjusted R squared of the full twelve reading model and of the reduced model AND say what deleting the inputs that did not clear significance did to the R squared and to the adjusted R squared, and why those two numbers moved differently AND name one group of readings where one member survived and another did not, and say what that tells you about those columns AND say what the logworth plot told you that the R squared did not. Respond to all four parts.</p>
+  <p>The fourth part is where a reflection separates itself. One number describes the whole model and the plot describes one input at a time, so say what each one cannot tell you.</p>
+  <p>Write 100 to 200 words.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-20">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four boxes joined by AND. Both pairs of numbers, what deleting the weak inputs did to each number and why they moved differently, a group where one member survived and another did not with what that tells you, and what the logworth plot told you that the R squared did not."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 212" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="212" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">All four parts of the case one reflection</text><rect x="21" y="46" width="204" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Both pairs of</text><text x="66" y="103" font-size="17" font-weight="600" fill="#2b2b2b">numbers</text><text x="37" y="134" font-size="14" fill="#6b6b6b">full model and reduced</text><text x="37" y="153" font-size="14" fill="#6b6b6b">model</text><text x="248" y="123" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">What the deletion</text><text x="318" y="103" font-size="17" font-weight="600" fill="#2b2b2b">did</text><text x="288" y="134" font-size="14" fill="#6b6b6b">to each number, and why</text><text x="288" y="153" font-size="14" fill="#6b6b6b">they moved differently</text><text x="500" y="123" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">A group that was</text><text x="569" y="103" font-size="17" font-weight="600" fill="#2b2b2b">split</text><text x="540" y="134" font-size="14" fill="#6b6b6b">one reading survived,</text><text x="540" y="153" font-size="14" fill="#6b6b6b">another was dropped, and</text><text x="540" y="172" font-size="14" fill="#6b6b6b">what that tells you</text><text x="752" y="123" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">What the plot told</text><text x="820" y="103" font-size="17" font-weight="600" fill="#2b2b2b">you</text><text x="792" y="134" font-size="14" fill="#6b6b6b">that the R squared did not</text></svg></div>
+    <figcaption class="plib-tile-caption">All four parts of the case one reflection, inside 100 to 200 words.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution RH3.2.1">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">RH3.2.1</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Case one reflection</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 100 to 200 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_21" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for RH3.2.1"
+            data-maxwords="200" data-maxchars="1600"
+            oninput="updateCounter('prompt_21', 'textarea_21')"></textarea>
+  <div class="plib-counter" id="counter_prompt_21" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_21">0</span> / 200 words&nbsp;·&nbsp;
+    <span id="cc_prompt_21">0</span> / 1600 characters
+    <span class="plib-counter-min">minimum: 100 words</span>
+  </div>
+  <div class="plib-warn" id="warn_prompt_21" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_21"
+       data-prefix="### RH3.2.1&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_21"
+       data-maxwords="200"
+       data-maxchars="1600"
+       data-minwords="100"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_21', this)"
+          aria-label="Copy contribution RH3.2.1 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 3 of 4</div><div class="plib-section-t">CASE TWO</div></div>
+
+<div class="plib-narration">
+  <p>Case two is worth 50 points, 35 for the exchange in the M block and 15 for the reflection.</p>
+  <p>Same response, different inputs. Open target.csv again, open the scores.csv you exported in part 1, copy all twelve score columns with their PC headings, and paste them to the right of Signal_Strength. Save it as pca_regression.csv. Thirteen columns, Signal_Strength first.</p>
+  <p>Double-click multivariate_regression.py again, choose pca_regression.csv, and write down the R squared and the adjusted R squared from the box it puts up. The plots and the report for the run go into a folder called pca_regression_outputs. Case two prints no numbers for you to check against, and you will see why once you compare this model with the twelve reading model of case one. If the two full models disagree by more than rounding, a paste went wrong, and the M block is where you say so.</p>
+  <p>Save a copy as pca_regression_reduced.csv. Open the eigenvalues.csv you exported in part 1 and count the rows whose eigenvalue is at or above one. The count of those rows is k, and on this data it is three. Keep Signal_Strength and the first k score columns, starting at PC1, delete the rest, and save. Run the script on that file and write down both numbers. The run writes the folder pca_regression_reduced_outputs.</p>
+  <p>One more reading before you open the block. Open report.txt from the original_regression_reduced_outputs folder and report.txt from the pca_regression_reduced_outputs folder, and find the column headed variance_inflation_factor in the TERMS table of each. In the reading model those values run from 1.5 to 3.3. In the component model every value is 1.00. Write both down, because move four uses them.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-25">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Signal_Strength first, then all twelve score columns pasted to its right, saved as pca_regression.csv. Then a copy keeping Signal_Strength and the first k score columns, saved as pca_regression_reduced.csv, with k read off eigenvalues.csv from part 1 by counting the rows at or above one, which is three here."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 213" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="213" rx="10" fill="#faf7f8"/><rect x="21" y="20" width="958" height="173" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><text x="46" y="58" font-size="18" font-weight="600" fill="#630031">The same response, with the components as inputs</text><text x="46" y="86" font-size="16" fill="#2b2b2b">Paste all twelve score columns to the right of Signal_Strength and save as pca_regression.csv. Then copy it, keep</text><text x="46" y="108" font-size="16" fill="#2b2b2b">Signal_Strength and the first k score columns, and save as pca_regression_reduced.csv. Open eigenvalues.csv from part 1 and</text><text x="46" y="130" font-size="16" fill="#2b2b2b">count the rows at or above one to get k, which is three here.</text><text x="46" y="156" font-size="14" fill="#6b6b6b">This case carries no printed check. You will see why when you compare the two full models, and a disagreement bigger than rounding means a</text><text x="46" y="175" font-size="14" fill="#6b6b6b">paste went wrong.</text></svg></div>
+    <figcaption class="plib-tile-caption">The same response as case one. Only the inputs changed.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>Before the moves, three properties of the reduced component model are worth knowing, because move four puts them to Hokie AI and move five weighs them against what the reading model offers.</p>
+  <p>The first property is that the score columns are uncorrelated with each other. The word for that in class was orthogonal, and zero correlation is what orthogonal means for these columns. The variance inflation factor of 1.00 you just read for every component is the evidence on your own screen. Each coefficient in the component model carries the whole of its own direction, and no coefficient moves when another component is added or dropped. The eight readings in original_regression_reduced.csv sit at 1.5 to 3.3 instead, so those coefficients are sharing credit with each other.</p>
+  <p>The second property is that three columns can be looked at. Three components carry 78.30 percent of the variance of twelve readings, which is the cumulative percent in row three of your eigenvalues.csv, and the three planes you set in pca_explorer.py in part 1, which are PC1 with PC2, PC1 with PC3 and PC2 with PC3, are three faces of one three dimensional picture. You already plotted two of those score columns in Excel in part 1, and the third component is one more axis. Eight readings have no picture at all.</p>
+  <p>The third property is that nothing in the analysis saw Signal_Strength. pca_explorer.py ran on the twelve readings alone in part 1, and the three directions it returned are where the response turned out to live. The other side of that is in your own twelve component model, where the logworth.png in pca_regression_outputs puts PC4, PC6, PC7 and PC9 past the dashed line while each of those four carries under four percent of the variance. Ordering components by variance is not the same as ordering them by what they say about the response.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-27">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Three properties joined by AND. The score columns are uncorrelated with each other and variance_inflation_factor is 1.00 for each component, three components are few enough to plot in the three planes PC1 with PC2, PC1 with PC3 and PC2 with PC3, and the analysis that produced them never saw Signal_Strength."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 193" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="193" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">The three properties, all three in move four</text><rect x="21" y="46" width="287" height="125" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Uncorrelated inputs</text><text x="37" y="122" font-size="14" fill="#6b6b6b">variance_inflation_factor is 1.00 for each</text><text x="37" y="141" font-size="14" fill="#6b6b6b">component</text><text x="332" y="114" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="356" y="46" width="287" height="125" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="380" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="380" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="401" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Three columns you can plot</text><text x="372" y="122" font-size="14" fill="#6b6b6b">PC1 with PC2, PC1 with PC3, PC2 with</text><text x="372" y="141" font-size="14" fill="#6b6b6b">PC3</text><text x="668" y="114" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="692" y="46" width="287" height="125" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="716" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="716" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="737" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Computed without the</text><text x="737" y="103" font-size="17" font-weight="600" fill="#2b2b2b">response</text><text x="708" y="134" font-size="14" fill="#6b6b6b">pca_explorer.py never saw</text><text x="708" y="153" font-size="14" fill="#6b6b6b">Signal_Strength</text></svg></div>
+    <figcaption class="plib-tile-caption">Move four puts all three of these to Hokie AI in one message.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>Now open the M block and put five things to Hokie AI, in order. The card below carries them.</p>
+  <p>Move one is a paragraph you write. Say what the dataset is, that the inputs this time are the principal components of the same twelve readings, give the R squared and the adjusted R squared of the twelve component model, say how many components the eigenvalue rule retained and give the R squared and the adjusted R squared of the reduced component model AND move two asks how the two full models compare, the one on the twelve readings and the one on the twelve components AND move three asks what is interesting about that comparison and makes Hokie AI give the reason AND move four names the three properties of the reduced component model that the page listed above, which are the zero correlation between the score columns, the three columns that can be plotted, and the reduction computed without the response, and asks what each one is worth on this data AND move five compares the two reduced models, asks which one is better to use and asks why. All five.</p>
+  <p>Move two is a comparison you can make from numbers you already hold, which are the R squared and the adjusted R squared of the twelve reading model and of the twelve component model. Put it to Hokie AI as a question about those four numbers and not as a request for a lecture on principal components.</p>
+  <p>Move three is the one to spend time on. There is a reason two models built from different columns return the same fit, and it is a fact about what the components are, not a coincidence. Make it give the reason and make sure the reason accounts for the adjusted R squared as well.</p>
+  <p>Move four is one message carrying all three properties. Ask what the zero correlation between the score columns is worth to somebody reading the coefficients, and put the variance inflation factors you read from the two reduced models in the same message AND ask what being able to plot three columns is worth when twelve readings cannot be plotted AND ask what it means that the analysis found those three directions without ever seeing Signal_Strength. All three. Then take at least one of the three answers a step further with a question aimed at something that answer said. Asking a second general question about principal components does not count as taking an answer further.</p>
+  <p>Move five is the task. One reduced model holds the eight readings that cleared significance and the other holds the three components the eigenvalue rule retained, and they do not return the same fit. A larger fit is one argument, the three properties of move four are arguments on the other side, and neither set settles it. Ask what each model costs the person who has to decide which satellite to act on, then say which model you would use.</p>
+  <p>Ten messages inside the block is the ceiling, and a ceiling is not a target.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-29">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Five moves joined by AND. The paragraph carrying the component models and their numbers, how the two full models compare, the reason behind that comparison including the adjusted R squared, the three properties put in one message with one answer pressed further, then the two reduced models with which is better to use and why."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 252" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="252" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Five moves. Move five is the task</text><rect x="21" y="46" width="153" height="184" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Write the</text><text x="66" y="103" font-size="17" font-weight="600" fill="#2b2b2b">paragraph</text><text x="37" y="134" font-size="14" fill="#6b6b6b">the component</text><text x="37" y="153" font-size="14" fill="#6b6b6b">models and all four</text><text x="37" y="172" font-size="14" fill="#6b6b6b">numbers</text><text x="198" y="143" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="222" y="46" width="153" height="184" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="246" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="246" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="267" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Compare</text><text x="267" y="103" font-size="17" font-weight="600" fill="#2b2b2b">the full</text><text x="267" y="124" font-size="17" font-weight="600" fill="#2b2b2b">models</text><text x="238" y="155" font-size="14" fill="#6b6b6b">twelve readings</text><text x="238" y="174" font-size="14" fill="#6b6b6b">against twelve</text><text x="238" y="193" font-size="14" fill="#6b6b6b">components</text><text x="399" y="143" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="423" y="46" width="153" height="184" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="447" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="447" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="468" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Ask for the</text><text x="468" y="103" font-size="17" font-weight="600" fill="#2b2b2b">reason</text><text x="439" y="134" font-size="14" fill="#6b6b6b">and make it cover</text><text x="439" y="153" font-size="14" fill="#6b6b6b">the adjusted R</text><text x="439" y="172" font-size="14" fill="#6b6b6b">squared too</text><text x="601" y="143" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="625" y="46" width="153" height="184" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="649" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="649" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="670" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Put the</text><text x="670" y="103" font-size="17" font-weight="600" fill="#2b2b2b">three</text><text x="670" y="124" font-size="17" font-weight="600" fill="#2b2b2b">properties</text><text x="641" y="155" font-size="14" fill="#6b6b6b">all three in one</text><text x="641" y="174" font-size="14" fill="#6b6b6b">message, then</text><text x="641" y="193" font-size="14" fill="#6b6b6b">press on one</text><text x="641" y="212" font-size="14" fill="#6b6b6b">answer</text><text x="802" y="143" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="826" y="46" width="153" height="184" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="850" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="850" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">5</text><text x="871" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Choose a</text><text x="871" y="103" font-size="17" font-weight="600" fill="#2b2b2b">reduced</text><text x="871" y="124" font-size="17" font-weight="600" fill="#2b2b2b">model</text><text x="842" y="155" font-size="14" fill="#6b6b6b">and say what it</text><text x="842" y="174" font-size="14" fill="#6b6b6b">costs the person</text><text x="842" y="193" font-size="14" fill="#6b6b6b">who acts on it</text></svg></div>
+    <figcaption class="plib-tile-caption">Five moves, in order. Move three is where the reason comes out, and move five is the task.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-30">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="One reduced model is eight named readings. The reduced component model is three columns, each one weighted across all twelve readings. Ask what each model costs the person who has to act on it, because a fit alone does not answer move five."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 172" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="172" rx="10" fill="#faf7f8"/><rect x="21" y="20" width="958" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><text x="46" y="58" font-size="18" font-weight="600" fill="#630031">What each model costs the person who acts on it</text><text x="46" y="86" font-size="16" fill="#2b2b2b">One reduced model is eight named readings. The reduced component model is three columns, each one weighted across all</text><text x="46" y="108" font-size="16" fill="#2b2b2b">twelve readings.</text><text x="46" y="134" font-size="14" fill="#6b6b6b">Ask what each model costs the person who has to act on it. A fit alone does not answer move four.</text></svg></div>
+    <figcaption class="plib-tile-caption">Move five asks which model you would use, and a fit alone does not answer it.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-prompt-m" role="region" aria-label="Multi-turn Block MH3.2.2, Begin">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-m-id">MH3.2.2</span>
+    <span class="plib-prompt-type-label plib-m-label">Multi-turn · Consolidation</span>
+    <span class="plib-m-badge">Summative</span>
+    <span class="plib-ai-badge plib-ai-respond">AI: respond</span>
+  </div>
+  <div class="plib-m-instructions">
+    <div class="plib-m-instructions-label">&#128221; How this block works</div>
+    <ol class="plib-m-steps">
+      <li>Click <strong>Copy opening marker</strong> and paste it into Hokie AI to begin this block.</li>
+      <li>Interact with Hokie AI: ask questions, explore, respond. All of this exchange belongs to this block.</li>
+      <li>When finished, use the <strong>Copy closing marker</strong> button below to close the block in your thread.</li>
+    </ol>
+  </div>
+  <div class="plib-prompt-text" id="text_m_open_31" data-copy="### MH3.2.2 OPEN&#10;----------&#10;"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-open" onclick="copyPrompt('text_m_open_31', this)"
+          aria-label="Copy opening marker for block MH3.2.2">
+    <span aria-hidden="true">&#9654;</span> Copy opening marker
+  </button>
+</div>
+
+<div class="plib-prompt-m-close" role="region" aria-label="Multi-turn Block MH3.2.2, End">
+  <div class="plib-m-close-label">
+    <span class="plib-prompt-id plib-m-id">MH3.2.2</span>
+    <span class="plib-prompt-type-label plib-m-label">End of Multi-turn Block</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-m-close-instruction">When you have finished your exchange, copy this closing marker and paste it into Hokie AI to close the block.</p>
+  <div class="plib-prompt-text" id="text_m_close_32" data-copy="&#10;----------&#10;### MH3.2.2 CLOSE"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-close" onclick="copyPrompt('text_m_close_32', this)"
+          aria-label="Copy closing marker for block MH3.2.2">
+    <span aria-hidden="true">&#9646;&#9646;</span> Copy closing marker
+  </button>
+</div>
+
+<div class="plib-narration">
+  <p>Now write your reflection for case two, in your own words and without help from the AI.</p>
+  <p>Your reflection needs all four parts below. Give the R squared and the adjusted R squared of the twelve component model and of the three component model AND say how the twelve component model compares with the twelve reading model and say why that happens AND say what the reduced component model gave up against the reduced reading model and name two of the three properties it gained AND say which of the two reduced models you would hand to somebody who has to act on it, and why. Respond to all four parts.</p>
+  <p>The fourth part is where a reflection separates itself. Name what the person receiving your model can do with it, and choose on that.</p>
+  <p>Write 100 to 200 words.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-35">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four boxes joined by AND. Both pairs of numbers, how the twelve component model compares with the twelve reading model and why, what the reduced component model gave up and two of the three properties it gained, and which reduced model you would hand to somebody who has to act on it and why."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 212" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="212" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">All four parts of the case two reflection</text><rect x="21" y="46" width="204" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Both pairs of</text><text x="66" y="103" font-size="17" font-weight="600" fill="#2b2b2b">numbers</text><text x="37" y="134" font-size="14" fill="#6b6b6b">the twelve component</text><text x="37" y="153" font-size="14" fill="#6b6b6b">model and the three</text><text x="37" y="172" font-size="14" fill="#6b6b6b">component model</text><text x="248" y="123" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The two full</text><text x="318" y="103" font-size="17" font-weight="600" fill="#2b2b2b">models</text><text x="288" y="134" font-size="14" fill="#6b6b6b">how the components</text><text x="288" y="153" font-size="14" fill="#6b6b6b">compare with the readings,</text><text x="288" y="172" font-size="14" fill="#6b6b6b">and why</text><text x="500" y="123" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">What the</text><text x="569" y="103" font-size="17" font-weight="600" fill="#2b2b2b">reduction gave up</text><text x="540" y="134" font-size="14" fill="#6b6b6b">and two properties it</text><text x="540" y="153" font-size="14" fill="#6b6b6b">gained</text><text x="752" y="123" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Which model you</text><text x="820" y="103" font-size="17" font-weight="600" fill="#2b2b2b">hand over</text><text x="792" y="134" font-size="14" fill="#6b6b6b">to somebody who has to</text><text x="792" y="153" font-size="14" fill="#6b6b6b">act on it, and why</text></svg></div>
+    <figcaption class="plib-tile-caption">All four parts of the case two reflection, inside 100 to 200 words.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution RH3.2.2">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">RH3.2.2</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Case two reflection</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 100 to 200 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_36" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for RH3.2.2"
+            data-maxwords="200" data-maxchars="1600"
+            oninput="updateCounter('prompt_36', 'textarea_36')"></textarea>
+  <div class="plib-counter" id="counter_prompt_36" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_36">0</span> / 200 words&nbsp;·&nbsp;
+    <span id="cc_prompt_36">0</span> / 1600 characters
+    <span class="plib-counter-min">minimum: 100 words</span>
+  </div>
+  <div class="plib-warn" id="warn_prompt_36" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_36"
+       data-prefix="### RH3.2.2&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_36"
+       data-maxwords="200"
+       data-maxchars="1600"
+       data-minwords="100"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_36', this)"
+          aria-label="Copy contribution RH3.2.2 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 4 of 4</div><div class="plib-section-t">SUBMISSION</div></div>
+
+<div class="plib-narration">
+  <p>You are done with homework 3. Both cases of part 2 are in one thread, and that thread is what you submit.</p>
+  <p>Export the whole conversation from Hokie AI as a .txt file and upload it to the Canvas assignment for part 2. Keep original_regression.csv, original_regression_reduced.csv, pca_regression.csv and pca_regression_reduced.csv in BIT5534/HomeWork/hw3_2.</p>
+  <p>Leave the turns where something went wrong. How you recovered is part of what is being read, and a tidied thread reads as a thinner one.</p>
+</div>
+
+<div class="plib-material" id="plib-material-40">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">Homework 3 part 2 on Canvas</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="https://canvas.vt.edu/courses/233475/assignments/2862856" target="_blank" rel="noopener noreferrer">Open the part 2 assignment</a>
+  </div>
+  <div class="plib-material-note">Upload the exported .txt of this thread here. Part 1 has its own assignment, so check the title on the page before you upload.</div>
+</div>
+
+<div class="plib-submit">
+  <div class="plib-submit-title">Turn it in</div>
+  <p class="plib-submit-p">Export this thread as a .txt file, then upload it to the Canvas assignment for this part. Leave the file as it came out. Your work is not submitted until Canvas shows your file.</p>
+</div>
+
+</div>
+</main>
+<script>
+function countWords(text) {
+  return text.trim() === '' ? 0 : text.trim().split(/[ \t\n\r]+/).length;
+}
+function announce(msg) {
+  var el = document.getElementById('plib-live');
+  if (!el) { el = document.createElement('div'); el.id = 'plib-live';
+    el.setAttribute('aria-live','polite'); el.setAttribute('aria-atomic','true');
+    el.style.cssText='position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;';
+    document.body.appendChild(el); }
+  el.textContent = ''; setTimeout(function(){ el.textContent = msg; }, 50);
+}
+function autoResize(ta) {
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(ta.scrollHeight + 2, 600) + 'px';
+}
+function updateCounter(bid, tid) {
+  var ta = document.getElementById(tid);
+  var textEl = document.getElementById('text_' + bid);
+  var wcEl = document.getElementById('wc_' + bid);
+  var ccEl = document.getElementById('cc_' + bid);
+  var ctrEl = document.getElementById('counter_' + bid);
+  if (!ta) return;
+  autoResize(ta);
+  var maxwords = textEl ? parseInt(textEl.getAttribute('data-maxwords') || '0') : 0;
+  var maxchars = textEl ? parseInt(textEl.getAttribute('data-maxchars') || '0') : 0;
+  var minwords = textEl ? parseInt(textEl.getAttribute('data-minwords') || '0') : 0;
+  var text = ta.value;
+  var words = countWords(text);
+  var chars = text.length;
+  if (maxchars && chars > maxchars) {
+    ta.value = text.substring(0, maxchars);
+    text = ta.value; words = countWords(text); chars = text.length;
+  }
+  if (wcEl) wcEl.textContent = words;
+  if (ccEl) ccEl.textContent = chars;
+  if (ctrEl && maxwords) {
+    var pct = words / maxwords;
+    var cls = pct >= 1.0 ? 'bad' : (pct >= 0.8 || (minwords && words < minwords)) ? 'warn' : 'ok';
+    if (pct >= 1.0) { ctrEl.className = 'plib-counter at-limit'; }
+    else { ctrEl.className = 'plib-counter'; }
+    if (wcEl) wcEl.className = 'plib-count-' + cls;
+    if (ccEl) ccEl.className = 'plib-count-' + cls;
+  }
+}
+function copyPrompt(id, btn) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var text = (el.getAttribute('data-copy') || el.textContent || '').replace(/&#10;/g, '\n');
+  var label = (btn.getAttribute('aria-label') || 'item').replace('Copy ','').replace(' to clipboard','');
+  doCopy(text, btn, label + ' copied.', '&#10003; Copied', 2000);
+}
+function copyWithInput(bid, btn) {
+  var el = document.getElementById('text_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!el) return;
+  var tid = el.getAttribute('data-tid');
+  var inputEl = document.getElementById(tid);
+  var prefix = (el.getAttribute('data-prefix') || '').replace(/&#10;/g, '\n');
+  var suffix = (el.getAttribute('data-suffix') || '').replace(/&#10;/g, '\n');
+  var userText = inputEl ? inputEl.value.trim() : '';
+  if (userText.replace(/[\t\n\r ]/g, '').length < 2) {
+    if (warnEl) warnEl.textContent = 'Please write your response before copying.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  var maxwords = parseInt(el.getAttribute('data-maxwords') || '0');
+  var maxchars = parseInt(el.getAttribute('data-maxchars') || '0');
+  var minwords = parseInt(el.getAttribute('data-minwords') || '0');
+  if (minwords && countWords(userText) < minwords) {
+    if (warnEl) warnEl.textContent = 'Response is below the minimum of ' + minwords + ' words.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  if (maxwords && countWords(userText) > maxwords) {
+    if (warnEl) warnEl.textContent = 'Response exceeds the ' + maxwords + ' word limit.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  if (warnEl) warnEl.textContent = '';
+  doCopy(prefix + userText + suffix, btn, 'Copied. Paste into Hokie AI.', '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+function doCopy(text, btn, announcement, label, duration) {
+  function ok() {
+    var orig = btn.innerHTML; btn.innerHTML = label; btn.classList.add('copied');
+    announce(announcement);
+    setTimeout(function() { btn.innerHTML = orig; btn.classList.remove('copied'); }, duration);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(ok).catch(function() { fallback(text, ok); });
+  } else { fallback(text, ok); }
+}
+function fallback(text, cb) {
+  var ta = document.createElement('textarea'); ta.value = text;
+  ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); cb(); } catch(e) {}
+  document.body.removeChild(ta);
+}
+function copyStructured(bid, blockId, btn) {
+  var container = document.getElementById('qitems_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!container) return;
+  var outerDiv = container.closest('.plib-prompt-q');
+  var aiDirective = outerDiv ? (outerDiv.getAttribute('data-ai-directive') || '') : '';
+  var items = container.querySelectorAll('.plib-q-item');
+  var lines = [];
+  var emptyItems = [];
+
+  items.forEach(function(itemEl) {
+    var n = itemEl.getAttribute('data-item-n');
+    var render = itemEl.getAttribute('data-render');
+    var selections = [];
+
+    if (render === 'dropdown') {
+      var sel = itemEl.querySelector('select');
+      if (sel && sel.value) selections.push(sel.value);
+    } else if (render === 'likert') {
+      var checkedRadio = itemEl.querySelector('input[type="radio"]:checked');
+      if (checkedRadio) selections.push(checkedRadio.value);
+    } else if (render === 'checkbox') {
+      var checks = itemEl.querySelectorAll('input[type="checkbox"]:checked');
+      checks.forEach(function(c) { selections.push(c.value); });
+    }
+
+    if (selections.length === 0) {
+      emptyItems.push(n);
+    } else {
+      lines.push('ITEM ' + n + ': ' + selections.join(', '));
+    }
+  });
+
+  if (emptyItems.length > 0) {
+    if (warnEl) {
+      warnEl.textContent = 'Please make a selection for ITEM '
+        + emptyItems.join(', ITEM ') + ' before copying.';
+    }
+    return;
+  }
+
+  if (warnEl) warnEl.textContent = '';
+
+  var directiveLine = aiDirective ? aiDirective + '\n' : '';
+  var envelope = '### ' + blockId + '\n----------\n' + directiveLine + 'RESPONSE:\n'
+    + lines.join('\n') + '\n----------\n###';
+  doCopy(envelope, btn,
+    'Structured response copied. Paste into Hokie AI.',
+    '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+function enforceCheckboxCap(itemEl) {
+  var max = parseInt(itemEl.getAttribute('data-max-select') || '0', 10);
+  if (!max || max < 2) return;
+  var checks = itemEl.querySelectorAll('input[type="checkbox"]');
+  var checked = itemEl.querySelectorAll('input[type="checkbox"]:checked');
+  var atCap = checked.length >= max;
+  checks.forEach(function(c) {
+    if (!c.checked) c.disabled = atCap;
+  });
+}
+function moveItem(btn, direction) {
+  var li = btn.closest('.plib-o-item');
+  if (!li) return;
+  var list = li.parentElement;
+  if (!list) return;
+  if (direction === 'up') {
+    var prev = li.previousElementSibling;
+    if (prev) list.insertBefore(li, prev);
+  } else if (direction === 'down') {
+    var next = li.nextElementSibling;
+    if (next) list.insertBefore(next, li);
+  }
+  updateArrowStates(list);
+}
+function updateArrowStates(list) {
+  var items = list.querySelectorAll('.plib-o-item');
+  items.forEach(function(li, idx) {
+    var rankEl = li.querySelector('.plib-o-rank');
+    if (rankEl) rankEl.textContent = (idx + 1) + '.';
+    var upBtn = li.querySelector('.plib-o-arrow-up');
+    var downBtn = li.querySelector('.plib-o-arrow-down');
+    if (upBtn) upBtn.disabled = (idx === 0);
+    if (downBtn) downBtn.disabled = (idx === items.length - 1);
+    var itemText = li.getAttribute('data-item-text') || '';
+    if (upBtn) upBtn.setAttribute('aria-label', 'Move ' + itemText + ' up');
+    if (downBtn) downBtn.setAttribute('aria-label', 'Move ' + itemText + ' down');
+  });
+}
+function copyOrdered(bid, blockId, btn) {
+  var list = document.getElementById('oitems_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!list) return;
+  var outerDiv = list.closest('.plib-prompt-o');
+  var aiDirective = outerDiv ? (outerDiv.getAttribute('data-ai-directive') || '') : '';
+  var question = list.getAttribute('data-question') || '';
+  var items = list.querySelectorAll('.plib-o-item');
+  var lines = [];
+  items.forEach(function(li, idx) {
+    var itemText = li.getAttribute('data-item-text') || '';
+    lines.push((idx + 1) + '. ' + itemText);
+  });
+  if (warnEl) warnEl.textContent = '';
+  var directiveLine = aiDirective ? aiDirective + '\n' : '';
+  var envelope = '### ' + blockId + '\n----------\n' + directiveLine + 'RESPONSE:\nQuestion: '
+    + question + '\n' + lines.join('\n') + '\n----------\n###';
+  doCopy(envelope, btn,
+    'Ordered response copied. Paste into Hokie AI.',
+    '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var checkboxItems = document.querySelectorAll('.plib-q-item[data-render="checkbox"]');
+  checkboxItems.forEach(function(itemEl) {
+    var checks = itemEl.querySelectorAll('input[type="checkbox"]');
+    checks.forEach(function(c) {
+      c.addEventListener('change', function() { enforceCheckboxCap(itemEl); });
+    });
+  });
+  var oLists = document.querySelectorAll('.plib-o-list');
+  oLists.forEach(function(list) {
+    updateArrowStates(list);
+  });
+});
+</script>
+</body>
+</html>
