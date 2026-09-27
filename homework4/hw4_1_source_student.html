@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hierarchical Clustering, Reading the Tree and Extending the Tool That Draws It</title>
+<style>
+:root {
+  --c-text:#1a1a1a; --c-muted:#4a4a4a;
+  --c-meta-bg:#f4f6f9; --c-meta-border:#d0d7e2;
+  --c-obj-bg:#eef4fb; --c-obj-accent:#1a5da0;
+  --c-ctx-bg:#fffbf0; --c-ctx-border:#e8d8a0; --c-ctx-label:#5c4400;
+  --c-ctx-s-bg:#f0f7ff; --c-ctx-s-border:#a0c8f0; --c-ctx-s-label:#1a4a80;
+  --c-nar-bg:#f9f9f9; --c-nar-border:#bbb;
+  --c-dis-bg:#f0f4ff; --c-dis-border:#8090cc; --c-dis-label:#1e2e80;
+  --c-sys-bg:#f3f0ff; --c-sys-border:#9080d0; --c-sys-label:#3a2090;
+  --c-scr-bg:#fff8e8; --c-scr-border:#d0a030; --c-scr-label:#6b4a00;
+  --c-s-bg:#f0faf4; --c-s-border:#70c090; --c-s-id:#14552f;
+  --c-r-bg:#fff8f0; --c-r-border:#d0a040; --c-r-id:#6b3e00;
+  --c-mk-bg:#f0f0ff; --c-mk-border:#8080c8; --c-mk-id:#2a2a80;
+  --c-m-bg:#f0f8ff; --c-m-border:#70a8d0; --c-m-id:#0a4a70;
+  --c-mc-bg:#f8f8ff; --c-mc-border:#a0a0d0;
+  --c-btn:#14552f; --c-btn-r:#6b3e00; --c-btn-mk:#2a2a80;
+  --c-btn-mo:#0a4a70; --c-btn-mc:#3a3a6a;
+  --c-q-bg:#f0fafd; --c-q-border:#70b8d0; --c-q-id:#0a5070;
+  --c-btn-q:#0a5070;
+  --c-o-bg:#fef6f0; --c-o-border:#e89870; --c-o-id:#a04510;
+  --c-btn-o:#a04510;
+  --radius:8px; --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --page:1100px;
+}
+/* Two layers. The wrapper takes the width Canvas gives it, up to --page, so it
+   never overflows a narrow frame and never needs a per-machine number. Everything
+   inside fills the block it sits in. */
+.plib-wrap{font-family:var(--font);color:var(--c-text);max-width:min(var(--page),100% - 2rem);margin:0 auto;padding:1rem 0}
+/* Every block spans the page so their left and right edges line up down the
+   column, and the text inside fills the block.
+
+   There is no reading column. D-032 put prose in a 720px column inside a 1100px
+   wrapper, and on 2026-09-02 the instructor read the rendered result and rejected
+   it: every text block stopped two thirds of the way across its own card and
+   stranded the rest, and a bordered box that stops short of the card it sits in
+   reads as broken rather than as typography. The wrapper's own
+   min(1100px, 100% - 2rem) is now the only bound, so a line never exceeds about
+   1055px. The cost is real and is worth stating. A long paragraph at 1055px reads
+   worse than the same paragraph at 800, and what pays for it is the writing
+   standard's rule on paragraph length, which now carries the load the column used
+   to carry. Recorded as D-043, amending D-032. */
+.plib-wrap > *{max-width:100%}
+.plib-submit{margin:2rem 0 1rem;padding:1.4rem 1.6rem;border-radius:var(--radius);background:var(--c-obj-bg);border:2px solid var(--c-obj-accent)}
+.plib-submit-title{font-size:13px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--c-obj-accent)}
+.plib-submit-p{margin:.5rem 0 1rem;font-size:15px;line-height:1.65}
+.plib-submit-btn{display:inline-block;background:var(--c-obj-accent);color:#fff;text-decoration:none;font-size:16px;font-weight:600;padding:.7rem 1.4rem;border-radius:var(--radius)}
+.plib-submit-btn:hover{filter:brightness(1.12)}
+.plib-submit-btn:focus{outline:3px solid var(--c-obj-accent);outline-offset:3px}
+.plib-submit-note{margin-top:.55rem;font-size:13px;color:var(--c-muted)}
+.plib-material{margin:1.6rem 0;padding:1.2rem 1.4rem;border-radius:var(--radius);background:var(--c-s-bg);border:1px solid var(--c-s-border)}
+.plib-material-tag{font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--c-s-id)}
+.plib-material-title{margin-top:.3rem;font-size:17px;font-weight:600;color:var(--c-text)}
+.plib-material-box{margin:.9rem 0 1.1rem;padding:.9rem 1rem;max-height:22rem;overflow:auto;background:#fff;border:1px solid var(--c-s-border);border-radius:6px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;color:var(--c-text)}
+.plib-material-box:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+.plib-material-btns{display:flex;flex-wrap:wrap;gap:.6rem}
+.plib-material-copies{margin:.9rem 0 0;display:flex;flex-wrap:wrap;gap:.8rem}
+.plib-copyrow{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;padding:.55rem .7rem;background:#fff;border:1px solid var(--c-s-border);border-radius:6px}
+.plib-copyrow-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-s-id)}
+.plib-copyrow-code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;color:var(--c-text)}
+.plib-copy-btn-row{padding:.3rem .6rem;font-size:12px}
+.plib-material-btn{display:inline-block;background:var(--c-s-id);color:#fff;text-decoration:none;font-size:15px;font-weight:600;padding:.6rem 1.2rem;border-radius:var(--radius)}
+.plib-material-btn:hover{filter:brightness(1.25)}
+.plib-material-btn:focus{outline:3px solid var(--c-s-id);outline-offset:3px}
+.plib-material-note{margin-top:.55rem;font-size:13px;color:var(--c-muted)}
+.plib-section{margin:2.25rem 0 1.1rem;padding-top:.9rem;border-top:3px solid var(--c-obj-accent)}
+.plib-section-n{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--c-muted)}
+.plib-section-t{font-size:23px;font-weight:700;letter-spacing:.04em;color:var(--c-obj-accent);margin-top:2px}
+.plib-wrap > .plib-section:first-child{margin-top:.5rem}
+.plib-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;margin-bottom:1.25rem}
+.plib-tile{background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);padding:.9rem;display:flex;flex-direction:column}
+.plib-tile img{width:100%;height:auto;border-radius:4px;background:#faf7f8}
+.plib-tile figure,.plib-tile{margin:0}
+/* A drawing narrower than its grid cell is centred in it. render_tiles caps the
+   wrapper at the SVG's own viewBox width so a 400px card is not blown up to the
+   full row, and without this the drawing sat against the left edge with the slack
+   stranded on the right, which is the same fault D-043 removed from the prose. */
+.plib-tile-svg{width:100%;margin-left:auto;margin-right:auto}
+.plib-tile-svg svg{width:100%;height:auto;display:block}
+.plib-tile-caption{font-size:13px;line-height:1.55;color:var(--c-text);margin-top:auto;padding-top:.6rem}
+.plib-meta{background:var(--c-meta-bg);border:1px solid var(--c-meta-border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1.5rem}
+.plib-meta-course{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--c-muted);margin-bottom:4px}
+.plib-meta-title{font-size:20px;font-weight:600;margin:4px 0 8px}
+.plib-meta-week{font-size:13px;color:var(--c-muted);margin-bottom:2px}
+.plib-meta-details{font-size:12px;color:var(--c-muted);margin-top:8px}
+.plib-objectives{background:var(--c-obj-bg);border-left:4px solid var(--c-obj-accent);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.5rem}
+.plib-objectives-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-obj-accent);font-weight:700;margin-bottom:8px}
+.plib-objectives-intro{margin:0 0 8px;font-size:14px;line-height:1.6;font-style:italic;color:var(--c-muted)}
+.plib-objectives-list{margin:0;padding-left:1.25rem}
+.plib-objectives-list li{margin-bottom:6px;font-size:14px;line-height:1.6}
+.plib-context{background:var(--c-ctx-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-context-student{background:var(--c-ctx-s-bg);border-color:var(--c-ctx-s-border)}
+.plib-context-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-ctx-label);font-weight:700;margin-bottom:8px}
+.plib-context-student .plib-context-label{color:var(--c-ctx-s-label)}
+.plib-context-body p{margin:4px 0;font-size:13px;line-height:1.6;color:var(--c-muted)}
+.plib-formula{margin:1rem 0;padding:1rem 1.25rem;background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);text-align:center}
+.plib-formula-body{overflow-x:auto;color:var(--c-text);padding:2px 0}
+.plib-formula-svg{max-width:100%;height:auto}
+.plib-formula-caption{margin-top:.85rem;font-size:13px;line-height:1.6;color:var(--c-muted);text-align:left}
+.plib-formula-missing{font-size:13px;color:var(--c-muted);text-align:left}
+.plib-formula-note{font-size:12px;margin-top:6px}
+.plib-formula-source{margin-top:.85rem;text-align:left}
+.plib-formula-source summary{font-size:12px;color:var(--c-muted);cursor:pointer}
+.plib-formula-latex{margin:6px 0 0;padding:8px 10px;background:var(--c-ctx-bg);border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.5;white-space:pre-wrap;color:var(--c-muted)}
+.plib-context-pre{margin:8px 0;padding:10px 12px;background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.55;color:var(--c-text);white-space:pre;overflow-x:auto}
+.plib-context-bullet{font-size:13px;color:var(--c-muted);padding-left:1rem;position:relative;margin-bottom:3px}
+.plib-context-bullet::before{content:"\2022";position:absolute;left:0}
+.plib-script{background:var(--c-scr-bg);border:1px solid var(--c-scr-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-script-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-scr-label);font-weight:700;margin-bottom:10px}
+.plib-script-list{margin:0;padding-left:1.25rem}
+.plib-script-list li{font-size:14px;line-height:1.6;margin-bottom:8px}
+.plib-script-time{font-weight:700;color:var(--c-scr-label);font-family:monospace;background:rgba(208,160,48,.15);padding:1px 6px;border-radius:3px}
+.plib-narration{background:var(--c-nar-bg);border-left:3px solid var(--c-nar-border);padding:.9rem 1.25rem;margin-bottom:1rem;border-radius:0 var(--radius) var(--radius) 0}
+.plib-narration p{margin:0 0 8px;font-size:14px;line-height:1.7}
+.plib-narration p:last-child{margin-bottom:0}
+.plib-narration-list{margin:4px 0;padding-left:1.25rem}
+.plib-narration-list li{font-size:14px;line-height:1.6;margin-bottom:4px}
+.plib-discussion{background:var(--c-dis-bg);border:1px solid var(--c-dis-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-slide{margin:0 0 1.25rem;text-align:center}
+.plib-slide-img{max-width:100%;height:auto;border:1px solid var(--c-dis-border);border-radius:var(--radius);box-shadow:0 1px 4px rgba(0,0,0,.08);background:#faf7f8;min-height:60px}
+.plib-slide-caption{font-size:13px;color:var(--c-muted);margin-top:.4rem}
+.plib-slide-script{margin-top:.6rem;text-align:left;font-size:13px;color:var(--c-muted)}
+.plib-slide-script summary{cursor:pointer;font-weight:600}
+.plib-slide-script-body{white-space:pre-wrap;background:rgba(0,0,0,.04);border-radius:var(--radius);padding:.6rem .8rem;margin-top:.4rem}
+.plib-discussion-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-dis-label);font-weight:700;margin-bottom:8px}
+.plib-discussion-intro{margin:0 0 8px;font-size:14px;line-height:1.6;font-style:italic;color:var(--c-dis-label)}
+.plib-discussion-list{margin:0;padding-left:1.25rem}
+.plib-discussion-list li{font-size:14px;line-height:1.6;margin-bottom:6px;color:var(--c-dis-label)}
+.plib-scenarios{margin-bottom:1rem}
+.plib-scenarios-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:#630031;font-weight:700;margin-bottom:8px}
+.plib-scenario-card{background:var(--c-ctx-s-bg);border:1px solid var(--c-ctx-s-border);border-left:4px solid #630031;border-radius:var(--radius);padding:.7rem 1rem;margin-bottom:.6rem}
+.plib-scenario-title{font-weight:700;font-size:14px;color:#630031;margin-bottom:4px}
+.plib-scenario-body{margin:0 0 4px;font-size:14px;line-height:1.6}
+.plib-scenario-line{font-size:13px;line-height:1.55;margin:2px 0 0;padding-left:1rem;position:relative}
+.plib-scenario-line::before{content:"›";position:absolute;left:.2rem;color:#CF4420;font-weight:700}
+.plib-system{background:var(--c-sys-bg);border:1px solid var(--c-sys-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-system-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-sys-label);font-weight:700;margin-bottom:8px}
+.plib-system-note{font-weight:400;text-transform:none;letter-spacing:0;font-style:italic}
+.plib-prompt-s-ref{opacity:.92;border-style:dashed}
+.plib-ref-note{font-size:12px;color:var(--c-muted);font-style:italic;margin-top:6px}
+.plib-prompt-text{display:none}
+.plib-prompt-display{font-size:14px;line-height:1.7;white-space:pre-wrap;background:rgba(255,255,255,.6);border-radius:4px;padding:.6rem .8rem;margin-bottom:10px}
+.plib-prompt-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.plib-prompt-id{font-size:12px;font-weight:700;font-family:monospace;padding:2px 7px;border-radius:4px}
+.plib-prompt-type-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-muted);font-weight:600}
+.plib-prompt-s{background:var(--c-s-bg);border:1px solid var(--c-s-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-prompt-s .plib-prompt-id{color:var(--c-s-id);background:rgba(20,85,47,.1)}
+.plib-prompt-r{background:var(--c-r-bg);border:1px solid var(--c-r-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-r-id{color:var(--c-r-id)!important;background:rgba(107,62,0,.1)!important}
+.plib-reflect-label{color:var(--c-r-id)!important}
+.plib-reflect-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-prompt-marker{background:var(--c-mk-bg);border:2px solid var(--c-mk-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-marker-id{color:var(--c-mk-id)!important;background:rgba(42,42,128,.1)!important}
+.plib-marker-label{color:var(--c-mk-id)!important}
+.plib-marker-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-marker-display{border-left:3px solid var(--c-mk-border);max-height:18em;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;box-shadow:inset 0 -10px 10px -10px rgba(0,0,0,.18)}
+.plib-prompt-m{background:var(--c-m-bg);border:1.5px solid var(--c-m-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:.5rem}
+.plib-m-id{color:var(--c-m-id)!important;background:rgba(10,74,112,.1)!important}
+.plib-m-label{color:var(--c-m-id)!important}
+.plib-m-badge{font-size:11px;background:var(--c-m-id);color:#fff;padding:2px 8px;border-radius:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.plib-m-instructions{background:rgba(255,255,255,.7);border-radius:6px;padding:10px 14px;margin-bottom:12px}
+.plib-m-instructions-label{font-size:12px;font-weight:700;color:var(--c-m-id);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.plib-m-steps{margin:0;padding-left:1.25rem}
+.plib-m-steps li{font-size:13px;line-height:1.6;margin-bottom:4px}
+.plib-m-seed{background:rgba(255,255,255,.5);border-left:3px solid var(--c-m-border);padding:8px 12px;margin-bottom:12px;border-radius:0 4px 4px 0}
+.plib-m-seed-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-m-id);margin-bottom:4px}
+.plib-m-seed-text{font-size:13px;line-height:1.6;white-space:pre-wrap}
+.plib-prompt-m-close{background:var(--c-mc-bg);border:1px dashed var(--c-mc-border);border-radius:var(--radius);padding:.75rem 1.25rem;margin-bottom:1.25rem}
+.plib-m-close-label{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.plib-m-close-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-copy-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;font-size:13px;font-weight:500;border:1.5px solid var(--c-btn);background:transparent;color:var(--c-btn);border-radius:6px;cursor:pointer;transition:background .15s,color .15s}
+.plib-copy-btn:hover{background:var(--c-btn);color:#fff}
+.plib-copy-btn:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+.plib-copy-btn.copied{background:#333;color:#fff;border-color:#333}
+.plib-copy-btn-reflect{border-color:var(--c-btn-r);color:var(--c-btn-r)}
+.plib-copy-btn-reflect:hover{background:var(--c-btn-r);color:#fff}
+.plib-copy-btn-marker{border-color:var(--c-btn-mk);color:var(--c-btn-mk)}
+.plib-copy-btn-marker:hover{background:var(--c-btn-mk);color:#fff}
+.plib-copy-btn-m-open{border-color:var(--c-btn-mo);color:var(--c-btn-mo)}
+.plib-copy-btn-m-open:hover{background:var(--c-btn-mo);color:#fff}
+.plib-copy-btn-m-close{border-color:var(--c-btn-mc);color:var(--c-btn-mc)}
+.plib-copy-btn-m-close:hover{background:var(--c-btn-mc);color:#fff}
+.plib-textarea{display:block;width:100%;box-sizing:border-box;padding:10px 12px;font-size:14px;font-family:var(--font);line-height:1.6;border:1.5px solid var(--c-r-border);border-radius:6px;margin-bottom:10px;background:#fff;color:var(--c-text);resize:vertical;min-height:120px}
+.plib-prompt-input{min-height:0;margin:10px 0 6px}
+.plib-textarea:focus{outline:3px solid #005fcc;outline-offset:2px;border-color:#005fcc}
+.plib-counter{font-size:13px;color:var(--c-muted);margin-bottom:8px;font-variant-numeric:tabular-nums}
+.plib-counter.at-limit{color:#b00020;font-weight:600}
+.plib-counter .plib-count-ok{color:#14552f}
+.plib-counter .plib-count-warn{color:#8a4a00}
+.plib-counter .plib-count-bad{color:#b00020;font-weight:600}
+.plib-counter-min{font-size:12px;color:var(--c-muted);margin-left:8px}
+.plib-warn{font-size:13px;color:#b00020;font-weight:600;margin-bottom:8px;min-height:20px}
+.plib-prompt-q{background:var(--c-q-bg);border:1px solid var(--c-q-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-q-id{color:var(--c-q-id)!important;background:rgba(10,80,112,.1)!important}
+.plib-q-label{color:var(--c-q-id)!important}
+.plib-q-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-q-items{display:flex;flex-direction:column;gap:14px;margin-bottom:10px}
+.plib-q-item{background:rgba(255,255,255,.6);border-radius:6px;padding:10px 12px}
+.plib-q-question{font-size:14px;font-weight:500;display:block;margin-bottom:8px;line-height:1.5}
+.plib-q-item-num{font-family:monospace;font-weight:700;color:var(--c-q-id);margin-right:6px}
+.plib-q-cap-note{font-weight:400;font-style:italic;color:var(--c-muted);margin-left:6px;font-size:13px}
+.plib-q-select{width:100%;padding:6px 8px;font-size:14px;border:1px solid var(--c-q-border);border-radius:4px;background:#fff}
+.plib-q-likert{display:flex;flex-wrap:wrap;gap:10px}
+.plib-q-likert-opt{display:flex;align-items:center;gap:5px;font-size:14px;cursor:pointer}
+.plib-q-checkboxes{display:flex;flex-direction:column;gap:6px}
+.plib-q-check-opt{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.plib-q-check-opt input[disabled] + span{opacity:.5}
+.plib-copy-btn-q{border-color:var(--c-btn-q);color:var(--c-btn-q)}
+.plib-copy-btn-q:hover{background:var(--c-btn-q);color:#fff}
+.plib-prompt-o{background:var(--c-o-bg);border:1px solid var(--c-o-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-o-id{color:var(--c-o-id)!important;background:rgba(160,69,16,.1)!important}
+.plib-o-label{color:var(--c-o-id)!important}
+.plib-o-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-o-question{font-size:14px;font-weight:500;margin-bottom:10px;line-height:1.5}
+.plib-o-list{list-style:none;padding:0;margin:0 0 10px 0;display:flex;flex-direction:column;gap:6px}
+.plib-o-item{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.7);border-radius:6px;padding:8px 10px;font-size:14px}
+.plib-o-rank{font-family:monospace;font-weight:700;color:var(--c-o-id);min-width:1.5em;text-align:right}
+.plib-o-item-text{flex:1}
+.plib-o-controls{display:flex;flex-direction:column;gap:2px}
+.plib-o-arrow{background:transparent;border:1px solid var(--c-o-border);color:var(--c-o-id);width:28px;height:22px;font-size:14px;line-height:1;cursor:pointer;border-radius:3px;padding:0}
+.plib-o-arrow:hover:not([disabled]){background:var(--c-o-border);color:#fff}
+.plib-o-arrow[disabled]{opacity:.25;cursor:default}
+.plib-copy-btn-o{border-color:var(--c-btn-o);color:var(--c-btn-o)}
+.plib-copy-btn-o:hover{background:var(--c-btn-o);color:#fff}
+.plib-demo-badge{font-size:11px;color:var(--c-muted);background:rgba(0,0,0,.05);padding:2px 8px;border-radius:3px;font-style:italic;margin-left:8px}
+.plib-ai-badge{font-size:11px;padding:2px 8px;border-radius:3px;font-family:monospace;margin-left:8px}
+.plib-ai-respond{background:#e8f5e8;color:#2c5e2c}
+.plib-ai-acknowledge{background:#fef0e6;color:#8c4a1a}
+.plib-ai-archive{background:#f0e8f5;color:#5a2c8c}
+</style>
+</head>
+<body>
+<a href="#main-content" class="plib-skip-link">Skip to main content</a>
+<style>.plib-skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;}.plib-skip-link:focus{position:static;width:auto;height:auto;background:#005fcc;color:#fff;padding:8px 16px;font-size:14px;font-weight:600;border-radius:4px;text-decoration:none;display:inline-block;margin:8px;}</style>
+<main id="main-content">
+<div class="plib-wrap">
+<div class="plib-meta">
+  <div class="plib-meta-course">BIT 5534 Applied Business Intelligence and Analytics</div>
+  <div class="plib-meta-week">Week 5 · Homework 4 · Part 1 of 2</div>
+  <div class="plib-meta-title">Hierarchical Clustering, Reading the Tree and Extending the Tool That Draws It</div>
+  <div class="plib-meta-details"><span><strong>Platform:</strong> Hokie AI (build) + local Python (run)</span>&ensp;·&ensp;<span><strong>Submission:</strong> Thread exported as a .zip and uploaded to Canvas</span></div>
+</div>
+
+<div class="plib-objectives">
+  <div class="plib-objectives-label">Learning Objectives</div>
+  <p class="plib-objectives-intro">By the end of this part, students will be able to:</p>
+  <ol class="plib-objectives-list">
+    <li>Read the number of clusters off a scree plot and name the two merge heights the reading rests on.</li>
+    <li>Name the columns that make a cluster prominent in a parallel coordinates plot, and say what those columns being high or low would mean for the rows in that cluster.</li>
+    <li>Describe a cluster whose profile has nothing prominent in it, and say what that flatness is evidence of.</li>
+    <li>Say what changes in the cluster sizes when the linkage changes and the number of clusters is held fixed.</li>
+    <li>Specify an extension to a tool they already have, obtain the build through an interview, and run it against a number printed on this page.</li>
+    <li>Report the best number of clusters and its silhouette score for all five linkages, and say which linkages agree.</li>
+    <li>Say whether a silhouette sweep and an elbow reading agree on the same file, and which of the two they would rely on.</li>
+  </ol>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 1 of 4</div><div class="plib-section-t">ORIENTATION</div></div>
+
+<div class="plib-context plib-context-student">
+  <div class="plib-context-label">&#128203; Note for Students</div>
+  <div class="plib-context-body">
+    <p>Part 1 of homework 4 runs in one Hokie AI thread and holds two cases. The second case extends the tool from the first, so do them in order and do not start a new conversation between them.</p>
+    <p>Make a folder for it inside the HomeWork folder.</p>
+    <pre class="plib-context-pre">BIT5534/
+    HomeWork/
+        hw4_1/</pre>
+    <p>Put the data file and the script in there. Case two writes two more files into the same folder.</p>
+  </div>
+</div>
+
+<div class="plib-narration">
+  <p>Both cases work on the same file. It holds 125 stores of one retail chain, with six numeric columns describing how each store trades and one column holding the store name. The chain wants to stop treating 125 stores as 125 separate problems and start treating them as a handful of store types, which is the decision clustering is for.</p>
+  <p>Case one is Tuesday's method run on a file you have not seen, and the reading is the work. Case two is a measurement the tool does not make, which you specify and Hokie AI builds.</p>
+  <p>Part 1 is worth 100 points, split evenly. Case one is worth 50, 35 for the exchange in the M block and 15 for the reflection. Case two is worth 50, on the same split. Pasting a prompt earns nothing, because it is not work.</p>
+  <p>Work alone. Your notes and both week 5 lectures are open to you. Do not ask Hokie AI to write your reflections. Take as long as you need.</p>
+</div>
+
+<div class="plib-material" id="plib-material-6">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The data for both cases</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="retail_stores.csv" download="retail_stores.csv" target="_blank" rel="noopener noreferrer">Download retail_stores.csv</a>
+  </div>
+  <div class="plib-material-note">125 rows. Six numeric columns, which are avg_basket, weekly_txns, staff_hours, online_pickup_pct, markdown_pct and loyalty_share_pct, plus a store column holding the name of each location. Save it into your hw4_1 folder.</div>
+</div>
+
+<div class="plib-material" id="plib-material-7">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The tool for both cases</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="hier_explorer.py" download="hier_explorer.py" target="_blank" rel="noopener noreferrer">Download hier_explorer.py</a>
+  </div>
+  <div class="plib-material-note">The companion explorer from Tuesday. Everybody starts case two from this same file, so use this copy and set your own build aside. It needs pandas, numpy, matplotlib, scipy and tkinter. If the browser opens the code as a page of text, right-click the link and use Save link as. Run it by double clicking, or give it the data file path on the command line.</div>
+</div>
+
+<div class="plib-narration">
+  <p>Paste the block below into a new Hokie AI thread and wait for it to acknowledge. Do not write anything else in that message. Everything after this goes in the same thread.</p>
+</div>
+
+<div class="plib-prompt-marker" role="region" aria-label="Session Opener">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-marker-id">TH4.1</span>
+    <span class="plib-prompt-type-label plib-marker-label">Session Opener</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-marker-instruction">Copy this block and paste it into Hokie AI to begin your session.</p>
+  <div class="plib-prompt-display plib-marker-display">You are an analysis partner for BIT 5534 Applied Business Intelligence and Analytics, a graduate course at Virginia Tech. The student holds graduate standing, has some statistics background, and is working through a homework case on their own with no instructor present. Speak to them as a capable adult. Be direct, say when something is uncertain or contested, and do not pad your answers. When a student pushes back on something you said, take the challenge seriously and do not concede immediately to be agreeable. When they ask about your reasoning, say what you assumed and what you cannot settle for them because it depends on something you were not told.
+
+---
+**AI Interaction Protocol**
+
+In this session, you will receive blocks of content with the
+following structural pattern:
+
+```
+### &lt;BlockID&gt;
+----------
+&lt;content&gt;
+----------
+###
+```
+
+Some blocks include an interaction-mode directive on a separate
+line inside the dashed envelope:
+
+```
+### &lt;BlockID&gt;
+----------
+[ai_interaction=&lt;mode&gt;]
+&lt;content&gt;
+----------
+###
+```
+
+Three modes determine your response:
+
+  - **respond**: Engage substantively with the block content.
+    Treat it as a prompt, question, or task that wants your
+    analytical response. Default for S blocks (prompts) and X
+    blocks (free exploration).
+
+  - **acknowledge**: Confirm receipt with one brief sentence
+    naming the block ID. Do not analyze, comment on, or expand on
+    the content. The student is filing the block for the record,
+    not asking for engagement. Default for T blocks (this opener),
+    R blocks (reflections), M CLOSE blocks (closing markers), Q
+    blocks (structured selections), and O blocks (ordering
+    selections).
+
+  - **archive**: Respond with only the block ID and nothing else.
+    Used for batched archival pastes where even brief
+    acknowledgment would clutter the thread.
+
+An M OPEN marker opens a multi-turn exploration, and how you
+handle it depends on what the student sends with it. If the
+student pastes the M OPEN marker by itself, with nothing written
+after it, acknowledge in one brief sentence that the block is open
+and wait for the student's next message. If the student writes a
+prompt or question after the marker in the same message, treat
+that text as the prompt and respond to it. Always acknowledge an
+M CLOSE marker.
+
+If a block has no explicit `[ai_interaction=...]` directive, apply
+the block-type default per the list above.
+
+This protocol applies for the remainder of this session.
+---</div>
+  <div class="plib-prompt-text" id="text_prompt_9" data-copy="### TH4.1&#10;----------&#10;You are an analysis partner for BIT 5534 Applied Business Intelligence and Analytics, a graduate course at Virginia Tech. The student holds graduate standing, has some statistics background, and is working through a homework case on their own with no instructor present. Speak to them as a capable adult. Be direct, say when something is uncertain or contested, and do not pad your answers. When a student pushes back on something you said, take the challenge seriously and do not concede immediately to be agreeable. When they ask about your reasoning, say what you assumed and what you cannot settle for them because it depends on something you were not told.&#10;&#10;---&#10;**AI Interaction Protocol**&#10;&#10;In this session, you will receive blocks of content with the&#10;following structural pattern:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Some blocks include an interaction-mode directive on a separate&#10;line inside the dashed envelope:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;[ai_interaction=&lt;mode&gt;]&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Three modes determine your response:&#10;&#10;  - **respond**: Engage substantively with the block content.&#10;    Treat it as a prompt, question, or task that wants your&#10;    analytical response. Default for S blocks (prompts) and X&#10;    blocks (free exploration).&#10;&#10;  - **acknowledge**: Confirm receipt with one brief sentence&#10;    naming the block ID. Do not analyze, comment on, or expand on&#10;    the content. The student is filing the block for the record,&#10;    not asking for engagement. Default for T blocks (this opener),&#10;    R blocks (reflections), M CLOSE blocks (closing markers), Q&#10;    blocks (structured selections), and O blocks (ordering&#10;    selections).&#10;&#10;  - **archive**: Respond with only the block ID and nothing else.&#10;    Used for batched archival pastes where even brief&#10;    acknowledgment would clutter the thread.&#10;&#10;An M OPEN marker opens a multi-turn exploration, and how you&#10;handle it depends on what the student sends with it. If the&#10;student pastes the M OPEN marker by itself, with nothing written&#10;after it, acknowledge in one brief sentence that the block is open&#10;and wait for the student's next message. If the student writes a&#10;prompt or question after the marker in the same message, treat&#10;that text as the prompt and respond to it. Always acknowledge an&#10;M CLOSE marker.&#10;&#10;If a block has no explicit `[ai_interaction=...]` directive, apply&#10;the block-type default per the list above.&#10;&#10;This protocol applies for the remainder of this session.&#10;---&#10;----------&#10;###"></div>
+  <button class="plib-copy-btn plib-copy-btn-marker" onclick="copyPrompt('text_prompt_9', this)"
+          aria-label="Copy session opener to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy session opener
+  </button>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 2 of 4</div><div class="plib-section-t">CASE ONE</div></div>
+
+<div class="plib-narration">
+  <p>Case one is worth 50 points, 35 for the exchange in the M block and 15 for the reflection.</p>
+  <p>Open hier_explorer.py, load retail_stores.csv, take all six numeric columns, set store as the label column, leave standardize on, and leave the linkage on ward.</p>
+  <p>Check three numbers before you read anything else. The first merge is at height 0.1303. Cut at five clusters, the merge height is 5.0264 and the five clusters hold 40, 31, 28, 16 and 10 stores. If your screen agrees, the tool is computing what it claims to compute on the file this page is written about, and every number below is one you can compare against.</p>
+  <p>Four things are on screen and they answer different questions. The dendrogram shows which stores joined which, and in what order. The scree plot shows the height at which the tree drops to each number of clusters, and the place where that height stops falling steeply is the cut worth taking. The parallel coordinates plot draws one line per store across the six columns, coloured by cluster, and it is the only one of the four that tells you what a cluster is made of. The table underneath gives each cluster's mean on every column in standardized units, so a value near zero sits at the chain average, a value above one sits well above it, and a value below minus one sits well below.</p>
+</div>
+
+<div class="plib-narration">
+  <p>Four moves, in order, and every move after the first uses what came back from the one before it. The card below carries them.</p>
+  <p>Move one claims the cut AND move two claims three profiles AND move three works through whatever the verdict disputes AND move four changes the linkage and reports what survived. All four.</p>
+  <p>Move one opens the block. Attach retail_stores.csv and write a paragraph that says four things: that you have already run this analysis yourself in hier_explorer, that you are going to state what you observed and want it checked against the data, that it should tell you for each claim whether you are right, wrong, overstating or understating, and that it should not describe the analysis ahead of you or list results you have not asked about. Then in the same message, make your first claim. Say how many clusters you are cutting the tree into, and give the two merge heights that made you read it there, the one just above your cut and the one just below.</p>
+  <p>Move two claims three profiles. Pick three of your clusters and for each one name the columns that stand out, saying which are high and which are low, and then say what a store in that cluster would actually be like for those columns to sit where they do. A cluster that is highest on markdown and lowest on loyalty is a description. A store selling inventory down to people who do not come back is a reading, and the reading is what is being asked for. Ask for the same four way check on all three.</p>
+  <p>Move three is where the exchange earns its place. Read the verdict claim by claim. Where it says you are overstating, ask what in the data makes it an overstatement and what a correctly stated version would be. Where you think it is wrong, say so and hold your ground until it gives you a number. You ran the analysis and it is reading the file, so a disagreement is worth settling and not worth conceding.</p>
+  <p>Move four changes one thing and holds the rest. Set the linkage to complete and look again at the same number of clusters, then set it to average and look again. Report what happened to the cluster sizes each time, and say which of your three profiles you can still find and which you cannot.</p>
+  <p>One move is not one message. Ten messages inside the block is the ceiling, and a ceiling is not a target.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-14">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four moves joined by AND. Attach the data, set the terms and claim your cut with the two merge heights behind it. Claim three cluster profiles, naming the columns that stand out and saying what a store in that cluster would be like. Work through whatever the verdict disputes. Change the linkage to complete and then average and report what happened to the sizes and which profiles survived."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 254" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="254" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Four moves, and each one uses the answer before it</text><rect x="21" y="46" width="204" height="186" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Attach the data,</text><text x="66" y="103" font-size="17" font-weight="600" fill="#2b2b2b">set the terms,</text><text x="66" y="124" font-size="17" font-weight="600" fill="#2b2b2b">claim your cut</text><text x="37" y="155" font-size="14" fill="#6b6b6b">the number of clusters, and</text><text x="37" y="174" font-size="14" fill="#6b6b6b">the two merge heights on</text><text x="37" y="193" font-size="14" fill="#6b6b6b">either side of it</text><text x="248" y="144" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="186" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Claim three</text><text x="318" y="103" font-size="17" font-weight="600" fill="#2b2b2b">profiles</text><text x="288" y="134" font-size="14" fill="#6b6b6b">the columns that stand out,</text><text x="288" y="153" font-size="14" fill="#6b6b6b">and what a store in that</text><text x="288" y="172" font-size="14" fill="#6b6b6b">cluster would be like</text><text x="500" y="144" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="186" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Work through the</text><text x="569" y="103" font-size="17" font-weight="600" fill="#2b2b2b">verdict</text><text x="540" y="134" font-size="14" fill="#6b6b6b">ask what makes it an</text><text x="540" y="153" font-size="14" fill="#6b6b6b">overstatement, and hold</text><text x="540" y="172" font-size="14" fill="#6b6b6b">your ground where you</text><text x="540" y="191" font-size="14" fill="#6b6b6b">disagree</text><text x="752" y="144" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="186" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Change the</text><text x="820" y="103" font-size="17" font-weight="600" fill="#2b2b2b">linkage to</text><text x="820" y="124" font-size="17" font-weight="600" fill="#2b2b2b">complete, then</text><text x="820" y="145" font-size="17" font-weight="600" fill="#2b2b2b">average</text><text x="792" y="176" font-size="14" fill="#6b6b6b">what happened to the</text><text x="792" y="195" font-size="14" fill="#6b6b6b">sizes, and which profiles</text><text x="792" y="214" font-size="14" fill="#6b6b6b">you can still find</text></svg></div>
+    <figcaption class="plib-tile-caption">Four moves, in order. You state it, it checks it against the data, and the fourth is where the method itself moves.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-15">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Check three numbers before you read anything else. The first merge is at height 0.1303. Cut at five clusters the merge height is 5.0264, and the five clusters hold 40, 31, 28, 16 and 10 stores."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 191" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="191" rx="10" fill="#faf7f8"/><rect x="21" y="20" width="958" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><text x="46" y="58" font-size="18" font-weight="600" fill="#630031">Check three numbers before you read anything else</text><text x="46" y="86" font-size="16" fill="#2b2b2b">The first merge is at height 0.1303. Cut at five clusters, the merge height is 5.0264 and the five clusters hold 40, 31, 28, 16 and</text><text x="46" y="108" font-size="16" fill="#2b2b2b">10 stores.</text><text x="46" y="134" font-size="14" fill="#6b6b6b">If your screen agrees, the tool is computing what it claims to compute on this file, and every number you read after that is one you can compare</text><text x="46" y="153" font-size="14" fill="#6b6b6b">against.</text></svg></div>
+    <figcaption class="plib-tile-caption">If your screen agrees, the tool is computing what it claims to compute on this file.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-prompt-m" role="region" aria-label="Multi-turn Block MH4.1.1, Begin">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-m-id">MH4.1.1</span>
+    <span class="plib-prompt-type-label plib-m-label">Multi-turn · Consolidation</span>
+    <span class="plib-m-badge">Summative</span>
+    <span class="plib-ai-badge plib-ai-respond">AI: respond</span>
+  </div>
+  <div class="plib-m-instructions">
+    <div class="plib-m-instructions-label">&#128221; How this block works</div>
+    <ol class="plib-m-steps">
+      <li>Click <strong>Copy opening marker</strong> and paste it into Hokie AI to begin this block.</li>
+      <li>Interact with Hokie AI: ask questions, explore, respond. All of this exchange belongs to this block.</li>
+      <li>When finished, use the <strong>Copy closing marker</strong> button below to close the block in your thread.</li>
+    </ol>
+  </div>
+  <div class="plib-prompt-text" id="text_m_open_16" data-copy="### MH4.1.1 OPEN&#10;----------&#10;"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-open" onclick="copyPrompt('text_m_open_16', this)"
+          aria-label="Copy opening marker for block MH4.1.1">
+    <span aria-hidden="true">&#9654;</span> Copy opening marker
+  </button>
+</div>
+
+<div class="plib-prompt-m-close" role="region" aria-label="Multi-turn Block MH4.1.1, End">
+  <div class="plib-m-close-label">
+    <span class="plib-prompt-id plib-m-id">MH4.1.1</span>
+    <span class="plib-prompt-type-label plib-m-label">End of Multi-turn Block</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-m-close-instruction">When you have finished your exchange, copy this closing marker and paste it into Hokie AI to close the block.</p>
+  <div class="plib-prompt-text" id="text_m_close_17" data-copy="&#10;----------&#10;### MH4.1.1 CLOSE"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-close" onclick="copyPrompt('text_m_close_17', this)"
+          aria-label="Copy closing marker for block MH4.1.1">
+    <span aria-hidden="true">&#9646;&#9646;</span> Copy closing marker
+  </button>
+</div>
+
+<div class="plib-narration">
+  <p>Now write your reflection for case one, in your own words and without help from the AI.</p>
+  <p>Your reflection needs all four parts below. Say how many clusters you cut the tree into and give the two merge heights on either side of that cut AND pick one cluster, name the columns that stand out in its profile and say what a store in that cluster would be like AND name the cluster whose profile has nothing standing out in it and say what you make of that AND say what the parallel coordinates plot told you that the dendrogram could not. Respond to all four parts.</p>
+  <p>The fourth part is where a reflection separates itself. The dendrogram and the parallel coordinates plot are drawn from the same clustering, so say what each one is for.</p>
+  <p>Write 100 to 200 words.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-20">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four boxes joined by AND. How many clusters you cut into and the two merge heights on either side of that cut. One cluster, the columns that stand out in its profile and what a store in that cluster would be like. The cluster with nothing standing out, and what you make of that. What the parallel coordinates plot told you that the dendrogram could not."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 214" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="214" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">All four parts of the case one reflection</text><rect x="21" y="46" width="204" height="146" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">How many</text><text x="66" y="103" font-size="17" font-weight="600" fill="#2b2b2b">clusters you cut</text><text x="66" y="124" font-size="17" font-weight="600" fill="#2b2b2b">into</text><text x="37" y="155" font-size="14" fill="#6b6b6b">and the two merge heights</text><text x="37" y="174" font-size="14" fill="#6b6b6b">on either side</text><text x="248" y="124" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="146" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">One cluster</text><text x="288" y="122" font-size="14" fill="#6b6b6b">the columns that stand out,</text><text x="288" y="141" font-size="14" fill="#6b6b6b">and what a store there</text><text x="288" y="160" font-size="14" fill="#6b6b6b">would be like</text><text x="500" y="124" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="146" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The cluster with</text><text x="569" y="103" font-size="17" font-weight="600" fill="#2b2b2b">nothing standing</text><text x="569" y="124" font-size="17" font-weight="600" fill="#2b2b2b">out</text><text x="540" y="155" font-size="14" fill="#6b6b6b">and what you make of that</text><text x="752" y="124" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="146" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">What parallel</text><text x="820" y="103" font-size="17" font-weight="600" fill="#2b2b2b">coordinates told</text><text x="820" y="124" font-size="17" font-weight="600" fill="#2b2b2b">you</text><text x="792" y="155" font-size="14" fill="#6b6b6b">that the dendrogram could</text><text x="792" y="174" font-size="14" fill="#6b6b6b">not</text></svg></div>
+    <figcaption class="plib-tile-caption">All four parts of the case one reflection, inside 100 to 200 words.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution RH4.1.1">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">RH4.1.1</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Case one reflection</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 100 to 200 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_21" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for RH4.1.1"
+            data-maxwords="200" data-maxchars="1600"
+            oninput="updateCounter('prompt_21', 'textarea_21')"></textarea>
+  <div class="plib-counter" id="counter_prompt_21" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_21">0</span> / 200 words&nbsp;·&nbsp;
+    <span id="cc_prompt_21">0</span> / 1600 characters
+    <span class="plib-counter-min">minimum: 100 words</span>
+  </div>
+  <div class="plib-warn" id="warn_prompt_21" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_21"
+       data-prefix="### RH4.1.1&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_21"
+       data-maxwords="200"
+       data-maxchars="1600"
+       data-minwords="100"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_21', this)"
+          aria-label="Copy contribution RH4.1.1 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 3 of 4</div><div class="plib-section-t">CASE TWO</div></div>
+
+<div class="plib-narration">
+  <p>Case two is worth 50 points, 35 for the exchange in the M block and 15 for the reflection.</p>
+  <p>In case one you cut the tree where the scree plot bent, and the reading was yours. and two people can read the same plot and bend it in different places. A silhouette score settles it with a number instead, because it asks of every store how close it sits to its own cluster against the nearest cluster it is not in, and averages the answer.</p>
+  <p>The tool you have does not compute it. Case two is where you add it, and the shape of the addition matters. Building a tree is the expensive part and cutting one you already have is nearly free, so a tool that builds the tree once and then cuts it at every number of clusters in turn can score twenty cuts for barely more than the cost of one. The pairwise distances behave the same way. Compute them once and every silhouette after that reads from the same table.</p>
+  <p>A scree plot you squint at becomes five rows you can compare.</p>
+</div>
+
+<div class="plib-narration">
+  <p>Four moves, in order. The card below carries them.</p>
+  <p>Move one writes the specification AND move two closes the gaps it finds AND move three runs the build against a number on this page AND move four reads what the report says. All four.</p>
+  <p>Move one opens the block. Attach hier_explorer.py and write one paragraph specifying what you want added. Your paragraph has to carry four things. For each of the five linkages the tool already offers, build the tree once and cut it at every number of clusters from two to twenty. Score each cut with the average silhouette, computing the pairwise distances one time and reusing them. For each linkage report the number of clusters with the best score and what that score was. Print the five rows as a table and write the same table to a csv file in the folder the data came from. Say in the paragraph that you want at most five questions before the finished code, so the interview has an end.</p>
+  <p>Move two answers what it asks. It will have gaps to close, and the gaps are the point of asking for an interview at all. Answer plainly, say when you do not care about something and let it choose, and when it has what it needs ask for the finished file.</p>
+  <p>Move three runs it. Save the file it gives you as hier_explorer_silhouette.py in your hw4_1 folder, run it on retail_stores.csv with the same six columns and standardize on, and check one row before you trust the other four. Under ward the best cut is at five clusters with a silhouette of 0.5149. If your ward row agrees, run the rest and report all five rows in the thread.</p>
+  <p>Move four reads the table. Say which linkages landed on the same number of clusters and which did not, and say which linkage scored highest and which scored lowest.</p>
+  <p>One move is not one message. Twelve messages inside the block is the ceiling, and a ceiling is not a target. If the build does not run, the error and what you did about it belong in the thread. A thread showing a failure and a repair reads as more work than a thread showing neither.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-26">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four moves joined by AND. Attach the tool and specify the sweep, which is five linkages, every cut from two to twenty, one distance matrix reused, the best number of clusters and its score for each linkage, printed and saved as a csv. Answer the interview, close the gaps it finds, then ask for the finished file. Run it and check the ward row against the page. Read the table and say which linkages agree and which do not."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 233" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="233" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Four moves. The specification is yours to write</text><rect x="21" y="46" width="204" height="165" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Attach the tool</text><text x="66" y="103" font-size="17" font-weight="600" fill="#2b2b2b">and specify the</text><text x="66" y="124" font-size="17" font-weight="600" fill="#2b2b2b">sweep</text><text x="37" y="155" font-size="14" fill="#6b6b6b">five linkages, every cut</text><text x="37" y="174" font-size="14" fill="#6b6b6b">from 2 to 20, one distance</text><text x="37" y="193" font-size="14" fill="#6b6b6b">matrix reused</text><text x="248" y="134" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="165" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Answer the</text><text x="318" y="103" font-size="17" font-weight="600" fill="#2b2b2b">interview</text><text x="288" y="134" font-size="14" fill="#6b6b6b">close the gaps it finds, then</text><text x="288" y="153" font-size="14" fill="#6b6b6b">ask for the finished file</text><text x="500" y="134" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="165" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Run it and check</text><text x="569" y="103" font-size="17" font-weight="600" fill="#2b2b2b">one row</text><text x="540" y="134" font-size="14" fill="#6b6b6b">ward at five clusters,</text><text x="540" y="153" font-size="14" fill="#6b6b6b">silhouette 0.5149</text><text x="752" y="134" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="165" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Read the table</text><text x="792" y="122" font-size="14" fill="#6b6b6b">which linkages agree,</text><text x="792" y="141" font-size="14" fill="#6b6b6b">which do not, highest and</text><text x="792" y="160" font-size="14" fill="#6b6b6b">lowest</text></svg></div>
+    <figcaption class="plib-tile-caption">Four moves. The specification is yours, the build is the interview, and the table is the deliverable.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-27">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Check one row before you trust the other four. Under ward linkage the best cut is at five clusters with an average silhouette of 0.5149."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 150" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="150" rx="10" fill="#faf7f8"/><rect x="21" y="20" width="958" height="110" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><text x="46" y="58" font-size="18" font-weight="600" fill="#630031">Check one row before you trust the other four</text><text x="46" y="86" font-size="16" fill="#2b2b2b">Under ward linkage the best cut is at five clusters, with an average silhouette of 0.5149.</text><text x="46" y="112" font-size="14" fill="#6b6b6b">The other four rows are yours to produce.</text></svg></div>
+    <figcaption class="plib-tile-caption">One row you can check. The other four are yours to produce.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-prompt-m" role="region" aria-label="Multi-turn Block MH4.1.2, Begin">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-m-id">MH4.1.2</span>
+    <span class="plib-prompt-type-label plib-m-label">Multi-turn · Exploration</span>
+    <span class="plib-m-badge">Summative</span>
+    <span class="plib-ai-badge plib-ai-respond">AI: respond</span>
+  </div>
+  <div class="plib-m-instructions">
+    <div class="plib-m-instructions-label">&#128221; How this block works</div>
+    <ol class="plib-m-steps">
+      <li>Click <strong>Copy opening marker</strong> and paste it into Hokie AI to begin this block.</li>
+      <li>Interact with Hokie AI: ask questions, explore, respond. All of this exchange belongs to this block.</li>
+      <li>When finished, use the <strong>Copy closing marker</strong> button below to close the block in your thread.</li>
+    </ol>
+  </div>
+  <div class="plib-prompt-text" id="text_m_open_28" data-copy="### MH4.1.2 OPEN&#10;----------&#10;"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-open" onclick="copyPrompt('text_m_open_28', this)"
+          aria-label="Copy opening marker for block MH4.1.2">
+    <span aria-hidden="true">&#9654;</span> Copy opening marker
+  </button>
+</div>
+
+<div class="plib-prompt-m-close" role="region" aria-label="Multi-turn Block MH4.1.2, End">
+  <div class="plib-m-close-label">
+    <span class="plib-prompt-id plib-m-id">MH4.1.2</span>
+    <span class="plib-prompt-type-label plib-m-label">End of Multi-turn Block</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-m-close-instruction">When you have finished your exchange, copy this closing marker and paste it into Hokie AI to close the block.</p>
+  <div class="plib-prompt-text" id="text_m_close_29" data-copy="&#10;----------&#10;### MH4.1.2 CLOSE"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-close" onclick="copyPrompt('text_m_close_29', this)"
+          aria-label="Copy closing marker for block MH4.1.2">
+    <span aria-hidden="true">&#9646;&#9646;</span> Copy closing marker
+  </button>
+</div>
+
+<div class="plib-narration">
+  <p>Now write your reflection for case two, in your own words and without help from the AI.</p>
+  <p>Your reflection needs all four parts below. Give your five rows in one or two sentences, each row being a linkage with its best number of clusters and its score AND say which linkages landed on the same number of clusters and which landed somewhere else AND give single linkage's score and say what it tells you about the way single linkage decides what to merge AND say whether the sweep agrees with the cut you read off the scree plot in case one, and which of the two you would put in front of the chain. Respond to all four parts.</p>
+  <p>The fourth part is where a reflection separates itself. One of the two is a number and the other is a judgment, and that is not the same as one being right.</p>
+  <p>Write 100 to 200 words.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-32">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four boxes joined by AND. Your five rows, each a linkage with its best number of clusters and its score. Which linkages agreed on the number and which did not. Single linkage's score and what it says about how single linkage decides what to merge. Whether the sweep agrees with your case one cut, and which of the two you would put in front of the chain."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 214" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="214" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">All four parts of the case two reflection</text><rect x="21" y="46" width="204" height="146" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Your five rows</text><text x="37" y="122" font-size="14" fill="#6b6b6b">each a linkage, its best</text><text x="37" y="141" font-size="14" fill="#6b6b6b">number of clusters, and its</text><text x="37" y="160" font-size="14" fill="#6b6b6b">score</text><text x="248" y="124" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="146" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Which linkages</text><text x="318" y="103" font-size="17" font-weight="600" fill="#2b2b2b">agreed on the</text><text x="318" y="124" font-size="17" font-weight="600" fill="#2b2b2b">number</text><text x="288" y="155" font-size="14" fill="#6b6b6b">and which landed</text><text x="288" y="174" font-size="14" fill="#6b6b6b">somewhere else</text><text x="500" y="124" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="146" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Single linkage's</text><text x="569" y="103" font-size="17" font-weight="600" fill="#2b2b2b">score</text><text x="540" y="134" font-size="14" fill="#6b6b6b">and what it says about how</text><text x="540" y="153" font-size="14" fill="#6b6b6b">single linkage decides to</text><text x="540" y="172" font-size="14" fill="#6b6b6b">merge</text><text x="752" y="124" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="146" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Whether the</text><text x="820" y="103" font-size="17" font-weight="600" fill="#2b2b2b">sweep agrees</text><text x="820" y="124" font-size="17" font-weight="600" fill="#2b2b2b">with your cut</text><text x="792" y="155" font-size="14" fill="#6b6b6b">and which of the two you</text><text x="792" y="174" font-size="14" fill="#6b6b6b">put in front of the chain</text></svg></div>
+    <figcaption class="plib-tile-caption">All four parts of the case two reflection, inside 100 to 200 words.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution RH4.1.2">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">RH4.1.2</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Case two reflection</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 100 to 200 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_33" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for RH4.1.2"
+            data-maxwords="200" data-maxchars="1600"
+            oninput="updateCounter('prompt_33', 'textarea_33')"></textarea>
+  <div class="plib-counter" id="counter_prompt_33" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_33">0</span> / 200 words&nbsp;·&nbsp;
+    <span id="cc_prompt_33">0</span> / 1600 characters
+    <span class="plib-counter-min">minimum: 100 words</span>
+  </div>
+  <div class="plib-warn" id="warn_prompt_33" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_33"
+       data-prefix="### RH4.1.2&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_33"
+       data-maxwords="200"
+       data-maxchars="1600"
+       data-minwords="100"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_33', this)"
+          aria-label="Copy contribution RH4.1.2 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 4 of 4</div><div class="plib-section-t">SUBMISSION</div></div>
+
+<div class="plib-narration">
+  <p>You are done with part 1. Both cases are in one thread, and that thread is what you submit.</p>
+  <p>Export the whole conversation from Hokie AI as a .zip and upload it to the Canvas assignment for part 1. Keep hier_explorer_silhouette.py and the csv it wrote in BIT5534/HomeWork/hw4_1, because part 2 compares against the numbers in that csv.</p>
+  <p>Leave the turns where something went wrong. How you recovered is part of what is being read, and a tidied thread reads as a thinner one.</p>
+  <p>Part 2 is a separate thread and a separate upload. Start it fresh.</p>
+</div>
+
+<div class="plib-material" id="plib-material-37">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">Homework 4 part 1 on Canvas</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="https://canvas.vt.edu/courses/233475/assignments/2867032" target="_blank" rel="noopener noreferrer">Open the part 1 assignment</a>
+  </div>
+  <div class="plib-material-note">Upload the exported .zip of this thread here. Part 2 has its own assignment, so check the title on the page before you upload.</div>
+</div>
+
+<div class="plib-submit">
+  <div class="plib-submit-title">Turn it in</div>
+  <p class="plib-submit-p">Export this thread as a .zip file, then upload it to the Canvas assignment for this part. Leave the file as it came out. Your work is not submitted until Canvas shows your file.</p>
+</div>
+
+</div>
+</main>
+<script>
+function countWords(text) {
+  return text.trim() === '' ? 0 : text.trim().split(/[ \t\n\r]+/).length;
+}
+function announce(msg) {
+  var el = document.getElementById('plib-live');
+  if (!el) { el = document.createElement('div'); el.id = 'plib-live';
+    el.setAttribute('aria-live','polite'); el.setAttribute('aria-atomic','true');
+    el.style.cssText='position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;';
+    document.body.appendChild(el); }
+  el.textContent = ''; setTimeout(function(){ el.textContent = msg; }, 50);
+}
+function autoResize(ta) {
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(ta.scrollHeight + 2, 600) + 'px';
+}
+function updateCounter(bid, tid) {
+  var ta = document.getElementById(tid);
+  var textEl = document.getElementById('text_' + bid);
+  var wcEl = document.getElementById('wc_' + bid);
+  var ccEl = document.getElementById('cc_' + bid);
+  var ctrEl = document.getElementById('counter_' + bid);
+  if (!ta) return;
+  autoResize(ta);
+  var maxwords = textEl ? parseInt(textEl.getAttribute('data-maxwords') || '0') : 0;
+  var maxchars = textEl ? parseInt(textEl.getAttribute('data-maxchars') || '0') : 0;
+  var minwords = textEl ? parseInt(textEl.getAttribute('data-minwords') || '0') : 0;
+  var text = ta.value;
+  var words = countWords(text);
+  var chars = text.length;
+  if (maxchars && chars > maxchars) {
+    ta.value = text.substring(0, maxchars);
+    text = ta.value; words = countWords(text); chars = text.length;
+  }
+  if (wcEl) wcEl.textContent = words;
+  if (ccEl) ccEl.textContent = chars;
+  if (ctrEl && maxwords) {
+    var pct = words / maxwords;
+    var cls = pct >= 1.0 ? 'bad' : (pct >= 0.8 || (minwords && words < minwords)) ? 'warn' : 'ok';
+    if (pct >= 1.0) { ctrEl.className = 'plib-counter at-limit'; }
+    else { ctrEl.className = 'plib-counter'; }
+    if (wcEl) wcEl.className = 'plib-count-' + cls;
+    if (ccEl) ccEl.className = 'plib-count-' + cls;
+  }
+}
+function copyPrompt(id, btn) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var text = (el.getAttribute('data-copy') || el.textContent || '').replace(/&#10;/g, '\n');
+  var label = (btn.getAttribute('aria-label') || 'item').replace('Copy ','').replace(' to clipboard','');
+  doCopy(text, btn, label + ' copied.', '&#10003; Copied', 2000);
+}
+function copyWithInput(bid, btn) {
+  var el = document.getElementById('text_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!el) return;
+  var tid = el.getAttribute('data-tid');
+  var inputEl = document.getElementById(tid);
+  var prefix = (el.getAttribute('data-prefix') || '').replace(/&#10;/g, '\n');
+  var suffix = (el.getAttribute('data-suffix') || '').replace(/&#10;/g, '\n');
+  var userText = inputEl ? inputEl.value.trim() : '';
+  if (userText.replace(/[\t\n\r ]/g, '').length < 2) {
+    if (warnEl) warnEl.textContent = 'Please write your response before copying.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  var maxwords = parseInt(el.getAttribute('data-maxwords') || '0');
+  var maxchars = parseInt(el.getAttribute('data-maxchars') || '0');
+  var minwords = parseInt(el.getAttribute('data-minwords') || '0');
+  if (minwords && countWords(userText) < minwords) {
+    if (warnEl) warnEl.textContent = 'Response is below the minimum of ' + minwords + ' words.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  if (maxwords && countWords(userText) > maxwords) {
+    if (warnEl) warnEl.textContent = 'Response exceeds the ' + maxwords + ' word limit.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  if (warnEl) warnEl.textContent = '';
+  doCopy(prefix + userText + suffix, btn, 'Copied. Paste into Hokie AI.', '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+function doCopy(text, btn, announcement, label, duration) {
+  function ok() {
+    var orig = btn.innerHTML; btn.innerHTML = label; btn.classList.add('copied');
+    announce(announcement);
+    setTimeout(function() { btn.innerHTML = orig; btn.classList.remove('copied'); }, duration);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(ok).catch(function() { fallback(text, ok); });
+  } else { fallback(text, ok); }
+}
+function fallback(text, cb) {
+  var ta = document.createElement('textarea'); ta.value = text;
+  ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); cb(); } catch(e) {}
+  document.body.removeChild(ta);
+}
+function copyStructured(bid, blockId, btn) {
+  var container = document.getElementById('qitems_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!container) return;
+  var outerDiv = container.closest('.plib-prompt-q');
+  var aiDirective = outerDiv ? (outerDiv.getAttribute('data-ai-directive') || '') : '';
+  var items = container.querySelectorAll('.plib-q-item');
+  var lines = [];
+  var emptyItems = [];
+
+  items.forEach(function(itemEl) {
+    var n = itemEl.getAttribute('data-item-n');
+    var render = itemEl.getAttribute('data-render');
+    var selections = [];
+
+    if (render === 'dropdown') {
+      var sel = itemEl.querySelector('select');
+      if (sel && sel.value) selections.push(sel.value);
+    } else if (render === 'likert') {
+      var checkedRadio = itemEl.querySelector('input[type="radio"]:checked');
+      if (checkedRadio) selections.push(checkedRadio.value);
+    } else if (render === 'checkbox') {
+      var checks = itemEl.querySelectorAll('input[type="checkbox"]:checked');
+      checks.forEach(function(c) { selections.push(c.value); });
+    }
+
+    if (selections.length === 0) {
+      emptyItems.push(n);
+    } else {
+      lines.push('ITEM ' + n + ': ' + selections.join(', '));
+    }
+  });
+
+  if (emptyItems.length > 0) {
+    if (warnEl) {
+      warnEl.textContent = 'Please make a selection for ITEM '
+        + emptyItems.join(', ITEM ') + ' before copying.';
+    }
+    return;
+  }
+
+  if (warnEl) warnEl.textContent = '';
+
+  var directiveLine = aiDirective ? aiDirective + '\n' : '';
+  var envelope = '### ' + blockId + '\n----------\n' + directiveLine + 'RESPONSE:\n'
+    + lines.join('\n') + '\n----------\n###';
+  doCopy(envelope, btn,
+    'Structured response copied. Paste into Hokie AI.',
+    '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+function enforceCheckboxCap(itemEl) {
+  var max = parseInt(itemEl.getAttribute('data-max-select') || '0', 10);
+  if (!max || max < 2) return;
+  var checks = itemEl.querySelectorAll('input[type="checkbox"]');
+  var checked = itemEl.querySelectorAll('input[type="checkbox"]:checked');
+  var atCap = checked.length >= max;
+  checks.forEach(function(c) {
+    if (!c.checked) c.disabled = atCap;
+  });
+}
+function moveItem(btn, direction) {
+  var li = btn.closest('.plib-o-item');
+  if (!li) return;
+  var list = li.parentElement;
+  if (!list) return;
+  if (direction === 'up') {
+    var prev = li.previousElementSibling;
+    if (prev) list.insertBefore(li, prev);
+  } else if (direction === 'down') {
+    var next = li.nextElementSibling;
+    if (next) list.insertBefore(next, li);
+  }
+  updateArrowStates(list);
+}
+function updateArrowStates(list) {
+  var items = list.querySelectorAll('.plib-o-item');
+  items.forEach(function(li, idx) {
+    var rankEl = li.querySelector('.plib-o-rank');
+    if (rankEl) rankEl.textContent = (idx + 1) + '.';
+    var upBtn = li.querySelector('.plib-o-arrow-up');
+    var downBtn = li.querySelector('.plib-o-arrow-down');
+    if (upBtn) upBtn.disabled = (idx === 0);
+    if (downBtn) downBtn.disabled = (idx === items.length - 1);
+    var itemText = li.getAttribute('data-item-text') || '';
+    if (upBtn) upBtn.setAttribute('aria-label', 'Move ' + itemText + ' up');
+    if (downBtn) downBtn.setAttribute('aria-label', 'Move ' + itemText + ' down');
+  });
+}
+function copyOrdered(bid, blockId, btn) {
+  var list = document.getElementById('oitems_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!list) return;
+  var outerDiv = list.closest('.plib-prompt-o');
+  var aiDirective = outerDiv ? (outerDiv.getAttribute('data-ai-directive') || '') : '';
+  var question = list.getAttribute('data-question') || '';
+  var items = list.querySelectorAll('.plib-o-item');
+  var lines = [];
+  items.forEach(function(li, idx) {
+    var itemText = li.getAttribute('data-item-text') || '';
+    lines.push((idx + 1) + '. ' + itemText);
+  });
+  if (warnEl) warnEl.textContent = '';
+  var directiveLine = aiDirective ? aiDirective + '\n' : '';
+  var envelope = '### ' + blockId + '\n----------\n' + directiveLine + 'RESPONSE:\nQuestion: '
+    + question + '\n' + lines.join('\n') + '\n----------\n###';
+  doCopy(envelope, btn,
+    'Ordered response copied. Paste into Hokie AI.',
+    '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var checkboxItems = document.querySelectorAll('.plib-q-item[data-render="checkbox"]');
+  checkboxItems.forEach(function(itemEl) {
+    var checks = itemEl.querySelectorAll('input[type="checkbox"]');
+    checks.forEach(function(c) {
+      c.addEventListener('change', function() { enforceCheckboxCap(itemEl); });
+    });
+  });
+  var oLists = document.querySelectorAll('.plib-o-list');
+  oLists.forEach(function(list) {
+    updateArrowStates(list);
+  });
+});
+</script>
+</body>
+</html>
