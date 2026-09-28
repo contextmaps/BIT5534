@@ -577,10 +577,10 @@ const LECTURES = [
   { id: "lec4_2",  week: 4,  phase: 2, mode: "exploratory",  title: "Principal component analysis, how many components",
     business: "Three datasets and three component counts; what standardization brings out when raw dollars hide everything but size." },
   // Week 5
-  { id: "lec5_1",  week: 5,  phase: 2, mode: "exploratory",  tool: true, title: "Cluster Analysis: Distance, Linkage, and What a Segment Actually Is",
-    business: "Building a clustering tool, then watching the answer move as the distance measure and the linkage rule change." },
-  { id: "lec5_2",  week: 5,  phase: 2, mode: "consolidation", title: "Choosing k and Defending It: Profiling Segments for a Business Audience",
-    business: "Naming clusters from their profiles and saying what a firm should do differently for each one." },
+  { id: "lec5_1",  week: 5,  phase: 2, mode: "exploratory",  tool: true, title: "Hierarchical Clustering",
+    business: "A dendrogram read as the recorded history of a merging loop, then a tool built to draw it and five linkage rules that cut the same file differently." },
+  { id: "lec5_2",  week: 5,  phase: 2, mode: "exploratory",  tool: true, title: "K-Means Clustering",
+    business: "Lloyd's two steps written out by hand, then a tool built from a specification and a silhouette curve that names a k without saying how thin the win is." },
 
   // Week 6
   { id: "lec6_1",  week: 6,  phase: 3, mode: "exploratory",  tool: true, title: "Decision Trees: Splits, Impurity, and Why a Tree Overfits",
@@ -696,10 +696,14 @@ const HOMEWORK = [
     business: "One input at a time on a thousand loan applications, then a contingency tool you specify yourself for the three columns that hold categories." },
   { id: "hw2_2", week: 3, part: 2, title: "Logistic Regression with Many Inputs and What the Report Leaves Out",
     business: "Seven columns and twelve degrees of freedom, then the levels the report never prints and the test it never runs." },
-  { id: "hw3_1", week: 4, part: 1, title: "Reading a Principal Component Analysis and Exporting Its Scores and Loadings",
+  { id: "hw3_1", week: 4, part: 1, title: "Reading a Principal Component Analysis and Exporting Its Scores, Loadings and Eigenvalues",
     business: "Twelve satellites read in three planes against an assistant holding the same data, then the three exports the explorer never had, specified in a paragraph and built through an interview." },
   { id: "hw3_2", week: 4, part: 2, title: "Regression on Satellite Readings and on Their Principal Components",
     business: "One signal strength on twelve readings, then on their components, and a choice between two reduced models that a fit alone does not settle." },
+  { id: "hw4_1", week: 5, part: 1, title: "Hierarchical Clustering, Reading the Tree and Extending the Tool That Draws It",
+    business: "A scree plot read for the number of clusters on 125 retail stores, then a silhouette sweep across all five linkages that the explorer was extended to run." },
+  { id: "hw4_2", week: 5, part: 2, title: "K-Means Clustering, A Method That Answers Differently Each Time",
+    business: "The same file clustered five times with one restart, then two methods held at one number of clusters and the two stores that change group between them." },
 ];
 
 /* Weeks with no homework show what the outline says is due instead. */
@@ -753,6 +757,8 @@ const HOMEWORK_LINKS = {
   "hw2_2":    "https://canvas.vt.edu/courses/233475/assignments/2858605",
   "hw3_1":    "https://canvas.vt.edu/courses/233475/assignments/2862854",
   "hw3_2":    "https://canvas.vt.edu/courses/233475/assignments/2862856",
+  "hw4_1":    "https://canvas.vt.edu/courses/233475/assignments/2867032",
+  "hw4_2":    "https://canvas.vt.edu/courses/233475/assignments/2867033",
 };
 
 /* ============ Render ============ */
