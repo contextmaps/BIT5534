@@ -1,0 +1,101 @@
+﻿return,gpa,miles_from_home,college,accommodations,parttime_work_hours,attends_office_hours,high_school_gpa
+0,0.117315499,192,Sciences,Other,20,Never,3.197589087
+0,0.282611056,143,Business,Off-campus,35,Never,3.161129776
+0,0.345470291,440,Engineering,Other,10,Sometimes,2.560310302
+0,0.549308053,452,Sciences,Dorm,20,Sometimes,3.107533454
+0,0.69162409,334,Business,Other,15,Sometimes,2.35
+0,0.731519624,253,Social Sciences,Dorm,35,Sometimes,3.230768286
+0,0.790720692,209,Engineering,Off-campus,20,Never,2.15
+0,0.828221861,125,Engineering,Other,25,Sometimes,2.988333468
+0,0.834690193,204,Liberal Arts,Off-campus,20,Sometimes,2.698949739
+0,0.841825404,492,Business,Other,20,Sometimes,3.232051939
+0,0.961828001,237,Business,Dorm,15,Never,2.64
+1,1.015918075,332,Sciences,Off-campus,30,Sometimes,3.436390786
+1,1.18,99,Liberal Arts,Off-campus,30,Regularly,3.0031215
+1,1.235273097,143,Social Sciences,Dorm,5,Sometimes,3.185855942
+1,1.326424827,234,Social Sciences,Off-campus,10,Sometimes,3.434919367
+1,1.33,402,Engineering,Off-campus,20,Never,2.765697483
+1,1.347684475,231,Engineering,Dorm,10,Sometimes,2.726939841
+1,1.453531766,494,Sciences,Dorm,25,Never,3.089789986
+1,1.56,261,Sciences,Off-campus,35,Never,2.846366226
+1,1.562390397,485,Sciences,Off-campus,30,Sometimes,3.248506094
+1,1.578713098,189,Engineering,Off-campus,25,Regularly,2.66
+0,1.597098696,143,Social Sciences,Dorm,30,Never,2.35
+0,1.634665407,233,Social Sciences,Off-campus,35,Never,2.22
+0,1.640598566,138,Social Sciences,Off-campus,30,Regularly,2.68
+1,1.646360346,491,Sciences,Other,10,Sometimes,2.61
+1,1.673929322,217,Engineering,Off-campus,10,Never,2.829278764
+1,1.71,225,Engineering,Dorm,35,Never,2.4
+0,1.715578206,365,Social Sciences,Off-campus,10,Never,2.97803631
+1,1.720400817,461,Sciences,Dorm,30,Never,3.409403406
+0,1.726634488,473,Social Sciences,Off-campus,10,Never,2.869860154
+1,1.80913964,147,Business,Off-campus,20,Never,3.100048914
+1,1.81771743,458,Social Sciences,Off-campus,35,Never,2.14
+1,1.82,103,Social Sciences,Off-campus,25,Never,2.720091333
+1,1.840178372,397,Sciences,Other,10,Never,2.991379708
+1,1.846189004,176,Engineering,Off-campus,40,Never,2.53
+1,1.886513858,264,Engineering,Other,15,Sometimes,2.866407845
+1,1.89,159,Business,Dorm,30,Sometimes,3.48010016
+1,1.975967026,179,Sciences,Off-campus,10,Regularly,3.216601619
+1,1.981134554,179,Engineering,Dorm,0,Sometimes,2.5
+0,1.999077699,461,Social Sciences,Off-campus,30,Sometimes,2.33
+1,2.004644055,460,Liberal Arts,Other,10,Never,3.15
+1,2.01,201,Business,Off-campus,20,Never,2.74418205
+1,2.01,353,Social Sciences,Dorm,20,Regularly,3.007695446
+1,2.02,181,Engineering,Dorm,0,Sometimes,3.127899091
+1,2.03,33,Business,Dorm,35,Never,3.99
+1,2.047831291,176,Liberal Arts,Dorm,0,Sometimes,3.45
+1,2.058015045,312,Business,Dorm,30,Sometimes,3.701623399
+1,2.064388351,398,Liberal Arts,Dorm,5,Sometimes,3.241060424
+1,2.161263443,280,Sciences,Dorm,35,Sometimes,3.448019423
+1,2.169143284,171,Social Sciences,Dorm,25,Never,3.95
+1,2.19,494,Liberal Arts,Off-campus,30,Never,2.790209667
+1,2.2,416,Liberal Arts,Off-campus,5,Never,2.971585946
+1,2.21,448,Social Sciences,Off-campus,0,Regularly,2.800297288
+1,2.24571363,489,Engineering,Dorm,5,Never,2.424806186
+1,2.247181973,270,Social Sciences,Dorm,30,Sometimes,3.018686363
+1,2.325674777,388,Business,Dorm,20,Regularly,3.125419493
+1,2.33,418,Liberal Arts,Dorm,15,Never,3.01
+1,2.37,206,Business,Off-campus,15,Never,3.431976558
+1,2.44,356,Engineering,Other,0,Regularly,3.141189551
+1,2.446179986,469,Social Sciences,Other,25,Regularly,3.35
+1,2.5,75,Business,Dorm,10,Regularly,3.328519275
+1,2.509350779,200,Engineering,Dorm,0,Never,3.431256017
+1,2.512301878,34,Social Sciences,Dorm,30,Regularly,2.624425547
+1,2.53,302,Engineering,Other,0,Regularly,3
+1,2.55,465,Liberal Arts,Other,30,Regularly,3.069427015
+1,2.57,86,Sciences,Other,15,Sometimes,2.965742604
+1,2.59,291,Liberal Arts,Dorm,30,Regularly,3.114014502
+1,2.620962443,12,Liberal Arts,Dorm,20,Never,3.116779758
+1,2.623262715,207,Social Sciences,Dorm,30,Never,3.401020199
+1,2.65,194,Liberal Arts,Off-campus,30,Sometimes,3.62
+1,2.68014983,435,Engineering,Dorm,0,Regularly,3.26025004
+1,2.69,111,Sciences,Dorm,0,Regularly,3.002508259
+1,2.741301047,148,Social Sciences,Other,25,Regularly,3.78
+1,2.803058418,16,Engineering,Other,30,Sometimes,3.146387283
+1,2.839578018,272,Business,Off-campus,0,Regularly,3.85
+1,2.854867382,197,Business,Dorm,40,Sometimes,3.108040723
+1,2.889601168,447,Engineering,Dorm,20,Regularly,3.249038593
+1,2.912202026,136,Sciences,Other,0,Regularly,2.954762223
+1,2.968498533,494,Social Sciences,Off-campus,0,Sometimes,3.20386946
+1,2.969647781,165,Social Sciences,Off-campus,35,Sometimes,3.078313575
+1,3.091189517,305,Social Sciences,Dorm,30,Sometimes,2.144139984
+1,3.12221799,120,Business,Off-campus,30,Sometimes,3.1
+1,3.13829502,112,Business,Dorm,25,Sometimes,3.2
+1,3.258982648,4,Social Sciences,Other,0,Regularly,2.364036187
+1,3.27,137,Sciences,Dorm,20,Never,2.548680339
+1,3.277061583,479,Business,Dorm,0,Regularly,3.22
+1,3.32,48,Engineering,Off-campus,35,Never,3.026343708
+1,3.334988406,427,Liberal Arts,Other,40,Sometimes,3.46
+1,3.348544581,423,Sciences,Dorm,0,Sometimes,3.26490869
+1,3.39,135,Sciences,Off-campus,30,Regularly,3.104628472
+1,3.43,331,Business,Off-campus,20,Regularly,3.093926107
+1,3.51,371,Engineering,Other,30,Regularly,2.96033753
+0,3.62419584,30,Social Sciences,Dorm,40,Regularly,2.464170243
+0,3.63,118,Social Sciences,Dorm,35,Sometimes,3.086231173
+1,3.72832603,53,Business,Off-campus,30,Sometimes,2.682470649
+0,3.755955627,382,Social Sciences,Dorm,0,Regularly,3.147558021
+0,3.758628751,29,Social Sciences,Dorm,30,Regularly,2.982409387
+0,3.766973987,273,Social Sciences,Dorm,30,Never,3.070492926
+0,3.87,18,Engineering,Dorm,25,Regularly,3.484276383
+1,3.9,138,Business,Off-campus,0,Sometimes,2.732407902
