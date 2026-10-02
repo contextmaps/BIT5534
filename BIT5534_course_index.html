@@ -481,7 +481,7 @@
     <a class="macro-card" data-phase="3" href="#phase-3" style="text-decoration:none;">
       <p class="macro-eyebrow">Phase III</p>
       <p class="macro-title">Prediction &amp; Comparison</p>
-      <p class="macro-desc">Trees, forests, networks, margins, and ensembles, then an honest harness that scores them all the same way.</p>
+      <p class="macro-desc">Trees, networks, margins, and ensembles, then an honest harness that scores them all the same way.</p>
       <p class="macro-weeks">Weeks 6&ndash;11 &middot; 12 lectures</p>
     </a>
     <a class="macro-card" data-phase="4" href="#phase-4" style="text-decoration:none;">
@@ -542,7 +542,7 @@ const PHASES = [
     n: 3,
     kicker: "Phase III \u00b7 Weeks 6\u201311",
     title: "Prediction and Comparison",
-    sub: "Trees, forests, neural networks, margins, and ensembles, each built and verified in turn, then scored against one another on a harness that does not flatter any of them. Text enters last and has to earn its place.",
+    sub: "Trees, neural networks, margins, and ensembles, each built and verified in turn, then scored against one another on a harness that does not flatter any of them. Text enters last and has to earn its place.",
     weeks: [6, 7, 8, 9, 10, 11],
   },
   {
@@ -583,10 +583,10 @@ const LECTURES = [
     business: "Lloyd's two steps written out by hand, then a tool built from a specification and a silhouette curve that names a k without saying how thin the win is." },
 
   // Week 6
-  { id: "lec6_1",  week: 6,  phase: 3, mode: "exploratory",  tool: true, title: "Decision Trees: Splits, Impurity, and Why a Tree Overfits",
-    business: "Reading a fitted tree as a set of business rules, then watching the same tree memorize its training set." },
-  { id: "lec6_2",  week: 6,  phase: 3, mode: "consolidation", title: "Random Forests: Bagging, Variable Importance, and the Interpretability Trade",
-    business: "What the forest buys in accuracy, what it costs in explanation, and how to answer for the difference." },
+  { id: "lec6_1",  week: 6,  phase: 3, mode: "exploratory",  tool: true, title: "Decision Trees",
+    business: "Every cut on every column tried and scored, a tree grown one split at a time, and each leaf read as a rule someone could act on." },
+  { id: "lec6_2",  week: 6,  phase: 3, mode: "consolidation", tool: true, title: "Regression Trees",
+    business: "The same split search pointed at GPA, each cut scored by the squared error it removes, and Tuesday's tool extended to grow regression trees." },
   // Week 7
   { id: "lec7_1",  week: 7,  phase: 3, mode: "exploratory",  tool: true, title: "Neural Networks: Layers, Activations, and What the Network Is Fitting",
     business: "Building a small network and finding the point where added capacity stops improving anything that matters." },
@@ -664,7 +664,7 @@ const WEEKS = {
   3:  { title: "Logistic Regression and the Yes or No Decision", dates: "09/08, 09/10", due: "HW 2" },
   4:  { title: "Reducing Dimensions",                 dates: "09/15, 09/17", due: "HW 3" },
   5:  { title: "Finding Segments",                    dates: "09/22, 09/24", due: "HW 4, teams form" },
-  6:  { title: "Trees and Forests",                   dates: "09/29, 10/01", due: "HW 5, teams finalized" },
+  6:  { title: "Decision and Regression Trees",       dates: "09/29, 10/01", due: "HW 5, teams finalized" },
   7:  { title: "Neural Networks",                     dates: "10/06, 10/08", due: "HW 6" },
   8:  { title: "Margins and Ensembles",               dates: "10/13, 10/15", due: "HW 7" },
   9:  { title: "Evaluating Honestly",                 dates: "10/20, 10/22", due: "HW 8, Deliverable 1" },
@@ -704,6 +704,10 @@ const HOMEWORK = [
     business: "A scree plot read for the number of clusters on 125 retail stores, then a silhouette sweep across all five linkages that the explorer was extended to run." },
   { id: "hw4_2", week: 5, part: 2, title: "K-Means Clustering, A Method That Answers Differently Each Time",
     business: "The same file clustered five times with one restart, then two methods held at one number of clusters and the two stores that change group between them." },
+  { id: "hw5_1", week: 6, part: 1, title: "Decision Trees on Loan Default, With and Without Credit Bureau Data",
+    business: "A default tree on 1,000 loan applicants read as lending rules, then grown again without the two bureau columns to decide whether the bank can drop its subscription." },
+  { id: "hw5_2", week: 6, part: 2, title: "Regression Trees on Credit Scores, One Model or Two",
+    business: "A credit score tree read as advice to applicants, then grown on 161 young thin file applicants whose scores turn on different columns." },
 ];
 
 /* Weeks with no homework show what the outline says is due instead. */
@@ -759,6 +763,8 @@ const HOMEWORK_LINKS = {
   "hw3_2":    "https://canvas.vt.edu/courses/233475/assignments/2862856",
   "hw4_1":    "https://canvas.vt.edu/courses/233475/assignments/2867032",
   "hw4_2":    "https://canvas.vt.edu/courses/233475/assignments/2867033",
+  "hw5_1":    "https://canvas.vt.edu/courses/233475/assignments/2870238",
+  "hw5_2":    "https://canvas.vt.edu/courses/233475/assignments/2870239",
 };
 
 /* ============ Render ============ */
