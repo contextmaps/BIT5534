@@ -1,0 +1,1001 @@
+Default,Credit_Score,Age,Gender,Marital_Status,Education_Level,Employment_Status,Annual_Income,Debt_to_Income_Ratio,Loan_Amount_Requested,Num_Credit_Accounts,Credit_Utilization_Ratio,Tenure_with_Bank,Num_Dependents
+1,534.4,51,Female,Married,Master,Unemployed,11961.49,0.425,4928.49,6,0.729,9.05,2
+0,596.6,69,Female,Married,High School,Employed,57860.98,0.259,12108.8,9,0.86,4.51,0
+1,609.9,27,Male,Married,Master,Employed,52304.65,0.159,8778.67,1,0.399,0.68,2
+0,618.9,51,Male,Married,Bachelor,Employed,53930.61,0.193,9829.43,6,0.767,17.84,1
+0,715.1,69,Male,Married,High School,Employed,64598.39,0.163,24949.6,9,0.512,12.74,2
+0,671.8,26,Male,Single,Master,Employed,73998.75,0.308,12917.47,4,0.223,0.93,1
+1,688.0,39,Female,Married,High School,Self-employed,52969.22,0.468,13105.09,3,0.02,3.58,0
+1,706.1,35,Male,Single,High School,Self-employed,58124.45,0.47,5151.45,6,0.188,14.83,1
+1,555.4,51,Male,Single,Bachelor,Employed,54967.57,0.388,19572.93,6,0.715,4.98,0
+1,630.0,70,Male,Married,Bachelor,Employed,80201.36,0.366,17025.46,9,0.746,9.32,0
+1,679.3,64,Male,Married,Master,Employed,62266.19,0.397,10050.04,9,0.374,12.85,2
+0,681.2,66,Male,Married,Bachelor,Retired,30187.15,0.413,6190.81,9,0.415,22.05,1
+0,538.7,22,Female,Single,Master,Student,20747.66,0.268,2628.21,1,0.83,4.5,0
+1,651.3,38,Male,Single,Bachelor,Employed,54419.73,0.338,23771.85,6,0.689,2.51,4
+0,661.5,46,Male,Married,Bachelor,Employed,81758.44,0.112,32757.29,5,0.634,6.51,2
+1,596.9,39,Female,Divorced,Master,Unemployed,14451.73,0.641,1629.74,7,0.454,12.37,0
+0,639.3,27,Female,Married,High School,Employed,37567.32,0.106,8670.14,3,0.098,1.3,3
+0,718.8,50,Male,Married,Bachelor,Employed,49551.23,0.055,9005.02,7,0.387,4.69,3
+1,589.3,20,Female,Single,Bachelor,Employed,46085.46,0.333,19391.17,1,0.122,0.5,0
+1,685.0,28,Male,Married,Bachelor,Unemployed,19752.29,0.325,4770.9,4,0.518,1.65,3
+1,621.4,43,Female,Married,High School,Employed,45525.69,0.538,4956.57,4,0.398,6.27,0
+1,622.8,27,Female,Married,Bachelor,Self-employed,39476.77,0.411,14358.32,2,0.46,0.1,1
+0,703.9,22,Female,Single,Bachelor,Self-employed,48074.31,0.357,18898.61,4,0.619,2.09,0
+0,653.1,24,Male,Single,High School,Employed,47731.95,0.127,11730.71,3,0.3,1.34,0
+1,543.9,31,Female,Married,High School,Employed,33193.03,0.56,13414.0,2,0.699,8.52,1
+1,657.3,33,Female,Married,Bachelor,Employed,48581.76,0.392,18950.61,4,0.258,14.55,0
+0,729.0,54,Female,Married,Master,Employed,83514.36,0.161,29706.4,8,0.144,10.47,0
+1,555.7,26,Male,Single,Master,Employed,91362.58,0.37,32546.59,1,0.709,0.4,2
+1,640.8,69,Male,Married,Bachelor,Unemployed,10000.0,0.332,1192.58,8,0.61,3.86,2
+0,637.3,63,Female,Married,Bachelor,Retired,38342.45,0.147,4524.58,7,0.607,3.44,0
+0,668.3,71,Male,Single,Bachelor,Retired,48475.38,0.061,9262.3,9,0.618,13.64,0
+1,623.9,20,Female,Single,Bachelor,Unemployed,14579.34,0.262,3532.79,2,0.529,2.48,0
+0,638.1,27,Male,Single,High School,Employed,37882.91,0.233,16740.42,5,0.651,9.35,0
+0,714.9,67,Female,Married,Bachelor,Retired,54582.49,0.171,7166.48,7,0.267,8.74,1
+0,657.5,69,Female,Divorced,Bachelor,Retired,29424.76,0.293,3890.74,9,0.614,5.54,0
+0,669.3,19,Female,Single,High School,Student,14338.47,0.281,6450.9,4,0.411,0.72,0
+0,690.0,73,Male,Married,Master,Employed,61526.56,0.276,9787.35,9,0.279,3.74,2
+0,723.6,58,Non-binary,Divorced,High School,Employed,56463.38,0.198,17368.99,6,0.453,8.05,0
+0,783.6,52,Female,Divorced,PhD,Employed,94756.71,0.229,15294.9,9,0.277,24.48,0
+1,666.0,27,Female,Married,High School,Employed,54505.35,0.142,14659.89,3,0.549,3.08,2
+0,557.2,26,Female,Divorced,Bachelor,Employed,63975.97,0.168,10097.49,1,0.54,0.61,3
+1,667.6,39,Male,Single,Bachelor,Employed,46965.19,0.485,4494.97,4,0.361,13.06,2
+0,756.2,40,Male,Married,High School,Employed,58262.51,0.137,14003.23,8,0.213,12.39,0
+1,682.0,40,Female,Married,Bachelor,Employed,41692.7,0.366,17673.51,6,0.151,8.0,1
+1,606.3,55,Female,Married,Bachelor,Employed,70870.11,0.212,23639.78,9,0.858,21.86,0
+0,685.0,70,Female,Married,High School,Retired,38997.09,0.115,14255.01,9,0.442,9.27,0
+0,725.4,64,Female,Married,Bachelor,Retired,30214.89,0.206,8622.78,9,0.349,28.11,0
+1,610.7,73,Female,Married,High School,Employed,60181.08,0.388,16306.73,9,0.566,14.69,0
+1,556.4,70,Male,Married,PhD,Retired,78467.02,0.271,32811.07,6,0.994,5.39,0
+1,644.1,55,Female,Single,Master,Student,19690.47,0.184,3094.29,6,0.523,1.98,0
+0,624.3,41,Male,Married,Master,Employed,70720.31,0.258,18174.21,3,0.712,12.44,3
+1,645.6,23,Male,Single,High School,Employed,46957.14,0.432,10514.62,4,0.542,1.47,2
+0,621.3,35,Female,Married,Bachelor,Employed,44022.67,0.211,5054.56,6,0.68,4.42,3
+0,750.8,41,Non-binary,Married,High School,Employed,60629.54,0.253,18017.07,7,0.333,13.0,4
+0,637.3,32,Male,Single,High School,Unemployed,12900.33,0.267,4071.7,4,0.466,11.82,2
+0,680.9,55,Female,Divorced,High School,Employed,50251.44,0.358,13991.82,7,0.267,1.31,0
+1,615.6,35,Male,Single,Bachelor,Unemployed,17249.32,0.329,1659.41,5,0.43,9.31,0
+0,683.2,64,Female,Divorced,Bachelor,Retired,39749.22,0.352,15670.83,6,0.133,6.54,0
+0,679.9,66,Female,Single,High School,Unemployed,12055.42,0.226,2559.42,9,0.603,30.0,1
+0,758.5,40,Female,Married,Bachelor,Employed,62783.12,0.217,26199.65,8,0.187,22.5,0
+0,793.8,46,Male,Married,Bachelor,Self-employed,46038.67,0.2,6834.05,7,0.382,23.96,2
+1,632.3,69,Female,Divorced,Master,Employed,78651.41,0.49,19018.01,6,0.376,2.06,1
+1,646.4,63,Male,Divorced,Bachelor,Retired,47527.87,0.394,4626.9,9,0.656,10.6,0
+1,585.8,22,Female,Single,Bachelor,Employed,30603.0,0.503,3744.81,3,0.316,4.5,0
+0,666.9,57,Female,Married,Bachelor,Employed,37545.66,0.2,10413.43,9,0.558,17.37,2
+0,699.9,59,Male,Single,Bachelor,Employed,45417.77,0.379,13305.44,8,0.387,18.34,1
+1,678.4,52,Female,Married,Bachelor,Employed,61450.16,0.267,11417.98,7,0.681,3.41,1
+0,649.9,19,Male,Single,High School,Student,15842.68,0.319,4162.44,4,0.367,0.1,0
+1,686.1,65,Male,Married,Master,Employed,76350.45,0.307,16294.28,8,0.406,11.39,0
+0,696.8,72,Male,Single,PhD,Employed,52767.6,0.395,18530.31,8,0.349,5.79,2
+1,619.5,73,Male,Divorced,Bachelor,Self-employed,55182.44,0.6,18716.05,8,0.343,1.22,2
+0,677.5,20,Male,Single,High School,Student,15301.63,0.223,5931.99,2,0.637,2.39,0
+1,664.8,72,Male,Single,Bachelor,Unemployed,12111.06,0.384,1082.68,9,0.517,28.11,0
+0,649.7,73,Male,Married,Master,Retired,40574.91,0.255,17173.08,7,0.514,7.4,2
+1,639.6,75,Female,Married,Bachelor,Unemployed,14596.61,0.411,5753.53,9,0.487,27.95,0
+0,714.9,55,Female,Married,Bachelor,Employed,48304.1,0.297,5908.23,7,0.207,16.71,3
+0,778.1,57,Female,Married,Master,Employed,54361.4,0.319,22725.65,9,0.277,26.38,1
+1,695.7,69,Male,Married,Bachelor,Self-employed,64666.74,0.15,11764.23,9,0.582,11.66,0
+1,509.6,39,Male,Married,Master,Unemployed,19146.49,0.472,6794.8,5,0.701,6.48,3
+1,540.4,34,Male,Single,Bachelor,Employed,57902.57,0.341,7311.44,2,0.808,0.97,0
+1,634.3,75,Male,Single,Master,Retired,49028.62,0.478,9596.95,9,0.122,3.3,0
+0,713.1,20,Female,Single,High School,Student,16511.69,0.228,6374.27,3,0.59,2.5,0
+0,632.5,41,Male,Divorced,Bachelor,Employed,61871.35,0.349,21336.34,5,0.499,8.08,2
+0,696.7,18,Female,Single,Bachelor,Student,15109.16,0.224,1243.81,4,0.576,0.5,0
+1,637.0,50,Female,Married,High School,Self-employed,39799.6,0.127,7866.98,6,0.677,3.12,2
+0,720.7,50,Female,Married,High School,Employed,51382.52,0.192,21534.9,5,0.462,5.47,2
+0,705.5,65,Male,Single,Master,Retired,59055.44,0.293,18031.46,5,0.49,3.98,0
+0,715.9,50,Female,Married,Master,Employed,57320.85,0.217,6406.1,5,0.428,4.94,2
+0,634.3,66,Female,Married,Bachelor,Employed,83588.46,0.378,30820.27,9,0.678,20.14,2
+1,722.3,33,Female,Married,Master,Employed,65482.29,0.294,17681.57,5,0.285,15.5,1
+1,582.4,44,Male,Married,PhD,Unemployed,24404.94,0.363,4062.27,5,0.587,2.9,1
+1,630.7,18,Non-binary,Single,High School,Student,16882.42,0.467,2764.35,3,0.705,0.5,0
+1,564.2,64,Female,Single,Master,Retired,58081.86,0.308,11553.87,9,0.892,20.0,0
+0,683.6,55,Female,Married,Master,Employed,88868.32,0.36,14971.44,8,0.614,10.11,2
+1,506.7,23,Female,Single,Bachelor,Student,14840.54,0.227,2013.76,2,0.831,5.5,0
+1,519.7,31,Non-binary,Married,Bachelor,Employed,37430.33,0.319,5571.37,4,0.913,13.5,3
+0,765.0,64,Female,Married,Bachelor,Employed,49991.34,0.253,15528.49,9,0.308,17.45,0
+1,668.8,23,Female,Single,Bachelor,Student,11946.45,0.338,3661.66,4,0.6,0.75,0
+0,697.8,65,Male,Married,High School,Employed,50447.61,0.304,13787.43,8,0.475,9.41,1
+1,569.5,34,Female,Married,High School,Unemployed,13725.94,0.268,5507.23,6,0.757,11.24,4
+0,661.0,68,Male,Married,Master,Employed,100579.36,0.336,34621.76,9,0.632,8.48,0
+0,684.6,46,Female,Married,PhD,Employed,91492.4,0.518,13115.39,5,0.236,3.73,1
+1,636.6,34,Male,Married,Bachelor,Student,11862.32,0.4,2974.78,2,0.145,5.06,0
+1,580.6,73,Female,Divorced,High School,Unemployed,10000.0,0.403,3452.04,9,0.7,3.42,0
+0,680.7,59,Female,Divorced,High School,Employed,72731.69,0.231,8556.65,9,0.65,12.64,2
+0,686.7,39,Female,Married,Master,Self-employed,54357.16,0.252,8887.1,6,0.534,2.03,1
+0,754.9,55,Female,Divorced,Bachelor,Employed,72947.62,0.154,15985.88,9,0.079,10.76,0
+1,444.4,35,Female,Single,High School,Unemployed,10000.0,0.436,1714.68,3,0.875,8.75,1
+0,762.0,53,Male,Married,Bachelor,Employed,47965.21,0.213,4313.24,8,0.165,16.09,0
+1,512.6,40,Female,Married,PhD,Unemployed,22232.19,0.565,3797.04,7,0.655,9.14,2
+1,544.4,37,Female,Single,Bachelor,Employed,46268.79,0.338,19752.76,4,0.719,6.27,0
+0,620.0,22,Female,Single,Bachelor,Student,10000.0,0.435,1390.31,1,0.152,2.88,0
+1,499.9,58,Male,Married,Bachelor,Self-employed,50604.24,0.266,19852.14,9,0.914,5.0,0
+0,753.8,51,Male,Single,High School,Employed,61293.18,0.189,14443.31,7,0.119,14.27,2
+0,648.4,49,Male,Married,Master,Employed,115200.61,0.468,35000.0,4,0.531,4.38,2
+0,637.5,62,Male,Divorced,Bachelor,Retired,47206.58,0.466,17599.08,7,0.241,5.34,1
+1,642.7,75,Female,Married,Bachelor,Employed,48025.23,0.375,20862.07,7,0.437,8.41,0
+1,617.9,72,Male,Single,High School,Retired,34310.15,0.346,12994.49,9,0.753,24.72,0
+1,584.6,40,Male,Married,High School,Employed,44284.0,0.334,17618.06,7,0.808,20.53,1
+1,703.8,39,Female,Single,Master,Employed,63062.34,0.095,5306.74,5,0.409,8.47,3
+0,650.3,60,Male,Married,Bachelor,Employed,77506.14,0.317,11162.14,7,0.521,3.49,4
+1,618.7,74,Female,Divorced,High School,Retired,25154.01,0.294,11270.66,9,0.59,18.7,0
+0,736.3,19,Male,Single,High School,Employed,51686.59,0.387,5453.69,4,0.183,1.5,0
+0,704.2,47,Non-binary,Single,Bachelor,Employed,49088.98,0.455,14106.55,7,0.22,12.75,2
+0,751.6,47,Male,Divorced,PhD,Self-employed,74059.24,0.331,33249.69,4,0.25,2.36,2
+0,725.9,51,Female,Married,High School,Employed,56309.31,0.346,7856.6,7,0.315,11.03,3
+0,675.9,46,Female,Divorced,Bachelor,Employed,82571.46,0.285,6687.06,7,0.631,6.41,4
+0,725.4,37,Female,Single,Master,Employed,70640.64,0.326,11841.43,6,0.374,17.45,2
+1,686.7,34,Female,Single,Master,Employed,75576.19,0.183,15860.0,4,0.581,13.57,1
+0,594.8,48,Male,Single,High School,Self-employed,42597.24,0.313,7867.26,7,0.838,7.45,2
+0,717.6,58,Female,Divorced,Master,Employed,55033.93,0.15,21330.47,8,0.382,14.46,1
+1,624.6,56,Male,Married,PhD,Employed,50214.19,0.144,19250.99,8,0.763,9.63,2
+0,727.3,62,Female,Married,High School,Retired,32085.8,0.167,8403.32,8,0.437,8.82,4
+0,705.8,40,Male,Married,High School,Employed,47615.15,0.203,14151.72,2,0.276,1.1,2
+1,637.7,66,Female,Single,Master,Retired,56603.83,0.339,18432.52,8,0.598,2.83,1
+0,591.2,25,Female,Divorced,Master,Self-employed,46010.55,0.393,20441.21,3,0.588,4.76,3
+0,691.1,61,Male,Single,PhD,Employed,76524.25,0.257,22935.81,7,0.451,5.12,0
+0,710.7,51,Male,Divorced,High School,Unemployed,12623.23,0.375,1483.57,8,0.175,14.16,0
+0,695.6,72,Female,Married,High School,Retired,51192.58,0.253,21840.85,9,0.51,4.54,0
+0,724.8,58,Female,Single,Bachelor,Employed,65213.65,0.312,12950.63,8,0.08,6.14,1
+0,610.6,21,Male,Single,High School,Student,12400.4,0.239,4819.38,3,0.647,3.01,0
+0,656.0,21,Male,Single,High School,Employed,42181.43,0.145,18517.68,1,0.578,3.33,0
+1,684.6,69,Male,Married,Bachelor,Retired,36755.05,0.217,11709.31,9,0.417,18.67,0
+0,672.3,60,Female,Married,PhD,Employed,102387.05,0.401,21195.2,6,0.37,1.94,0
+0,592.0,57,Male,Married,High School,Employed,70760.0,0.24,10755.54,9,0.738,17.64,3
+0,685.1,21,Male,Single,High School,Student,11908.19,0.2,3259.74,2,0.259,3.5,0
+1,619.8,19,Female,Single,High School,Employed,37424.71,0.229,5403.76,1,0.529,1.06,0
+0,715.4,56,Female,Single,Master,Employed,68611.51,0.24,13479.9,9,0.089,9.77,1
+0,671.9,50,Female,Divorced,High School,Employed,41365.51,0.372,16384.84,5,0.333,7.71,2
+0,754.1,36,Female,Married,Bachelor,Employed,64466.22,0.266,27154.8,6,0.261,18.5,2
+0,658.6,68,Female,Married,Bachelor,Employed,67312.12,0.332,13980.2,9,0.603,14.88,0
+1,709.7,30,Male,Divorced,High School,Employed,38459.14,0.367,15989.33,5,0.055,10.72,3
+1,565.3,42,Female,Married,Master,Employed,101737.15,0.365,15538.76,5,0.759,2.49,3
+1,697.6,60,Female,Married,PhD,Employed,87809.34,0.4,31310.0,8,0.088,7.8,3
+0,733.8,75,Male,Single,High School,Retired,38090.56,0.159,16306.87,9,0.205,16.98,1
+1,660.7,62,Female,Single,Bachelor,Retired,40071.95,0.487,7155.25,8,0.204,6.41,0
+0,706.2,31,Female,Single,High School,Employed,35659.36,0.419,10561.39,3,0.23,13.5,0
+0,737.9,75,Male,Divorced,High School,Employed,49905.66,0.217,18337.42,9,0.138,15.06,0
+1,585.6,23,Female,Single,Bachelor,Self-employed,45573.4,0.219,12441.42,1,0.976,0.86,2
+0,698.0,49,Male,Divorced,Bachelor,Unemployed,14366.16,0.33,5873.34,5,0.17,3.6,4
+0,605.7,24,Male,Married,Bachelor,Unemployed,17957.7,0.454,6554.39,3,0.615,5.46,2
+0,687.8,37,Female,Married,Bachelor,Employed,73273.97,0.219,19387.15,6,0.402,15.95,2
+1,617.9,63,Male,Divorced,Master,Unemployed,19969.1,0.542,7460.96,6,0.259,7.39,0
+1,642.3,69,Male,Married,Master,Unemployed,10000.0,0.453,1583.72,9,0.449,26.85,0
+0,739.0,64,Male,Single,High School,Retired,29474.71,0.328,7146.95,9,0.373,7.54,1
+0,769.7,48,Female,Divorced,Bachelor,Employed,59272.23,0.294,13379.3,9,0.37,27.19,2
+0,622.5,26,Male,Single,High School,Employed,35003.36,0.202,3569.18,1,0.756,1.19,2
+0,705.4,70,Female,Single,High School,Employed,49972.53,0.289,16563.86,8,0.386,4.56,1
+0,737.1,48,Male,Married,High School,Employed,61779.24,0.31,11382.45,7,0.167,8.75,2
+1,722.2,28,Male,Single,PhD,Employed,60698.05,0.165,5186.63,5,0.333,4.61,3
+0,727.7,24,Male,Single,High School,Employed,42362.24,0.133,14797.65,3,0.14,4.06,1
+0,695.3,70,Female,Married,High School,Retired,31968.58,0.327,5693.92,9,0.361,2.81,0
+0,691.8,58,Female,Married,Master,Employed,84096.41,0.253,24320.28,9,0.698,21.65,0
+1,584.1,44,Male,Single,Bachelor,Employed,43971.61,0.385,8539.93,3,0.599,6.31,0
+0,718.7,74,Male,Married,Bachelor,Employed,59735.04,0.359,5108.16,9,0.349,6.14,0
+0,663.3,48,Female,Married,High School,Employed,87310.61,0.242,9783.86,5,0.505,1.82,2
+0,717.2,62,Male,Married,Bachelor,Retired,50388.24,0.291,18432.2,7,0.35,13.61,0
+0,667.1,57,Male,Divorced,High School,Unemployed,10577.72,0.333,1124.56,7,0.366,9.11,1
+0,708.8,68,Female,Married,High School,Employed,40783.32,0.267,12680.44,9,0.367,11.17,0
+0,697.6,18,Female,Single,High School,Employed,36355.51,0.348,12706.35,4,0.227,0.5,0
+1,608.6,32,Male,Single,High School,Employed,30413.84,0.347,7466.59,4,0.631,1.09,0
+1,576.2,19,Male,Single,High School,Unemployed,10009.93,0.491,2566.63,1,0.327,0.21,0
+1,558.4,20,Male,Single,High School,Student,12845.08,0.248,1631.81,1,0.967,0.5,0
+1,602.9,18,Male,Single,High School,Employed,37967.72,0.239,13183.45,1,0.348,0.5,0
+0,668.6,36,Female,Single,Master,Employed,92636.9,0.387,32676.32,4,0.257,3.35,4
+0,739.9,47,Female,Married,Bachelor,Self-employed,72595.61,0.16,25457.0,6,0.413,4.92,2
+0,671.4,35,Male,Married,Master,Employed,58377.65,0.066,7973.86,4,0.612,6.0,1
+0,575.4,49,Male,Single,PhD,Employed,72671.48,0.247,26535.27,5,0.757,6.33,2
+0,659.1,40,Female,Single,Bachelor,Self-employed,36089.01,0.341,14025.02,8,0.588,22.5,3
+0,655.3,37,Female,Married,PhD,Unemployed,15345.41,0.246,4339.52,7,0.569,8.17,2
+1,577.6,52,Male,Married,High School,Unemployed,18364.74,0.506,4615.43,7,0.454,13.17,2
+1,574.1,59,Female,Married,High School,Employed,42711.19,0.51,15329.23,7,0.51,2.58,2
+0,649.8,59,Female,Single,PhD,Employed,97227.89,0.247,35000.0,9,0.641,7.03,0
+0,721.3,53,Female,Single,Bachelor,Employed,72505.96,0.343,28039.14,9,0.329,21.9,2
+1,687.7,71,Male,Single,Bachelor,Employed,87323.81,0.355,35000.0,8,0.302,6.31,1
+0,657.3,26,Male,Divorced,PhD,Employed,74863.49,0.476,11785.88,1,0.137,3.99,1
+0,661.0,31,Female,Single,Master,Unemployed,14452.7,0.434,3782.0,3,0.224,6.23,3
+0,699.5,49,Male,Married,High School,Employed,57382.62,0.213,10109.16,7,0.344,9.29,0
+0,735.7,74,Male,Divorced,PhD,Employed,89254.58,0.299,28798.46,9,0.342,5.14,0
+0,721.9,58,Male,Married,High School,Self-employed,43373.49,0.36,13062.38,7,0.264,16.31,4
+0,663.4,46,Male,Married,Bachelor,Employed,45712.1,0.3,5393.22,7,0.621,14.25,2
+1,544.9,39,Male,Married,High School,Self-employed,51347.89,0.354,5520.56,4,0.838,3.67,3
+1,712.7,35,Female,Married,High School,Employed,32043.97,0.335,2801.66,4,0.407,4.28,4
+0,685.6,29,Male,Married,Bachelor,Employed,52118.03,0.372,5973.05,3,0.74,2.96,2
+1,594.3,22,Male,Single,Bachelor,Student,20694.12,0.231,8070.98,1,0.689,1.0,0
+0,683.0,60,Female,Married,High School,Self-employed,50593.73,0.323,7547.58,8,0.368,2.92,4
+0,739.0,35,Male,Married,Master,Employed,109843.83,0.23,15416.75,5,0.299,2.58,0
+0,635.5,18,Male,Single,High School,Student,14121.63,0.349,1567.17,2,0.535,0.5,1
+0,641.5,41,Male,Married,High School,Self-employed,38814.65,0.546,13856.46,7,0.434,7.77,1
+0,726.5,69,Female,Married,Bachelor,Retired,63402.87,0.32,5661.42,9,0.435,11.4,0
+1,517.2,37,Female,Married,Master,Employed,73405.26,0.394,30679.31,3,0.905,4.19,0
+1,658.0,24,Non-binary,Single,Bachelor,Student,12964.13,0.338,1820.39,2,0.271,2.32,0
+0,738.0,75,Female,Married,Master,Employed,42391.92,0.384,10839.98,9,0.161,12.49,0
+0,704.5,64,Female,Married,Master,Self-employed,70698.83,0.411,8700.22,9,0.41,18.38,0
+0,652.5,67,Female,Married,High School,Employed,59624.11,0.283,22422.76,6,0.546,2.16,0
+0,700.8,74,Male,Single,High School,Retired,31127.36,0.338,2779.41,9,0.374,17.62,1
+0,654.2,35,Female,Married,High School,Unemployed,14286.99,0.407,6414.72,5,0.344,8.74,1
+1,479.8,43,Female,Single,Bachelor,Unemployed,16345.36,0.65,7269.12,8,0.831,25.02,4
+0,711.7,53,Male,Married,High School,Employed,50129.55,0.129,13963.91,6,0.335,1.72,2
+1,695.3,45,Female,Single,High School,Employed,43384.98,0.471,13699.48,9,0.37,27.5,0
+0,722.8,59,Male,Single,High School,Employed,46832.02,0.08,9385.88,6,0.332,5.89,0
+1,597.4,56,Female,Married,High School,Employed,54752.32,0.271,14421.8,9,0.711,7.38,2
+1,674.6,22,Female,Single,Bachelor,Employed,31240.89,0.522,4848.86,3,0.493,2.69,0
+1,683.8,25,Female,Single,Bachelor,Employed,45889.16,0.208,20374.67,4,0.464,0.89,4
+0,696.9,46,Male,Married,Master,Employed,96156.26,0.237,29645.52,5,0.678,5.46,2
+1,569.8,20,Female,Single,High School,Unemployed,14363.08,0.212,3692.32,1,0.586,1.2,0
+0,648.7,35,Non-binary,Married,Master,Employed,46088.1,0.335,9589.72,3,0.524,3.8,2
+0,661.7,30,Male,Married,High School,Self-employed,48122.47,0.252,17061.98,4,0.513,4.81,3
+0,728.6,58,Male,Divorced,Bachelor,Self-employed,57729.88,0.221,4713.14,9,0.333,5.15,1
+1,691.8,73,Female,Married,High School,Retired,48722.83,0.336,4396.74,9,0.387,10.03,1
+0,741.6,73,Female,Married,Master,Self-employed,73899.61,0.174,17199.04,9,0.209,9.16,0
+0,687.2,52,Male,Married,Bachelor,Employed,56403.88,0.433,13317.26,8,0.294,16.05,2
+0,622.5,23,Female,Single,Bachelor,Employed,53855.44,0.432,5977.97,4,0.324,3.36,0
+0,732.5,34,Female,Single,Master,Employed,73130.12,0.273,16453.61,5,0.386,12.4,2
+0,630.4,19,Female,Married,High School,Student,17912.38,0.36,4410.77,3,0.419,0.85,0
+0,655.6,73,Female,Married,Master,Retired,42594.39,0.333,13484.08,9,0.303,2.63,0
+0,644.3,54,Female,Single,High School,Employed,50762.77,0.235,11613.88,6,0.5,1.22,2
+1,600.3,42,Male,Married,Bachelor,Self-employed,39446.6,0.26,10993.9,4,0.741,4.92,0
+1,560.2,56,Male,Single,Bachelor,Employed,45849.61,0.481,8643.63,9,0.782,30.0,0
+0,750.9,66,Non-binary,Married,Bachelor,Employed,61342.0,0.305,8769.06,9,0.222,11.59,0
+1,613.4,19,Female,Single,High School,Student,13039.34,0.209,2133.13,3,0.488,0.1,0
+1,582.7,24,Female,Single,Bachelor,Unemployed,15097.91,0.382,5805.81,2,0.54,6.36,3
+0,686.9,70,Male,Married,Bachelor,Retired,36758.62,0.302,13423.98,9,0.669,23.01,0
+1,621.4,27,Female,Divorced,High School,Employed,32210.45,0.246,14315.9,2,0.333,0.95,2
+0,696.5,22,Male,Single,High School,Unemployed,16709.54,0.528,3659.16,4,0.879,2.75,0
+1,508.0,51,Female,Married,Bachelor,Unemployed,12628.65,0.48,4062.88,8,0.771,5.12,3
+0,670.0,21,Male,Single,High School,Student,13262.08,0.236,4658.97,3,0.462,1.14,0
+0,745.7,45,Male,Married,High School,Employed,79402.65,0.284,22359.9,6,0.02,11.35,4
+0,672.9,38,Female,Single,Bachelor,Employed,67817.18,0.211,16559.19,2,0.496,7.41,2
+0,743.9,70,Female,Divorced,Bachelor,Employed,77999.17,0.28,17697.2,9,0.4,5.3,0
+1,613.3,49,Male,Married,Master,Employed,74435.46,0.533,18076.16,5,0.601,4.07,2
+0,654.8,68,Female,Married,High School,Retired,32817.76,0.418,9632.46,9,0.254,7.34,0
+0,749.9,30,Male,Married,Bachelor,Employed,72959.16,0.16,25478.28,5,0.119,7.85,1
+0,662.0,57,Male,Single,Bachelor,Unemployed,12944.13,0.279,3450.96,7,0.44,11.74,0
+1,644.4,24,Female,Single,Bachelor,Employed,47618.97,0.154,20345.75,3,0.66,2.39,2
+1,577.2,52,Female,Divorced,Bachelor,Unemployed,11127.33,0.567,3796.01,6,0.55,8.01,3
+1,586.7,18,Female,Single,High School,Student,16519.72,0.169,1536.24,1,0.508,0.39,0
+1,699.8,61,Female,Married,Bachelor,Self-employed,51702.73,0.24,16786.24,9,0.652,17.07,0
+0,724.6,53,Male,Single,Master,Employed,55810.03,0.325,22355.24,9,0.276,22.67,1
+0,760.1,71,Male,Single,Bachelor,Retired,27250.29,0.231,2968.25,9,0.101,12.4,2
+0,710.9,57,Female,Married,High School,Employed,52599.73,0.354,21545.59,7,0.339,0.97,0
+1,585.1,32,Female,Single,High School,Unemployed,17155.71,0.37,3404.82,5,0.638,14.5,2
+0,710.5,52,Male,Married,Bachelor,Employed,62844.61,0.159,23014.66,9,0.418,23.6,2
+0,654.0,54,Non-binary,Married,PhD,Employed,78305.85,0.396,19215.13,7,0.445,10.04,1
+1,610.5,55,Female,Married,High School,Unemployed,25632.09,0.555,6954.65,6,0.403,4.81,2
+0,710.9,72,Male,Married,Bachelor,Self-employed,67643.53,0.304,29363.02,9,0.527,17.3,0
+1,644.7,40,Non-binary,Married,High School,Self-employed,37991.3,0.438,16577.87,7,0.606,22.5,0
+1,564.3,18,Male,Single,High School,Student,13290.64,0.383,1813.16,1,0.381,0.5,0
+0,751.5,31,Non-binary,Single,High School,Employed,37968.76,0.187,13528.73,4,0.079,13.5,3
+0,662.1,64,Non-binary,Single,High School,Employed,38640.38,0.445,15561.2,8,0.553,2.76,0
+0,678.2,46,Male,Married,High School,Employed,47491.8,0.132,8559.44,5,0.527,5.55,0
+0,722.5,68,Female,Single,Bachelor,Retired,33666.08,0.319,4282.71,9,0.474,13.16,1
+0,686.4,69,Female,Married,Bachelor,Retired,33212.28,0.204,7574.52,9,0.677,7.37,0
+1,588.0,31,Female,Single,Master,Unemployed,16655.34,0.366,3304.25,5,0.596,13.5,3
+1,660.6,58,Female,Married,PhD,Employed,60347.72,0.298,18900.27,5,0.536,11.62,0
+0,685.8,29,Male,Married,High School,Employed,33764.59,0.187,13826.8,4,0.26,0.52,2
+1,602.4,57,Male,Married,PhD,Unemployed,19754.76,0.455,3913.52,8,0.672,11.08,1
+0,722.1,66,Female,Married,Master,Employed,62347.29,0.305,8375.22,7,0.197,7.27,0
+1,636.8,62,Female,Divorced,Master,Retired,52773.29,0.3,11874.4,4,0.548,3.03,1
+1,502.2,49,Male,Single,Bachelor,Unemployed,11501.79,0.386,4171.9,6,0.774,5.84,3
+1,623.0,18,Female,Single,Bachelor,Employed,71953.86,0.074,16483.56,2,0.312,0.5,0
+0,702.5,35,Male,Single,Bachelor,Employed,110889.43,0.325,35000.0,6,0.485,9.51,3
+0,730.3,46,Female,Married,High School,Employed,67174.67,0.246,18638.82,4,0.06,8.8,4
+0,732.4,31,Female,Single,Bachelor,Employed,42787.47,0.157,4425.87,6,0.306,13.5,3
+0,696.0,40,Female,Married,Bachelor,Employed,45625.2,0.253,16389.81,6,0.436,12.5,2
+0,679.1,19,Female,Single,High School,Employed,60912.27,0.158,27348.87,3,0.199,1.49,0
+0,648.0,20,Female,Single,High School,Student,12668.49,0.301,3811.23,1,0.384,2.5,0
+1,735.4,42,Male,Single,Bachelor,Employed,50583.6,0.191,18991.07,5,0.422,2.86,1
+0,658.4,52,Female,Married,High School,Employed,50412.41,0.378,12782.75,7,0.553,11.13,1
+1,509.7,24,Female,Single,Bachelor,Student,17463.66,0.324,7218.52,2,0.874,3.86,0
+0,666.8,48,Male,Married,Bachelor,Employed,40380.03,0.322,10413.48,8,0.441,6.81,2
+1,595.2,54,Female,Single,Bachelor,Employed,65861.96,0.435,22000.69,6,0.68,15.09,3
+1,637.1,19,Male,Single,Bachelor,Employed,67598.05,0.297,9756.89,3,0.583,0.91,0
+0,722.5,36,Female,Single,Master,Employed,70447.25,0.123,8850.88,6,0.357,18.5,3
+0,645.0,52,Male,Married,High School,Employed,37429.99,0.217,9339.28,5,0.639,3.11,0
+0,733.0,35,Female,Married,Bachelor,Self-employed,50495.38,0.171,19760.94,5,0.214,12.5,2
+1,560.4,41,Male,Married,High School,Employed,65503.53,0.298,9553.33,5,0.791,5.57,1
+1,619.6,37,Male,Single,Bachelor,Student,17597.23,0.237,1583.11,3,0.602,2.56,0
+1,664.5,73,Female,Married,Master,Retired,51773.67,0.47,16361.71,9,0.606,18.26,1
+0,697.5,53,Male,Married,Master,Employed,100970.03,0.319,24849.29,7,0.375,4.93,2
+0,703.3,46,Male,Divorced,PhD,Employed,64135.59,0.106,10989.39,6,0.13,5.35,1
+0,657.6,58,Male,Married,Master,Employed,70428.89,0.324,19147.22,8,0.652,9.69,2
+1,699.7,22,Male,Single,Bachelor,Employed,77541.34,0.282,16153.31,3,0.458,1.42,0
+0,582.7,57,Female,Married,High School,Self-employed,44581.25,0.194,12207.45,7,0.94,1.98,2
+0,699.1,44,Male,Single,Bachelor,Employed,45490.23,0.3,9594.59,7,0.566,13.89,0
+0,665.3,60,Male,Married,High School,Employed,52678.16,0.368,14266.85,9,0.597,18.19,2
+1,656.3,30,Female,Married,Bachelor,Employed,40547.97,0.357,13975.52,4,0.087,12.5,2
+1,654.0,21,Female,Single,Bachelor,Self-employed,40421.26,0.403,16371.69,3,0.461,2.43,0
+1,569.8,18,Male,Single,High School,Student,18518.71,0.231,5523.72,1,0.696,0.26,0
+1,600.9,57,Male,Single,Master,Employed,82729.56,0.437,11144.79,8,0.63,5.09,0
+0,772.4,56,Female,Divorced,Bachelor,Employed,64594.2,0.185,12104.33,9,0.221,21.3,2
+0,606.6,23,Male,Single,High School,Student,10671.38,0.296,1057.37,3,0.843,0.16,0
+1,718.3,73,Female,Single,Bachelor,Retired,33003.68,0.296,4314.7,9,0.427,13.1,0
+1,645.0,25,Male,Married,High School,Student,11963.13,0.281,2594.52,4,0.798,0.56,0
+1,671.6,38,Male,Single,Master,Employed,56696.66,0.495,20519.48,5,0.188,8.76,3
+0,717.0,53,Male,Married,Master,Self-employed,61732.45,0.231,11857.11,6,0.294,11.27,0
+1,658.2,26,Male,Divorced,Master,Employed,79647.23,0.35,14231.42,3,0.606,3.16,0
+1,632.1,39,Male,Married,Master,Employed,109088.97,0.467,17330.83,7,0.48,18.56,1
+0,685.9,56,Male,Married,Master,Employed,59768.68,0.403,17044.26,7,0.132,16.58,1
+0,678.5,20,Non-binary,Single,High School,Employed,38973.57,0.302,11294.52,3,0.622,2.5,0
+0,672.8,59,Female,Divorced,High School,Unemployed,10539.56,0.337,2920.01,6,0.33,12.49,1
+1,563.7,31,Female,Married,Bachelor,Self-employed,68666.51,0.391,12924.42,5,0.791,5.38,4
+1,557.5,62,Male,Married,Bachelor,Retired,34745.12,0.232,13173.66,6,0.807,3.41,2
+0,645.9,29,Male,Single,High School,Student,13111.05,0.333,4391.02,3,0.371,1.0,0
+0,701.4,26,Non-binary,Divorced,Bachelor,Student,14863.36,0.113,3730.15,4,0.73,2.77,0
+1,612.0,69,Female,Married,Bachelor,Retired,39298.19,0.409,11255.43,9,0.521,8.79,0
+1,596.3,37,Female,Single,Bachelor,Unemployed,16924.01,0.324,5287.46,6,0.76,3.21,0
+0,705.5,20,Female,Single,High School,Employed,51644.99,0.111,13891.7,4,0.225,2.5,1
+0,597.3,56,Male,Married,Bachelor,Employed,61166.33,0.115,6189.01,7,0.746,5.05,0
+0,695.4,29,Female,Single,Master,Unemployed,22711.99,0.33,5328.12,4,0.734,2.77,1
+0,677.5,66,Female,Married,Bachelor,Retired,36612.28,0.147,10115.9,7,0.66,3.95,1
+0,747.7,30,Female,Divorced,PhD,Employed,119190.21,0.254,17567.62,3,0.422,10.45,2
+1,617.8,31,Male,Single,Bachelor,Employed,49090.49,0.459,19823.7,6,0.517,13.5,2
+0,704.1,51,Male,Single,Master,Employed,78913.7,0.344,16913.85,7,0.388,5.21,1
+0,762.5,41,Male,Single,PhD,Employed,72591.6,0.2,20924.2,6,0.067,4.1,2
+0,661.8,27,Male,Single,Bachelor,Employed,47963.77,0.285,8447.5,2,0.39,2.12,0
+1,655.9,42,Male,Married,Master,Employed,73619.82,0.307,32939.68,5,0.442,9.79,0
+0,677.3,68,Female,Divorced,High School,Employed,51283.51,0.42,22200.45,7,0.275,6.27,0
+1,584.3,67,Female,Divorced,Master,Employed,100603.23,0.142,26313.99,8,0.818,2.46,0
+1,599.1,22,Female,Single,Bachelor,Employed,54726.87,0.285,22731.07,4,0.764,4.5,0
+0,554.2,54,Female,Single,High School,Unemployed,10172.07,0.195,1942.3,9,0.911,16.69,1
+1,679.4,34,Male,Married,Bachelor,Unemployed,19732.36,0.432,2425.06,6,0.247,16.5,2
+1,606.3,33,Female,Married,Bachelor,Employed,56509.81,0.156,17555.41,8,0.751,15.5,2
+0,652.9,58,Male,Single,Master,Employed,64348.76,0.269,16387.13,5,0.649,5.73,0
+0,682.9,68,Male,Married,Master,Self-employed,92909.44,0.121,15671.67,9,0.691,6.5,0
+0,708.0,70,Male,Divorced,Bachelor,Employed,62118.67,0.435,26719.66,9,0.18,20.84,0
+0,662.2,21,Male,Single,High School,Student,17334.57,0.264,5134.12,4,0.636,0.43,1
+0,764.3,43,Male,Single,Bachelor,Employed,49993.81,0.193,20379.84,5,0.29,18.97,0
+0,740.7,59,Male,Married,High School,Employed,44603.2,0.328,5319.11,7,0.317,15.29,1
+0,753.0,69,Male,Divorced,Bachelor,Retired,48357.55,0.164,8597.98,9,0.272,18.19,2
+0,647.9,46,Female,Single,High School,Employed,46726.89,0.377,18686.76,5,0.442,2.21,2
+1,649.9,27,Non-binary,Married,Bachelor,Employed,52232.15,0.348,20599.24,3,0.743,1.14,3
+1,615.2,37,Female,Single,Bachelor,Self-employed,46139.25,0.487,6866.08,3,0.213,3.02,0
+0,720.0,73,Female,Single,Master,Self-employed,54704.08,0.253,23233.87,9,0.462,11.62,2
+1,516.6,36,Female,Married,Bachelor,Employed,65865.91,0.454,8095.32,6,0.771,7.03,3
+1,665.2,33,Female,Married,Bachelor,Employed,53731.93,0.295,9391.84,5,0.504,6.18,0
+0,640.9,28,Female,Married,Bachelor,Employed,68218.48,0.429,22468.92,4,0.344,3.96,2
+1,618.6,37,Female,Married,Bachelor,Employed,36617.73,0.483,6333.18,6,0.383,5.43,4
+1,518.7,45,Female,Divorced,Bachelor,Unemployed,16334.56,0.355,7149.98,4,0.79,1.56,3
+1,620.2,27,Male,Married,Bachelor,Employed,68248.21,0.31,11627.16,1,0.568,2.32,2
+1,618.4,71,Female,Married,Master,Employed,59265.47,0.255,22414.2,9,0.722,7.7,0
+0,688.4,52,Female,Married,Master,Self-employed,65548.65,0.257,22908.26,8,0.556,18.13,4
+1,526.0,59,Male,Married,High School,Student,14734.11,0.273,1313.77,7,0.973,3.33,0
+1,566.8,50,Non-binary,Single,High School,Unemployed,14817.98,0.222,5250.36,8,0.855,8.89,0
+1,652.4,33,Female,Single,Bachelor,Employed,65363.44,0.146,7597.11,5,0.588,1.91,2
+0,709.8,49,Female,Married,High School,Employed,46791.68,0.244,17222.17,3,0.279,0.94,0
+1,680.5,69,Male,Divorced,Master,Employed,71806.03,0.425,18945.59,7,0.349,10.03,0
+0,593.8,70,Female,Single,Master,Retired,28507.23,0.397,5733.72,9,0.681,7.05,1
+0,676.8,53,Male,Married,Bachelor,Employed,51976.18,0.528,4836.18,9,0.036,19.97,1
+1,624.9,22,Female,Single,Bachelor,Unemployed,16082.7,0.22,5730.26,2,0.175,0.4,0
+0,555.9,36,Female,Single,Bachelor,Student,16108.14,0.328,4679.29,4,0.711,9.84,0
+0,688.4,66,Male,Divorced,Bachelor,Retired,24046.82,0.15,9157.45,9,0.551,13.61,0
+1,580.1,32,Male,Divorced,High School,Student,13934.54,0.217,4845.38,6,0.704,13.19,0
+0,719.4,71,Female,Married,Bachelor,Employed,45488.93,0.277,4154.87,9,0.314,15.02,2
+0,695.0,58,Male,Married,Bachelor,Self-employed,67605.56,0.246,18884.36,8,0.41,15.06,0
+1,620.8,70,Male,Married,High School,Employed,59074.65,0.447,7389.28,9,0.634,23.55,0
+0,702.4,24,Female,Single,Bachelor,Employed,60937.06,0.198,11157.26,3,0.411,2.53,2
+0,718.7,31,Female,Married,PhD,Employed,79421.97,0.308,26856.43,5,0.369,10.36,2
+1,675.6,44,Male,Single,High School,Employed,39421.6,0.331,7143.85,4,0.562,3.84,3
+0,671.6,21,Female,Single,Bachelor,Employed,36403.98,0.317,4306.62,4,0.297,1.54,0
+0,672.8,53,Female,Married,Master,Employed,87660.19,0.478,30951.47,8,0.101,8.02,4
+0,699.4,65,Female,Married,Bachelor,Retired,49425.57,0.312,10703.43,9,0.394,22.12,1
+0,744.3,57,Female,Divorced,Bachelor,Employed,65558.67,0.196,15561.88,8,0.109,12.35,1
+0,720.2,63,Female,Single,Master,Self-employed,73379.45,0.3,20417.13,8,0.137,4.24,0
+1,581.7,29,Female,Single,Bachelor,Employed,60988.33,0.404,6777.73,2,0.822,0.66,4
+0,621.0,46,Male,Married,Bachelor,Employed,43119.73,0.178,4075.2,4,0.576,1.92,3
+1,418.7,58,Female,Married,PhD,Unemployed,21759.85,0.489,8589.47,6,0.979,2.74,2
+1,720.8,65,Female,Married,High School,Retired,43341.15,0.071,18500.58,8,0.065,5.09,1
+0,559.8,18,Female,Single,High School,Student,18872.61,0.351,1783.57,2,0.26,0.5,0
+0,674.3,63,Male,Married,Bachelor,Retired,36468.87,0.233,6685.38,8,0.668,6.02,0
+0,693.7,54,Female,Divorced,Bachelor,Self-employed,51548.15,0.328,18235.76,7,0.233,7.79,3
+1,537.3,42,Female,Married,Bachelor,Unemployed,17604.74,0.39,5830.44,9,0.791,24.5,1
+1,666.3,33,Male,Married,Bachelor,Employed,50644.97,0.358,6428.56,2,0.2,3.37,0
+1,683.4,70,Male,Married,High School,Retired,37046.26,0.324,8879.01,9,0.593,20.02,0
+0,680.4,54,Female,Divorced,Master,Employed,61304.2,0.172,15968.12,6,0.593,10.4,0
+0,700.1,65,Male,Single,High School,Self-employed,66387.55,0.159,9342.24,6,0.104,1.15,0
+0,698.2,52,Female,Divorced,Bachelor,Employed,89047.16,0.202,15403.66,5,0.584,6.11,1
+1,468.5,47,Female,Single,Bachelor,Unemployed,19894.12,0.434,1603.66,7,1.0,13.45,1
+0,717.8,45,Female,Married,High School,Employed,72873.63,0.153,17463.5,5,0.167,2.72,3
+1,604.5,55,Female,Divorced,High School,Employed,58261.04,0.288,12022.35,7,0.85,17.23,1
+0,672.4,67,Female,Divorced,High School,Retired,28292.2,0.129,9712.59,9,0.462,10.15,0
+1,558.9,58,Female,Single,PhD,Student,16941.45,0.522,2389.05,7,0.588,4.31,0
+1,558.2,25,Male,Married,Bachelor,Self-employed,71750.73,0.301,8702.45,2,0.72,3.16,1
+1,550.9,41,Female,Married,Master,Employed,66088.03,0.415,19429.25,7,0.752,12.49,1
+1,605.5,22,Male,Single,High School,Employed,46282.54,0.115,4289.66,1,0.458,1.87,0
+0,653.1,64,Male,Divorced,Master,Retired,43203.08,0.183,4931.74,6,0.585,3.89,0
+1,635.2,45,Female,Married,High School,Unemployed,18607.78,0.261,7460.62,5,0.689,7.5,0
+0,632.3,32,Female,Single,Bachelor,Self-employed,55459.18,0.484,12524.07,5,0.464,14.5,2
+1,567.4,49,Male,Married,Bachelor,Employed,54908.93,0.418,15397.94,6,0.718,5.98,2
+1,567.7,74,Female,Married,Bachelor,Employed,56691.83,0.334,10662.73,8,0.851,7.44,0
+1,670.1,67,Female,Married,Master,Employed,65848.36,0.356,22396.82,9,0.609,14.92,2
+1,582.4,49,Male,Single,Bachelor,Employed,51871.31,0.487,21417.56,8,0.666,4.75,0
+0,741.7,65,Male,Married,Bachelor,Self-employed,58011.82,0.358,9098.87,9,0.146,30.0,0
+1,591.8,70,Female,Divorced,High School,Retired,37258.08,0.265,5937.39,9,0.77,14.42,0
+1,586.3,21,Female,Single,High School,Employed,64345.73,0.362,19906.54,1,0.608,3.5,0
+1,619.6,18,Female,Single,High School,Unemployed,12681.3,0.195,1602.12,3,0.794,0.5,0
+0,645.3,52,Female,Divorced,Bachelor,Employed,62036.84,0.348,9263.96,5,0.65,3.2,0
+1,663.9,62,Female,Married,Bachelor,Employed,41125.19,0.322,13012.84,9,0.548,24.42,2
+0,708.1,54,Male,Single,Master,Unemployed,16274.88,0.357,3658.55,8,0.463,10.62,2
+0,677.4,37,Non-binary,Married,High School,Employed,64888.15,0.366,10074.73,4,0.251,11.07,1
+1,606.3,37,Female,Married,High School,Employed,37722.02,0.229,11813.55,8,0.887,14.93,3
+0,718.4,69,Non-binary,Married,PhD,Self-employed,102620.79,0.282,35000.0,9,0.458,17.52,0
+0,651.9,26,Female,Single,High School,Employed,45563.55,0.343,8122.4,3,0.488,1.06,3
+0,702.7,37,Female,Single,Bachelor,Employed,69333.47,0.38,27217.98,6,0.186,9.8,2
+0,744.9,55,Male,Married,High School,Self-employed,45304.96,0.223,4545.11,6,0.16,12.68,0
+1,604.1,26,Female,Married,Bachelor,Self-employed,37864.23,0.312,9723.9,1,0.644,0.76,3
+0,736.2,57,Female,Married,Master,Employed,59590.2,0.153,16020.31,7,0.159,5.42,1
+0,716.7,63,Female,Divorced,Master,Employed,65729.92,0.272,29232.52,7,0.358,2.92,0
+1,583.9,61,Male,Married,Bachelor,Student,14277.76,0.274,5993.65,6,0.706,4.49,0
+0,768.7,61,Female,Married,High School,Employed,69680.51,0.151,11121.12,8,0.223,5.89,2
+1,655.8,20,Female,Single,High School,Unemployed,16918.89,0.219,3252.13,3,0.452,1.32,0
+0,761.5,72,Male,Married,High School,Employed,56512.75,0.283,13251.25,9,0.166,17.76,2
+0,684.5,50,Male,Married,Master,Employed,68500.38,0.51,10595.18,9,0.491,29.31,1
+1,708.4,75,Male,Single,High School,Self-employed,47547.77,0.401,12579.42,9,0.346,30.0,0
+1,684.7,32,Female,Single,Bachelor,Employed,49698.89,0.249,19019.61,5,0.244,7.08,1
+0,717.8,58,Female,Married,Master,Self-employed,68519.67,0.366,15828.03,6,0.221,5.15,4
+1,620.7,19,Female,Single,High School,Student,13444.97,0.27,4815.85,1,0.295,1.24,1
+0,667.9,68,Male,Married,High School,Self-employed,68081.7,0.291,27820.17,9,0.49,7.6,0
+0,731.4,56,Female,Single,Master,Employed,89498.59,0.29,28047.04,8,0.341,5.73,3
+0,663.1,54,Female,Married,Bachelor,Employed,61172.1,0.319,25921.68,8,0.532,2.79,0
+1,635.6,44,Female,Single,High School,Employed,44605.53,0.301,19572.83,6,0.657,3.49,2
+1,504.5,40,Female,Married,Bachelor,Employed,37755.8,0.409,13421.18,4,0.725,5.28,2
+0,732.7,52,Female,Married,Bachelor,Employed,60381.39,0.279,10121.89,6,0.228,1.73,2
+0,625.6,47,Female,Single,Bachelor,Employed,57592.17,0.201,6113.51,5,0.696,3.68,2
+0,641.4,49,Female,Married,Bachelor,Employed,53637.7,0.342,9446.88,7,0.636,11.47,4
+0,726.1,48,Male,Married,Master,Self-employed,91772.61,0.221,22212.15,4,0.153,3.52,0
+0,654.6,52,Male,Married,High School,Self-employed,51862.15,0.336,17671.13,3,0.359,3.36,1
+0,717.6,66,Female,Married,High School,Employed,48502.07,0.317,9958.07,8,0.3,19.07,0
+0,688.5,31,Female,Married,Master,Employed,59718.25,0.198,9852.4,1,0.109,7.3,4
+1,618.9,26,Male,Divorced,High School,Unemployed,10549.02,0.445,2578.74,2,0.714,2.09,2
+1,571.0,62,Male,Single,Master,Employed,79086.53,0.521,23862.38,8,0.746,14.53,2
+0,745.8,62,Female,Single,Bachelor,Retired,31957.6,0.234,12171.43,9,0.109,12.12,0
+1,509.1,37,Female,Married,High School,Unemployed,16513.57,0.397,3355.89,6,0.923,10.34,4
+0,782.8,48,Female,Married,PhD,Employed,110911.19,0.259,14087.98,9,0.301,30.0,0
+0,744.2,73,Male,Married,Master,Retired,53038.02,0.317,5700.01,9,0.307,14.1,1
+0,703.9,20,Non-binary,Single,High School,Employed,35470.35,0.322,15833.74,4,0.225,0.71,0
+0,672.9,32,Male,Single,Bachelor,Employed,59995.09,0.378,16879.33,6,0.201,5.62,2
+1,596.0,48,Female,Married,High School,Employed,45517.15,0.516,11670.83,5,0.518,7.39,0
+0,718.1,47,Female,Married,Master,Employed,70670.06,0.229,13979.55,6,0.116,6.65,3
+0,581.1,48,Male,Divorced,PhD,Employed,72194.86,0.249,30134.06,7,0.764,3.4,0
+0,596.4,20,Female,Single,High School,Student,10000.0,0.32,4364.08,2,0.966,2.5,0
+0,606.7,23,Male,Single,High School,Employed,50659.27,0.369,6290.46,1,0.633,1.98,2
+0,735.5,74,Male,Married,Bachelor,Retired,44799.37,0.03,6548.15,8,0.434,3.54,0
+0,739.4,67,Female,Single,Master,Unemployed,19828.69,0.296,3894.54,9,0.357,14.86,0
+1,623.4,28,Female,Single,High School,Employed,35877.85,0.083,6345.75,4,0.659,3.34,2
+0,710.8,63,Male,Married,Bachelor,Retired,44694.73,0.219,15548.69,6,0.371,3.02,0
+0,736.6,44,Male,Divorced,Bachelor,Employed,56617.8,0.231,21977.25,5,0.211,13.46,2
+0,717.6,32,Male,Single,High School,Employed,44470.94,0.14,9199.74,6,0.505,14.5,2
+1,666.1,37,Male,Single,Bachelor,Employed,53886.21,0.37,22860.91,6,0.282,2.33,1
+1,656.2,73,Female,Single,High School,Employed,38520.34,0.304,12823.52,7,0.595,3.53,1
+1,595.0,49,Non-binary,Married,Master,Self-employed,72275.11,0.285,31462.72,7,0.76,7.98,2
+0,696.0,72,Male,Single,Bachelor,Retired,20716.9,0.074,4959.22,9,0.345,17.46,0
+1,644.3,60,Female,Married,Master,Employed,104847.39,0.25,28408.41,4,0.581,6.19,1
+0,757.6,42,Female,Married,Master,Employed,80900.79,0.249,22855.65,5,0.377,10.27,1
+0,664.6,75,Male,Single,High School,Self-employed,39568.05,0.432,3216.29,8,0.419,5.69,2
+1,626.0,34,Male,Married,High School,Employed,61206.44,0.437,14847.53,3,0.256,3.17,0
+0,705.6,36,Female,Married,Bachelor,Employed,46956.26,0.22,6690.87,5,0.412,11.5,0
+0,673.6,43,Female,Married,Bachelor,Unemployed,17429.18,0.184,1973.62,3,0.44,2.15,4
+0,678.6,56,Male,Married,High School,Employed,58568.22,0.44,21248.21,9,0.357,9.88,2
+0,625.8,27,Female,Married,Bachelor,Employed,43269.02,0.345,14252.95,2,0.06,0.11,0
+0,727.0,32,Female,Married,Bachelor,Employed,46867.51,0.257,7666.47,5,0.167,14.5,1
+0,683.0,65,Male,Married,Bachelor,Retired,28601.31,0.427,8568.19,9,0.266,11.64,0
+0,658.1,52,Male,Married,High School,Employed,56131.9,0.436,17339.51,7,0.47,17.04,0
+0,731.4,46,Male,Divorced,High School,Employed,61970.41,0.204,13362.42,5,0.314,5.07,0
+1,586.7,41,Female,Divorced,High School,Employed,51041.79,0.451,4615.88,6,0.67,9.51,4
+1,701.6,20,Female,Single,High School,Employed,49213.11,0.287,16014.57,4,0.55,1.01,0
+0,587.1,44,Male,Married,Master,Employed,90090.89,0.137,19471.19,6,0.738,5.32,1
+0,666.1,36,Female,Married,Bachelor,Employed,72895.96,0.118,26291.11,1,0.48,5.99,4
+0,679.0,26,Male,Married,PhD,Unemployed,16850.1,0.409,5291.47,2,0.111,3.17,2
+1,620.1,47,Female,Married,Master,Unemployed,16393.34,0.518,1781.76,5,0.337,10.1,0
+1,544.1,24,Female,Single,Bachelor,Student,11748.59,0.226,4466.2,4,0.86,4.19,0
+1,547.8,75,Female,Married,Bachelor,Unemployed,15263.17,0.363,3066.17,9,0.787,23.08,0
+0,658.9,35,Male,Single,Bachelor,Employed,62303.56,0.319,24308.34,4,0.525,14.82,1
+1,585.8,42,Male,Married,High School,Employed,55759.86,0.324,22484.22,5,0.814,9.06,4
+0,630.8,38,Female,Single,PhD,Self-employed,90079.71,0.18,32692.81,6,0.645,10.23,0
+0,721.1,35,Male,Married,Bachelor,Employed,46544.15,0.407,19706.94,6,0.324,16.48,1
+1,716.3,40,Female,Married,Master,Employed,84923.18,0.036,35000.0,3,0.301,5.11,4
+0,680.8,64,Male,Married,High School,Employed,61078.37,0.3,16195.69,8,0.625,16.07,0
+0,669.4,19,Male,Married,High School,Employed,58636.43,0.213,16279.86,4,0.518,1.06,0
+1,572.9,53,Female,Divorced,Master,Self-employed,52271.97,0.355,17293.58,7,0.8,2.76,0
+1,665.2,74,Male,Single,High School,Retired,26181.25,0.238,5036.39,7,0.523,4.49,0
+0,704.6,44,Male,Single,PhD,Employed,83841.7,0.145,23889.11,9,0.483,26.5,2
+0,478.1,53,Female,Married,Bachelor,Employed,46773.13,0.36,8733.84,4,0.91,2.51,2
+0,728.6,50,Male,Married,Bachelor,Employed,60463.34,0.148,26862.39,7,0.408,7.99,2
+0,717.3,53,Male,Married,Bachelor,Employed,63988.67,0.21,17719.99,7,0.459,21.67,1
+0,648.2,41,Female,Married,Bachelor,Employed,47237.49,0.412,5414.36,5,0.542,5.49,1
+0,724.6,61,Male,Married,High School,Employed,41767.07,0.402,14748.98,9,0.453,25.52,2
+1,525.9,39,Female,Single,Bachelor,Unemployed,15613.03,0.366,4111.11,5,0.75,2.02,4
+0,716.7,44,Male,Divorced,High School,Employed,52842.71,0.303,15719.13,6,0.099,4.61,4
+0,694.9,69,Male,Married,High School,Retired,23250.78,0.235,8004.79,6,0.58,6.59,2
+1,553.9,19,Male,Single,High School,Unemployed,12635.68,0.531,1381.37,2,0.667,0.1,0
+0,693.0,31,Male,Married,Master,Employed,43982.33,0.309,7518.73,6,0.487,13.5,3
+1,546.2,57,Male,Married,High School,Employed,64405.26,0.368,8039.12,8,0.869,7.56,2
+0,678.7,69,Female,Single,Master,Retired,43290.52,0.311,9788.54,9,0.386,10.6,0
+0,750.5,69,Male,Married,PhD,Retired,58454.96,0.312,17337.47,9,0.106,15.07,0
+1,644.8,57,Male,Single,High School,Unemployed,13964.24,0.424,5752.01,9,0.615,28.91,2
+0,695.9,56,Non-binary,Married,High School,Employed,43196.35,0.177,11419.86,9,0.544,14.03,1
+0,689.8,33,Female,Married,Bachelor,Employed,69104.13,0.374,26326.94,4,0.115,3.72,0
+0,626.3,62,Female,Divorced,PhD,Employed,58400.32,0.253,4731.53,7,0.502,5.65,3
+0,649.6,64,Male,Single,Master,Retired,63675.66,0.448,23577.91,6,0.486,5.68,0
+0,707.0,69,Male,Married,High School,Retired,23591.34,0.354,3402.49,9,0.219,15.37,0
+0,679.2,74,Male,Married,High School,Employed,57959.59,0.33,19051.77,8,0.176,9.63,0
+0,682.4,54,Male,Single,High School,Employed,38087.18,0.275,6223.5,8,0.545,17.1,1
+0,656.3,36,Female,Single,Master,Self-employed,58780.21,0.289,22705.41,5,0.68,3.56,1
+1,603.8,27,Female,Married,Master,Employed,87583.48,0.252,15774.31,6,0.889,6.92,2
+1,651.3,20,Male,Single,High School,Student,10469.27,0.347,3572.16,3,0.467,1.56,0
+0,679.9,25,Female,Single,High School,Employed,59361.32,0.108,24976.09,4,0.788,0.71,4
+0,662.5,30,Male,Married,Bachelor,Employed,50373.7,0.205,8492.66,4,0.602,12.5,0
+1,645.2,65,Female,Divorced,Bachelor,Unemployed,10873.75,0.498,2684.28,8,0.277,6.64,1
+1,587.5,25,Male,Married,Bachelor,Self-employed,45703.86,0.325,6378.67,1,0.283,0.76,0
+0,710.2,49,Male,Divorced,Bachelor,Unemployed,15283.95,0.207,6822.36,6,0.303,7.47,0
+0,629.5,64,Male,Single,High School,Employed,58051.43,0.501,4695.01,8,0.428,4.71,0
+1,621.6,18,Female,Married,High School,Student,12066.94,0.211,4809.92,3,0.746,0.5,0
+0,592.7,53,Male,Married,Bachelor,Employed,51567.45,0.252,12078.6,7,0.77,6.18,0
+0,620.6,25,Male,Divorced,High School,Employed,43100.92,0.347,10172.0,1,0.707,2.44,0
+1,542.6,35,Female,Single,Bachelor,Employed,47023.85,0.471,5266.9,3,0.659,10.19,2
+0,674.5,58,Female,Married,Master,Employed,67119.26,0.297,25951.08,8,0.526,6.01,1
+1,559.1,51,Male,Married,Bachelor,Employed,68493.37,0.331,28359.87,5,0.775,1.7,1
+1,584.3,73,Female,Married,High School,Employed,49955.77,0.48,19599.46,9,0.715,22.68,0
+0,687.6,55,Female,Single,Master,Employed,110357.98,0.045,10785.86,4,0.223,5.96,1
+1,674.6,51,Male,Married,High School,Employed,61134.72,0.369,21319.37,7,0.248,6.48,0
+1,607.1,34,Female,Married,Bachelor,Student,16810.93,0.276,3597.13,3,0.582,0.77,0
+1,657.6,32,Female,Married,High School,Employed,35830.31,0.332,3743.31,5,0.388,14.5,0
+0,672.3,63,Female,Married,High School,Retired,21117.69,0.349,6499.11,8,0.36,6.66,1
+1,595.4,24,Female,Single,Bachelor,Student,18232.75,0.364,7124.7,2,0.223,0.22,0
+0,648.2,46,Male,Married,PhD,Unemployed,32494.48,0.436,7304.25,7,0.5,9.6,0
+0,700.5,49,Male,Married,High School,Self-employed,49310.64,0.233,14450.01,6,0.49,9.65,2
+0,709.9,30,Male,Married,Bachelor,Employed,58178.06,0.224,23054.95,3,0.321,6.82,0
+1,584.2,26,Female,Married,Master,Unemployed,19641.5,0.342,1701.74,1,0.608,0.42,1
+0,669.5,21,Male,Single,High School,Student,10947.38,0.237,3280.84,4,0.453,1.34,0
+0,727.5,39,Female,Single,Bachelor,Employed,63886.04,0.042,8702.2,6,0.434,21.5,2
+0,548.8,66,Female,Married,High School,Retired,34821.64,0.311,10796.73,9,0.859,9.48,0
+0,707.1,27,Male,Married,Bachelor,Student,26136.82,0.364,2829.19,2,0.458,2.34,0
+1,625.1,22,Female,Single,High School,Unemployed,18117.32,0.453,2296.1,2,0.135,2.8,0
+1,623.8,41,Male,Married,Bachelor,Unemployed,13409.31,0.394,4971.59,4,0.532,4.37,0
+0,762.6,53,Male,Married,High School,Employed,70305.2,0.253,21156.26,8,0.093,11.17,2
+1,550.1,39,Male,Married,Bachelor,Employed,40470.25,0.333,16228.42,5,0.852,5.73,0
+1,673.9,62,Female,Married,High School,Retired,41885.56,0.199,11853.67,9,0.633,8.82,2
+0,631.1,33,Male,Married,Bachelor,Employed,53581.11,0.363,11709.27,3,0.573,4.15,3
+1,615.7,18,Female,Single,High School,Employed,47651.09,0.225,11991.39,2,0.639,0.3,1
+0,689.3,41,Male,Married,PhD,Employed,76225.75,0.269,18688.59,5,0.541,7.8,2
+0,674.2,34,Female,Single,Master,Employed,87465.71,0.403,8925.73,6,0.561,16.5,3
+0,660.4,63,Female,Married,Master,Retired,42335.99,0.434,4720.65,6,0.544,12.04,0
+1,542.3,47,Male,Married,High School,Employed,51077.75,0.383,22061.51,6,0.882,8.25,4
+1,627.5,23,Non-binary,Single,Bachelor,Employed,36142.13,0.186,12308.95,1,0.382,1.65,1
+0,740.7,55,Female,Married,Bachelor,Employed,82213.31,0.116,11006.09,7,0.385,3.03,1
+0,582.6,18,Male,Single,High School,Student,10000.0,0.36,2462.15,2,0.373,0.5,0
+0,739.7,43,Male,Single,Bachelor,Employed,57955.51,0.221,9698.5,6,0.265,3.86,1
+0,714.4,32,Male,Single,Bachelor,Self-employed,40737.11,0.293,12180.94,4,0.285,7.15,0
+1,563.3,23,Male,Single,Bachelor,Unemployed,17559.21,0.116,2680.22,5,0.841,3.46,1
+1,652.0,64,Male,Married,Bachelor,Employed,57416.41,0.375,22210.18,8,0.355,3.72,0
+1,594.9,25,Female,Single,Bachelor,Employed,50856.14,0.316,22279.82,3,0.669,4.28,0
+0,664.2,62,Female,Divorced,Bachelor,Retired,34642.19,0.24,11149.92,7,0.354,6.75,3
+0,744.3,67,Female,Married,Bachelor,Employed,66272.46,0.085,5485.58,8,0.276,7.41,0
+0,622.0,33,Female,Married,PhD,Employed,109796.99,0.232,12696.6,8,0.864,15.5,1
+1,666.1,28,Male,Single,Bachelor,Employed,42959.76,0.319,5402.86,2,0.35,3.64,3
+1,532.5,35,Female,Married,Bachelor,Employed,38985.07,0.433,7443.07,5,0.753,4.75,1
+0,722.1,44,Male,Single,Master,Employed,60305.99,0.282,12317.52,8,0.391,8.39,1
+1,586.0,71,Male,Married,Master,Unemployed,12732.46,0.302,3912.14,9,0.678,8.9,0
+0,679.9,75,Female,Married,Master,Employed,74061.11,0.467,6416.68,9,0.415,11.46,0
+1,685.8,35,Female,Married,Bachelor,Employed,47857.98,0.236,14307.23,6,0.557,12.77,0
+1,615.3,54,Male,Married,Bachelor,Unemployed,18612.61,0.561,5593.59,6,0.247,10.82,2
+1,651.2,38,Female,Single,Bachelor,Employed,50829.46,0.237,13219.72,3,0.374,2.43,1
+0,728.0,43,Male,Married,High School,Employed,46951.64,0.189,16953.66,8,0.487,7.2,0
+0,639.4,50,Female,Married,Bachelor,Employed,62047.76,0.353,21578.16,6,0.635,1.51,4
+1,699.4,54,Female,Divorced,Bachelor,Self-employed,72713.73,0.22,10498.16,7,0.48,8.61,2
+0,703.0,73,Female,Married,Bachelor,Retired,47483.35,0.306,16596.73,9,0.419,2.83,0
+0,719.8,60,Female,Single,Bachelor,Employed,61652.75,0.155,20286.26,7,0.437,6.49,4
+1,565.2,32,Female,Married,High School,Employed,46478.53,0.331,13633.47,6,0.743,14.5,4
+1,475.1,53,Female,Married,Bachelor,Employed,72807.04,0.488,23554.83,5,0.864,4.0,0
+0,707.3,22,Female,Single,High School,Employed,38249.56,0.309,13152.74,4,0.303,3.5,0
+1,695.3,44,Male,Single,Bachelor,Employed,39929.99,0.212,5921.58,6,0.427,14.13,0
+0,743.1,59,Female,Married,Bachelor,Employed,53064.58,0.33,4591.81,8,0.309,13.34,4
+1,678.4,66,Female,Married,Bachelor,Retired,35626.63,0.491,14883.05,8,0.185,14.55,0
+0,701.2,37,Female,Single,Master,Unemployed,17918.06,0.337,5594.99,3,0.339,9.96,3
+0,722.4,70,Female,Married,Bachelor,Employed,42585.5,0.455,4155.6,9,0.4,27.96,0
+1,644.4,43,Male,Married,Master,Unemployed,18219.18,0.352,6716.46,5,0.335,1.43,2
+0,721.7,32,Male,Married,High School,Employed,37610.7,0.145,4759.67,5,0.155,4.41,3
+0,739.9,49,Female,Single,Master,Employed,61768.47,0.227,6567.83,7,0.419,21.47,1
+0,624.7,18,Female,Single,High School,Employed,37013.37,0.292,15568.38,2,0.251,0.5,1
+1,511.0,36,Female,Married,Bachelor,Unemployed,13416.21,0.259,1712.23,2,0.921,1.93,0
+1,694.3,44,Male,Married,High School,Self-employed,64125.18,0.396,20942.38,8,0.294,18.29,0
+0,675.3,24,Female,Single,Bachelor,Unemployed,13962.05,0.28,2775.0,3,0.644,1.01,4
+0,739.2,35,Female,Married,Bachelor,Employed,49011.99,0.269,5210.48,6,0.134,4.35,0
+0,660.7,19,Female,Single,High School,Student,15192.66,0.41,4097.19,3,0.354,1.07,0
+0,672.7,75,Female,Married,High School,Self-employed,59368.77,0.335,14683.98,9,0.321,9.38,2
+0,683.4,72,Female,Married,Bachelor,Employed,52661.01,0.189,19502.43,6,0.535,1.04,1
+1,626.5,21,Female,Single,High School,Student,12398.9,0.375,4483.85,2,0.796,0.47,0
+0,700.4,46,Female,Divorced,Bachelor,Employed,45932.38,0.286,8488.09,6,0.411,11.04,4
+0,574.1,72,Male,Divorced,Master,Retired,35167.64,0.238,5191.33,8,0.923,14.34,1
+1,619.7,21,Female,Single,High School,Student,11219.71,0.38,4102.37,2,0.589,2.54,0
+0,680.3,30,Male,Divorced,Master,Employed,51923.87,0.418,11887.22,4,0.184,10.63,0
+0,712.8,30,Female,Single,High School,Self-employed,48327.18,0.162,12673.36,2,0.341,4.9,1
+0,684.7,46,Female,Married,Master,Employed,97377.25,0.282,25593.17,7,0.373,13.27,2
+0,744.4,30,Male,Single,High School,Employed,34123.79,0.33,10680.48,6,0.305,12.5,0
+1,646.7,28,Male,Single,High School,Employed,36443.98,0.181,8612.44,3,0.499,0.1,4
+0,731.7,65,Female,Married,Bachelor,Employed,66124.47,0.23,22948.83,6,0.189,5.33,2
+1,684.5,36,Female,Single,Master,Self-employed,57090.38,0.182,17905.34,5,0.673,5.91,1
+0,691.1,64,Female,Single,High School,Retired,49727.87,0.03,18842.26,7,0.594,7.69,2
+0,721.9,54,Male,Divorced,Master,Student,21424.25,0.248,2894.89,5,0.303,8.08,0
+0,706.4,25,Non-binary,Single,Bachelor,Employed,50439.64,0.27,9229.12,4,0.161,1.4,3
+0,713.0,36,Female,Married,PhD,Employed,84773.47,0.37,9825.78,5,0.3,13.34,1
+0,715.0,32,Female,Single,High School,Employed,57311.63,0.033,11883.02,4,0.35,8.76,1
+0,712.0,70,Female,Single,High School,Employed,47304.36,0.293,19430.42,8,0.519,2.24,0
+1,620.1,26,Male,Divorced,Bachelor,Employed,62184.98,0.184,8004.11,2,0.491,0.28,1
+0,726.2,67,Male,Married,Master,Employed,80431.88,0.272,29623.74,8,0.235,0.61,0
+0,743.1,59,Male,Single,PhD,Employed,63746.43,0.19,7559.01,5,0.21,6.45,0
+0,687.4,63,Female,Divorced,Master,Retired,35395.53,0.364,8233.62,9,0.281,4.41,0
+1,574.4,35,Male,Divorced,Bachelor,Student,14909.57,0.363,2373.18,6,0.601,12.04,0
+1,670.8,72,Male,Married,Bachelor,Retired,33222.83,0.321,13978.44,9,0.373,16.82,1
+0,693.4,69,Female,Married,High School,Retired,45668.96,0.32,17539.7,7,0.302,7.87,0
+1,672.0,43,Non-binary,Divorced,Master,Self-employed,50826.05,0.399,13384.2,7,0.416,2.71,3
+1,542.5,40,Female,Married,Master,Employed,78304.44,0.343,13200.21,8,0.943,21.8,1
+0,661.6,64,Female,Divorced,Master,Retired,37386.37,0.281,3520.61,8,0.439,12.29,0
+1,587.5,68,Female,Married,High School,Employed,52873.24,0.274,18631.58,9,0.854,2.69,0
+0,721.5,54,Male,Married,Bachelor,Employed,87852.59,0.13,15057.35,9,0.68,15.86,2
+0,687.9,27,Female,Divorced,Master,Employed,45543.25,0.21,4653.4,4,0.231,1.01,0
+0,575.0,31,Male,Married,Bachelor,Employed,57660.89,0.193,6228.83,2,0.753,4.07,0
+0,703.8,45,Male,Single,High School,Employed,32321.11,0.321,3634.62,9,0.422,27.5,0
+0,740.8,62,Male,Married,Master,Retired,52337.69,0.25,16626.61,8,0.118,5.74,2
+0,680.5,71,Female,Single,High School,Employed,36581.96,0.273,5043.44,9,0.538,15.85,0
+1,683.8,42,Female,Married,High School,Employed,49148.64,0.342,6092.47,5,0.303,3.03,1
+0,671.3,42,Male,Single,Bachelor,Employed,46673.61,0.255,4548.92,6,0.493,4.72,1
+0,724.6,45,Male,Married,High School,Employed,54627.84,0.315,10169.21,7,0.429,11.65,0
+1,664.5,18,Female,Single,High School,Employed,49473.19,0.168,9428.92,3,0.543,0.5,0
+1,666.1,74,Male,Married,PhD,Employed,105968.35,0.224,26552.1,9,0.697,4.52,0
+1,735.0,73,Male,Married,Bachelor,Self-employed,70533.51,0.228,10892.14,8,0.075,5.94,1
+1,681.8,52,Male,Single,High School,Employed,43753.61,0.247,19292.91,8,0.546,19.53,2
+0,668.0,34,Female,Divorced,Bachelor,Employed,50058.28,0.349,6353.42,4,0.182,5.91,1
+0,699.5,23,Female,Single,High School,Employed,47378.07,0.066,4973.86,4,0.5,1.19,4
+1,646.1,60,Male,Married,Master,Employed,71911.54,0.43,21504.19,7,0.407,7.47,2
+1,629.6,21,Male,Single,High School,Student,19549.12,0.22,4995.07,1,0.239,1.83,0
+1,552.0,63,Male,Married,High School,Employed,40432.26,0.315,13155.58,8,0.737,1.25,0
+1,485.4,47,Female,Married,High School,Unemployed,13770.23,0.438,2098.23,5,0.882,7.09,3
+1,598.7,24,Female,Single,High School,Student,10976.89,0.388,2732.87,3,0.258,0.1,0
+0,709.0,35,Male,Single,Master,Employed,78563.48,0.323,33905.92,5,0.232,4.05,2
+1,606.8,75,Female,Married,PhD,Retired,50868.01,0.194,10572.67,9,0.719,5.8,1
+1,641.8,58,Female,Married,Bachelor,Employed,71563.21,0.504,28640.78,9,0.593,25.12,0
+0,697.6,56,Male,Married,Master,Employed,55587.55,0.119,17616.85,9,0.405,8.45,3
+0,615.7,22,Female,Single,High School,Student,11553.74,0.368,5085.09,4,0.588,3.57,0
+1,597.8,59,Male,Married,Bachelor,Self-employed,53100.73,0.078,11970.52,9,0.8,19.08,0
+0,723.7,47,Male,Single,Bachelor,Employed,76676.03,0.204,23133.28,8,0.424,10.67,1
+1,570.7,29,Male,Married,High School,Self-employed,44864.41,0.264,18800.61,1,0.267,0.38,0
+1,600.7,53,Male,Married,Master,Self-employed,62166.95,0.47,14113.88,7,0.647,6.34,3
+1,516.9,57,Female,Divorced,High School,Employed,40072.2,0.324,14236.43,7,0.964,1.52,2
+0,685.6,40,Male,Single,High School,Employed,36835.32,0.146,14709.54,6,0.45,12.03,3
+0,722.0,75,Male,Married,Bachelor,Employed,72555.13,0.285,15050.6,9,0.092,2.9,0
+1,674.8,21,Male,Single,Bachelor,Student,18625.7,0.282,7089.96,4,0.229,0.4,0
+0,695.1,35,Female,Single,High School,Employed,58191.37,0.247,25167.77,3,0.266,1.61,1
+0,675.2,34,Female,Married,High School,Self-employed,40249.36,0.325,9258.45,6,0.385,16.5,0
+0,724.1,72,Female,Married,Bachelor,Retired,27843.91,0.194,5444.39,7,0.355,4.74,0
+1,570.7,50,Male,Married,Bachelor,Employed,84748.53,0.469,8152.32,8,0.674,16.75,3
+0,676.7,73,Male,Married,Bachelor,Retired,27378.82,0.356,10828.42,9,0.146,4.26,0
+0,766.7,42,Female,Married,High School,Employed,60799.57,0.238,9846.68,7,0.3,13.07,0
+0,682.2,38,Male,Single,Master,Employed,82331.09,0.424,17209.9,6,0.508,4.76,0
+1,598.6,44,Male,Single,High School,Unemployed,11002.83,0.393,1148.41,6,0.664,7.85,3
+1,577.5,38,Female,Married,High School,Employed,63813.57,0.489,27260.57,5,0.633,8.46,1
+1,687.4,51,Male,Single,Bachelor,Self-employed,85053.48,0.393,23419.32,7,0.376,2.24,0
+0,687.1,23,Female,Single,High School,Employed,50347.56,0.198,10808.4,3,0.566,2.92,2
+0,730.4,48,Female,Single,High School,Employed,39847.11,0.03,11311.71,6,0.258,3.98,2
+0,738.9,36,Female,Married,PhD,Employed,103206.58,0.197,34506.42,2,0.057,0.69,2
+0,711.7,39,Female,Divorced,Bachelor,Self-employed,53555.81,0.205,9630.64,5,0.187,4.8,0
+1,621.9,22,Male,Single,Bachelor,Student,19622.28,0.139,5332.28,3,0.436,4.5,0
+1,681.0,65,Female,Married,Bachelor,Employed,70545.53,0.434,27244.27,8,0.367,7.43,0
+0,664.5,62,Female,Single,Bachelor,Retired,45703.87,0.445,12705.96,9,0.526,15.61,1
+0,665.9,43,Male,Single,Bachelor,Employed,48758.58,0.226,9239.84,4,0.7,7.03,1
+0,673.5,31,Male,Single,High School,Employed,30989.27,0.451,9771.76,5,0.353,9.08,1
+1,684.1,40,Female,Divorced,High School,Employed,44449.9,0.353,19826.85,4,0.242,1.72,3
+0,644.7,70,Female,Married,Bachelor,Self-employed,69558.78,0.371,18385.35,9,0.582,8.63,0
+1,611.4,18,Female,Single,High School,Unemployed,13832.46,0.398,5302.25,2,0.333,0.5,0
+0,681.2,59,Female,Divorced,Bachelor,Employed,42700.23,0.345,18043.38,9,0.501,11.95,0
+1,647.9,62,Male,Single,Bachelor,Self-employed,67010.33,0.348,25992.03,6,0.576,6.71,1
+1,596.0,63,Female,Married,High School,Self-employed,63427.64,0.425,13378.36,8,0.669,5.4,0
+0,656.0,68,Female,Divorced,Bachelor,Employed,42727.81,0.456,12306.69,9,0.417,15.83,0
+1,512.5,33,Female,Single,Bachelor,Self-employed,49933.64,0.392,5866.69,5,0.751,13.57,0
+0,695.4,38,Female,Married,Master,Employed,56102.14,0.379,9241.6,7,0.038,14.47,2
+0,710.8,52,Male,Married,Bachelor,Employed,66263.98,0.26,18684.71,4,0.359,5.27,4
+0,720.6,40,Male,Married,Bachelor,Employed,46124.1,0.045,15032.43,4,0.194,1.98,2
+0,669.8,70,Male,Married,High School,Retired,19624.73,0.463,3666.94,9,0.123,30.0,0
+1,612.7,51,Male,Married,PhD,Unemployed,15311.96,0.382,3777.65,7,0.673,9.81,3
+0,707.1,40,Female,Married,PhD,Self-employed,73767.56,0.245,30303.35,4,0.503,1.57,1
+0,668.8,42,Male,Married,Master,Employed,69592.4,0.152,25766.29,6,0.546,15.73,0
+1,636.6,18,Female,Single,High School,Student,13494.69,0.271,4795.74,3,0.472,0.5,0
+1,601.1,51,Female,Married,High School,Unemployed,10272.89,0.561,2407.77,8,0.53,12.58,0
+0,777.3,47,Female,Married,Bachelor,Self-employed,34195.3,0.138,15343.77,9,0.191,25.12,3
+1,697.6,20,Female,Single,High School,Student,12681.22,0.307,2382.87,3,0.419,2.5,0
+1,621.9,21,Female,Single,High School,Employed,44619.89,0.404,7844.95,1,0.418,0.56,0
+0,635.1,23,Male,Single,High School,Employed,45453.15,0.276,5102.57,2,0.781,0.7,0
+1,653.2,28,Female,Single,High School,Unemployed,18678.16,0.31,5192.64,2,0.284,4.53,1
+1,624.2,74,Female,Married,Bachelor,Employed,58229.85,0.566,8871.08,9,0.499,6.75,2
+1,701.9,45,Female,Single,Master,Employed,108905.73,0.387,29298.65,5,0.148,5.36,1
+1,676.3,68,Male,Married,Master,Employed,92589.47,0.314,14657.76,8,0.519,11.56,0
+1,449.3,44,Male,Married,Bachelor,Unemployed,21599.68,0.544,6727.85,7,0.916,15.44,0
+0,743.4,48,Male,Married,High School,Student,11113.26,0.21,1335.98,6,0.227,11.07,0
+1,654.0,19,Female,Single,High School,Unemployed,16299.62,0.383,6377.43,3,0.531,1.24,0
+0,729.6,54,Male,Single,High School,Employed,37321.48,0.03,11985.5,6,0.222,9.83,0
+1,688.2,28,Male,Single,Master,Self-employed,73636.72,0.375,28504.98,4,0.4,10.5,2
+1,725.9,64,Male,Married,Bachelor,Retired,30018.58,0.252,3275.78,9,0.552,6.02,0
+0,685.1,70,Female,Married,Master,Employed,88469.09,0.376,27254.3,8,0.375,3.7,0
+0,690.4,43,Female,Single,Master,Employed,61715.94,0.306,19462.61,4,0.278,9.76,1
+1,637.0,62,Female,Married,High School,Retired,37987.04,0.389,4629.23,7,0.697,15.2,2
+1,573.0,48,Male,Divorced,High School,Employed,61463.88,0.072,17802.82,5,0.86,7.27,3
+0,646.2,72,Male,Married,Bachelor,Employed,40283.88,0.3,6856.63,9,0.651,12.04,0
+1,549.2,51,Male,Married,High School,Employed,51173.67,0.257,14519.2,5,0.848,7.82,2
+1,606.7,27,Female,Single,Bachelor,Unemployed,27252.25,0.365,3378.99,1,0.914,1.7,3
+1,597.8,31,Male,Married,Master,Employed,60763.1,0.294,5138.13,3,0.751,7.09,2
+1,702.3,31,Male,Single,High School,Employed,37125.31,0.498,16366.2,5,0.148,13.5,2
+1,634.0,28,Female,Married,Bachelor,Employed,49967.98,0.305,11864.35,2,0.418,2.21,1
+0,673.4,23,Male,Single,Bachelor,Employed,80561.7,0.262,19068.71,2,0.465,1.7,1
+1,579.2,25,Male,Married,High School,Unemployed,12410.29,0.426,1314.35,1,0.916,2.65,3
+1,617.2,43,Female,Married,High School,Employed,48081.36,0.3,4547.75,5,0.634,14.69,0
+1,507.5,50,Female,Single,Bachelor,Unemployed,13848.13,0.448,3451.62,8,0.784,9.56,2
+0,612.9,27,Male,Single,Master,Employed,63742.26,0.35,17339.69,1,0.643,2.08,2
+1,650.9,25,Male,Single,High School,Employed,36527.71,0.441,15910.26,3,0.775,2.55,0
+0,699.7,42,Female,Married,Bachelor,Employed,53985.49,0.187,17587.95,7,0.598,6.74,0
+0,718.0,63,Male,Married,PhD,Retired,53437.11,0.219,23196.91,7,0.187,0.78,0
+0,733.2,49,Female,Married,Master,Self-employed,70218.33,0.439,22024.38,9,0.082,24.15,2
+0,750.4,42,Female,Married,Master,Employed,82492.63,0.252,22620.1,5,0.342,9.7,2
+0,777.4,63,Male,Married,Bachelor,Self-employed,40757.34,0.258,13977.2,9,0.064,19.0,0
+1,657.5,55,Female,Married,Bachelor,Unemployed,13203.63,0.298,5317.73,9,0.47,16.65,1
+1,599.9,25,Female,Single,High School,Employed,48270.68,0.186,8166.85,1,0.143,1.24,0
+1,609.7,51,Female,Married,Master,Employed,52802.36,0.388,8760.0,5,0.551,6.26,0
+0,715.8,50,Female,Married,Bachelor,Employed,59462.29,0.107,8408.74,6,0.19,15.27,2
+0,763.7,38,Female,Single,High School,Employed,63363.41,0.277,5538.57,6,0.258,19.22,1
+0,655.0,37,Non-binary,Married,Bachelor,Student,18884.52,0.26,2553.37,5,0.614,13.05,0
+0,685.5,45,Female,Married,Bachelor,Employed,83477.98,0.275,26939.01,7,0.527,8.82,4
+1,571.7,26,Female,Single,High School,Employed,43570.1,0.431,16742.02,1,0.358,0.67,3
+0,688.3,29,Female,Married,Master,Employed,59538.08,0.318,19561.71,3,0.35,0.39,0
+0,683.9,54,Female,Married,Bachelor,Employed,57036.14,0.124,7387.73,8,0.645,2.29,0
+0,598.5,25,Female,Single,High School,Employed,33801.02,0.314,6096.27,2,0.365,0.68,0
+0,713.9,27,Male,Married,High School,Unemployed,10000.0,0.299,4218.81,4,0.551,2.68,2
+1,607.6,50,Female,Married,Bachelor,Employed,52328.1,0.408,8078.73,5,0.638,2.46,0
+1,654.5,21,Male,Single,High School,Student,18227.74,0.311,5093.72,4,0.528,0.93,0
+0,653.2,19,Female,Single,High School,Employed,55569.39,0.268,10241.92,3,0.345,0.52,0
+1,536.3,72,Male,Divorced,High School,Retired,28886.46,0.46,8242.79,9,0.774,30.0,0
+0,595.4,28,Male,Single,Master,Self-employed,48734.51,0.285,15302.19,1,0.096,0.26,1
+1,603.2,19,Female,Single,Bachelor,Employed,46925.66,0.216,10419.27,1,0.322,1.5,0
+1,640.1,33,Non-binary,Married,High School,Employed,61008.31,0.279,24595.93,2,0.62,3.32,4
+0,639.1,19,Female,Single,Bachelor,Employed,47611.93,0.503,21331.14,3,0.179,0.68,0
+0,683.6,73,Female,Single,Bachelor,Employed,28874.96,0.212,4708.6,9,0.493,1.93,0
+1,599.3,24,Female,Single,High School,Employed,44887.54,0.442,9746.22,1,0.47,1.69,3
+1,685.5,41,Female,Married,Bachelor,Employed,51212.94,0.263,22697.59,5,0.114,9.37,2
+0,688.4,50,Male,Married,High School,Employed,43720.68,0.289,17827.01,5,0.582,17.93,4
+0,687.0,43,Male,Single,Bachelor,Self-employed,53888.67,0.044,19278.76,5,0.468,3.28,0
+1,629.1,20,Male,Single,High School,Student,10000.0,0.511,2630.53,2,0.406,1.4,0
+0,633.3,67,Female,Married,High School,Retired,33126.53,0.471,9122.32,9,0.627,21.35,1
+1,689.9,34,Male,Single,Bachelor,Employed,62278.83,0.354,16687.55,4,0.072,5.78,2
+1,555.8,54,Male,Married,Bachelor,Employed,40273.85,0.345,5151.52,7,0.838,13.74,2
+0,613.7,40,Male,Married,Bachelor,Employed,42707.49,0.257,16516.57,7,0.692,22.5,4
+1,586.7,58,Male,Single,Bachelor,Employed,55732.99,0.325,17135.09,7,0.753,7.65,1
+0,696.4,71,Female,Married,Master,Employed,76027.29,0.363,22274.36,9,0.622,14.61,2
+1,639.1,63,Female,Divorced,Bachelor,Retired,46046.2,0.275,20304.91,9,0.59,5.89,0
+0,561.7,44,Male,Married,High School,Employed,49788.58,0.309,7915.37,6,0.764,4.74,0
+1,580.3,62,Male,Divorced,Bachelor,Retired,45239.95,0.255,16315.35,7,0.743,10.21,4
+0,605.5,39,Female,Married,High School,Unemployed,13179.74,0.428,1142.08,6,0.464,9.02,2
+1,682.5,35,Male,Married,Bachelor,Self-employed,60049.98,0.03,23826.27,7,0.662,16.21,0
+1,528.2,75,Male,Married,Master,Employed,65589.73,0.357,27236.15,9,0.893,7.98,0
+0,742.0,66,Male,Married,Bachelor,Retired,33269.03,0.238,12981.99,8,0.101,7.16,0
+0,733.0,75,Male,Single,Master,Retired,42145.93,0.275,17970.77,9,0.385,8.64,0
+0,697.6,62,Female,Divorced,Master,Retired,40176.03,0.051,15064.1,9,0.622,7.78,0
+0,671.4,69,Female,Married,PhD,Retired,48875.55,0.362,10332.38,7,0.503,0.86,0
+0,706.7,41,Female,Single,High School,Self-employed,54479.53,0.186,5957.03,5,0.455,2.92,3
+0,739.8,63,Male,Married,Bachelor,Employed,35998.65,0.12,8061.18,8,0.24,9.98,0
+0,674.7,33,Non-binary,Single,Master,Self-employed,55241.19,0.236,12103.48,2,0.585,3.86,1
+0,690.3,52,Male,Divorced,Bachelor,Employed,45670.66,0.215,15504.76,4,0.293,5.7,4
+0,549.6,51,Male,Divorced,High School,Employed,42140.94,0.179,3463.25,5,0.716,4.59,1
+1,694.4,69,Male,Married,High School,Employed,49190.84,0.357,17410.65,9,0.06,8.16,0
+0,631.1,59,Male,Divorced,Bachelor,Employed,60223.23,0.2,23258.79,6,0.625,5.47,0
+0,650.3,19,Male,Single,High School,Employed,61191.86,0.311,19695.25,2,0.408,1.5,0
+0,743.0,31,Female,Single,Master,Employed,59191.14,0.202,7711.58,7,0.335,11.28,2
+0,698.8,35,Female,Married,Master,Unemployed,16861.74,0.167,2024.26,4,0.307,11.94,2
+1,549.2,22,Female,Single,Bachelor,Employed,46856.18,0.319,12887.99,3,0.751,4.5,0
+0,718.0,51,Female,Single,High School,Employed,44825.75,0.292,8036.82,5,0.178,7.08,1
+0,698.5,39,Male,Single,Bachelor,Employed,57244.2,0.23,6014.07,4,0.498,1.54,2
+0,643.7,44,Male,Single,Bachelor,Employed,50218.16,0.258,4431.37,3,0.662,1.77,0
+0,613.0,27,Male,Married,PhD,Student,16702.99,0.488,7466.93,3,0.277,4.7,0
+1,579.2,37,Male,Divorced,High School,Unemployed,12382.16,0.372,4312.2,3,0.539,5.94,0
+1,626.4,62,Female,Married,Bachelor,Unemployed,10988.32,0.432,1438.29,5,0.348,3.54,2
+0,705.1,74,Non-binary,Married,High School,Retired,26947.38,0.291,8987.7,9,0.309,19.77,0
+1,653.5,33,Male,Divorced,PhD,Employed,95019.65,0.298,33667.64,2,0.537,4.15,0
+0,698.4,74,Male,Married,Bachelor,Employed,50580.94,0.33,10452.1,6,0.282,4.07,0
+0,598.5,23,Male,Married,Bachelor,Student,13839.73,0.075,2964.01,2,0.511,0.1,0
+1,586.3,60,Male,Single,Bachelor,Employed,68167.89,0.275,19276.89,8,0.785,10.41,0
+1,641.7,47,Female,Married,Master,Unemployed,17453.19,0.559,3387.01,7,0.353,10.22,0
+1,520.8,67,Female,Married,Master,Unemployed,19529.69,0.35,2755.76,6,0.808,3.13,0
+0,713.8,23,Male,Single,High School,Student,15498.71,0.211,1541.2,4,0.661,2.66,0
+0,715.5,43,Male,Single,Master,Employed,58339.66,0.19,25483.39,7,0.494,7.9,0
+0,653.4,27,Female,Married,Bachelor,Employed,37833.29,0.202,12793.15,3,0.32,0.28,4
+0,692.3,40,Female,Single,Bachelor,Employed,63046.42,0.25,23984.95,6,0.512,7.7,1
+0,702.3,34,Female,Married,Master,Employed,59173.2,0.296,8531.48,4,0.304,4.51,4
+1,501.0,69,Male,Married,Bachelor,Retired,48016.29,0.467,15347.2,7,0.894,4.58,0
+0,648.3,49,Male,Married,PhD,Employed,101630.5,0.267,35000.0,7,0.689,10.47,1
+0,741.7,53,Male,Married,Master,Employed,76946.88,0.216,31456.87,8,0.481,15.43,1
+0,668.5,72,Male,Single,High School,Retired,44156.8,0.243,19257.94,8,0.63,2.46,0
+0,681.0,63,Female,Married,Bachelor,Retired,40728.71,0.368,11713.72,7,0.25,6.62,0
+0,715.4,40,Female,Married,High School,Employed,56449.23,0.134,10128.52,6,0.045,6.91,0
+1,663.2,31,Female,Single,Bachelor,Self-employed,59972.04,0.325,4867.55,4,0.416,1.8,1
+0,604.6,33,Female,Married,High School,Employed,47419.76,0.088,19826.62,5,0.755,7.31,0
+0,643.0,63,Female,Divorced,High School,Employed,47194.63,0.239,16990.42,8,0.702,12.5,1
+0,686.2,62,Female,Married,High School,Employed,60217.34,0.317,19192.74,6,0.289,5.04,1
+0,689.6,43,Female,Divorced,High School,Employed,52030.58,0.264,5998.64,5,0.509,9.62,4
+1,606.4,53,Male,Single,Master,Self-employed,70485.64,0.157,9009.0,7,0.807,9.45,0
+0,695.8,33,Female,Single,Bachelor,Student,16914.7,0.276,4125.55,4,0.388,9.73,0
+1,577.3,65,Female,Married,Bachelor,Employed,64036.1,0.302,21320.89,9,0.805,13.31,0
+0,665.4,28,Non-binary,Married,High School,Employed,36158.8,0.453,7580.69,3,0.277,1.39,1
+1,681.5,44,Female,Married,Master,Employed,63609.57,0.519,26251.72,7,0.257,8.46,0
+0,708.7,27,Female,Married,Bachelor,Employed,48098.27,0.303,21280.32,4,0.432,1.02,1
+0,717.2,57,Male,Married,Master,Self-employed,69544.74,0.271,14844.49,7,0.503,2.3,2
+0,625.8,73,Female,Single,Bachelor,Employed,62560.45,0.204,17219.76,9,0.741,14.33,0
+0,732.1,53,Male,Married,Master,Employed,57986.73,0.278,13834.25,8,0.237,21.73,1
+1,729.0,59,Male,Single,High School,Self-employed,62090.46,0.257,22601.17,9,0.196,25.58,1
+0,681.2,39,Female,Single,Bachelor,Employed,63019.87,0.315,17640.01,5,0.083,3.48,3
+0,717.3,32,Female,Single,Master,Employed,50761.06,0.105,17155.86,7,0.078,14.5,2
+0,702.4,45,Female,Married,High School,Self-employed,69464.93,0.231,17413.44,8,0.521,15.39,2
+0,675.9,44,Female,Married,High School,Employed,43585.67,0.277,14715.44,4,0.56,3.45,1
+0,674.1,48,Male,Married,Master,Employed,51627.35,0.36,6031.92,9,0.5,30.0,4
+0,654.8,74,Male,Married,Bachelor,Retired,52203.02,0.423,10350.73,7,0.506,2.33,1
+1,523.8,41,Female,Divorced,Bachelor,Unemployed,19727.88,0.499,8159.44,5,0.815,19.15,2
+1,706.6,62,Male,Married,High School,Retired,21732.47,0.316,6457.99,8,0.314,15.25,3
+0,721.9,63,Female,Married,Bachelor,Employed,99685.81,0.277,10476.05,6,0.303,0.98,1
+0,732.3,68,Male,Divorced,High School,Employed,51529.08,0.165,12242.52,8,0.265,5.36,0
+0,700.2,65,Female,Divorced,Bachelor,Retired,37681.52,0.224,3035.35,9,0.345,11.27,1
+0,686.2,43,Female,Married,High School,Employed,44130.56,0.344,18447.94,9,0.638,11.96,4
+0,745.1,40,Male,Married,High School,Employed,60987.65,0.21,6154.68,6,0.192,22.5,2
+0,681.0,56,Female,Married,High School,Employed,41482.1,0.353,4122.71,8,0.406,11.47,0
+0,685.7,73,Male,Single,Master,Self-employed,47616.79,0.34,6726.16,9,0.433,19.18,0
+1,570.2,27,Female,Single,Bachelor,Employed,55868.85,0.354,24391.11,4,0.879,3.55,0
+0,663.4,27,Male,Divorced,Master,Employed,65887.54,0.384,19003.85,3,0.393,3.24,0
+0,619.6,38,Female,Single,Bachelor,Student,21067.24,0.097,7967.03,4,0.631,3.12,0
+0,677.1,75,Female,Single,Bachelor,Retired,37166.78,0.371,6683.16,9,0.64,1.48,0
+0,677.5,47,Male,Single,Bachelor,Employed,60677.02,0.386,9827.31,6,0.121,14.19,2
+1,646.1,58,Male,Married,High School,Employed,69650.33,0.338,23829.21,9,0.595,5.62,0
+1,676.8,37,Female,Single,Master,Self-employed,69772.63,0.434,22501.35,5,0.16,8.11,1
+1,656.3,39,Female,Single,Bachelor,Employed,50143.37,0.109,22064.61,3,0.441,6.23,3
+0,676.5,22,Female,Single,Master,Employed,70677.88,0.372,7726.28,3,0.505,3.36,0
+1,578.6,27,Female,Single,Bachelor,Unemployed,18992.11,0.512,1685.94,3,0.609,9.5,1
+1,570.6,50,Male,Divorced,PhD,Unemployed,15765.1,0.275,3680.22,6,0.781,14.22,0
+0,731.3,68,Female,Divorced,Master,Retired,45778.1,0.326,6527.94,9,0.277,9.43,0
+0,752.6,32,Female,Married,Bachelor,Self-employed,42676.0,0.326,10112.48,4,0.29,6.34,0
+0,721.1,58,Male,Divorced,High School,Self-employed,37323.18,0.264,16021.82,9,0.275,7.65,3
+1,643.0,27,Male,Divorced,Master,Employed,49486.29,0.351,6747.23,3,0.626,1.75,2
+0,734.9,69,Male,Single,PhD,Retired,56222.11,0.269,17981.91,8,0.28,6.45,0
+0,631.7,40,Female,Married,High School,Self-employed,40435.76,0.489,6745.73,3,0.347,9.32,4
+1,614.6,46,Female,Married,High School,Unemployed,10344.58,0.378,3609.49,8,0.509,6.55,2
+0,670.2,29,Female,Single,Master,Employed,58027.26,0.299,8016.79,4,0.618,0.5,4
+0,705.6,38,Female,Single,Bachelor,Employed,52028.86,0.379,16892.7,6,0.283,15.3,1
+0,722.1,70,Male,Married,Master,Employed,76374.39,0.158,30746.82,8,0.585,3.46,2
+1,710.9,74,Male,Single,High School,Retired,35657.54,0.198,12787.86,9,0.17,25.46,0
+1,596.0,71,Female,Divorced,High School,Employed,48318.78,0.553,14339.61,9,0.538,5.31,0
+0,599.7,33,Male,Single,Master,Employed,63866.47,0.191,22033.09,7,0.769,15.5,2
+1,629.5,45,Male,Married,High School,Employed,38545.62,0.424,16239.64,6,0.523,5.97,0
+1,613.9,48,Female,Divorced,Bachelor,Employed,60701.78,0.618,17021.9,7,0.522,14.27,4
+1,640.8,66,Female,Married,PhD,Retired,53332.77,0.438,11497.95,9,0.545,10.49,0
+1,608.7,21,Male,Single,High School,Student,17652.78,0.305,3331.72,2,0.726,1.29,0
+0,662.3,71,Female,Divorced,High School,Retired,42253.76,0.356,11558.97,9,0.594,13.51,0
+0,637.1,19,Male,Single,High School,Student,13910.33,0.19,1610.59,2,0.392,1.42,0
+0,745.8,73,Female,Single,High School,Retired,33505.25,0.295,10091.54,9,0.286,8.6,0
+0,640.4,19,Male,Single,High School,Employed,51368.51,0.351,14446.15,3,0.755,1.5,0
+1,554.7,39,Female,Single,High School,Employed,72471.43,0.18,10541.56,8,0.947,16.69,1
+0,756.9,42,Female,Married,PhD,Employed,68295.67,0.224,9337.51,6,0.205,6.45,2
+0,672.9,26,Female,Married,High School,Employed,47855.76,0.238,6860.02,1,0.417,2.34,0
+1,550.8,55,Male,Married,High School,Employed,43671.49,0.403,8774.04,6,0.779,6.28,1
+0,676.0,57,Male,Married,Bachelor,Employed,38689.08,0.215,5129.08,9,0.61,3.82,1
+0,667.7,67,Male,Divorced,High School,Retired,18276.24,0.066,4695.69,9,0.535,30.0,0
+1,649.8,36,Female,Single,Master,Unemployed,17945.96,0.297,4972.3,5,0.347,12.54,0
+1,617.3,54,Female,Married,Bachelor,Employed,54798.93,0.513,5364.21,6,0.522,6.15,2
+0,673.2,32,Non-binary,Married,Bachelor,Employed,48440.6,0.154,9085.68,6,0.647,12.49,0
+0,638.4,37,Female,Single,High School,Employed,54918.85,0.351,12184.6,4,0.485,19.5,0
+1,549.8,62,Female,Married,High School,Retired,28849.27,0.272,12557.2,9,0.793,5.87,4
+1,531.6,55,Male,Married,Master,Employed,52753.69,0.198,11947.01,4,0.95,0.96,0
+1,456.8,35,Male,Divorced,Master,Self-employed,64796.66,0.474,19448.33,4,0.895,1.07,0
+1,729.6,32,Female,Divorced,High School,Unemployed,10000.0,0.146,2672.05,5,0.322,6.79,0
+1,680.7,50,Male,Married,High School,Employed,48989.63,0.185,21334.96,9,0.613,24.52,4
+1,651.7,36,Male,Married,High School,Employed,59820.47,0.193,23029.52,4,0.644,2.95,1
+0,610.8,19,Female,Single,High School,Student,11565.23,0.388,1226.77,2,0.589,1.5,0
+1,612.2,46,Female,Married,Bachelor,Employed,61208.17,0.501,20341.2,7,0.572,10.91,0
+1,747.9,58,Non-binary,Married,Bachelor,Employed,83918.54,0.16,29377.88,7,0.04,6.02,0
+0,648.2,40,Female,Divorced,High School,Employed,62991.96,0.312,8784.82,5,0.563,1.49,4
+1,670.4,34,Male,Single,High School,Employed,40668.29,0.29,15042.09,3,0.421,2.71,0
+0,699.3,44,Female,Single,Bachelor,Self-employed,43865.82,0.293,12827.1,5,0.284,14.86,1
+1,660.7,57,Female,Married,Bachelor,Employed,53029.83,0.471,20189.0,6,0.34,2.5,2
+1,512.7,39,Male,Single,Bachelor,Employed,46285.69,0.4,12076.81,7,0.879,8.66,1
+0,732.6,52,Female,Divorced,Master,Self-employed,66068.35,0.283,15941.35,8,0.191,22.27,0
+0,727.8,40,Male,Single,High School,Employed,35200.84,0.299,3905.05,7,0.291,8.3,1
+0,679.3,24,Female,Single,High School,Employed,47982.7,0.396,7066.39,3,0.2,1.06,2
+1,557.1,72,Male,Single,Master,Retired,32005.85,0.473,7563.06,9,0.736,22.53,0
+0,730.8,31,Female,Single,High School,Employed,62249.97,0.276,26047.78,5,0.115,2.55,1
+1,661.4,46,Male,Married,Bachelor,Employed,59687.68,0.424,8982.44,5,0.415,0.81,2
+1,520.5,67,Female,Single,High School,Retired,35871.49,0.361,15866.74,6,0.801,3.96,2
+1,567.2,51,Female,Married,Bachelor,Unemployed,13694.13,0.495,3908.52,6,0.505,5.52,2
+1,642.7,48,Male,Married,High School,Employed,43144.22,0.424,13289.22,9,0.635,13.68,1
+1,717.9,46,Male,Married,Bachelor,Self-employed,57404.74,0.386,15809.85,4,0.237,13.35,2
+0,691.7,33,Male,Married,High School,Employed,32239.95,0.252,12691.92,2,0.27,12.65,2
+0,615.6,25,Female,Single,Master,Employed,42074.03,0.264,4040.34,1,0.608,1.24,1
+0,696.4,74,Male,Married,High School,Employed,36698.06,0.424,11727.76,9,0.21,13.5,2
+0,695.7,56,Female,Divorced,High School,Employed,60176.17,0.388,20511.91,5,0.363,2.81,2
+0,686.8,29,Female,Single,Master,Employed,78893.5,0.274,23940.63,2,0.356,3.05,2
+0,758.5,46,Female,Married,Master,Employed,75408.54,0.232,29881.24,9,0.02,12.51,3
+1,712.0,50,Male,Married,Master,Unemployed,15107.04,0.182,5418.93,6,0.24,15.07,2
+0,737.9,52,Female,Married,Bachelor,Employed,75088.51,0.271,13468.76,9,0.517,30.0,1
+1,559.6,26,Male,Single,High School,Employed,40718.34,0.287,6399.46,3,0.698,3.54,2
+1,651.1,59,Male,Divorced,Master,Employed,72089.08,0.311,27216.8,8,0.543,3.12,1
+0,740.2,51,Female,Married,Bachelor,Employed,51760.32,0.288,5581.26,5,0.255,7.52,1
+1,633.1,53,Female,Married,Master,Employed,50068.45,0.103,12043.87,8,0.7,8.33,3
+1,684.5,72,Male,Married,High School,Retired,25349.3,0.254,4627.88,7,0.668,2.83,0
+0,724.9,48,Female,Divorced,High School,Employed,45929.94,0.229,20331.98,5,0.327,11.67,2
+0,688.6,59,Male,Divorced,Bachelor,Self-employed,76059.55,0.309,16331.73,6,0.39,4.03,0
+0,754.2,38,Female,Married,Bachelor,Employed,45351.1,0.123,18112.36,6,0.099,10.33,0
+1,640.1,37,Female,Married,Bachelor,Employed,54750.18,0.391,8390.38,4,0.253,11.0,1
+1,573.6,21,Female,Single,High School,Student,12002.92,0.426,4161.05,2,0.801,0.33,0
+1,615.1,24,Male,Single,Bachelor,Employed,47257.37,0.185,4249.04,2,0.486,1.03,2
+0,737.5,57,Female,Single,Bachelor,Employed,49285.28,0.267,17846.88,9,0.128,13.81,0
+1,678.9,48,Non-binary,Married,Bachelor,Employed,58259.5,0.302,7409.04,5,0.573,11.66,2
+1,625.6,25,Female,Single,Master,Employed,38612.25,0.491,17160.92,4,0.271,7.5,4
+1,572.8,21,Female,Single,High School,Student,16125.62,0.364,2323.15,2,0.507,0.1,0
+1,623.5,44,Male,Married,Master,Employed,51395.5,0.332,11617.12,6,0.552,7.25,0
+0,720.9,65,Female,Married,Bachelor,Retired,27958.2,0.302,5546.93,8,0.281,6.56,0
+0,753.7,72,Male,Married,Bachelor,Employed,53233.33,0.279,23025.82,9,0.269,5.28,0
+1,612.1,20,Female,Single,High School,Student,14368.06,0.377,2268.25,2,0.505,1.5,0
+1,524.3,42,Female,Married,Bachelor,Employed,49958.53,0.332,10667.38,5,0.784,3.69,0
+0,728.7,66,Female,Married,High School,Employed,47477.16,0.233,9213.48,9,0.192,17.47,0
+1,686.3,71,Female,Married,Bachelor,Employed,57240.5,0.259,12354.16,9,0.686,14.17,1
+0,722.0,57,Male,Divorced,PhD,Employed,74353.61,0.185,9215.39,8,0.295,4.39,0
+0,730.7,35,Non-binary,Divorced,Bachelor,Employed,63568.2,0.122,14562.84,5,0.31,11.74,2
+0,745.7,69,Male,Single,Bachelor,Retired,31824.08,0.232,13447.51,9,0.376,16.78,0
+1,678.7,58,Male,Married,High School,Employed,41931.56,0.327,16742.52,9,0.671,19.76,0
+1,561.8,24,Male,Single,High School,Employed,74348.24,0.366,18584.32,1,0.534,0.78,0
+0,702.7,61,Male,Married,Bachelor,Employed,72475.25,0.138,5835.64,5,0.306,1.28,2
+1,659.2,58,Female,Married,Master,Employed,84117.74,0.398,21636.09,5,0.539,5.69,4
+1,612.9,74,Female,Divorced,Bachelor,Retired,28619.03,0.327,9074.64,6,0.676,2.27,1
+1,516.0,65,Female,Married,Bachelor,Retired,47967.89,0.248,16033.39,8,0.806,2.97,0
+0,590.8,49,Female,Married,Bachelor,Employed,49322.86,0.03,4171.97,6,0.735,0.1,2
+0,734.5,68,Female,Divorced,Bachelor,Employed,39960.03,0.162,5026.17,8,0.134,8.66,0
+0,728.8,54,Male,Married,Bachelor,Employed,39990.52,0.318,6880.74,8,0.121,18.66,2
+1,598.8,31,Female,Married,High School,Unemployed,11585.51,0.465,4082.88,4,0.386,11.03,1
+1,630.4,35,Male,Single,High School,Unemployed,12781.51,0.408,2763.65,6,0.601,17.5,1
+0,712.2,62,Non-binary,Single,Bachelor,Retired,31216.03,0.266,4701.36,9,0.212,11.82,1
+1,660.9,27,Male,Single,Bachelor,Employed,84100.38,0.175,29932.66,3,0.543,0.14,0
+1,587.2,25,Male,Married,High School,Employed,37481.61,0.288,4382.01,1,0.374,0.82,1
+0,669.2,26,Female,Divorced,Master,Employed,58226.6,0.379,22166.6,4,0.89,0.93,2
+0,745.7,74,Female,Single,Bachelor,Retired,41713.52,0.249,9179.87,9,0.149,7.23,0
+0,662.4,21,Female,Single,High School,Employed,38450.8,0.361,13220.32,3,0.419,3.5,0
+1,681.7,48,Female,Married,Bachelor,Employed,55520.69,0.169,13862.66,9,0.697,30.0,1
+0,608.3,59,Female,Divorced,High School,Employed,42994.2,0.236,4770.37,7,0.797,1.35,2
+1,516.4,22,Male,Single,Bachelor,Unemployed,20479.47,0.184,5196.52,1,0.783,3.93,1
+1,604.1,44,Male,Divorced,Master,Self-employed,47003.74,0.442,7221.2,3,0.413,6.33,0
+0,718.3,62,Female,Single,Bachelor,Retired,33451.4,0.371,14980.3,7,0.103,13.56,4
+0,660.5,57,Male,Married,High School,Employed,57697.48,0.495,9582.42,8,0.288,5.26,2
+0,592.3,19,Male,Single,High School,Student,18200.51,0.221,5948.41,1,0.767,1.5,0
+0,716.2,58,Female,Married,Bachelor,Employed,82066.76,0.244,35000.0,8,0.469,15.27,3
+1,689.1,35,Male,Married,Bachelor,Employed,43631.49,0.18,18706.91,6,0.294,17.5,2
+0,672.3,42,Male,Married,Bachelor,Self-employed,76917.47,0.15,29901.85,5,0.624,14.74,1
+0,696.1,68,Male,Married,Master,Employed,92730.41,0.225,12377.85,8,0.392,6.98,2
+0,654.4,48,Male,Married,Bachelor,Employed,61097.84,0.456,10168.9,8,0.491,12.6,2
+0,713.7,45,Female,Married,High School,Employed,50764.62,0.32,15039.46,7,0.303,5.95,2
+1,690.4,29,Female,Single,Bachelor,Employed,58003.1,0.224,5697.99,3,0.129,0.69,2
+1,587.8,65,Male,Married,High School,Employed,52584.06,0.253,12730.89,7,0.8,10.15,0
+1,655.9,46,Female,Single,Master,Employed,72234.95,0.212,15315.51,6,0.685,10.21,3
+0,701.0,43,Female,Single,High School,Employed,45540.62,0.395,6270.26,2,0.271,1.94,2
+0,702.7,60,Female,Married,Bachelor,Employed,61883.09,0.358,14856.15,7,0.366,11.73,2
+0,730.6,63,Male,Married,High School,Retired,29435.84,0.29,10885.44,9,0.221,19.83,0
+0,676.2,51,Female,Married,Bachelor,Employed,72926.7,0.286,19683.44,6,0.543,8.5,1
+1,663.1,40,Male,Married,Master,Employed,63409.29,0.497,20770.67,3,0.105,1.53,2
+0,621.9,20,Male,Single,High School,Employed,42687.4,0.143,11847.69,1,0.301,1.93,0
+1,585.3,75,Male,Married,Bachelor,Unemployed,11405.42,0.324,3318.7,9,0.714,22.95,1
+1,553.7,67,Male,Married,High School,Employed,38024.15,0.399,10829.66,8,0.85,13.83,1
+0,702.5,55,Male,Divorced,High School,Employed,49713.07,0.094,6392.57,9,0.513,15.35,1
+1,710.7,67,Male,Married,PhD,Self-employed,64120.49,0.366,20998.63,8,0.321,7.79,0
+1,674.1,53,Male,Single,Bachelor,Self-employed,44628.69,0.2,11808.41,9,0.571,8.8,2
+1,618.6,36,Male,Single,Master,Unemployed,16401.47,0.222,1669.28,7,0.568,18.5,0
+1,516.5,40,Male,Divorced,Bachelor,Employed,62524.7,0.28,25552.08,4,0.93,1.39,1
+1,734.5,46,Male,Divorced,Bachelor,Self-employed,56149.34,0.212,12762.06,6,0.303,5.7,2
+1,697.6,38,Male,Single,High School,Self-employed,36179.75,0.316,12085.54,5,0.403,12.68,0
+1,628.3,47,Female,Married,Master,Self-employed,92094.84,0.498,32946.22,9,0.572,26.96,1
+1,567.9,49,Male,Married,Bachelor,Employed,51342.01,0.189,18601.67,5,0.822,5.43,3
+1,550.9,66,Female,Married,Master,Retired,48627.96,0.228,9680.59,7,0.86,2.77,0
+0,734.2,40,Female,Married,Master,Self-employed,60959.21,0.171,19623.67,4,0.155,13.82,1
+0,646.3,29,Male,Married,High School,Self-employed,51445.82,0.146,7846.66,2,0.121,1.16,0
+1,597.8,29,Male,Single,Bachelor,Employed,40292.98,0.082,15967.18,5,0.729,11.5,2
+0,715.6,33,Female,Single,Master,Employed,81948.68,0.265,20111.58,3,0.304,0.66,0
