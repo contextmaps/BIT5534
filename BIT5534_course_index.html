@@ -588,10 +588,10 @@ const LECTURES = [
   { id: "lec6_2",  week: 6,  phase: 3, mode: "consolidation", tool: true, title: "Regression Trees",
     business: "The same split search pointed at GPA, each cut scored by the squared error it removes, and Tuesday's tool extended to grow regression trees." },
   // Week 7
-  { id: "lec7_1",  week: 7,  phase: 3, mode: "exploratory",  tool: true, title: "Neural Networks: Layers, Activations, and What the Network Is Fitting",
-    business: "Building a small network and finding the point where added capacity stops improving anything that matters." },
-  { id: "lec7_2",  week: 7,  phase: 3, mode: "consolidation", title: "Training and Regularization: Diagnosing a Network That Learned the Wrong Thing",
-    business: "Learning curves, early stopping, and telling a bad model apart from a bad dataset." },
+  { id: "lec7_1",  week: 7,  phase: 3, mode: "exploratory",  tool: true, title: "Neural Networks, Building and Validating a Network",
+    business: "The neuron, four activations and the parameter count, then networks fitted from random starts on 804 used cars and judged on a validation column made from a seed." },
+  { id: "lec7_2",  week: 7,  phase: 3, mode: "consolidation", title: "Neural Networks, Settings, Overfitting and Classification",
+    business: "Overfitting on a curve from one to eighty neurons, starts drawn as climbers, a settings grid read as ranges, a holdout against five folds, and MedPrice read from a confusion table." },
   // Week 8
   { id: "lec8_1",  week: 8,  phase: 3, mode: "exploratory",  tool: true, title: "Support Vector Machines: Margins, Kernels, and Where the Boundary Comes From",
     business: "Why a handful of observations decide the boundary, and what changing the kernel really changes." },
@@ -708,6 +708,10 @@ const HOMEWORK = [
     business: "A default tree on 1,000 loan applicants read as lending rules, then grown again without the two bureau columns to decide whether the bank can drop its subscription." },
   { id: "hw5_2", week: 6, part: 2, title: "Regression Trees on Credit Scores, One Model or Two",
     business: "A credit score tree read as advice to applicants, then grown on 161 young thin file applicants whose scores turn on different columns." },
+  { id: "hw6_1", week: 7, part: 1, title: "Neural Networks on Delivery Minutes, in the City and in a New Town",
+    business: "A straight line and two networks on 1,000 delivery times, the order hour that only a network can use, then the same fits on the first 150 orders of a new town." },
+  { id: "hw6_2", week: 7, part: 2, title: "Neural Networks on Late Deliveries, the Settings Grid and Target Leakage",
+    business: "Late deliveries on a settings grid with each kind of error priced in dollars, then a customer rating that makes the model nearly perfect and arrives too late to use." },
 ];
 
 /* Weeks with no homework show what the outline says is due instead. */
@@ -765,6 +769,8 @@ const HOMEWORK_LINKS = {
   "hw4_2":    "https://canvas.vt.edu/courses/233475/assignments/2867033",
   "hw5_1":    "https://canvas.vt.edu/courses/233475/assignments/2870238",
   "hw5_2":    "https://canvas.vt.edu/courses/233475/assignments/2870239",
+  "hw6_1":    "https://canvas.vt.edu/courses/233475/assignments/2874065",
+  "hw6_2":    "https://canvas.vt.edu/courses/233475/assignments/2874066",
 };
 
 /* ============ Render ============ */
