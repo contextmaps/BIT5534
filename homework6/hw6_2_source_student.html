@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neural Networks on Late Deliveries, the Settings Grid and Target Leakage</title>
+<style>
+:root {
+  --c-text:#1a1a1a; --c-muted:#4a4a4a;
+  --c-meta-bg:#f4f6f9; --c-meta-border:#d0d7e2;
+  --c-obj-bg:#eef4fb; --c-obj-accent:#1a5da0;
+  --c-ctx-bg:#fffbf0; --c-ctx-border:#e8d8a0; --c-ctx-label:#5c4400;
+  --c-ctx-s-bg:#f0f7ff; --c-ctx-s-border:#a0c8f0; --c-ctx-s-label:#1a4a80;
+  --c-nar-bg:#f9f9f9; --c-nar-border:#bbb;
+  --c-dis-bg:#f0f4ff; --c-dis-border:#8090cc; --c-dis-label:#1e2e80;
+  --c-sys-bg:#f3f0ff; --c-sys-border:#9080d0; --c-sys-label:#3a2090;
+  --c-scr-bg:#fff8e8; --c-scr-border:#d0a030; --c-scr-label:#6b4a00;
+  --c-s-bg:#f0faf4; --c-s-border:#70c090; --c-s-id:#14552f;
+  --c-r-bg:#fff8f0; --c-r-border:#d0a040; --c-r-id:#6b3e00;
+  --c-mk-bg:#f0f0ff; --c-mk-border:#8080c8; --c-mk-id:#2a2a80;
+  --c-m-bg:#f0f8ff; --c-m-border:#70a8d0; --c-m-id:#0a4a70;
+  --c-mc-bg:#f8f8ff; --c-mc-border:#a0a0d0;
+  --c-btn:#14552f; --c-btn-r:#6b3e00; --c-btn-mk:#2a2a80;
+  --c-btn-mo:#0a4a70; --c-btn-mc:#3a3a6a;
+  --c-q-bg:#f0fafd; --c-q-border:#70b8d0; --c-q-id:#0a5070;
+  --c-btn-q:#0a5070;
+  --c-o-bg:#fef6f0; --c-o-border:#e89870; --c-o-id:#a04510;
+  --c-btn-o:#a04510;
+  --radius:8px; --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --page:1100px;
+}
+/* Two layers. The wrapper takes the width Canvas gives it, up to --page, so it
+   never overflows a narrow frame and never needs a per-machine number. Everything
+   inside fills the block it sits in. */
+.plib-wrap{font-family:var(--font);color:var(--c-text);max-width:min(var(--page),100% - 2rem);margin:0 auto;padding:1rem 0}
+/* Every block spans the page so their left and right edges line up down the
+   column, and the text inside fills the block.
+
+   There is no reading column. D-032 put prose in a 720px column inside a 1100px
+   wrapper, and on 2026-09-02 the instructor read the rendered result and rejected
+   it: every text block stopped two thirds of the way across its own card and
+   stranded the rest, and a bordered box that stops short of the card it sits in
+   reads as broken rather than as typography. The wrapper's own
+   min(1100px, 100% - 2rem) is now the only bound, so a line never exceeds about
+   1055px. The cost is real and is worth stating. A long paragraph at 1055px reads
+   worse than the same paragraph at 800, and what pays for it is the writing
+   standard's rule on paragraph length, which now carries the load the column used
+   to carry. Recorded as D-043, amending D-032. */
+.plib-wrap > *{max-width:100%}
+.plib-submit{margin:2rem 0 1rem;padding:1.4rem 1.6rem;border-radius:var(--radius);background:var(--c-obj-bg);border:2px solid var(--c-obj-accent)}
+.plib-submit-title{font-size:13px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--c-obj-accent)}
+.plib-submit-p{margin:.5rem 0 1rem;font-size:15px;line-height:1.65}
+.plib-submit-btn{display:inline-block;background:var(--c-obj-accent);color:#fff;text-decoration:none;font-size:16px;font-weight:600;padding:.7rem 1.4rem;border-radius:var(--radius)}
+.plib-submit-btn:hover{filter:brightness(1.12)}
+.plib-submit-btn:focus{outline:3px solid var(--c-obj-accent);outline-offset:3px}
+.plib-submit-note{margin-top:.55rem;font-size:13px;color:var(--c-muted)}
+.plib-material{margin:1.6rem 0;padding:1.2rem 1.4rem;border-radius:var(--radius);background:var(--c-s-bg);border:1px solid var(--c-s-border)}
+.plib-material-tag{font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--c-s-id)}
+.plib-material-title{margin-top:.3rem;font-size:17px;font-weight:600;color:var(--c-text)}
+.plib-material-box{margin:.9rem 0 1.1rem;padding:.9rem 1rem;max-height:22rem;overflow:auto;background:#fff;border:1px solid var(--c-s-border);border-radius:6px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;color:var(--c-text)}
+.plib-material-box:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+.plib-material-btns{display:flex;flex-wrap:wrap;gap:.6rem}
+.plib-material-copies{margin:.9rem 0 0;display:flex;flex-wrap:wrap;gap:.8rem}
+.plib-copyrow{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;padding:.55rem .7rem;background:#fff;border:1px solid var(--c-s-border);border-radius:6px}
+.plib-copyrow-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-s-id)}
+.plib-copyrow-code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;color:var(--c-text)}
+.plib-copy-btn-row{padding:.3rem .6rem;font-size:12px}
+.plib-material-btn{display:inline-block;background:var(--c-s-id);color:#fff;text-decoration:none;font-size:15px;font-weight:600;padding:.6rem 1.2rem;border-radius:var(--radius)}
+.plib-material-btn:hover{filter:brightness(1.25)}
+.plib-material-btn:focus{outline:3px solid var(--c-s-id);outline-offset:3px}
+.plib-material-note{margin-top:.55rem;font-size:13px;color:var(--c-muted)}
+.plib-section{margin:2.25rem 0 1.1rem;padding-top:.9rem;border-top:3px solid var(--c-obj-accent)}
+.plib-section-n{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--c-muted)}
+.plib-section-t{font-size:23px;font-weight:700;letter-spacing:.04em;color:var(--c-obj-accent);margin-top:2px}
+.plib-wrap > .plib-section:first-child{margin-top:.5rem}
+.plib-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;margin-bottom:1.25rem}
+.plib-tile{background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);padding:.9rem;display:flex;flex-direction:column}
+.plib-tile img{width:100%;height:auto;border-radius:4px;background:#faf7f8}
+.plib-tile figure,.plib-tile{margin:0}
+/* A drawing narrower than its grid cell is centred in it. render_tiles caps the
+   wrapper at the SVG's own viewBox width so a 400px card is not blown up to the
+   full row, and without this the drawing sat against the left edge with the slack
+   stranded on the right, which is the same fault D-043 removed from the prose. */
+.plib-tile-svg{width:100%;margin-left:auto;margin-right:auto}
+.plib-tile-svg svg{width:100%;height:auto;display:block}
+.plib-tile-caption{font-size:13px;line-height:1.55;color:var(--c-text);margin-top:auto;padding-top:.6rem}
+.plib-meta{background:var(--c-meta-bg);border:1px solid var(--c-meta-border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1.5rem}
+.plib-meta-course{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--c-muted);margin-bottom:4px}
+.plib-meta-title{font-size:20px;font-weight:600;margin:4px 0 8px}
+.plib-meta-week{font-size:13px;color:var(--c-muted);margin-bottom:2px}
+.plib-meta-details{font-size:12px;color:var(--c-muted);margin-top:8px}
+.plib-objectives{background:var(--c-obj-bg);border-left:4px solid var(--c-obj-accent);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.5rem}
+.plib-objectives-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-obj-accent);font-weight:700;margin-bottom:8px}
+.plib-objectives-intro{margin:0 0 8px;font-size:14px;line-height:1.6;font-style:italic;color:var(--c-muted)}
+.plib-objectives-list{margin:0;padding-left:1.25rem}
+.plib-objectives-list li{margin-bottom:6px;font-size:14px;line-height:1.6}
+.plib-context{background:var(--c-ctx-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-context-student{background:var(--c-ctx-s-bg);border-color:var(--c-ctx-s-border)}
+.plib-context-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-ctx-label);font-weight:700;margin-bottom:8px}
+.plib-context-student .plib-context-label{color:var(--c-ctx-s-label)}
+.plib-context-body p{margin:4px 0;font-size:13px;line-height:1.6;color:var(--c-muted)}
+.plib-formula{margin:1rem 0;padding:1rem 1.25rem;background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);text-align:center}
+.plib-formula-body{overflow-x:auto;color:var(--c-text);padding:2px 0}
+.plib-formula-svg{max-width:100%;height:auto}
+.plib-formula-caption{margin-top:.85rem;font-size:13px;line-height:1.6;color:var(--c-muted);text-align:left}
+.plib-formula-missing{font-size:13px;color:var(--c-muted);text-align:left}
+.plib-formula-note{font-size:12px;margin-top:6px}
+.plib-formula-source{margin-top:.85rem;text-align:left}
+.plib-formula-source summary{font-size:12px;color:var(--c-muted);cursor:pointer}
+.plib-formula-latex{margin:6px 0 0;padding:8px 10px;background:var(--c-ctx-bg);border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.5;white-space:pre-wrap;color:var(--c-muted)}
+.plib-context-pre{margin:8px 0;padding:10px 12px;background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.55;color:var(--c-text);white-space:pre;overflow-x:auto}
+.plib-context-bullet{font-size:13px;color:var(--c-muted);padding-left:1rem;position:relative;margin-bottom:3px}
+.plib-context-bullet::before{content:"\2022";position:absolute;left:0}
+.plib-script{background:var(--c-scr-bg);border:1px solid var(--c-scr-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-script-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-scr-label);font-weight:700;margin-bottom:10px}
+.plib-script-list{margin:0;padding-left:1.25rem}
+.plib-script-list li{font-size:14px;line-height:1.6;margin-bottom:8px}
+.plib-script-time{font-weight:700;color:var(--c-scr-label);font-family:monospace;background:rgba(208,160,48,.15);padding:1px 6px;border-radius:3px}
+.plib-narration{background:var(--c-nar-bg);border-left:3px solid var(--c-nar-border);padding:.9rem 1.25rem;margin-bottom:1rem;border-radius:0 var(--radius) var(--radius) 0}
+.plib-narration p{margin:0 0 8px;font-size:14px;line-height:1.7}
+.plib-narration p:last-child{margin-bottom:0}
+.plib-narration-list{margin:4px 0;padding-left:1.25rem}
+.plib-narration-list li{font-size:14px;line-height:1.6;margin-bottom:4px}
+.plib-discussion{background:var(--c-dis-bg);border:1px solid var(--c-dis-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-slide{margin:0 0 1.25rem;text-align:center}
+.plib-slide-img{max-width:100%;height:auto;border:1px solid var(--c-dis-border);border-radius:var(--radius);box-shadow:0 1px 4px rgba(0,0,0,.08);background:#faf7f8;min-height:60px}
+.plib-slide-caption{font-size:13px;color:var(--c-muted);margin-top:.4rem}
+.plib-slide-script{margin-top:.6rem;text-align:left;font-size:13px;color:var(--c-muted)}
+.plib-slide-script summary{cursor:pointer;font-weight:600}
+.plib-slide-script-body{white-space:pre-wrap;background:rgba(0,0,0,.04);border-radius:var(--radius);padding:.6rem .8rem;margin-top:.4rem}
+.plib-discussion-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-dis-label);font-weight:700;margin-bottom:8px}
+.plib-discussion-intro{margin:0 0 8px;font-size:14px;line-height:1.6;font-style:italic;color:var(--c-dis-label)}
+.plib-discussion-list{margin:0;padding-left:1.25rem}
+.plib-discussion-list li{font-size:14px;line-height:1.6;margin-bottom:6px;color:var(--c-dis-label)}
+.plib-scenarios{margin-bottom:1rem}
+.plib-scenarios-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:#630031;font-weight:700;margin-bottom:8px}
+.plib-scenario-card{background:var(--c-ctx-s-bg);border:1px solid var(--c-ctx-s-border);border-left:4px solid #630031;border-radius:var(--radius);padding:.7rem 1rem;margin-bottom:.6rem}
+.plib-scenario-title{font-weight:700;font-size:14px;color:#630031;margin-bottom:4px}
+.plib-scenario-body{margin:0 0 4px;font-size:14px;line-height:1.6}
+.plib-scenario-line{font-size:13px;line-height:1.55;margin:2px 0 0;padding-left:1rem;position:relative}
+.plib-scenario-line::before{content:"›";position:absolute;left:.2rem;color:#CF4420;font-weight:700}
+.plib-system{background:var(--c-sys-bg);border:1px solid var(--c-sys-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-system-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-sys-label);font-weight:700;margin-bottom:8px}
+.plib-system-note{font-weight:400;text-transform:none;letter-spacing:0;font-style:italic}
+.plib-prompt-s-ref{opacity:.92;border-style:dashed}
+.plib-ref-note{font-size:12px;color:var(--c-muted);font-style:italic;margin-top:6px}
+.plib-prompt-text{display:none}
+.plib-prompt-display{font-size:14px;line-height:1.7;white-space:pre-wrap;background:rgba(255,255,255,.6);border-radius:4px;padding:.6rem .8rem;margin-bottom:10px}
+.plib-prompt-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.plib-prompt-id{font-size:12px;font-weight:700;font-family:monospace;padding:2px 7px;border-radius:4px}
+.plib-prompt-type-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-muted);font-weight:600}
+.plib-prompt-s{background:var(--c-s-bg);border:1px solid var(--c-s-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-prompt-s .plib-prompt-id{color:var(--c-s-id);background:rgba(20,85,47,.1)}
+.plib-prompt-r{background:var(--c-r-bg);border:1px solid var(--c-r-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-r-id{color:var(--c-r-id)!important;background:rgba(107,62,0,.1)!important}
+.plib-reflect-label{color:var(--c-r-id)!important}
+.plib-reflect-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-prompt-marker{background:var(--c-mk-bg);border:2px solid var(--c-mk-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-marker-id{color:var(--c-mk-id)!important;background:rgba(42,42,128,.1)!important}
+.plib-marker-label{color:var(--c-mk-id)!important}
+.plib-marker-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-marker-display{border-left:3px solid var(--c-mk-border);max-height:18em;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;box-shadow:inset 0 -10px 10px -10px rgba(0,0,0,.18)}
+.plib-prompt-m{background:var(--c-m-bg);border:1.5px solid var(--c-m-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:.5rem}
+.plib-m-id{color:var(--c-m-id)!important;background:rgba(10,74,112,.1)!important}
+.plib-m-label{color:var(--c-m-id)!important}
+.plib-m-badge{font-size:11px;background:var(--c-m-id);color:#fff;padding:2px 8px;border-radius:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.plib-m-instructions{background:rgba(255,255,255,.7);border-radius:6px;padding:10px 14px;margin-bottom:12px}
+.plib-m-instructions-label{font-size:12px;font-weight:700;color:var(--c-m-id);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.plib-m-steps{margin:0;padding-left:1.25rem}
+.plib-m-steps li{font-size:13px;line-height:1.6;margin-bottom:4px}
+.plib-m-seed{background:rgba(255,255,255,.5);border-left:3px solid var(--c-m-border);padding:8px 12px;margin-bottom:12px;border-radius:0 4px 4px 0}
+.plib-m-seed-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-m-id);margin-bottom:4px}
+.plib-m-seed-text{font-size:13px;line-height:1.6;white-space:pre-wrap}
+.plib-prompt-m-close{background:var(--c-mc-bg);border:1px dashed var(--c-mc-border);border-radius:var(--radius);padding:.75rem 1.25rem;margin-bottom:1.25rem}
+.plib-m-close-label{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.plib-m-close-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-copy-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;font-size:13px;font-weight:500;border:1.5px solid var(--c-btn);background:transparent;color:var(--c-btn);border-radius:6px;cursor:pointer;transition:background .15s,color .15s}
+.plib-copy-btn:hover{background:var(--c-btn);color:#fff}
+.plib-copy-btn:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+.plib-copy-btn.copied{background:#333;color:#fff;border-color:#333}
+.plib-copy-btn-reflect{border-color:var(--c-btn-r);color:var(--c-btn-r)}
+.plib-copy-btn-reflect:hover{background:var(--c-btn-r);color:#fff}
+.plib-copy-btn-marker{border-color:var(--c-btn-mk);color:var(--c-btn-mk)}
+.plib-copy-btn-marker:hover{background:var(--c-btn-mk);color:#fff}
+.plib-copy-btn-m-open{border-color:var(--c-btn-mo);color:var(--c-btn-mo)}
+.plib-copy-btn-m-open:hover{background:var(--c-btn-mo);color:#fff}
+.plib-copy-btn-m-close{border-color:var(--c-btn-mc);color:var(--c-btn-mc)}
+.plib-copy-btn-m-close:hover{background:var(--c-btn-mc);color:#fff}
+.plib-textarea{display:block;width:100%;box-sizing:border-box;padding:10px 12px;font-size:14px;font-family:var(--font);line-height:1.6;border:1.5px solid var(--c-r-border);border-radius:6px;margin-bottom:10px;background:#fff;color:var(--c-text);resize:vertical;min-height:120px}
+.plib-prompt-input{min-height:0;margin:10px 0 6px}
+.plib-textarea:focus{outline:3px solid #005fcc;outline-offset:2px;border-color:#005fcc}
+.plib-counter{font-size:13px;color:var(--c-muted);margin-bottom:8px;font-variant-numeric:tabular-nums}
+.plib-counter.at-limit{color:#b00020;font-weight:600}
+.plib-counter .plib-count-ok{color:#14552f}
+.plib-counter .plib-count-warn{color:#8a4a00}
+.plib-counter .plib-count-bad{color:#b00020;font-weight:600}
+.plib-counter-min{font-size:12px;color:var(--c-muted);margin-left:8px}
+.plib-warn{font-size:13px;color:#b00020;font-weight:600;margin-bottom:8px;min-height:20px}
+.plib-prompt-q{background:var(--c-q-bg);border:1px solid var(--c-q-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-q-id{color:var(--c-q-id)!important;background:rgba(10,80,112,.1)!important}
+.plib-q-label{color:var(--c-q-id)!important}
+.plib-q-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-q-items{display:flex;flex-direction:column;gap:14px;margin-bottom:10px}
+.plib-q-item{background:rgba(255,255,255,.6);border-radius:6px;padding:10px 12px}
+.plib-q-question{font-size:14px;font-weight:500;display:block;margin-bottom:8px;line-height:1.5}
+.plib-q-item-num{font-family:monospace;font-weight:700;color:var(--c-q-id);margin-right:6px}
+.plib-q-cap-note{font-weight:400;font-style:italic;color:var(--c-muted);margin-left:6px;font-size:13px}
+.plib-q-select{width:100%;padding:6px 8px;font-size:14px;border:1px solid var(--c-q-border);border-radius:4px;background:#fff}
+.plib-q-likert{display:flex;flex-wrap:wrap;gap:10px}
+.plib-q-likert-opt{display:flex;align-items:center;gap:5px;font-size:14px;cursor:pointer}
+.plib-q-checkboxes{display:flex;flex-direction:column;gap:6px}
+.plib-q-check-opt{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.plib-q-check-opt input[disabled] + span{opacity:.5}
+.plib-copy-btn-q{border-color:var(--c-btn-q);color:var(--c-btn-q)}
+.plib-copy-btn-q:hover{background:var(--c-btn-q);color:#fff}
+.plib-prompt-o{background:var(--c-o-bg);border:1px solid var(--c-o-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-o-id{color:var(--c-o-id)!important;background:rgba(160,69,16,.1)!important}
+.plib-o-label{color:var(--c-o-id)!important}
+.plib-o-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-o-question{font-size:14px;font-weight:500;margin-bottom:10px;line-height:1.5}
+.plib-o-list{list-style:none;padding:0;margin:0 0 10px 0;display:flex;flex-direction:column;gap:6px}
+.plib-o-item{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.7);border-radius:6px;padding:8px 10px;font-size:14px}
+.plib-o-rank{font-family:monospace;font-weight:700;color:var(--c-o-id);min-width:1.5em;text-align:right}
+.plib-o-item-text{flex:1}
+.plib-o-controls{display:flex;flex-direction:column;gap:2px}
+.plib-o-arrow{background:transparent;border:1px solid var(--c-o-border);color:var(--c-o-id);width:28px;height:22px;font-size:14px;line-height:1;cursor:pointer;border-radius:3px;padding:0}
+.plib-o-arrow:hover:not([disabled]){background:var(--c-o-border);color:#fff}
+.plib-o-arrow[disabled]{opacity:.25;cursor:default}
+.plib-copy-btn-o{border-color:var(--c-btn-o);color:var(--c-btn-o)}
+.plib-copy-btn-o:hover{background:var(--c-btn-o);color:#fff}
+.plib-demo-badge{font-size:11px;color:var(--c-muted);background:rgba(0,0,0,.05);padding:2px 8px;border-radius:3px;font-style:italic;margin-left:8px}
+.plib-ai-badge{font-size:11px;padding:2px 8px;border-radius:3px;font-family:monospace;margin-left:8px}
+.plib-ai-respond{background:#e8f5e8;color:#2c5e2c}
+.plib-ai-acknowledge{background:#fef0e6;color:#8c4a1a}
+.plib-ai-archive{background:#f0e8f5;color:#5a2c8c}
+</style>
+</head>
+<body>
+<a href="#main-content" class="plib-skip-link">Skip to main content</a>
+<style>.plib-skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;}.plib-skip-link:focus{position:static;width:auto;height:auto;background:#005fcc;color:#fff;padding:8px 16px;font-size:14px;font-weight:600;border-radius:4px;text-decoration:none;display:inline-block;margin:8px;}</style>
+<main id="main-content">
+<div class="plib-wrap">
+<div class="plib-meta">
+  <div class="plib-meta-course">BIT 5534 Applied Business Intelligence and Analytics</div>
+  <div class="plib-meta-week">Week 7 · Homework 6 · Part 2 of 2</div>
+  <div class="plib-meta-title">Neural Networks on Late Deliveries, the Settings Grid and Target Leakage</div>
+  <div class="plib-meta-details"><span><strong>Platform:</strong> Hokie AI (conversation) + local Python (run)</span>&ensp;·&ensp;<span><strong>Submission:</strong> Thread exported as a .zip and uploaded to Canvas</span></div>
+</div>
+
+<div class="plib-objectives">
+  <div class="plib-objectives-label">Learning Objectives</div>
+  <p class="plib-objectives-intro">By the end of this part, students will be able to:</p>
+  <ol class="plib-objectives-list">
+    <li>Fit a neural network to a category target and read the misclassification rate and the confusion table.</li>
+    <li>Compare one identity neuron, which is logistic regression fitted inside the network tool, with networks of tanh neurons, by misclassification and by the kind of error each model makes.</li>
+    <li>Change one setting at a time, the size, the activation, the layers and the starts, and read the results as ranges.</li>
+    <li>Put a cost on each kind of error and compare models by what the errors cost the business.</li>
+    <li>Recognize target leakage when a column known only after the outcome makes a model nearly perfect.</li>
+    <li>Decide which columns a model may use by when each column becomes known, and defend the decision against a challenge.</li>
+  </ol>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 1 of 4</div><div class="plib-section-t">ORIENTATION</div></div>
+
+<div class="plib-context plib-context-student">
+  <div class="plib-context-label">&#128203; Note for Students</div>
+  <div class="plib-context-body">
+    <p>Part 2 of homework 6 runs in its own Hokie AI thread, separate from part 1, and holds two cases. Case two uses the setting you choose in case one, so do the cases in order and do not start a new conversation between them.</p>
+    <p>Make a folder for part 2 inside the HomeWork folder.</p>
+    <pre class="plib-context-pre">BIT5534/
+    HomeWork/
+        hw6_2/</pre>
+    <p>Put both data files and the script in there.</p>
+  </div>
+</div>
+
+<div class="plib-narration">
+  <p>Part 2 stays with Hokie Eats, the made up delivery platform from part 1. The target is now Late, 1 when an order took more than the 30 minutes promised at checkout and 0 when the order arrived on time. In the city file 219 of the 1,000 orders were late. Late is a category, so the tool reports misclassification, the share of orders the model puts in the wrong class, and a confusion table, the way Thursday's lecture did for MedPrice. Late is built from Minutes, so in part 2 Minutes stays out of the inputs.</p>
+  <p>The seven inputs are the same as in part 1. Orders_in_Queue and Items describe the kitchen, Distance_km, Hour, Weekend and Rain describe the road, and Courier_Months describes the courier, and all seven are known the moment the customer presses Order.</p>
+  <p>One identity neuron with a category target is logistic regression, the model from earlier in the semester. The single neuron forms a straight line score from the seven inputs, and the tool turns the score into a probability for each class, which is what logistic regression does. In part 1 the same single neuron with a number target was linear regression. So nn_explorer.py fits logistic regression and the networks on the same folds, and the comparison is fair.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-6">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Two boxes joined by AND, two models you already know inside the network tool. A number target with one identity neuron is linear regression, as in part 1. A category target with one identity neuron is logistic regression, the baseline of part 2."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 190" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="190" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Two models you already know, inside the network tool</text><rect x="21" y="46" width="455" height="122" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">A number target, one identity neuron</text><text x="37" y="122" font-size="14" fill="#6b6b6b">linear regression, as in part 1</text><text x="500" y="112" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="455" height="122" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">A category target, one identity neuron</text><text x="540" y="122" font-size="14" fill="#6b6b6b">logistic regression, the baseline of part 2</text></svg></div>
+    <figcaption class="plib-tile-caption">Every network in part 2 is compared with logistic regression fitted in the same tool on the same folds.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>Hokie Eats wants to flag an order at checkout when the order is likely to be late, so that the app can show a longer promise. A flag can be wrong in two ways, and the two ways cost different amounts. When the model says on time and the order arrives late, Hokie Eats gives the customer a 5 dollar credit for the broken promise. When the model says late and the order would have arrived on time, the app shows a promise ten minutes longer, and a longer promise loses about one order in five to a competitor, at about 15 dollars of margin per lost order, which is 3 dollars per false flag on average.</p>
+  <p>Case one fits networks to Late on the city file and changes one setting at a time, the way Thursday's settings grid did, then prices the errors.</p>
+  <p>Case two opens a richer export from the operations team, with two columns the city file did not have. One of the two makes the model nearly perfect, and you decide whether Hokie Eats may use the column.</p>
+  <p>Part 2 is worth 100 points, split evenly. Case one is worth 50, 35 for the exchange in the M block and 15 for the reflection. Case two is worth 50, on the same split. Pasting a prompt earns nothing, because it is not work.</p>
+  <p>Work alone. Your notes and both week 7 lectures are open to you. Do not ask Hokie AI to write your reflections. Take as long as you need.</p>
+</div>
+
+<div class="plib-material" id="plib-material-8">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The city file, for case one</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="delivery_orders.csv" download="delivery_orders.csv" target="_blank" rel="noopener noreferrer">Download delivery_orders.csv</a>
+  </div>
+  <div class="plib-material-note">The same 1,000 orders as part 1, 9 columns. Minutes, Late, Hour, Weekend, Distance_km, Rain, Items, Orders_in_Queue, Courier_Months. Save the file into your hw6_2 folder.</div>
+</div>
+
+<div class="plib-material" id="plib-material-9">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The operations export, for case two</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="delivery_orders_ops.csv" download="delivery_orders_ops.csv" target="_blank" rel="noopener noreferrer">Download delivery_orders_ops.csv</a>
+  </div>
+  <div class="plib-material-note">The same 1,000 orders with two more columns at the end, Pickup_Wait_Minutes and Customer_Rating. Save the file into your hw6_2 folder.</div>
+</div>
+
+<div class="plib-material" id="plib-material-10">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The tool for both cases</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="nn_explorer.py" download="nn_explorer.py" target="_blank" rel="noopener noreferrer">Download nn_explorer.py</a>
+  </div>
+  <div class="plib-material-note">The neural network explorer from both week 7 lectures and part 1, unchanged. If the browser opens the code as a page of text, right click the link and use Save link as.</div>
+</div>
+
+<div class="plib-narration">
+  <p>As in part 1, a seed repeats a fit exactly only on the machine that ran the fit, so your tanh and relu figures will differ from a classmate's in the second or third digit, and the pattern holds. The checks on this page use the identity neuron, the row counts and the parameter counts, which agree on every machine.</p>
+  <p>Hokie AI never sees your fits. Everything Hokie AI knows about your networks is what you write in your prompts, so every number, every confusion table and every cost in the thread has to come from you. A prompt that reports what you saw, says what you make of the result and asks to be challenged gives Hokie AI something to test.</p>
+  <p>Every fit in this part uses five folds made with seed 123. If Hokie AI suggests another way to validate, tell Hokie AI that the validation is part of the design of the homework.</p>
+  <p>Paste the block below into a new Hokie AI thread and wait for the acknowledgment. Do not write anything else in that message. Everything after this goes in the same thread.</p>
+</div>
+
+<div class="plib-prompt-marker" role="region" aria-label="Session Opener">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-marker-id">TH6.2</span>
+    <span class="plib-prompt-type-label plib-marker-label">Session Opener</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-marker-instruction">Copy this block and paste it into Hokie AI to begin your session.</p>
+  <div class="plib-prompt-display plib-marker-display">You are an analysis partner for BIT 5534 Applied Business Intelligence and Analytics, a graduate course at Virginia Tech. The student holds graduate standing, has some statistics background, and is working through a homework case on their own with no instructor present. Speak to them as a capable adult. Be direct, say when something is uncertain or contested, and do not pad your answers. When a student pushes back on something you said, take the challenge seriously and do not concede immediately to be agreeable. When they ask about your reasoning, say what you assumed and what you cannot settle for them because it depends on something you were not told.
+
+In this homework the student fits neural networks to a category target in a local tool that you cannot see, on a file they have not attached. Everything you know about their fits is what they write. Never invent a misclassification rate, a confusion table count, a parameter count or any other number from their fits. When you need one, ask for it. Your job is to test their reading of the results, their arithmetic and the business conclusions they draw, to say where a conclusion goes further than the numbers support, and to argue the other side when they ask you to. Every fit in this homework uses five folds and fixed settings the page gives. Treat that as the design of the exercise. Do not propose other validation schemes, other model families or more data, and judge the student's conclusions by what their fits support. The student's network figures can differ from another machine's in the second or third digit, because a seed repeats a fit only on one machine, so read differences of a point or two as noise.
+---
+**AI Interaction Protocol**
+
+In this session, you will receive blocks of content with the
+following structural pattern:
+
+```
+### &lt;BlockID&gt;
+----------
+&lt;content&gt;
+----------
+###
+```
+
+Some blocks include an interaction-mode directive on a separate
+line inside the dashed envelope:
+
+```
+### &lt;BlockID&gt;
+----------
+[ai_interaction=&lt;mode&gt;]
+&lt;content&gt;
+----------
+###
+```
+
+Three modes determine your response:
+
+  - **respond**: Engage substantively with the block content.
+    Treat it as a prompt, question, or task that wants your
+    analytical response. Default for S blocks (prompts) and X
+    blocks (free exploration).
+
+  - **acknowledge**: Confirm receipt with one brief sentence
+    naming the block ID. Do not analyze, comment on, or expand on
+    the content. The student is filing the block for the record,
+    not asking for engagement. Default for T blocks (this opener),
+    R blocks (reflections), M CLOSE blocks (closing markers), Q
+    blocks (structured selections), and O blocks (ordering
+    selections).
+
+  - **archive**: Respond with only the block ID and nothing else.
+    Used for batched archival pastes where even brief
+    acknowledgment would clutter the thread.
+
+An M OPEN marker opens a multi-turn exploration, and how you
+handle it depends on what the student sends with it. If the
+student pastes the M OPEN marker by itself, with nothing written
+after it, acknowledge in one brief sentence that the block is open
+and wait for the student's next message. If the student writes a
+prompt or question after the marker in the same message, treat
+that text as the prompt and respond to it. Always acknowledge an
+M CLOSE marker.
+
+If a block has no explicit `[ai_interaction=...]` directive, apply
+the block-type default per the list above.
+
+This protocol applies for the remainder of this session.
+---</div>
+  <div class="plib-prompt-text" id="text_prompt_12" data-copy="### TH6.2&#10;----------&#10;You are an analysis partner for BIT 5534 Applied Business Intelligence and Analytics, a graduate course at Virginia Tech. The student holds graduate standing, has some statistics background, and is working through a homework case on their own with no instructor present. Speak to them as a capable adult. Be direct, say when something is uncertain or contested, and do not pad your answers. When a student pushes back on something you said, take the challenge seriously and do not concede immediately to be agreeable. When they ask about your reasoning, say what you assumed and what you cannot settle for them because it depends on something you were not told.&#10;&#10;In this homework the student fits neural networks to a category target in a local tool that you cannot see, on a file they have not attached. Everything you know about their fits is what they write. Never invent a misclassification rate, a confusion table count, a parameter count or any other number from their fits. When you need one, ask for it. Your job is to test their reading of the results, their arithmetic and the business conclusions they draw, to say where a conclusion goes further than the numbers support, and to argue the other side when they ask you to. Every fit in this homework uses five folds and fixed settings the page gives. Treat that as the design of the exercise. Do not propose other validation schemes, other model families or more data, and judge the student's conclusions by what their fits support. The student's network figures can differ from another machine's in the second or third digit, because a seed repeats a fit only on one machine, so read differences of a point or two as noise.&#10;---&#10;**AI Interaction Protocol**&#10;&#10;In this session, you will receive blocks of content with the&#10;following structural pattern:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Some blocks include an interaction-mode directive on a separate&#10;line inside the dashed envelope:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;[ai_interaction=&lt;mode&gt;]&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Three modes determine your response:&#10;&#10;  - **respond**: Engage substantively with the block content.&#10;    Treat it as a prompt, question, or task that wants your&#10;    analytical response. Default for S blocks (prompts) and X&#10;    blocks (free exploration).&#10;&#10;  - **acknowledge**: Confirm receipt with one brief sentence&#10;    naming the block ID. Do not analyze, comment on, or expand on&#10;    the content. The student is filing the block for the record,&#10;    not asking for engagement. Default for T blocks (this opener),&#10;    R blocks (reflections), M CLOSE blocks (closing markers), Q&#10;    blocks (structured selections), and O blocks (ordering&#10;    selections).&#10;&#10;  - **archive**: Respond with only the block ID and nothing else.&#10;    Used for batched archival pastes where even brief&#10;    acknowledgment would clutter the thread.&#10;&#10;An M OPEN marker opens a multi-turn exploration, and how you&#10;handle it depends on what the student sends with it. If the&#10;student pastes the M OPEN marker by itself, with nothing written&#10;after it, acknowledge in one brief sentence that the block is open&#10;and wait for the student's next message. If the student writes a&#10;prompt or question after the marker in the same message, treat&#10;that text as the prompt and respond to it. Always acknowledge an&#10;M CLOSE marker.&#10;&#10;If a block has no explicit `[ai_interaction=...]` directive, apply&#10;the block-type default per the list above.&#10;&#10;This protocol applies for the remainder of this session.&#10;---&#10;----------&#10;###"></div>
+  <button class="plib-copy-btn plib-copy-btn-marker" onclick="copyPrompt('text_prompt_12', this)"
+          aria-label="Copy session opener to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy session opener
+  </button>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 2 of 4</div><div class="plib-section-t">CASE ONE</div></div>
+
+<div class="plib-narration">
+  <p>Case one is worth 50 points, 35 for the exchange in the M block and 15 for the reflection.</p>
+  <p>Set up the first fit in five steps, as in part 1, with one difference in the target.</p>
+  <p>Step 1, the file and the target. Open nn_explorer.py, press Open file and choose delivery_orders.csv. Choose Late in Target column. The type changes to category on its own, because Late holds only 0 and 1. In Input columns, click Minutes to unselect Minutes. Seven inputs stay selected.</p>
+  <p>Step 2, the validation column. Choose k folds, leave k at 5, type 123 in Seed and press Make the column.</p>
+  <p>Step 3, the network. In the First row set tanh to 0 and identity to 1. With a category target, one identity neuron is logistic regression, a straight line in the seven inputs turned into a probability of each class.</p>
+  <p>Step 4, the fitting. Leave Standardize inputs ticked, set Number of starts to 10 and the Seed under the starts to 123.</p>
+  <p>Step 5, press Fit the network.</p>
+  <p>Check three things. The Fit tab should say Parameters: 1 x (7 + 1) + 2 x (1 + 1) = 12, two outputs because Late has two classes. The Fit tab should read Average validation misclassification over 5 folds: 0.126. In the confusion table of validation rows, actual 1 should hold 86 predicted 0 and 133 predicted 1. If all three agree, read on.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-16">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Three checks before you read anything. The Fit tab says Parameters: 1 x (7 + 1) + 2 x (1 + 1) = 12. The Fit tab reads Average validation misclassification over 5 folds: 0.126. In the confusion table of validation rows, actual 1 holds 86 predicted 0 and 133 predicted 1."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 172" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="172" rx="10" fill="#faf7f8"/><rect x="21" y="20" width="958" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><text x="46" y="58" font-size="18" font-weight="600" fill="#630031">Three checks before you read anything</text><text x="46" y="86" font-size="16" fill="#2b2b2b">The Fit tab says Parameters: 1 x (7 + 1) + 2 x (1 + 1) = 12. The Fit tab reads Average validation misclassification over 5 folds:</text><text x="46" y="108" font-size="16" fill="#2b2b2b">0.126. In the confusion table of validation rows, actual 1 holds 86 predicted 0 and 133 predicted 1.</text><text x="46" y="134" font-size="14" fill="#6b6b6b">Late as the target, Minutes unselected, five folds with seed 123, one identity neuron, ten starts.</text></svg></div>
+    <figcaption class="plib-tile-caption">Late as the target, Minutes unselected, five folds made with seed 123, one identity neuron, ten starts with seed 123.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>The confusion table reads with the actual class down the side and the predicted class across the top. With five folds, every order is predicted once by the fold model that did not learn from the order, so the table covers all 1,000 orders. The cell in row 1 and column 0 counts late orders the model called on time, the 5 dollar error. The cell in row 0 and column 1 counts on time orders the model flagged as late, the 3 dollar error.</p>
+  <p>Now the settings grid from Thursday's lecture, four settings that shape a network. Size is the number of neurons, how big the network is. Activation is the type of neuron, tanh, logistic, relu or identity. Layers is one hidden layer or two. Starts is the number of random starting points the tool tries, keeping the best on validation.</p>
+  <p>The base setting is three tanh neurons in one layer with ten starts. Fit the base, then change one setting at a time from the base and fit again, four times.</p>
+  <p>Size, ten tanh in place of three. Activation, three relu in place of three tanh. Layers, three tanh in the First row and three tanh in the Second row. Starts, the base with Number of starts set to 1.</p>
+  <p>Write down five things for every fit, the parameter count, the average train and validation misclassification, the lowest and highest validation fold, and the two error cells of the confusion table.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-18">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Five boxes joined by AND, the base and one change at a time. The base, three tanh, one layer, ten starts. Size, ten tanh. Activation, three relu. Layers, three tanh then three tanh. Starts, the base with one start. For every fit, the parameters, train and validation misclassification, the fold range, and the two error cells."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 190" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="190" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">The base, then one change at a time</text><rect x="21" y="46" width="153" height="122" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The base</text><text x="37" y="122" font-size="14" fill="#6b6b6b">three tanh, one</text><text x="37" y="141" font-size="14" fill="#6b6b6b">layer, ten starts</text><text x="198" y="112" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="222" y="46" width="153" height="122" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="246" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="246" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="267" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Size</text><text x="238" y="122" font-size="14" fill="#6b6b6b">ten tanh</text><text x="399" y="112" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="423" y="46" width="153" height="122" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="447" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="447" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="468" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Activation</text><text x="439" y="122" font-size="14" fill="#6b6b6b">three relu</text><text x="601" y="112" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="625" y="46" width="153" height="122" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="649" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="649" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="670" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Layers</text><text x="641" y="122" font-size="14" fill="#6b6b6b">three tanh then</text><text x="641" y="141" font-size="14" fill="#6b6b6b">three tanh</text><text x="802" y="112" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="826" y="46" width="153" height="122" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="850" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="850" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">5</text><text x="871" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Starts</text><text x="842" y="122" font-size="14" fill="#6b6b6b">the base with one</text><text x="842" y="141" font-size="14" fill="#6b6b6b">start</text></svg></div>
+    <figcaption class="plib-tile-caption">One change from the base at a time, on the same five folds, so a difference belongs to the change.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>Four moves, in order. The card below carries the four moves.</p>
+  <p>Move one reports the straight line and the base AND move two reads the grid AND move three prices the errors AND move four works through what Hokie AI disputes. All four.</p>
+  <p>Move one opens the block. Write in your prompt that you fit these models yourself in a tool Hokie AI cannot see, that you will report what the tool shows, and that you want each reading tested and not repeated back to you. Then report logistic regression, the one identity neuron, and the base, three tanh, each with the parameter count, the train and validation misclassification, the fold range and the two error cells. Say which kind of error the base reduced most.</p>
+  <p>Move two reads the grid. Report the four changes. For each change, say whether the change helped, hurt or cannot be told apart from the base, using the fold ranges and not the averages alone. Name any fit where train and validation pull apart, with the numbers.</p>
+  <p>Move three prices the errors. For logistic regression and for the setting you would choose, multiply the late orders called on time by 5 dollars and the on time orders flagged as late by 3 dollars, and add. Report both totals for the 1,000 orders and the difference. Ask Hokie AI to check the arithmetic and to test whether the cheaper model is the better choice.</p>
+  <p>Move four is where the exchange earns its place. Where Hokie AI says you are reading too much into a number, ask what a correctly stated version would be. Where you think Hokie AI is wrong, say so and give Hokie AI the number from your tool that settles the question.</p>
+  <p>One move is not one message. Ten messages inside the block is the ceiling, and a ceiling is not a target.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-20">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four moves joined by AND. Report logistic regression and the base, each with parameters, misclassification, fold range and the two error cells. Read the grid, for each change helped, hurt or cannot be told apart, by the ranges, and name a fit where train and validation pull apart. Price the errors at 5 dollars for a late order called on time and 3 dollars for a false flag, for logistic regression and your chosen setting. Work through what Hokie AI disputes, with numbers from your tool."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 200" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="200" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Four moves. Every number in the thread comes from you</text><rect x="21" y="46" width="204" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Report the line</text><text x="66" y="103" font-size="17" font-weight="600" fill="#2b2b2b">and the base</text><text x="37" y="134" font-size="14" fill="#6b6b6b">misclassification, fold range</text><text x="37" y="153" font-size="14" fill="#6b6b6b">and the two error cells</text><text x="248" y="117" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Read the grid</text><text x="288" y="122" font-size="14" fill="#6b6b6b">helped, hurt or cannot be</text><text x="288" y="141" font-size="14" fill="#6b6b6b">told apart, by the ranges</text><text x="500" y="117" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Price the errors</text><text x="540" y="122" font-size="14" fill="#6b6b6b">5 dollars per late order</text><text x="540" y="141" font-size="14" fill="#6b6b6b">called on time, 3 per false</text><text x="540" y="160" font-size="14" fill="#6b6b6b">flag</text><text x="752" y="117" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Work through the</text><text x="820" y="103" font-size="17" font-weight="600" fill="#2b2b2b">challenges</text><text x="792" y="134" font-size="14" fill="#6b6b6b">settle disagreements with</text><text x="792" y="153" font-size="14" fill="#6b6b6b">numbers from your tool</text></svg></div>
+    <figcaption class="plib-tile-caption">Four moves. Hokie AI has not seen your fits, so every number in the thread comes from you.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-prompt-m" role="region" aria-label="Multi-turn Block MH6.2.1, Begin">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-m-id">MH6.2.1</span>
+    <span class="plib-prompt-type-label plib-m-label">Multi-turn · Consolidation</span>
+    <span class="plib-m-badge">Summative</span>
+    <span class="plib-ai-badge plib-ai-respond">AI: respond</span>
+  </div>
+  <div class="plib-m-instructions">
+    <div class="plib-m-instructions-label">&#128221; How this block works</div>
+    <ol class="plib-m-steps">
+      <li>Click <strong>Copy opening marker</strong> and paste it into Hokie AI to begin this block.</li>
+      <li>Interact with Hokie AI: ask questions, explore, respond. All of this exchange belongs to this block.</li>
+      <li>When finished, use the <strong>Copy closing marker</strong> button below to close the block in your thread.</li>
+    </ol>
+  </div>
+  <div class="plib-prompt-text" id="text_m_open_21" data-copy="### MH6.2.1 OPEN&#10;----------&#10;"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-open" onclick="copyPrompt('text_m_open_21', this)"
+          aria-label="Copy opening marker for block MH6.2.1">
+    <span aria-hidden="true">&#9654;</span> Copy opening marker
+  </button>
+</div>
+
+<div class="plib-prompt-m-close" role="region" aria-label="Multi-turn Block MH6.2.1, End">
+  <div class="plib-m-close-label">
+    <span class="plib-prompt-id plib-m-id">MH6.2.1</span>
+    <span class="plib-prompt-type-label plib-m-label">End of Multi-turn Block</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-m-close-instruction">When you have finished your exchange, copy this closing marker and paste it into Hokie AI to close the block.</p>
+  <div class="plib-prompt-text" id="text_m_close_22" data-copy="&#10;----------&#10;### MH6.2.1 CLOSE"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-close" onclick="copyPrompt('text_m_close_22', this)"
+          aria-label="Copy closing marker for block MH6.2.1">
+    <span aria-hidden="true">&#9646;&#9646;</span> Copy closing marker
+  </button>
+</div>
+
+<div class="plib-narration">
+  <p>Now write your reflection for case one, in your own words and without help from the AI.</p>
+  <p>Your reflection needs all four parts below. Give the validation misclassification and the late orders called on time for logistic regression and for the base, and say where the network's gain sits AND name one change in the grid that the ranges cannot tell apart from the base, and one fit where train and validation pull apart, with the numbers AND give the cost of the errors for logistic regression and for your chosen setting, with the arithmetic AND say which setting Hokie Eats should use to flag orders at checkout, and why the cost of the errors, and not the misclassification alone, decides the choice. Respond to all four parts.</p>
+  <p>The fourth part is where a reflection separates itself. Two models with the same misclassification can cost the business different amounts.</p>
+  <p>Write 100 to 200 words.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-25">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four boxes joined by AND. Logistic regression and the base, validation misclassification and late orders called on time, and where the network's gain sits. One change the ranges cannot tell apart from the base, and one fit where train and validation pull apart. The cost of the errors for logistic regression and your chosen setting, with the arithmetic. The setting Hokie Eats should use, and why the cost decides the choice."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 233" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="233" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">All four parts of the case one reflection</text><rect x="21" y="46" width="204" height="165" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Logistic</text><text x="66" y="103" font-size="17" font-weight="600" fill="#2b2b2b">regression and</text><text x="66" y="124" font-size="17" font-weight="600" fill="#2b2b2b">the base</text><text x="37" y="155" font-size="14" fill="#6b6b6b">misclassification, late</text><text x="37" y="174" font-size="14" fill="#6b6b6b">orders called on time,</text><text x="37" y="193" font-size="14" fill="#6b6b6b">where the gain sits</text><text x="248" y="134" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="165" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The grid</text><text x="288" y="122" font-size="14" fill="#6b6b6b">a change the ranges cannot</text><text x="288" y="141" font-size="14" fill="#6b6b6b">separate, and a fit that</text><text x="288" y="160" font-size="14" fill="#6b6b6b">pulls apart</text><text x="500" y="134" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="165" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The cost of the</text><text x="569" y="103" font-size="17" font-weight="600" fill="#2b2b2b">errors</text><text x="540" y="134" font-size="14" fill="#6b6b6b">logistic regression and your</text><text x="540" y="153" font-size="14" fill="#6b6b6b">setting, with the arithmetic</text><text x="752" y="134" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="165" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The setting for</text><text x="820" y="103" font-size="17" font-weight="600" fill="#2b2b2b">Hokie Eats</text><text x="792" y="134" font-size="14" fill="#6b6b6b">and why the cost decides</text><text x="792" y="153" font-size="14" fill="#6b6b6b">the choice</text></svg></div>
+    <figcaption class="plib-tile-caption">All four parts of the case one reflection, inside 100 to 200 words.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution RH6.2.1">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">RH6.2.1</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Case one reflection</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 100 to 200 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_26" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for RH6.2.1"
+            data-maxwords="200" data-maxchars="2000"
+            oninput="updateCounter('prompt_26', 'textarea_26')"></textarea>
+  <div class="plib-counter" id="counter_prompt_26" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_26">0</span> / 200 words&nbsp;·&nbsp;
+    <span id="cc_prompt_26">0</span> / 2000 characters
+    <span class="plib-counter-min">minimum: 100 words</span>
+  </div>
+  <div class="plib-warn" id="warn_prompt_26" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_26"
+       data-prefix="### RH6.2.1&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_26"
+       data-maxwords="200"
+       data-maxchars="2000"
+       data-minwords="100"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_26', this)"
+          aria-label="Copy contribution RH6.2.1 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 3 of 4</div><div class="plib-section-t">CASE TWO</div></div>
+
+<div class="plib-narration">
+  <p>Case two is worth 50 points, 35 for the exchange in the M block and 15 for the reflection.</p>
+  <p>The operations team has sent a richer export, delivery_orders_ops.csv, the same 1,000 orders with two more columns. Pickup_Wait_Minutes is how long the courier waited at the restaurant for the food, recorded by the courier app when the courier leaves with the order. Customer_Rating is the 1 to 5 stars the customer gave in the app. The team's message says to use every column, because more data makes a better model.</p>
+  <p>Open delivery_orders_ops.csv. Choose Late in Target column and unselect Minutes. Every numeric column starts selected, so also unselect Pickup_Wait_Minutes and Customer_Rating. Seven inputs stay selected, the same seven as case one. Make the five fold column with seed 123, as in case one.</p>
+  <p>Fit two models three times, one identity neuron and then the setting you chose in case one, ten starts each. First with the seven inputs. Then select Customer_Rating and fit both again. Then unselect Customer_Rating, select Pickup_Wait_Minutes and fit both again. For every fit write down the validation misclassification, the fold range and the two error cells.</p>
+  <p>Check three things. The two new columns sit at the end of the Input columns list. One identity neuron on the seven inputs reads 0.126, the same as case one. One identity neuron with Customer_Rating added reads Average validation misclassification over 5 folds: 0.016.</p>
+  <p>Keep your case one numbers beside you. The case is about why one column helps so much, and whether Hokie Eats may use the column at all.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-30">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Three checks on the operations export. The two new columns sit at the end of the Input columns list. One identity neuron on the seven inputs reads 0.126, as in case one. One identity neuron with Customer_Rating added reads Average validation misclassification over 5 folds: 0.016."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 172" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="172" rx="10" fill="#faf7f8"/><rect x="21" y="20" width="958" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><text x="46" y="58" font-size="18" font-weight="600" fill="#630031">Three checks on the operations export</text><text x="46" y="86" font-size="16" fill="#2b2b2b">The two new columns sit at the end of the Input columns list. One identity neuron on the seven inputs reads 0.126, as in case</text><text x="46" y="108" font-size="16" fill="#2b2b2b">one. One identity neuron with Customer_Rating added reads Average validation misclassification over 5 folds: 0.016.</text><text x="46" y="134" font-size="14" fill="#6b6b6b">The same 1,000 orders and five folds, with two columns the operations team added.</text></svg></div>
+    <figcaption class="plib-tile-caption">The same 1,000 orders and the same five folds, with two columns the operations team added.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>Four moves, in order. The card below carries the four moves.</p>
+  <p>Move one frames the question and reports the fits AND move two explains the near perfect model AND move three places Pickup_Wait_Minutes AND move four recommends and defends. All four.</p>
+  <p>Move one opens the block. Write the operations team's suggestion in your own words. Then report the six fits, logistic regression and your setting, with the seven inputs, with Customer_Rating and with Pickup_Wait_Minutes, each with the validation misclassification, the fold range and the two error cells.</p>
+  <p>Move two explains the model with Customer_Rating. Ask yourself when a rating exists. Write when Hokie Eats learns each order's rating, what being late does to a rating, and what that means for a model meant to flag an order at checkout. Ask Hokie AI to test the explanation, and use the name of the problem if you know it.</p>
+  <p>Move three places Pickup_Wait_Minutes. Write when Hokie Eats learns the pickup wait, how much the column improved each model, and whether there is a decision after checkout that the column could serve. Say why the gain from the column might be small, given the seven inputs the model already has.</p>
+  <p>Move four recommends and defends. Write which columns Hokie Eats may use for the flag at checkout, which could serve a later decision, and which should stay out of any model that predicts Late, each with a reason that rests on when the column becomes known. Ask Hokie AI for the strongest case for using every column, then answer the case.</p>
+  <p>One move is not one message. Twelve messages inside the block is the ceiling, and a ceiling is not a target.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-32">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four moves joined by AND. Frame the operations team's suggestion and report six fits, logistic regression and your setting with the seven inputs, with Customer_Rating and with Pickup_Wait_Minutes. Explain the near perfect model by when a rating exists and what being late does to a rating. Place Pickup_Wait_Minutes, when the wait is known, how much the column helped, and a later decision for the column. Recommend which columns go where by when each becomes known, ask for the strongest case for every column, and answer the case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 231" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="231" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Four moves. A column is only as useful as the moment the value is known</text><rect x="21" y="46" width="204" height="163" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Frame and report</text><text x="37" y="122" font-size="14" fill="#6b6b6b">six fits, with the seven</text><text x="37" y="141" font-size="14" fill="#6b6b6b">inputs, with the rating, with</text><text x="37" y="160" font-size="14" fill="#6b6b6b">the pickup wait</text><text x="248" y="132" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="163" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Explain the near</text><text x="318" y="103" font-size="17" font-weight="600" fill="#2b2b2b">perfect model</text><text x="288" y="134" font-size="14" fill="#6b6b6b">when a rating exists, and</text><text x="288" y="153" font-size="14" fill="#6b6b6b">what being late does to a</text><text x="288" y="172" font-size="14" fill="#6b6b6b">rating</text><text x="500" y="132" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="163" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Place the pickup</text><text x="569" y="103" font-size="17" font-weight="600" fill="#2b2b2b">wait</text><text x="540" y="134" font-size="14" fill="#6b6b6b">when the wait is known,</text><text x="540" y="153" font-size="14" fill="#6b6b6b">how much the column</text><text x="540" y="172" font-size="14" fill="#6b6b6b">helped, a later decision for</text><text x="540" y="191" font-size="14" fill="#6b6b6b">the column</text><text x="752" y="132" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="163" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Recommend and</text><text x="820" y="103" font-size="17" font-weight="600" fill="#2b2b2b">defend</text><text x="792" y="134" font-size="14" fill="#6b6b6b">which columns go where,</text><text x="792" y="153" font-size="14" fill="#6b6b6b">the case for every column,</text><text x="792" y="172" font-size="14" fill="#6b6b6b">your answer</text></svg></div>
+    <figcaption class="plib-tile-caption">Four moves. A column is only as useful as the moment Hokie Eats learns the value.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-prompt-m" role="region" aria-label="Multi-turn Block MH6.2.2, Begin">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-m-id">MH6.2.2</span>
+    <span class="plib-prompt-type-label plib-m-label">Multi-turn · Exploration</span>
+    <span class="plib-m-badge">Summative</span>
+    <span class="plib-ai-badge plib-ai-respond">AI: respond</span>
+  </div>
+  <div class="plib-m-instructions">
+    <div class="plib-m-instructions-label">&#128221; How this block works</div>
+    <ol class="plib-m-steps">
+      <li>Click <strong>Copy opening marker</strong> and paste it into Hokie AI to begin this block.</li>
+      <li>Interact with Hokie AI: ask questions, explore, respond. All of this exchange belongs to this block.</li>
+      <li>When finished, use the <strong>Copy closing marker</strong> button below to close the block in your thread.</li>
+    </ol>
+  </div>
+  <div class="plib-prompt-text" id="text_m_open_33" data-copy="### MH6.2.2 OPEN&#10;----------&#10;"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-open" onclick="copyPrompt('text_m_open_33', this)"
+          aria-label="Copy opening marker for block MH6.2.2">
+    <span aria-hidden="true">&#9654;</span> Copy opening marker
+  </button>
+</div>
+
+<div class="plib-prompt-m-close" role="region" aria-label="Multi-turn Block MH6.2.2, End">
+  <div class="plib-m-close-label">
+    <span class="plib-prompt-id plib-m-id">MH6.2.2</span>
+    <span class="plib-prompt-type-label plib-m-label">End of Multi-turn Block</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-m-close-instruction">When you have finished your exchange, copy this closing marker and paste it into Hokie AI to close the block.</p>
+  <div class="plib-prompt-text" id="text_m_close_34" data-copy="&#10;----------&#10;### MH6.2.2 CLOSE"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-close" onclick="copyPrompt('text_m_close_34', this)"
+          aria-label="Copy closing marker for block MH6.2.2">
+    <span aria-hidden="true">&#9646;&#9646;</span> Copy closing marker
+  </button>
+</div>
+
+<div class="plib-narration">
+  <p>Now write your reflection for case two, in your own words and without help from the AI.</p>
+  <p>Your reflection needs all four parts below. Give the validation misclassification of logistic regression and of your setting with the seven inputs and with Customer_Rating AND explain why Customer_Rating made the model nearly perfect, and why the model is of no use for the flag at checkout AND say when Pickup_Wait_Minutes becomes known, how much the column helped, and one decision the column could serve AND write a rule Hokie Eats' analysts could apply to any new column before it enters a model, and apply the rule to one column that is not in the file. Respond to all four parts.</p>
+  <p>The fourth part is where a reflection separates itself. Spotting one leak is a finding. A rule that catches the next leak is a practice.</p>
+  <p>Write 100 to 200 words.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-37">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four boxes joined by AND. Logistic regression and your setting, with the seven inputs and with Customer_Rating, validation misclassification. Why Customer_Rating made the model nearly perfect, and why the model is of no use at checkout. When Pickup_Wait_Minutes becomes known, how much the column helped, and one decision the column could serve. A rule for any new column, applied to one column not in the file."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 219" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="219" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">All four parts of the case two reflection</text><rect x="21" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The fits</text><text x="37" y="122" font-size="14" fill="#6b6b6b">both models, with the</text><text x="37" y="141" font-size="14" fill="#6b6b6b">seven inputs and with</text><text x="37" y="160" font-size="14" fill="#6b6b6b">Customer_Rating</text><text x="248" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Why the rating is</text><text x="318" y="103" font-size="17" font-weight="600" fill="#2b2b2b">nearly perfect</text><text x="288" y="134" font-size="14" fill="#6b6b6b">and why the model is of no</text><text x="288" y="153" font-size="14" fill="#6b6b6b">use at checkout</text><text x="500" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The pickup wait</text><text x="540" y="122" font-size="14" fill="#6b6b6b">when the wait is known,</text><text x="540" y="141" font-size="14" fill="#6b6b6b">how much the column</text><text x="540" y="160" font-size="14" fill="#6b6b6b">helped, a decision for the</text><text x="540" y="179" font-size="14" fill="#6b6b6b">column</text><text x="752" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">A rule for any new</text><text x="820" y="103" font-size="17" font-weight="600" fill="#2b2b2b">column</text><text x="792" y="134" font-size="14" fill="#6b6b6b">applied to one column not</text><text x="792" y="153" font-size="14" fill="#6b6b6b">in the file</text></svg></div>
+    <figcaption class="plib-tile-caption">All four parts of the case two reflection, inside 100 to 200 words.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution RH6.2.2">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">RH6.2.2</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Case two reflection</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 100 to 200 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_38" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for RH6.2.2"
+            data-maxwords="200" data-maxchars="2000"
+            oninput="updateCounter('prompt_38', 'textarea_38')"></textarea>
+  <div class="plib-counter" id="counter_prompt_38" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_38">0</span> / 200 words&nbsp;·&nbsp;
+    <span id="cc_prompt_38">0</span> / 2000 characters
+    <span class="plib-counter-min">minimum: 100 words</span>
+  </div>
+  <div class="plib-warn" id="warn_prompt_38" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_38"
+       data-prefix="### RH6.2.2&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_38"
+       data-maxwords="200"
+       data-maxchars="2000"
+       data-minwords="100"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_38', this)"
+          aria-label="Copy contribution RH6.2.2 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 4 of 4</div><div class="plib-section-t">SUBMISSION</div></div>
+
+<div class="plib-narration">
+  <p>You are done with homework 6. Both cases of part 2 are in one thread, and that thread is what you submit for part 2.</p>
+  <p>Export the whole conversation from Hokie AI as a .zip and upload the .zip to the Canvas assignment for part 2.</p>
+  <p>Leave the turns where something went wrong. How you recovered is part of what is being read, and a tidied thread reads as a thinner one.</p>
+</div>
+
+<div class="plib-material" id="plib-material-42">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">Homework 6 part 2 on Canvas</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="https://canvas.vt.edu/courses/233475/assignments/2874066" target="_blank" rel="noopener noreferrer">Open the part 2 assignment</a>
+  </div>
+  <div class="plib-material-note">Upload the exported .zip of this thread here. Part 1 has its own assignment, so check the title on the page before you upload.</div>
+</div>
+
+<div class="plib-submit">
+  <div class="plib-submit-title">Turn it in</div>
+  <p class="plib-submit-p">Export this thread as a .zip file, then upload it to the Canvas assignment for this part. Leave the file as it came out. Your work is not submitted until Canvas shows your file.</p>
+</div>
+
+</div>
+</main>
+<script>
+function countWords(text) {
+  return text.trim() === '' ? 0 : text.trim().split(/[ \t\n\r]+/).length;
+}
+function announce(msg) {
+  var el = document.getElementById('plib-live');
+  if (!el) { el = document.createElement('div'); el.id = 'plib-live';
+    el.setAttribute('aria-live','polite'); el.setAttribute('aria-atomic','true');
+    el.style.cssText='position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;';
+    document.body.appendChild(el); }
+  el.textContent = ''; setTimeout(function(){ el.textContent = msg; }, 50);
+}
+function autoResize(ta) {
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(ta.scrollHeight + 2, 600) + 'px';
+}
+function updateCounter(bid, tid) {
+  var ta = document.getElementById(tid);
+  var textEl = document.getElementById('text_' + bid);
+  var wcEl = document.getElementById('wc_' + bid);
+  var ccEl = document.getElementById('cc_' + bid);
+  var ctrEl = document.getElementById('counter_' + bid);
+  if (!ta) return;
+  autoResize(ta);
+  var maxwords = textEl ? parseInt(textEl.getAttribute('data-maxwords') || '0') : 0;
+  var maxchars = textEl ? parseInt(textEl.getAttribute('data-maxchars') || '0') : 0;
+  var minwords = textEl ? parseInt(textEl.getAttribute('data-minwords') || '0') : 0;
+  var text = ta.value;
+  var words = countWords(text);
+  var chars = text.length;
+  if (maxchars && chars > maxchars) {
+    ta.value = text.substring(0, maxchars);
+    text = ta.value; words = countWords(text); chars = text.length;
+  }
+  if (wcEl) wcEl.textContent = words;
+  if (ccEl) ccEl.textContent = chars;
+  if (ctrEl && maxwords) {
+    var pct = words / maxwords;
+    var cls = pct >= 1.0 ? 'bad' : (pct >= 0.8 || (minwords && words < minwords)) ? 'warn' : 'ok';
+    if (pct >= 1.0) { ctrEl.className = 'plib-counter at-limit'; }
+    else { ctrEl.className = 'plib-counter'; }
+    if (wcEl) wcEl.className = 'plib-count-' + cls;
+    if (ccEl) ccEl.className = 'plib-count-' + cls;
+  }
+}
+function copyPrompt(id, btn) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var text = (el.getAttribute('data-copy') || el.textContent || '').replace(/&#10;/g, '\n');
+  var label = (btn.getAttribute('aria-label') || 'item').replace('Copy ','').replace(' to clipboard','');
+  doCopy(text, btn, label + ' copied.', '&#10003; Copied', 2000);
+}
+function copyWithInput(bid, btn) {
+  var el = document.getElementById('text_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!el) return;
+  var tid = el.getAttribute('data-tid');
+  var inputEl = document.getElementById(tid);
+  var prefix = (el.getAttribute('data-prefix') || '').replace(/&#10;/g, '\n');
+  var suffix = (el.getAttribute('data-suffix') || '').replace(/&#10;/g, '\n');
+  var userText = inputEl ? inputEl.value.trim() : '';
+  if (userText.replace(/[\t\n\r ]/g, '').length < 2) {
+    if (warnEl) warnEl.textContent = 'Please write your response before copying.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  var maxwords = parseInt(el.getAttribute('data-maxwords') || '0');
+  var maxchars = parseInt(el.getAttribute('data-maxchars') || '0');
+  var minwords = parseInt(el.getAttribute('data-minwords') || '0');
+  if (minwords && countWords(userText) < minwords) {
+    if (warnEl) warnEl.textContent = 'Response is below the minimum of ' + minwords + ' words.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  if (maxwords && countWords(userText) > maxwords) {
+    if (warnEl) warnEl.textContent = 'Response exceeds the ' + maxwords + ' word limit.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  if (warnEl) warnEl.textContent = '';
+  doCopy(prefix + userText + suffix, btn, 'Copied. Paste into Hokie AI.', '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+function doCopy(text, btn, announcement, label, duration) {
+  function ok() {
+    var orig = btn.innerHTML; btn.innerHTML = label; btn.classList.add('copied');
+    announce(announcement);
+    setTimeout(function() { btn.innerHTML = orig; btn.classList.remove('copied'); }, duration);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(ok).catch(function() { fallback(text, ok); });
+  } else { fallback(text, ok); }
+}
+function fallback(text, cb) {
+  var ta = document.createElement('textarea'); ta.value = text;
+  ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); cb(); } catch(e) {}
+  document.body.removeChild(ta);
+}
+function copyStructured(bid, blockId, btn) {
+  var container = document.getElementById('qitems_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!container) return;
+  var outerDiv = container.closest('.plib-prompt-q');
+  var aiDirective = outerDiv ? (outerDiv.getAttribute('data-ai-directive') || '') : '';
+  var items = container.querySelectorAll('.plib-q-item');
+  var lines = [];
+  var emptyItems = [];
+
+  items.forEach(function(itemEl) {
+    var n = itemEl.getAttribute('data-item-n');
+    var render = itemEl.getAttribute('data-render');
+    var selections = [];
+
+    if (render === 'dropdown') {
+      var sel = itemEl.querySelector('select');
+      if (sel && sel.value) selections.push(sel.value);
+    } else if (render === 'likert') {
+      var checkedRadio = itemEl.querySelector('input[type="radio"]:checked');
+      if (checkedRadio) selections.push(checkedRadio.value);
+    } else if (render === 'checkbox') {
+      var checks = itemEl.querySelectorAll('input[type="checkbox"]:checked');
+      checks.forEach(function(c) { selections.push(c.value); });
+    }
+
+    if (selections.length === 0) {
+      emptyItems.push(n);
+    } else {
+      lines.push('ITEM ' + n + ': ' + selections.join(', '));
+    }
+  });
+
+  if (emptyItems.length > 0) {
+    if (warnEl) {
+      warnEl.textContent = 'Please make a selection for ITEM '
+        + emptyItems.join(', ITEM ') + ' before copying.';
+    }
+    return;
+  }
+
+  if (warnEl) warnEl.textContent = '';
+
+  var directiveLine = aiDirective ? aiDirective + '\n' : '';
+  var envelope = '### ' + blockId + '\n----------\n' + directiveLine + 'RESPONSE:\n'
+    + lines.join('\n') + '\n----------\n###';
+  doCopy(envelope, btn,
+    'Structured response copied. Paste into Hokie AI.',
+    '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+function enforceCheckboxCap(itemEl) {
+  var max = parseInt(itemEl.getAttribute('data-max-select') || '0', 10);
+  if (!max || max < 2) return;
+  var checks = itemEl.querySelectorAll('input[type="checkbox"]');
+  var checked = itemEl.querySelectorAll('input[type="checkbox"]:checked');
+  var atCap = checked.length >= max;
+  checks.forEach(function(c) {
+    if (!c.checked) c.disabled = atCap;
+  });
+}
+function moveItem(btn, direction) {
+  var li = btn.closest('.plib-o-item');
+  if (!li) return;
+  var list = li.parentElement;
+  if (!list) return;
+  if (direction === 'up') {
+    var prev = li.previousElementSibling;
+    if (prev) list.insertBefore(li, prev);
+  } else if (direction === 'down') {
+    var next = li.nextElementSibling;
+    if (next) list.insertBefore(next, li);
+  }
+  updateArrowStates(list);
+}
+function updateArrowStates(list) {
+  var items = list.querySelectorAll('.plib-o-item');
+  items.forEach(function(li, idx) {
+    var rankEl = li.querySelector('.plib-o-rank');
+    if (rankEl) rankEl.textContent = (idx + 1) + '.';
+    var upBtn = li.querySelector('.plib-o-arrow-up');
+    var downBtn = li.querySelector('.plib-o-arrow-down');
+    if (upBtn) upBtn.disabled = (idx === 0);
+    if (downBtn) downBtn.disabled = (idx === items.length - 1);
+    var itemText = li.getAttribute('data-item-text') || '';
+    if (upBtn) upBtn.setAttribute('aria-label', 'Move ' + itemText + ' up');
+    if (downBtn) downBtn.setAttribute('aria-label', 'Move ' + itemText + ' down');
+  });
+}
+function copyOrdered(bid, blockId, btn) {
+  var list = document.getElementById('oitems_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!list) return;
+  var outerDiv = list.closest('.plib-prompt-o');
+  var aiDirective = outerDiv ? (outerDiv.getAttribute('data-ai-directive') || '') : '';
+  var question = list.getAttribute('data-question') || '';
+  var items = list.querySelectorAll('.plib-o-item');
+  var lines = [];
+  items.forEach(function(li, idx) {
+    var itemText = li.getAttribute('data-item-text') || '';
+    lines.push((idx + 1) + '. ' + itemText);
+  });
+  if (warnEl) warnEl.textContent = '';
+  var directiveLine = aiDirective ? aiDirective + '\n' : '';
+  var envelope = '### ' + blockId + '\n----------\n' + directiveLine + 'RESPONSE:\nQuestion: '
+    + question + '\n' + lines.join('\n') + '\n----------\n###';
+  doCopy(envelope, btn,
+    'Ordered response copied. Paste into Hokie AI.',
+    '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var checkboxItems = document.querySelectorAll('.plib-q-item[data-render="checkbox"]');
+  checkboxItems.forEach(function(itemEl) {
+    var checks = itemEl.querySelectorAll('input[type="checkbox"]');
+    checks.forEach(function(c) {
+      c.addEventListener('change', function() { enforceCheckboxCap(itemEl); });
+    });
+  });
+  var oLists = document.querySelectorAll('.plib-o-list');
+  oLists.forEach(function(list) {
+    updateArrowStates(list);
+  });
+});
+</script>
+</body>
+</html>
