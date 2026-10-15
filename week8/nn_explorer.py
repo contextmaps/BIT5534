@@ -787,7 +787,10 @@ if not SELFTEST:
         def confusion(self, t, pred, _):
             p, r = self.p, self.result
             groups = [("train", r.folds[0][2])] if not r.kfold else []
-            groups += [("validation", np.isin(r.roles, [lab for lab, _, _ in r.folds]))]
+            vrows = np.zeros(len(p.y), dtype=bool)
+            for lab, val, train in r.folds:
+                vrows |= val
+            groups.append(("validation", vrows))
             if r.test.any():
                 groups.append(("test", r.test))
             yhat = predicted_column(p, pred)
