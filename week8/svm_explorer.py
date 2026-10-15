@@ -13,6 +13,16 @@ number target is fitted on the target standardized with the train rows, so
 epsilon is in standard deviations of the target, and every figure is reported
 in the target's own units.
 
+Save predictions and Save probabilities (lec8_2, 2026-10-15) add a column to
+the data and save the whole file, so the next explorer can open it and use the
+column as an input. With k folds, each row's value comes from the fold model that did not see
+that row, and a test row's value is the average of the fold models, so a model
+fitted on the saved columns (a stacking meta-model) learns from values no base
+model fitted to. With a holdout column the values come from the fit on the
+train rows, which saw the train rows themselves. A probability comes from scikit-learn's Platt scaling, fitted with
+probability=True, so it can disagree with the predicted class for a row near
+the boundary.
+
 Every row carries a role: train, validation or test, or for k folds
 validation_1 to validation_k plus an optional test. A column the file already
 has may use Training and Validation as its labels. The model is fitted on the
@@ -48,6 +58,16 @@ ROLE_COLORS = {"train": "#2c6fbb", "validation": "#d68910", "test": "#8e44ad"}
 CLASS_COLORS = ["#c0392b", "#2c6fbb", "#27ae60", "#d68910", "#8e44ad", "#16a085"]
 DEFAULT_C_GRID = "0.1 1 10 100 1000"
 DEFAULT_G_GRID = "0.01 0.1 1 10 100"
+TAG = "SVM"
+
+
+PRED_TAGS = ("REG ", "TREE ", "NN ", "SVM ")
+
+
+def default_positive(series):
+    """The less frequent level, which is usually the one a business wants to find."""
+    counts = series.dropna().astype(str).value_counts()
+    return str(counts.index[-1]) if len(counts) else ""
 
 
 # ----------------------------------------------------------------- data
@@ -138,11 +158,13 @@ class Prepared:
     pass
 
 
-def prepare(df, target, inputs, kind, role_col):
+def prepare(df, target, inputs, kind, role_col, positive=None):
     used = [target] + inputs + ([role_col] if role_col else [])
     before = len(df)
-    clean = df.dropna(subset=used).reset_index(drop=True)
+    clean = df.dropna(subset=used)
     p = Prepared()
+    p.rows = clean.index.to_numpy()          # where each used row sits in the file
+    clean = clean.reset_index(drop=True)
     p.data, p.dropped = clean, before - len(clean)
     p.X, p.names = encode_inputs(clean, inputs)
     p.kind = kind
@@ -150,10 +172,12 @@ def prepare(df, target, inputs, kind, role_col):
     if kind == "number":
         p.y = clean[target].astype(float).to_numpy()
         p.classes = None
+        p.positive = None
     else:
         lab = clean[target].astype(str)
         p.classes = sorted(lab.unique())
         p.y = lab.to_numpy()
+        p.positive = positive if positive in p.classes else default_positive(lab)
     return p
 
 
@@ -255,6 +279,25 @@ def run_model(p, roles, s):
     return r
 
 
+def positive_probability(p, r):
+    """The probability of the positive class for every row. Each fit is refitted with
+    Platt scaling on its own train rows, settings and standardization. With k folds a
+    row takes the value of the fold model that did not see it, and a test row the
+    average of the fold models."""
+    s = r.settings
+    out = np.zeros(len(p.y))
+    for (lab, val, train), f in zip(r.folds, r.fits):
+        Xs = (p.X - f.mu) / f.sd
+        m = SVC(kernel=s.kernel, C=s.C, gamma=gamma_used(s, p.X.shape[1]), probability=True, random_state=0)
+        m.fit(Xs[train], p.y[train])
+        pr = m.predict_proba(Xs)[:, list(m.classes_).index(p.positive)]
+        if not r.kfold:
+            return pr
+        out[val] = pr[val]
+        out[r.test] += pr[r.test] / len(r.fits)
+    return out
+
+
 def summary(p, r):
     """The validation figure a grid compares: the holdout figure, or the fold average."""
     key = "r2" if p.kind == "number" else "miss"
@@ -341,8 +384,16 @@ if not SELFTEST:
             kf = ttk.Frame(side)
             kf.pack(fill="x")
             self.kind_var = tk.StringVar(value="category")
-            ttk.Radiobutton(kf, text="number", value="number", variable=self.kind_var).pack(side="left")
-            ttk.Radiobutton(kf, text="category", value="category", variable=self.kind_var).pack(side="left")
+            ttk.Radiobutton(kf, text="number", value="number", variable=self.kind_var,
+                            command=self.kind_changed).pack(side="left")
+            ttk.Radiobutton(kf, text="category", value="category", variable=self.kind_var,
+                            command=self.kind_changed).pack(side="left")
+            pf = ttk.Frame(side)
+            pf.pack(fill="x")
+            ttk.Label(pf, text="Positive class").pack(side="left")
+            self.pos_var = tk.StringVar()
+            self.pos_box = ttk.Combobox(pf, textvariable=self.pos_var, state="readonly", width=14)
+            self.pos_box.pack(side="left", padx=(6, 0))
 
             ttk.Label(side, text="Input columns").pack(anchor="w", pady=(8, 0))
             self.input_list = tk.Listbox(side, selectmode="multiple", height=8, exportselection=False)
@@ -401,7 +452,11 @@ if not SELFTEST:
             ttk.Entry(gf, textvariable=self.Ggrid_var, width=22).grid(row=1, column=1, sticky="w")
             ttk.Button(gf, text="Search the grid", command=self.grid).grid(row=2, column=0, columnspan=2, sticky="ew", pady=(4, 0))
 
-            ttk.Button(side, text="Save predictions...", command=self.save_predictions).pack(fill="x", pady=(8, 0))
+            sf = ttk.LabelFrame(side, text="Save for stacking", padding=6)
+            sf.pack(fill="x", pady=(8, 0))
+            ttk.Button(sf, text="Save predictions...", command=self.save_predictions).pack(fill="x")
+            self.prob_button = ttk.Button(sf, text="Save probabilities...", command=self.save_probabilities)
+            self.prob_button.pack(fill="x", pady=(4, 0))
             self.status = ttk.Label(side, text="", wraplength=270, foreground="#444")
             self.status.pack(fill="x", pady=(8, 0))
 
@@ -449,6 +504,7 @@ if not SELFTEST:
                 messagebox.showerror("Could not read the file", str(exc))
                 return
             self.path = path
+            self.result = None
             self.file_label.config(text=os.path.basename(path))
             cols = list(self.raw.columns)
             self.target_box["values"] = cols
@@ -476,8 +532,27 @@ if not SELFTEST:
                     self.input_list.insert("end", c)
             names = list(self.input_list.get(0, "end"))
             for i, c in enumerate(names):
-                if pd.api.types.is_numeric_dtype(self.raw[c]):
+                # saved predictions start unselected, so a base model never uses another one's
+                if pd.api.types.is_numeric_dtype(self.raw[c]) and not c.startswith(PRED_TAGS):
                     self.input_list.select_set(i)
+            self.kind_changed()
+
+        def kind_changed(self):
+            t = self.target_var.get()
+            if self.raw is None or not t:
+                return
+            if self.kind_var.get() == "category":
+                levels = sorted(self.raw[t].dropna().astype(str).unique())
+                self.pos_box["values"] = levels
+                if self.pos_var.get() not in levels:
+                    self.pos_var.set(default_positive(self.raw[t]))
+                self.pos_box.config(state="readonly")
+                self.prob_button.config(state="normal")
+            else:
+                self.pos_box["values"] = []
+                self.pos_var.set("")
+                self.pos_box.config(state="disabled")
+                self.prob_button.config(state="disabled")
 
         def keep_inputs(self):
             chosen = {self.input_list.get(i) for i in self.input_list.curselection()}
@@ -560,7 +635,7 @@ if not SELFTEST:
                 self.status.config(text="Choose at least one input column.")
                 return None
             target = self.target_var.get()
-            self.p = prepare(self.raw, target, inputs, self.kind_var.get(), role)
+            self.p = prepare(self.raw, target, inputs, self.kind_var.get(), role, self.pos_var.get())
             if self.p.kind == "category" and len(self.p.classes) < 2:
                 self.status.config(text="The target has one class in these rows. Choose another target.")
                 return None
@@ -837,18 +912,48 @@ if not SELFTEST:
             self.status.config(text=f"Best validation {name} {V[best]:.3f} at C {Cs[best[1]]:g}{gtxt}, outlined in red. "
                                     f"The validation rows chose it, so only test rows can still judge it.")
 
+        def add_and_save(self, name, values, numbers):
+            """Put the column into the data, in the rows the model used, and save the whole file."""
+            if numbers:
+                col = np.full(len(self.raw), np.nan)
+            else:
+                col = np.full(len(self.raw), None, dtype=object)
+            col[self.p.rows] = values
+            self.raw[name] = col
+            self.keep_inputs()
+            src = ("the fold model that did not see each row, with test rows from the fold models together"
+                   if self.result.kfold else
+                   "the fit on the train rows, which saw the train rows themselves; for stacking, use k folds")
+            base = os.path.splitext(os.path.basename(self.path))[0]
+            base = base if base.endswith("_stack") else base + "_stack"
+            path = filedialog.asksaveasfilename(defaultextension=".csv", filetypes=[("CSV", "*.csv")],
+                                                initialfile=base + ".csv")
+            if not path:
+                self.status.config(text=f"Added the column {name} from {src}. The file is not saved yet.")
+                return
+            self.raw.to_csv(path, index=False)
+            self.status.config(text=f"Added the column {name}, from {src}, and saved {len(self.raw)} rows "
+                                    f"with every column to {os.path.basename(path)}.")
+
         def save_predictions(self):
             if self.result is None:
+                self.status.config(text="Fit the model first.")
                 return
-            path = filedialog.asksaveasfilename(defaultextension=".csv", filetypes=[("CSV", "*.csv")])
-            if not path:
-                return
-            out = self.p.data.copy()
-            out["predicted"] = self.result.pred
-            out["support_vector"] = np.where(self.result.fits[0].sv, 1, 0)
-            out.to_csv(path, index=False)
-            self.status.config(text=f"Saved {len(out)} rows to {os.path.basename(path)}.")
+            vals = self.result.pred
+            self.add_and_save(f"{TAG} pred {self.p.target_name}",
+                              vals.astype(float) if self.p.kind == "number" else vals, self.p.kind == "number")
 
+        def save_probabilities(self):
+            if self.result is None:
+                self.status.config(text="Fit the model first.")
+                return
+            if self.p.kind != "category":
+                self.status.config(text="Probabilities are for a category target.")
+                return
+            self.status.config(text="Fitting the probabilities...")
+            self.update_idletasks()
+            prob = positive_probability(self.p, self.result)
+            self.add_and_save(f"{TAG} prob {self.p.positive}", np.round(prob, 6), True)
 
 if __name__ == "__main__":
     args = [a for a in sys.argv[1:] if a != "--selftest"]
