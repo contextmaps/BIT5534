@@ -593,10 +593,10 @@ const LECTURES = [
   { id: "lec7_2",  week: 7,  phase: 3, mode: "consolidation", title: "Neural Networks, Settings, Overfitting and Classification",
     business: "Overfitting on a curve from one to eighty neurons, starts drawn as climbers, a settings grid read as ranges, a holdout against five folds, and MedPrice read from a confusion table." },
   // Week 8
-  { id: "lec8_1",  week: 8,  phase: 3, mode: "exploratory",  tool: true, title: "Support Vector Machines: Margins, Kernels, and Where the Boundary Comes From",
-    business: "Why a handful of observations decide the boundary, and what changing the kernel really changes." },
-  { id: "lec8_2",  week: 8,  phase: 3, mode: "consolidation", title: "Ensemble Modeling: Boosting, Stacking, and When Combining Models Helps",
-    business: "Combining the semester's models, including the cases where the ensemble beats nothing but the effort spent on it." },
+  { id: "lec8_1",  week: 8,  phase: 3, mode: "exploratory",  tool: true, title: "Support Vector Machines for Classification and Regression",
+    business: "The hard and soft margin, the support vectors that decide the boundary, the RBF kernel and the epsilon tube, then a C by gamma grid judged on a test share." },
+  { id: "lec8_2",  week: 8,  phase: 3, mode: "consolidation", title: "Ensemble Modeling and Stacking",
+    business: "Four tools on one panel save out of fold predictions, and a meta-model on those columns is set against the best single model on diabetes progression." },
   // Week 9
   { id: "lec9_1",  week: 9,  phase: 3, mode: "exploratory",  tool: true, title: "Model Comparison: Building an Honest Evaluation Harness",
     business: "One harness, every model from the semester, scored the same way on the same splits." },
@@ -712,6 +712,10 @@ const HOMEWORK = [
     business: "A straight line and two networks on 1,000 delivery times, the order hour that only a network can use, then the same fits on the first 150 orders of a new town." },
   { id: "hw6_2", week: 7, part: 2, title: "Neural Networks on Late Deliveries, the Settings Grid and Target Leakage",
     business: "Late deliveries on a settings grid with each kind of error priced in dollars, then a customer rating that makes the model nearly perfect and arrives too late to use." },
+  { id: "hw7_1", week: 8, part: 1, title: "Support Vector Machines on Two Spirals and on Cabin Rates",
+    business: "C and gamma read on a plot of two spirals until the boundary overfits, then a straight line and a tuned machine priced in dollars a night for a cabin rental owner." },
+  { id: "hw7_2", week: 8, part: 2, title: "Stacking Readmission Models, Four Families and Four Networks",
+    business: "Four model families and then four networks stacked on hospital readmissions, with two meta-models chosen between by whether a missed readmission or an extra call is worse." },
 ];
 
 /* Weeks with no homework show what the outline says is due instead. */
@@ -771,6 +775,8 @@ const HOMEWORK_LINKS = {
   "hw5_2":    "https://canvas.vt.edu/courses/233475/assignments/2870239",
   "hw6_1":    "https://canvas.vt.edu/courses/233475/assignments/2874065",
   "hw6_2":    "https://canvas.vt.edu/courses/233475/assignments/2874066",
+  "hw7_1":    "https://canvas.vt.edu/courses/233475/assignments/2877691",
+  "hw7_2":    "https://canvas.vt.edu/courses/233475/assignments/2877692",
 };
 
 /* ============ Render ============ */
