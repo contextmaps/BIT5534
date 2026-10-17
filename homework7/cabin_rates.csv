@@ -1,0 +1,901 @@
+Nightly_Rate,Bedrooms,Lake_km,View,Hot_Tub,Season,Weekend,Rating,Days_Ahead,Validation
+161,2,6.1,Mountain,No,Winter,0,4.2,13,Training
+256,3,8.8,Mountain,Yes,Summer,0,4.7,44,Training
+300,3,1.9,Mountain,No,Fall,0,4.9,9,Validation
+150,2,7.2,No View,Yes,Spring,1,4.0,22,Training
+237,2,2.8,Lake,No,Summer,0,4.0,7,Training
+319,4,10.4,Mountain,No,Summer,0,4.9,48,Training
+286,4,5.6,Mountain,No,Fall,0,4.2,21,Training
+253,2,15.6,Mountain,No,Summer,1,4.7,16,Training
+274,3,22.9,No View,No,Summer,1,4.2,10,Test
+151,2,8.3,No View,No,Winter,0,4.5,10,Validation
+331,5,17.1,Mountain,No,Winter,1,4.6,93,Validation
+281,4,14.7,No View,Yes,Winter,0,4.0,13,Validation
+215,3,10.0,Mountain,No,Winter,1,4.8,36,Training
+311,4,15.9,No View,Yes,Summer,1,4.2,48,Training
+220,3,3.7,No View,No,Fall,0,4.4,19,Training
+280,4,16.8,No View,Yes,Fall,0,4.3,24,Training
+134,2,16.6,Mountain,Yes,Spring,0,4.5,5,Validation
+245,2,5.4,Mountain,No,Summer,1,4.6,29,Training
+179,2,8.2,No View,No,Fall,0,4.1,51,Training
+156,2,14.1,No View,No,Winter,1,4.8,2,Training
+319,3,4.5,Lake,No,Summer,1,4.3,29,Training
+402,2,1.1,Lake,No,Summer,1,4.5,17,Test
+220,3,12.4,No View,No,Fall,0,4.6,62,Training
+253,1,5.6,Lake,No,Summer,1,4.3,23,Training
+256,2,5.5,Mountain,No,Fall,1,4.4,34,Test
+256,2,5.2,No View,Yes,Fall,1,4.7,59,Training
+140,2,28.9,Mountain,No,Spring,0,4.0,11,Training
+201,3,6.2,No View,No,Winter,1,4.3,23,Test
+204,2,11.0,No View,No,Fall,0,5.0,48,Test
+213,2,3.3,No View,Yes,Summer,0,4.2,22,Test
+233,2,8.0,Mountain,No,Summer,0,4.9,46,Training
+280,4,5.5,Mountain,No,Spring,1,4.8,12,Training
+347,4,3.6,Lake,No,Fall,1,4.8,55,Validation
+333,3,2.5,Lake,No,Fall,1,4.7,41,Training
+195,2,5.3,No View,No,Summer,0,4.4,39,Training
+426,5,2.2,Lake,Yes,Summer,0,4.5,12,Test
+249,3,4.2,No View,No,Spring,1,4.9,48,Training
+174,2,4.8,No View,No,Fall,1,4.0,11,Test
+198,4,4.8,No View,No,Winter,0,4.8,2,Training
+182,2,6.0,No View,No,Summer,0,4.3,23,Test
+333,3,5.9,Lake,Yes,Summer,0,4.9,41,Training
+211,2,10.7,No View,No,Winter,1,4.9,10,Training
+147,2,11.0,No View,No,Winter,0,4.6,25,Test
+309,3,4.1,Mountain,No,Summer,1,4.7,65,Training
+214,2,7.9,Mountain,No,Fall,0,4.2,30,Training
+288,3,6.1,No View,No,Summer,1,4.6,43,Training
+315,3,15.6,Mountain,No,Fall,1,4.6,20,Training
+248,2,18.5,Mountain,Yes,Winter,0,4.7,17,Test
+319,3,0.6,Mountain,No,Winter,1,4.9,13,Validation
+200,3,10.2,Mountain,No,Winter,1,4.4,41,Test
+246,3,9.4,Mountain,Yes,Winter,0,4.2,4,Training
+256,2,5.4,Mountain,No,Summer,1,4.4,37,Validation
+199,2,16.1,No View,No,Spring,1,4.5,13,Validation
+229,3,6.5,Mountain,Yes,Fall,0,4.3,4,Training
+315,3,9.2,No View,Yes,Winter,1,4.5,54,Test
+166,3,5.9,No View,No,Winter,0,4.5,5,Training
+264,3,5.0,Lake,No,Fall,0,4.3,59,Training
+276,2,1.0,Mountain,No,Winter,1,4.8,19,Training
+214,1,4.8,Mountain,Yes,Winter,0,4.1,32,Training
+402,4,1.8,No View,Yes,Winter,1,4.6,16,Training
+301,3,3.0,Mountain,Yes,Fall,0,4.5,55,Validation
+172,2,13.2,No View,No,Spring,1,4.3,23,Training
+300,3,9.1,No View,Yes,Winter,1,4.6,43,Validation
+113,1,10.1,Mountain,No,Summer,0,3.7,25,Validation
+319,4,8.9,Mountain,Yes,Summer,1,4.5,14,Training
+298,5,8.9,No View,No,Spring,1,4.6,13,Validation
+90,1,9.1,Mountain,No,Winter,0,4.4,5,Validation
+190,2,2.3,No View,Yes,Spring,0,4.4,29,Training
+225,3,6.1,Mountain,No,Summer,0,4.1,26,Training
+176,2,15.9,No View,Yes,Summer,0,4.0,16,Validation
+340,3,3.8,Lake,No,Summer,1,4.0,15,Training
+222,2,5.3,Lake,No,Spring,1,4.3,52,Validation
+235,4,1.2,Mountain,No,Spring,0,3.9,50,Training
+551,5,0.3,No View,Yes,Summer,1,4.2,20,Test
+284,4,9.2,No View,No,Fall,0,4.7,86,Test
+274,3,2.2,No View,No,Fall,1,4.3,27,Test
+208,2,13.2,No View,No,Summer,1,4.0,4,Training
+299,5,17.9,No View,No,Fall,0,4.8,14,Training
+185,1,8.7,Mountain,No,Fall,1,4.2,17,Validation
+202,2,2.3,No View,Yes,Fall,0,4.1,26,Test
+161,2,15.8,No View,No,Winter,1,4.1,18,Training
+243,3,12.3,Mountain,Yes,Spring,1,4.7,6,Test
+297,3,3.2,No View,Yes,Summer,0,4.4,34,Training
+203,1,12.8,Mountain,Yes,Summer,1,4.4,35,Training
+237,1,2.4,No View,No,Summer,0,4.6,38,Validation
+214,3,6.1,No View,No,Winter,1,4.4,59,Training
+294,3,5.1,Mountain,No,Fall,1,4.5,6,Training
+188,3,13.2,Mountain,Yes,Spring,0,4.1,11,Validation
+361,3,3.7,Lake,Yes,Winter,1,4.5,31,Training
+314,4,14.2,No View,Yes,Winter,1,4.1,66,Training
+321,4,5.3,Mountain,No,Summer,1,4.4,31,Training
+167,2,7.6,No View,No,Spring,1,3.9,9,Training
+482,5,1.2,No View,No,Summer,1,4.5,50,Training
+259,4,8.3,No View,No,Winter,0,4.7,37,Training
+222,3,10.1,No View,No,Spring,0,4.5,39,Training
+228,3,17.3,No View,Yes,Spring,1,4.4,62,Training
+232,3,10.0,No View,No,Spring,1,4.4,71,Training
+287,4,7.6,Mountain,No,Summer,0,4.3,40,Test
+163,2,6.6,No View,No,Summer,0,3.7,16,Training
+267,3,8.4,No View,No,Summer,0,4.7,20,Training
+276,4,5.8,No View,No,Spring,1,4.5,39,Training
+137,1,4.4,Lake,Yes,Spring,0,4.1,26,Test
+271,3,6.5,No View,Yes,Fall,1,4.4,9,Test
+233,2,11.7,No View,Yes,Summer,1,4.8,83,Training
+212,4,9.1,No View,No,Winter,0,4.0,16,Validation
+193,1,5.1,Mountain,No,Summer,0,4.4,13,Test
+189,3,11.4,No View,No,Spring,0,4.6,73,Validation
+284,4,4.7,Mountain,Yes,Fall,1,4.2,6,Validation
+255,3,3.1,Mountain,No,Winter,1,4.6,17,Training
+186,2,12.9,No View,Yes,Fall,0,4.1,70,Validation
+284,3,3.5,Lake,Yes,Spring,0,4.7,23,Test
+236,2,1.8,Lake,No,Spring,1,4.3,36,Training
+273,3,3.2,No View,No,Summer,0,4.1,13,Validation
+189,1,4.1,No View,No,Summer,0,4.5,43,Training
+149,2,8.0,Mountain,No,Summer,0,3.9,25,Test
+162,1,10.8,No View,Yes,Spring,1,4.3,10,Training
+190,1,4.0,Lake,Yes,Fall,1,4.3,42,Test
+258,3,7.2,Mountain,Yes,Summer,0,5.0,4,Training
+138,2,7.3,Mountain,No,Summer,0,4.6,2,Training
+307,3,20.3,Mountain,No,Summer,1,4.7,16,Training
+253,3,5.8,No View,Yes,Fall,1,4.2,16,Training
+356,4,3.4,Mountain,No,Summer,1,4.1,20,Test
+193,2,1.6,No View,No,Spring,1,3.9,32,Test
+289,2,0.4,No View,Yes,Fall,1,4.6,9,Training
+222,2,2.1,Lake,No,Summer,0,4.1,2,Training
+149,1,11.1,No View,Yes,Winter,0,4.0,8,Training
+269,3,13.3,Mountain,No,Summer,0,4.7,43,Training
+329,4,12.0,No View,No,Summer,1,4.7,67,Training
+266,3,5.9,Lake,No,Fall,0,4.3,9,Training
+299,3,10.9,No View,Yes,Winter,1,4.3,13,Validation
+254,5,3.2,No View,No,Winter,0,4.3,12,Training
+310,3,1.9,No View,Yes,Summer,0,4.2,41,Training
+230,3,5.9,Mountain,Yes,Summer,0,4.1,19,Test
+246,4,5.5,No View,No,Summer,0,4.4,24,Training
+230,2,12.7,No View,Yes,Fall,1,4.4,43,Training
+210,3,9.6,Mountain,No,Summer,0,4.1,39,Training
+294,3,3.6,Mountain,Yes,Winter,1,4.7,3,Test
+316,4,3.6,No View,No,Spring,1,5.0,42,Test
+237,2,7.8,Mountain,Yes,Fall,1,4.1,49,Test
+189,3,6.9,Mountain,No,Winter,0,4.3,19,Training
+231,3,9.2,Mountain,Yes,Fall,1,3.7,2,Validation
+193,2,7.0,Mountain,No,Spring,1,4.7,6,Training
+135,1,12.8,No View,No,Fall,0,4.0,32,Validation
+214,2,2.9,Mountain,Yes,Summer,0,4.4,11,Training
+400,5,3.7,No View,Yes,Summer,1,4.6,53,Validation
+303,2,2.6,No View,Yes,Winter,1,4.6,20,Training
+152,1,4.3,Mountain,No,Summer,0,4.0,44,Test
+278,2,4.7,Mountain,Yes,Summer,1,4.2,60,Training
+134,1,2.2,No View,Yes,Spring,0,4.3,34,Training
+245,2,0.6,Lake,No,Spring,0,3.9,47,Test
+365,4,3.9,Lake,No,Summer,1,4.2,24,Validation
+148,2,13.6,No View,No,Spring,0,4.6,48,Training
+205,3,12.3,No View,Yes,Summer,0,4.7,2,Training
+205,2,8.2,No View,No,Summer,1,4.0,37,Validation
+201,3,8.7,Mountain,No,Summer,0,4.1,5,Training
+132,1,3.6,No View,No,Winter,1,4.2,19,Test
+477,4,1.9,Lake,No,Summer,1,4.8,20,Test
+142,2,8.7,No View,Yes,Spring,0,4.2,44,Training
+143,2,9.6,No View,No,Winter,0,4.4,66,Validation
+321,4,6.5,Mountain,Yes,Summer,1,4.7,44,Validation
+328,3,21.5,Mountain,Yes,Winter,0,4.6,127,Training
+140,2,22.5,No View,No,Spring,0,4.6,55,Test
+313,2,4.8,No View,Yes,Winter,1,4.8,22,Training
+242,4,9.6,Mountain,Yes,Summer,0,3.9,8,Validation
+242,2,7.5,Mountain,Yes,Winter,0,4.5,76,Test
+203,1,29.9,Mountain,Yes,Fall,0,4.4,12,Validation
+303,5,10.4,Mountain,No,Summer,0,4.2,37,Test
+149,1,18.6,No View,Yes,Summer,0,4.7,26,Validation
+180,1,9.2,No View,No,Fall,0,4.8,12,Validation
+283,3,0.2,No View,No,Winter,0,4.2,28,Training
+135,2,13.2,No View,Yes,Spring,1,3.9,50,Validation
+160,2,2.8,No View,Yes,Spring,1,3.5,59,Test
+305,3,5.2,Mountain,No,Summer,0,5.0,42,Training
+329,5,10.6,Mountain,Yes,Fall,0,4.2,37,Test
+295,5,15.0,Mountain,No,Fall,0,4.5,7,Training
+131,1,8.0,No View,Yes,Spring,0,4.4,37,Training
+348,4,3.6,Mountain,No,Summer,0,4.9,57,Validation
+154,2,4.0,No View,No,Fall,0,4.0,27,Validation
+240,4,17.2,Mountain,Yes,Summer,0,4.3,61,Training
+156,2,9.4,No View,No,Summer,1,4.1,5,Training
+162,3,8.4,Mountain,No,Winter,0,4.2,16,Training
+266,3,3.0,No View,No,Summer,0,4.1,28,Test
+180,4,8.5,Mountain,No,Winter,0,4.1,6,Training
+424,5,3.6,Lake,No,Summer,1,4.5,39,Validation
+173,2,10.4,Mountain,No,Spring,0,4.4,31,Training
+140,3,7.8,No View,No,Spring,0,4.0,24,Training
+270,3,5.6,No View,No,Summer,1,4.3,14,Training
+153,1,7.1,Mountain,Yes,Fall,0,4.1,7,Training
+279,3,15.6,Mountain,No,Fall,1,4.6,7,Training
+203,2,6.9,Mountain,No,Spring,1,4.6,25,Training
+163,2,16.6,Mountain,No,Spring,0,4.7,8,Test
+234,3,7.3,Mountain,Yes,Summer,0,4.3,63,Training
+251,3,4.0,Mountain,No,Summer,1,4.2,3,Test
+235,3,9.4,No View,No,Summer,1,4.4,6,Training
+246,3,9.0,Mountain,No,Summer,0,4.2,44,Training
+279,3,3.4,No View,No,Summer,0,4.4,29,Validation
+329,4,11.2,Mountain,Yes,Fall,1,4.2,12,Training
+154,2,9.3,Mountain,No,Winter,1,4.0,21,Training
+259,2,14.4,Mountain,Yes,Fall,1,4.5,30,Validation
+193,2,7.2,Mountain,No,Spring,0,4.6,36,Training
+305,4,3.1,Mountain,No,Summer,0,4.6,6,Test
+218,3,19.5,No View,Yes,Fall,1,4.0,36,Training
+258,2,5.2,Lake,Yes,Fall,0,4.8,8,Training
+214,3,2.8,Mountain,No,Winter,1,3.9,33,Training
+278,4,6.6,No View,No,Fall,1,4.2,13,Test
+304,4,3.4,Mountain,Yes,Summer,0,4.4,84,Test
+84,1,5.5,No View,No,Winter,0,4.4,8,Validation
+169,2,2.1,Mountain,No,Winter,0,4.3,39,Training
+359,4,2.4,Mountain,No,Summer,1,4.3,19,Training
+222,4,12.5,No View,No,Winter,1,4.3,20,Validation
+178,2,7.8,No View,No,Winter,0,4.7,46,Validation
+265,3,2.7,No View,No,Fall,1,4.7,8,Training
+161,2,4.2,Mountain,No,Winter,0,4.4,90,Training
+195,2,4.4,No View,No,Fall,1,4.1,87,Training
+138,1,5.8,No View,No,Summer,0,4.6,51,Test
+270,2,7.3,No View,Yes,Winter,0,4.8,12,Validation
+254,2,18.2,Mountain,No,Fall,1,4.6,59,Validation
+229,4,11.5,Mountain,No,Winter,1,4.2,24,Validation
+183,3,8.0,Mountain,No,Winter,0,4.3,52,Validation
+288,2,5.2,Lake,No,Fall,0,4.8,94,Training
+292,2,1.7,Mountain,No,Summer,0,4.5,26,Training
+305,3,6.0,Lake,Yes,Fall,1,4.1,31,Training
+312,3,3.5,Mountain,No,Summer,0,4.8,14,Training
+247,3,9.6,Mountain,No,Summer,0,4.2,51,Training
+206,2,6.3,No View,Yes,Spring,0,4.9,24,Test
+214,2,7.8,Mountain,No,Spring,0,5.0,38,Training
+203,3,26.3,No View,No,Summer,0,4.9,6,Training
+459,5,1.6,No View,Yes,Summer,1,4.6,16,Training
+310,3,2.2,Mountain,Yes,Fall,0,4.4,24,Validation
+227,4,20.5,No View,No,Summer,0,4.0,7,Validation
+152,1,3.5,Lake,No,Summer,0,4.2,5,Training
+196,2,6.9,No View,Yes,Fall,1,4.1,11,Training
+249,4,6.8,No View,Yes,Spring,1,4.2,21,Training
+212,3,3.0,No View,No,Winter,0,4.5,10,Training
+316,3,0.3,No View,Yes,Fall,1,4.3,13,Validation
+201,2,7.9,No View,No,Summer,0,4.7,18,Validation
+202,2,4.7,No View,Yes,Summer,0,4.2,30,Training
+304,3,2.7,No View,Yes,Winter,0,4.6,16,Test
+277,2,7.1,Mountain,No,Fall,1,4.8,10,Training
+163,2,6.5,No View,No,Summer,0,4.2,11,Training
+331,4,5.3,No View,Yes,Summer,1,4.4,80,Validation
+354,5,8.5,Mountain,Yes,Summer,1,4.1,32,Training
+262,5,8.9,Mountain,Yes,Spring,0,4.2,77,Training
+243,3,4.1,Mountain,No,Spring,1,4.5,25,Training
+223,1,5.2,No View,No,Summer,1,4.5,9,Test
+141,1,9.3,No View,No,Spring,0,4.7,19,Training
+278,3,1.9,No View,Yes,Fall,1,4.2,13,Test
+189,1,3.7,Lake,No,Fall,0,4.5,29,Training
+238,1,4.6,No View,Yes,Winter,0,4.6,13,Training
+277,2,3.7,Lake,Yes,Winter,0,4.4,27,Training
+311,5,22.3,No View,Yes,Fall,0,4.5,27,Validation
+227,2,12.1,Mountain,Yes,Winter,0,3.9,110,Training
+209,1,2.9,Lake,No,Fall,1,4.1,27,Test
+360,4,2.8,Mountain,No,Summer,0,4.7,61,Validation
+251,3,8.2,Mountain,Yes,Fall,0,3.9,13,Validation
+326,3,3.2,Lake,No,Summer,1,3.8,41,Validation
+180,2,3.8,No View,No,Winter,1,4.4,8,Training
+340,5,8.9,No View,No,Summer,1,3.9,23,Training
+333,5,11.2,Mountain,Yes,Fall,0,4.8,29,Test
+286,3,7.3,Mountain,Yes,Winter,0,4.8,26,Validation
+333,5,4.7,Lake,No,Spring,1,4.2,82,Training
+205,3,7.4,No View,Yes,Spring,1,4.4,71,Training
+257,2,1.9,Mountain,Yes,Fall,0,4.1,22,Training
+212,4,4.7,Mountain,Yes,Spring,1,3.8,5,Training
+326,3,1.8,Mountain,Yes,Winter,0,4.5,31,Training
+198,2,6.1,Mountain,No,Fall,0,3.9,15,Training
+269,3,7.3,Mountain,No,Fall,1,4.6,4,Test
+288,1,2.9,Lake,Yes,Summer,1,4.8,3,Training
+214,4,10.9,No View,No,Winter,0,4.5,24,Validation
+193,3,11.5,No View,No,Summer,0,4.8,3,Validation
+191,1,2.3,No View,No,Fall,1,4.4,41,Test
+332,5,12.0,No View,No,Fall,1,4.6,18,Training
+355,5,11.7,Mountain,Yes,Fall,0,4.7,15,Validation
+178,3,4.0,No View,No,Spring,0,4.3,47,Training
+179,2,13.2,No View,Yes,Fall,0,4.6,35,Training
+293,3,8.0,Mountain,Yes,Winter,1,4.4,7,Training
+154,1,23.5,No View,No,Summer,0,3.9,20,Validation
+189,1,2.4,Lake,No,Fall,0,4.2,5,Training
+209,2,10.2,Mountain,No,Fall,0,4.2,38,Validation
+232,2,5.2,No View,No,Summer,0,4.1,59,Training
+249,4,5.0,No View,No,Summer,0,4.2,19,Training
+209,2,14.7,Mountain,No,Summer,0,4.8,18,Test
+174,1,9.5,No View,No,Summer,1,4.2,42,Training
+297,3,6.5,Mountain,Yes,Winter,0,4.5,18,Training
+304,4,6.1,Mountain,Yes,Summer,0,4.9,3,Training
+284,4,4.0,Mountain,No,Summer,0,4.4,20,Training
+260,3,2.5,Mountain,Yes,Summer,0,4.3,3,Training
+334,5,3.0,No View,Yes,Spring,0,4.5,88,Validation
+233,3,1.9,Mountain,No,Summer,0,3.9,6,Validation
+295,4,3.9,Mountain,No,Summer,0,4.2,53,Validation
+228,2,13.2,No View,No,Summer,1,4.4,11,Test
+123,2,8.0,No View,Yes,Spring,1,3.7,4,Validation
+295,4,8.9,Mountain,No,Fall,0,4.8,38,Training
+300,2,3.4,No View,No,Summer,1,4.6,49,Training
+239,3,12.6,No View,No,Summer,0,4.8,50,Test
+193,3,4.7,No View,No,Winter,0,4.3,10,Validation
+132,1,5.6,No View,No,Fall,0,4.4,7,Training
+186,1,2.2,No View,No,Summer,0,4.7,3,Training
+246,3,10.2,Mountain,No,Winter,0,5.0,43,Test
+296,3,0.6,No View,Yes,Winter,0,4.7,4,Training
+306,3,3.4,Mountain,Yes,Summer,1,4.6,42,Validation
+307,2,2.9,No View,Yes,Summer,1,4.9,18,Training
+162,1,12.4,No View,No,Fall,1,4.7,9,Validation
+180,3,11.0,No View,Yes,Spring,1,3.8,66,Training
+163,2,4.1,No View,No,Fall,0,4.5,3,Test
+162,2,11.0,Mountain,No,Spring,0,4.4,89,Validation
+294,3,5.1,Lake,Yes,Fall,0,4.6,11,Training
+207,2,2.7,No View,No,Winter,1,4.6,26,Training
+247,3,6.9,Mountain,No,Summer,0,4.3,58,Training
+179,1,4.8,No View,Yes,Summer,0,4.4,27,Training
+162,2,3.9,Mountain,Yes,Spring,0,4.1,83,Test
+347,4,1.2,Lake,No,Fall,0,4.6,53,Training
+269,3,4.5,No View,No,Summer,1,4.4,16,Training
+330,4,5.9,Mountain,No,Fall,1,4.4,61,Training
+369,4,2.1,Lake,Yes,Spring,1,4.8,36,Training
+262,2,10.8,Mountain,Yes,Winter,1,4.6,70,Training
+249,2,5.1,No View,Yes,Summer,1,4.6,36,Training
+210,3,19.0,No View,No,Spring,0,4.4,28,Training
+229,1,2.1,Mountain,Yes,Summer,0,4.3,24,Training
+147,1,8.3,Mountain,No,Winter,1,4.4,40,Training
+261,4,8.8,No View,Yes,Fall,0,4.5,12,Test
+265,4,6.3,No View,No,Summer,0,4.4,79,Training
+184,2,6.0,No View,Yes,Summer,0,4.5,69,Training
+289,3,18.3,No View,Yes,Fall,1,4.6,27,Test
+264,3,7.1,Mountain,No,Fall,1,4.7,28,Training
+350,3,1.7,Lake,Yes,Winter,0,4.1,23,Training
+150,2,6.3,Mountain,No,Spring,1,4.1,63,Training
+174,3,8.9,No View,Yes,Fall,0,3.5,12,Test
+419,4,1.5,Lake,No,Summer,0,4.4,33,Training
+311,4,2.9,No View,No,Summer,1,4.0,21,Training
+148,2,8.1,No View,No,Summer,0,3.8,35,Training
+243,4,3.6,Mountain,No,Spring,0,4.4,36,Test
+175,2,6.9,No View,No,Summer,0,4.1,54,Training
+328,3,3.2,No View,Yes,Summer,1,4.7,18,Test
+315,3,2.7,Lake,No,Summer,0,4.8,16,Training
+216,2,13.2,Mountain,No,Summer,0,4.6,22,Training
+258,4,12.8,Mountain,No,Spring,0,4.3,17,Validation
+281,3,17.1,Mountain,No,Summer,1,4.0,69,Training
+392,5,3.6,Lake,Yes,Summer,0,4.1,38,Training
+354,5,15.6,Mountain,Yes,Fall,1,4.1,29,Training
+350,4,1.1,Mountain,Yes,Winter,0,4.3,8,Training
+232,4,13.4,Mountain,No,Summer,0,4.3,5,Training
+209,1,11.4,Mountain,Yes,Spring,1,4.9,59,Training
+309,3,1.9,No View,No,Summer,0,4.6,42,Training
+209,3,6.7,No View,No,Spring,0,5.0,32,Validation
+267,3,1.7,Mountain,No,Fall,0,4.5,7,Training
+206,3,3.0,Mountain,No,Spring,0,4.1,32,Validation
+174,2,11.9,No View,No,Spring,1,4.2,27,Training
+163,2,14.8,Mountain,No,Spring,1,4.4,3,Test
+246,4,6.6,Mountain,Yes,Spring,0,4.5,9,Test
+212,1,7.3,No View,No,Summer,1,4.7,27,Training
+258,3,13.9,Mountain,No,Fall,0,4.2,31,Training
+190,1,9.9,Mountain,Yes,Fall,0,4.3,34,Test
+240,2,1.3,No View,Yes,Fall,0,4.5,20,Training
+225,1,11.5,Mountain,Yes,Winter,0,4.8,29,Test
+238,3,4.7,No View,Yes,Summer,0,4.3,7,Test
+143,2,38.3,Mountain,No,Spring,0,4.6,46,Training
+259,3,3.4,Mountain,No,Fall,0,4.1,41,Validation
+223,2,4.7,No View,Yes,Spring,1,4.5,32,Test
+237,3,1.9,No View,Yes,Spring,0,4.5,11,Training
+276,3,4.2,No View,Yes,Summer,0,4.6,28,Validation
+225,2,6.5,No View,No,Fall,1,4.8,28,Test
+245,4,5.4,No View,No,Winter,1,4.4,7,Training
+304,4,3.0,Mountain,Yes,Spring,1,4.6,48,Training
+304,5,3.8,Mountain,No,Spring,1,4.1,52,Training
+211,2,9.7,No View,Yes,Winter,0,4.0,47,Training
+254,4,7.6,Mountain,No,Spring,0,4.4,36,Training
+153,1,4.2,Mountain,Yes,Spring,0,4.3,66,Validation
+361,5,11.0,Mountain,No,Fall,0,4.9,59,Training
+228,2,13.1,Mountain,Yes,Fall,0,4.6,22,Training
+241,2,18.1,No View,No,Summer,1,4.8,23,Validation
+158,1,7.6,Mountain,No,Fall,0,4.5,9,Training
+316,4,10.4,No View,No,Summer,1,4.7,22,Training
+229,3,10.3,Mountain,No,Summer,0,4.3,13,Validation
+356,5,5.8,Lake,Yes,Fall,0,4.6,32,Training
+162,1,3.5,No View,Yes,Fall,0,4.2,8,Training
+340,4,3.9,Mountain,Yes,Summer,1,4.3,42,Training
+104,2,10.4,No View,No,Winter,0,3.7,55,Training
+237,2,4.1,Mountain,No,Summer,0,4.5,41,Test
+299,3,10.8,Mountain,Yes,Winter,0,4.7,22,Training
+182,1,29.0,Mountain,No,Fall,0,4.6,6,Training
+264,3,18.7,Mountain,No,Summer,0,4.5,51,Training
+281,3,13.2,No View,Yes,Summer,1,4.3,20,Test
+71,1,14.5,Mountain,No,Spring,1,3.7,6,Validation
+223,2,11.6,No View,No,Summer,1,4.1,23,Training
+199,2,12.4,No View,No,Fall,1,4.4,22,Training
+215,2,9.0,Mountain,No,Fall,0,4.6,34,Test
+413,5,4.9,Mountain,No,Summer,1,4.8,14,Validation
+249,3,4.0,No View,No,Fall,0,4.7,29,Training
+200,2,2.1,No View,No,Summer,0,4.2,4,Training
+275,4,17.1,Mountain,No,Summer,0,4.3,28,Training
+203,2,3.2,No View,No,Summer,0,4.0,39,Training
+231,3,8.5,Mountain,No,Summer,1,3.8,14,Test
+180,2,13.8,Mountain,No,Spring,1,4.1,57,Test
+167,3,16.1,No View,No,Winter,0,4.2,21,Training
+186,3,6.6,No View,Yes,Spring,0,4.1,15,Validation
+292,2,5.8,Mountain,No,Summer,1,4.6,19,Validation
+253,4,6.0,No View,No,Winter,0,4.8,15,Training
+208,3,7.3,No View,Yes,Fall,1,4.2,4,Test
+328,3,6.9,Mountain,Yes,Fall,1,4.9,13,Training
+115,2,7.4,Mountain,No,Summer,0,3.9,1,Training
+192,2,8.8,No View,No,Fall,0,4.5,25,Training
+227,2,7.3,No View,Yes,Fall,1,4.6,25,Test
+193,1,8.6,Mountain,No,Summer,1,4.0,15,Test
+304,1,1.1,Mountain,Yes,Fall,1,4.7,16,Training
+234,3,19.7,No View,No,Fall,1,4.3,31,Validation
+152,2,10.3,No View,No,Winter,1,4.5,17,Test
+226,3,10.7,No View,No,Summer,0,4.7,14,Training
+222,1,7.6,Mountain,No,Fall,1,4.6,38,Training
+270,3,3.4,Mountain,No,Summer,0,4.3,29,Training
+214,2,5.0,Lake,No,Spring,1,4.4,71,Test
+374,4,5.1,Mountain,No,Summer,1,4.9,44,Validation
+198,4,13.9,Mountain,No,Spring,0,3.9,13,Training
+196,3,9.2,Mountain,Yes,Spring,0,4.7,12,Validation
+254,2,4.0,Mountain,Yes,Fall,0,4.7,35,Training
+190,1,3.1,No View,No,Winter,1,5.0,66,Test
+323,4,24.2,No View,Yes,Summer,1,4.8,48,Training
+237,3,17.8,Mountain,Yes,Summer,1,3.9,24,Training
+229,1,4.5,Lake,Yes,Summer,0,4.6,26,Training
+196,3,4.2,No View,No,Spring,0,4.5,16,Test
+371,1,1.0,Mountain,No,Summer,1,4.7,45,Test
+263,3,15.9,No View,No,Fall,0,5.0,63,Validation
+292,3,9.5,Mountain,No,Summer,1,4.5,51,Test
+230,4,20.5,No View,No,Fall,0,4.3,15,Validation
+193,2,7.0,No View,Yes,Fall,1,4.3,20,Validation
+481,2,0.3,Lake,No,Summer,1,4.7,41,Validation
+188,2,9.2,Mountain,No,Winter,1,4.1,21,Test
+424,1,0.3,Mountain,No,Summer,1,4.6,32,Validation
+345,5,21.8,No View,No,Summer,1,4.5,65,Training
+300,4,11.3,Mountain,Yes,Fall,1,3.9,11,Test
+181,3,7.5,No View,No,Summer,0,4.6,3,Training
+87,1,15.4,No View,No,Winter,0,4.1,19,Training
+205,1,15.5,No View,Yes,Summer,0,5.0,61,Training
+333,5,7.7,No View,Yes,Winter,0,4.1,20,Validation
+201,1,4.1,Mountain,No,Fall,0,4.7,38,Validation
+282,1,2.1,Lake,No,Summer,0,4.3,52,Training
+278,4,6.3,Mountain,Yes,Fall,0,4.1,24,Validation
+128,2,3.6,No View,No,Winter,0,4.5,6,Training
+146,2,5.2,No View,No,Spring,1,4.0,27,Training
+178,2,14.6,Mountain,No,Winter,0,4.3,21,Training
+307,3,4.2,No View,Yes,Winter,0,4.8,27,Training
+224,3,4.3,Mountain,Yes,Spring,1,4.3,18,Validation
+275,4,2.9,No View,No,Winter,0,5.0,25,Test
+257,3,16.5,Mountain,Yes,Spring,1,4.7,55,Test
+270,2,2.7,Mountain,No,Summer,1,3.9,19,Training
+363,2,2.5,No View,Yes,Summer,1,5.0,17,Training
+359,4,4.2,No View,Yes,Winter,0,4.9,8,Training
+194,2,4.3,Mountain,Yes,Winter,0,3.8,15,Test
+351,3,1.1,Mountain,Yes,Winter,0,4.3,59,Test
+370,3,2.5,No View,No,Summer,1,5.0,47,Training
+292,5,14.8,No View,No,Spring,0,4.4,18,Training
+274,1,1.5,Mountain,Yes,Fall,1,4.4,24,Training
+140,2,22.6,No View,Yes,Spring,0,4.1,13,Test
+282,3,9.6,Mountain,No,Summer,1,4.4,80,Training
+238,2,3.0,No View,No,Summer,0,4.6,6,Training
+255,1,5.4,Mountain,Yes,Fall,1,5.0,10,Validation
+254,4,7.2,Mountain,No,Summer,0,4.2,29,Training
+195,3,6.4,No View,No,Spring,0,4.4,7,Training
+265,2,6.2,Mountain,Yes,Winter,0,4.9,9,Test
+261,1,5.3,Lake,Yes,Winter,0,4.6,52,Test
+368,4,2.4,Mountain,No,Summer,1,4.0,24,Training
+257,3,4.6,No View,No,Fall,0,4.7,22,Validation
+324,5,4.4,Lake,No,Spring,0,4.5,59,Training
+196,3,3.2,Mountain,No,Fall,0,3.9,3,Training
+220,2,1.5,No View,No,Spring,1,4.8,6,Training
+148,1,3.1,No View,Yes,Fall,1,4.0,6,Test
+223,2,6.3,No View,No,Fall,1,4.8,59,Test
+314,3,2.4,No View,Yes,Winter,1,4.5,40,Training
+207,1,6.3,No View,Yes,Summer,1,4.6,8,Training
+155,2,4.4,No View,Yes,Fall,0,4.0,36,Test
+203,2,1.0,Mountain,No,Spring,0,4.2,11,Training
+275,3,6.3,Mountain,Yes,Summer,1,4.4,17,Validation
+201,2,8.1,No View,No,Fall,1,4.2,58,Training
+249,4,5.1,Mountain,No,Summer,0,4.1,24,Test
+218,2,2.5,No View,No,Fall,0,4.3,12,Training
+207,4,9.0,No View,No,Winter,0,4.1,40,Training
+311,4,7.0,No View,Yes,Fall,1,4.4,15,Training
+213,4,7.4,No View,No,Winter,0,4.2,36,Training
+115,2,4.6,Mountain,Yes,Spring,0,3.4,48,Test
+368,4,21.4,Mountain,Yes,Summer,1,4.9,14,Training
+191,2,12.4,Mountain,No,Spring,1,4.4,33,Training
+286,2,5.2,Mountain,No,Fall,1,4.6,28,Training
+72,2,6.7,Mountain,No,Spring,0,3.8,4,Validation
+239,3,2.8,Lake,No,Spring,0,4.0,76,Training
+146,1,17.7,No View,No,Fall,0,4.4,35,Training
+416,5,3.2,Mountain,No,Summer,0,5.0,53,Training
+118,1,6.6,No View,No,Spring,0,4.5,10,Validation
+129,3,6.1,Mountain,No,Winter,0,4.3,1,Training
+329,4,5.6,No View,No,Summer,1,4.5,47,Test
+85,1,8.4,No View,No,Spring,0,3.9,6,Training
+273,3,3.2,Lake,No,Fall,0,4.1,15,Training
+231,3,4.6,No View,No,Fall,0,4.7,6,Validation
+294,4,14.6,Mountain,No,Summer,1,4.4,35,Training
+274,3,2.6,Mountain,No,Fall,0,4.5,8,Validation
+252,4,5.5,Mountain,No,Spring,0,4.8,9,Training
+401,4,1.6,Lake,Yes,Summer,0,4.5,28,Training
+202,3,24.1,No View,No,Spring,1,3.9,55,Training
+201,2,4.0,No View,No,Winter,1,4.9,70,Test
+213,1,4.2,No View,Yes,Winter,0,4.6,12,Validation
+303,2,2.4,Mountain,Yes,Winter,1,4.7,53,Training
+332,4,7.3,Mountain,Yes,Winter,0,4.2,30,Validation
+249,2,4.4,No View,Yes,Fall,1,4.5,36,Validation
+382,4,7.1,No View,Yes,Winter,1,4.9,17,Validation
+270,2,8.8,Mountain,Yes,Fall,1,4.2,9,Training
+260,1,7.7,Mountain,Yes,Fall,1,4.7,42,Training
+247,2,5.8,No View,No,Summer,0,4.8,59,Validation
+249,2,10.7,No View,Yes,Summer,1,5.0,10,Training
+186,1,11.4,Mountain,No,Summer,1,4.0,12,Training
+112,2,13.5,Mountain,No,Spring,0,4.1,18,Validation
+278,4,4.5,Mountain,Yes,Spring,1,4.2,19,Validation
+236,2,7.1,Mountain,Yes,Winter,0,4.4,28,Training
+212,3,1.9,No View,No,Winter,0,4.4,60,Training
+334,5,6.6,Mountain,Yes,Summer,0,4.4,28,Training
+132,2,12.6,No View,No,Spring,0,4.6,41,Training
+209,3,11.5,No View,No,Fall,0,4.2,60,Training
+363,5,8.6,Mountain,Yes,Fall,0,4.6,66,Training
+268,3,3.6,Lake,No,Spring,1,4.1,46,Training
+350,3,3.2,Lake,No,Summer,1,4.3,76,Validation
+239,3,8.2,Mountain,No,Fall,1,3.9,22,Validation
+239,1,19.9,Mountain,No,Fall,1,4.9,6,Test
+272,3,1.2,Lake,Yes,Fall,0,3.6,60,Validation
+235,4,13.8,Mountain,No,Spring,0,4.2,19,Training
+314,5,8.5,Mountain,No,Summer,0,3.9,15,Validation
+356,3,1.8,No View,Yes,Summer,1,4.6,55,Training
+149,2,10.4,No View,No,Winter,0,4.6,15,Training
+276,3,11.4,No View,No,Summer,1,4.3,19,Training
+359,5,18.1,No View,Yes,Winter,1,4.1,65,Training
+267,5,3.2,No View,No,Winter,1,3.9,24,Test
+236,2,13.5,Mountain,No,Summer,1,4.1,25,Training
+332,5,2.1,No View,No,Fall,1,4.4,45,Validation
+271,3,3.9,No View,No,Summer,0,4.8,21,Training
+302,4,11.0,Mountain,No,Fall,0,4.5,47,Training
+251,2,3.1,No View,No,Summer,1,4.8,5,Training
+406,5,5.4,Lake,No,Summer,1,4.4,50,Training
+265,4,4.4,No View,No,Spring,1,4.4,86,Training
+260,2,4.8,No View,Yes,Winter,1,4.5,98,Training
+279,3,3.2,Lake,No,Winter,0,4.5,102,Validation
+106,1,4.1,No View,Yes,Spring,0,4.2,21,Training
+236,3,7.3,No View,No,Fall,0,4.6,16,Training
+316,3,7.5,Mountain,Yes,Winter,1,4.5,13,Training
+305,3,6.0,Lake,Yes,Summer,1,4.2,12,Training
+285,4,13.0,No View,No,Fall,1,4.6,21,Test
+264,4,11.0,Mountain,No,Fall,0,4.2,27,Training
+230,1,10.3,No View,Yes,Winter,1,4.4,53,Training
+327,4,5.2,Lake,No,Summer,0,4.3,13,Test
+270,3,9.1,Mountain,No,Fall,0,4.4,16,Training
+162,2,5.0,No View,No,Winter,0,4.7,15,Validation
+182,2,0.9,Mountain,Yes,Spring,0,4.0,17,Training
+234,3,9.0,No View,Yes,Summer,0,4.5,41,Training
+311,4,9.6,Mountain,Yes,Fall,1,4.3,32,Training
+296,4,7.1,No View,Yes,Fall,1,4.2,22,Test
+98,1,10.7,No View,Yes,Spring,0,4.0,15,Validation
+195,2,0.7,No View,No,Winter,0,4.6,29,Validation
+291,4,2.3,No View,Yes,Fall,0,4.3,29,Training
+191,3,13.2,Mountain,No,Spring,0,4.5,36,Training
+299,4,4.7,No View,Yes,Fall,1,4.5,51,Validation
+270,3,7.3,No View,No,Fall,0,4.9,87,Training
+237,2,14.4,No View,No,Summer,0,4.9,11,Training
+325,3,4.4,Mountain,Yes,Summer,1,4.7,28,Training
+243,3,5.3,Mountain,Yes,Spring,1,4.7,22,Training
+282,4,5.2,No View,No,Winter,1,5.0,39,Training
+179,2,10.9,No View,No,Winter,1,4.5,24,Training
+341,2,2.3,Mountain,Yes,Summer,1,4.6,81,Training
+221,3,6.0,Mountain,No,Winter,1,4.6,36,Validation
+245,2,6.1,No View,No,Summer,1,4.2,16,Test
+270,3,21.7,Mountain,No,Summer,1,4.4,18,Training
+336,5,7.6,Mountain,No,Fall,0,4.5,32,Test
+267,3,8.0,No View,No,Summer,1,4.5,70,Training
+253,3,4.6,Mountain,No,Summer,1,4.5,3,Training
+390,5,7.8,Mountain,No,Fall,1,4.4,36,Test
+263,3,2.6,Mountain,Yes,Spring,0,4.6,20,Training
+331,5,21.1,Mountain,No,Summer,1,4.1,41,Validation
+243,3,7.6,Mountain,No,Winter,1,4.6,11,Training
+160,3,10.2,No View,No,Winter,0,4.2,11,Test
+159,2,5.7,Lake,Yes,Fall,0,3.8,7,Training
+166,2,2.9,Mountain,No,Spring,0,4.0,56,Test
+319,3,14.3,No View,Yes,Summer,1,4.4,17,Test
+229,1,2.9,Mountain,Yes,Winter,1,4.6,5,Training
+115,2,8.9,Mountain,No,Spring,0,4.3,3,Test
+263,3,7.4,Mountain,No,Fall,1,4.4,25,Training
+256,3,11.6,Mountain,Yes,Fall,1,4.6,5,Training
+142,1,10.0,No View,No,Summer,0,4.3,51,Test
+195,2,5.3,No View,No,Spring,1,4.6,27,Test
+292,3,3.2,Mountain,No,Fall,0,4.8,30,Training
+225,2,14.9,Mountain,Yes,Fall,0,4.8,6,Test
+208,3,3.4,No View,No,Winter,1,4.2,19,Test
+143,1,19.2,Mountain,No,Summer,0,4.1,15,Validation
+422,4,2.3,Lake,No,Summer,0,5.0,29,Training
+225,2,4.7,Mountain,No,Winter,1,4.8,12,Test
+203,2,15.8,No View,Yes,Spring,0,4.9,21,Test
+251,2,3.7,No View,No,Summer,1,4.5,29,Training
+283,3,5.9,Lake,No,Summer,1,4.3,9,Training
+400,5,26.1,Mountain,Yes,Fall,1,4.6,33,Training
+325,2,1.9,Mountain,Yes,Summer,1,4.1,46,Training
+200,2,6.2,No View,Yes,Spring,1,4.4,34,Training
+187,1,1.4,No View,No,Fall,1,4.6,7,Test
+290,4,14.3,No View,Yes,Summer,0,4.5,24,Test
+176,2,14.7,No View,No,Summer,0,4.2,16,Training
+403,5,21.4,Mountain,Yes,Winter,1,4.6,15,Training
+181,1,2.3,No View,No,Fall,1,4.4,19,Test
+247,3,9.3,No View,No,Fall,1,4.6,25,Test
+307,4,7.6,No View,No,Summer,1,4.4,31,Validation
+240,3,15.3,Mountain,No,Spring,1,4.4,17,Training
+204,2,7.7,Mountain,No,Summer,0,4.1,24,Test
+297,4,6.9,No View,Yes,Fall,0,5.0,24,Validation
+276,3,5.1,No View,No,Summer,0,4.9,35,Training
+242,4,6.2,No View,No,Fall,0,4.2,8,Training
+233,2,4.7,Mountain,No,Summer,0,4.3,39,Training
+256,3,6.9,No View,Yes,Summer,0,4.8,34,Training
+433,3,0.8,Lake,Yes,Summer,0,4.1,41,Test
+277,4,20.6,Mountain,No,Summer,0,4.7,8,Training
+255,1,4.5,No View,Yes,Summer,1,4.7,22,Validation
+330,4,2.4,Mountain,No,Summer,0,4.3,89,Training
+316,3,4.6,No View,Yes,Summer,0,4.8,113,Training
+316,4,14.2,No View,Yes,Summer,1,4.5,23,Training
+246,3,10.8,No View,No,Spring,1,4.5,80,Training
+281,3,6.4,Mountain,No,Fall,1,4.5,27,Training
+256,4,8.3,No View,No,Spring,0,4.5,11,Training
+188,2,6.5,Mountain,No,Fall,1,4.1,6,Validation
+216,1,19.9,Mountain,No,Fall,1,4.5,8,Validation
+188,3,7.4,Mountain,No,Summer,0,4.4,5,Training
+290,4,7.5,Mountain,Yes,Summer,1,4.4,4,Training
+303,4,3.0,No View,No,Fall,0,4.6,11,Training
+241,2,5.3,Lake,No,Summer,0,4.3,58,Training
+190,3,5.3,Mountain,No,Summer,0,4.5,4,Training
+300,3,4.4,No View,Yes,Winter,0,4.6,38,Training
+207,2,13.9,Mountain,No,Summer,0,4.2,35,Training
+253,4,4.4,No View,No,Spring,0,4.4,55,Validation
+290,5,3.1,No View,No,Fall,0,4.2,35,Test
+158,2,6.8,Mountain,No,Spring,0,4.4,8,Training
+422,2,1.1,Mountain,Yes,Summer,1,4.7,38,Test
+270,3,4.3,No View,Yes,Spring,1,4.6,86,Validation
+260,4,1.6,Mountain,No,Fall,1,3.9,3,Test
+227,3,10.6,No View,Yes,Fall,0,4.1,16,Validation
+352,5,4.4,Mountain,No,Summer,1,4.5,53,Validation
+232,5,12.4,No View,Yes,Fall,0,3.6,29,Validation
+229,3,3.1,No View,No,Spring,1,4.3,52,Training
+221,3,2.3,Lake,No,Winter,0,4.1,27,Training
+238,2,12.9,Mountain,No,Fall,0,4.4,25,Validation
+131,2,9.6,No View,Yes,Spring,0,3.8,16,Training
+263,4,16.9,No View,No,Summer,1,4.3,7,Validation
+233,2,2.5,No View,Yes,Fall,1,4.4,7,Training
+158,2,2.3,Mountain,No,Spring,1,3.9,34,Validation
+203,1,3.9,Mountain,No,Summer,1,4.5,3,Training
+256,2,20.6,No View,Yes,Summer,1,4.5,27,Training
+298,3,8.6,Mountain,No,Summer,1,4.6,36,Training
+297,5,18.6,Mountain,No,Summer,0,4.1,3,Training
+194,2,11.3,Mountain,No,Summer,0,4.5,28,Validation
+310,4,6.0,Lake,No,Summer,1,4.4,5,Training
+279,1,1.8,Mountain,Yes,Summer,0,4.6,18,Training
+287,4,6.7,No View,No,Fall,1,4.6,10,Validation
+331,5,5.6,Mountain,Yes,Fall,0,4.2,42,Training
+170,3,21.9,No View,No,Spring,0,4.4,24,Validation
+229,3,7.3,Mountain,No,Spring,0,4.6,100,Validation
+254,4,8.6,No View,No,Summer,0,4.4,9,Training
+186,2,18.2,No View,No,Fall,0,4.6,134,Training
+400,5,2.0,No View,No,Summer,0,4.5,11,Training
+312,4,5.3,No View,Yes,Winter,1,4.5,7,Test
+340,5,7.0,Mountain,No,Fall,1,4.2,9,Training
+329,4,4.4,No View,Yes,Summer,1,4.2,19,Test
+208,3,4.2,No View,Yes,Spring,1,3.8,60,Training
+276,3,9.5,No View,Yes,Summer,1,3.8,11,Training
+202,3,5.3,Mountain,No,Spring,1,4.0,15,Training
+369,2,1.2,Lake,Yes,Summer,0,4.4,17,Training
+346,5,1.9,No View,No,Fall,1,4.2,14,Training
+188,1,32.6,No View,No,Fall,1,4.3,93,Validation
+173,2,15.2,No View,No,Fall,1,4.5,20,Training
+269,5,6.6,Mountain,Yes,Fall,0,3.7,4,Test
+272,5,8.2,No View,Yes,Spring,0,4.3,50,Training
+247,2,11.0,No View,Yes,Summer,1,5.0,7,Training
+349,5,10.0,No View,No,Summer,1,4.4,21,Test
+353,4,2.0,Mountain,Yes,Fall,1,4.1,38,Training
+224,4,9.4,No View,No,Summer,0,4.2,5,Training
+229,3,8.5,Mountain,Yes,Summer,0,4.0,17,Training
+399,2,0.9,Mountain,Yes,Summer,1,4.5,47,Training
+179,1,7.5,Mountain,No,Summer,0,5.0,82,Validation
+293,2,7.7,No View,No,Fall,1,5.0,133,Validation
+234,2,3.6,Mountain,Yes,Summer,1,3.8,20,Training
+143,1,7.6,Mountain,No,Spring,1,4.2,43,Test
+221,1,8.4,Mountain,No,Summer,1,4.6,42,Training
+192,2,4.0,No View,Yes,Summer,0,4.2,25,Test
+261,3,9.2,No View,No,Summer,0,5.0,11,Training
+316,4,8.8,Mountain,Yes,Summer,1,4.1,21,Training
+334,3,4.5,No View,Yes,Summer,1,4.6,94,Training
+315,3,1.9,No View,No,Summer,1,4.3,5,Training
+312,4,5.7,No View,Yes,Winter,0,4.2,34,Training
+207,4,4.3,No View,No,Fall,0,3.8,29,Training
+255,2,13.6,Mountain,No,Fall,1,4.4,42,Test
+306,3,7.0,No View,No,Summer,1,4.7,33,Validation
+314,5,8.8,No View,Yes,Fall,0,4.6,20,Training
+115,1,7.0,No View,No,Spring,0,4.6,16,Training
+242,3,15.7,Mountain,No,Fall,1,4.4,6,Training
+231,4,5.4,No View,No,Winter,0,4.5,48,Training
+197,2,5.6,No View,No,Fall,0,4.8,34,Training
+216,3,16.2,Mountain,No,Fall,0,3.8,6,Validation
+314,4,3.9,Mountain,Yes,Fall,0,4.7,63,Training
+237,4,17.0,No View,Yes,Spring,0,4.4,44,Test
+118,3,6.4,No View,No,Winter,0,4.0,6,Training
+286,3,8.6,Mountain,Yes,Fall,0,4.5,15,Training
+259,3,4.9,No View,Yes,Winter,0,3.8,18,Validation
+246,2,11.8,Mountain,Yes,Summer,0,4.6,167,Training
+146,1,8.5,Mountain,No,Spring,1,4.3,8,Training
+263,5,6.5,Mountain,No,Winter,0,4.1,44,Test
+256,3,1.8,No View,No,Spring,0,4.9,70,Training
+241,2,3.9,No View,Yes,Winter,1,3.8,17,Test
+234,2,6.9,No View,Yes,Summer,0,4.9,11,Test
+220,2,15.2,Mountain,Yes,Spring,1,4.7,55,Validation
+221,3,3.9,Lake,No,Spring,0,4.0,10,Training
+221,3,10.3,No View,No,Winter,1,4.3,27,Validation
+205,2,1.7,No View,No,Fall,1,4.0,37,Test
+158,1,10.8,Mountain,Yes,Fall,0,4.0,7,Training
+507,5,2.2,Mountain,Yes,Summer,1,5.0,58,Validation
+108,1,11.5,Mountain,No,Summer,0,4.1,26,Training
+361,4,3.9,No View,Yes,Summer,1,4.4,32,Validation
+197,1,7.6,Mountain,Yes,Fall,0,4.7,30,Training
+296,3,7.1,Mountain,No,Fall,1,4.3,36,Training
+291,4,2.3,Mountain,No,Summer,0,4.2,12,Training
+263,3,13.9,No View,Yes,Fall,1,4.4,12,Training
+261,3,12.2,Mountain,No,Summer,1,4.4,38,Training
+142,1,3.6,Mountain,No,Spring,1,4.1,62,Validation
+330,4,13.4,Mountain,No,Summer,1,4.4,45,Training
+233,3,6.5,Mountain,No,Summer,0,4.1,38,Test
+415,5,1.6,Mountain,Yes,Fall,1,4.3,51,Training
+320,5,17.1,Mountain,No,Summer,0,4.5,19,Training
+270,4,9.1,No View,No,Summer,0,4.7,15,Training
+223,4,11.6,Mountain,No,Winter,0,4.2,27,Validation
+307,5,4.1,Mountain,No,Summer,0,4.0,29,Training
+265,3,2.2,Mountain,Yes,Spring,1,4.4,7,Test
+286,3,10.9,Mountain,No,Fall,0,4.5,56,Training
+235,3,14.2,No View,Yes,Fall,0,4.7,12,Training
+358,3,1.0,Mountain,Yes,Fall,1,4.4,16,Test
+256,3,20.4,No View,Yes,Winter,0,4.1,20,Training
+247,3,4.1,No View,Yes,Summer,0,4.1,80,Training
+143,1,16.6,No View,No,Summer,0,4.0,64,Training
+178,1,4.9,Mountain,No,Spring,1,4.4,11,Training
+169,2,7.8,Mountain,No,Summer,0,4.1,43,Training
+245,2,5.1,Lake,No,Summer,0,4.2,18,Test
+282,3,1.6,No View,No,Spring,1,4.6,11,Test
+432,5,1.9,Mountain,No,Summer,1,4.2,25,Training
+231,2,2.8,No View,No,Fall,1,4.4,42,Validation
+254,4,4.8,Mountain,No,Winter,0,4.4,25,Training
+243,2,1.4,Mountain,Yes,Fall,0,4.1,13,Training
+308,3,4.5,No View,Yes,Summer,1,4.2,52,Training
+189,1,8.7,No View,Yes,Fall,1,4.6,12,Test
+214,3,19.1,Mountain,No,Summer,0,4.0,23,Training
+272,3,7.6,Mountain,No,Fall,0,4.8,54,Training
+330,4,3.6,Lake,No,Fall,0,4.6,69,Validation
+164,1,4.4,No View,No,Spring,1,4.6,13,Training
+205,3,2.0,No View,No,Fall,0,4.3,4,Test
+175,4,5.6,Mountain,No,Winter,1,4.1,3,Validation
+242,3,5.1,No View,No,Fall,0,4.5,53,Test
+172,2,7.5,Mountain,No,Summer,0,5.0,2,Training
+305,4,13.4,Mountain,No,Fall,0,4.6,40,Test
+190,2,11.2,Mountain,No,Summer,0,4.2,41,Training
+180,1,2.7,Lake,No,Summer,0,3.8,6,Training
+156,1,1.2,No View,Yes,Spring,0,4.3,14,Training
+303,4,1.6,Mountain,No,Spring,1,4.2,30,Training
+306,4,3.5,Mountain,No,Summer,1,4.0,16,Training
+241,4,9.7,Mountain,Yes,Spring,0,4.2,15,Training
+292,4,3.3,No View,No,Spring,1,4.8,26,Training
+299,4,9.5,No View,No,Summer,1,4.2,18,Test
+337,5,5.1,Mountain,No,Fall,0,4.5,10,Training
+197,3,20.8,No View,No,Summer,0,4.7,4,Training
+250,3,11.9,Mountain,No,Winter,1,4.7,11,Training
+441,5,1.5,Mountain,Yes,Fall,1,4.6,44,Training
+261,3,9.9,Mountain,Yes,Summer,1,4.1,10,Training
+223,2,3.0,Lake,No,Winter,0,4.5,26,Test
+418,5,0.6,Mountain,No,Summer,0,3.7,5,Test
+188,1,11.8,Mountain,Yes,Fall,0,4.0,53,Validation
+355,3,4.6,Mountain,Yes,Winter,1,4.6,24,Validation
+349,5,18.7,Mountain,No,Fall,0,4.6,31,Training
+289,3,14.5,No View,No,Summer,1,4.7,43,Training
+204,3,4.6,Mountain,No,Spring,0,4.4,70,Training
+417,3,1.2,No View,No,Summer,1,4.6,23,Training
+261,2,2.0,No View,No,Summer,0,4.3,9,Validation
+220,3,9.6,Mountain,Yes,Summer,0,4.0,33,Training
+267,3,7.9,Mountain,Yes,Fall,1,4.5,6,Test
+338,3,2.6,No View,Yes,Winter,1,4.8,10,Training
+292,4,3.4,Lake,No,Spring,0,4.9,16,Test
+278,5,24.3,Mountain,No,Summer,0,4.6,9,Validation
+200,3,6.6,No View,No,Summer,0,4.0,28,Training
+214,3,5.1,Mountain,No,Winter,1,4.4,33,Test
+287,4,0.9,No View,No,Spring,0,4.3,29,Training
+346,3,1.4,Mountain,Yes,Summer,0,4.2,30,Test
+172,2,12.8,No View,No,Fall,0,4.4,19,Test
+236,4,18.4,No View,No,Fall,0,4.1,16,Test
+281,4,6.3,No View,Yes,Fall,1,4.3,41,Test
+381,5,3.4,Mountain,No,Summer,0,4.7,17,Training
+174,1,4.2,Mountain,No,Fall,0,4.0,22,Validation
+253,3,3.7,No View,Yes,Fall,0,4.6,16,Training
+156,1,6.1,Mountain,Yes,Summer,0,4.2,6,Test
+308,3,7.3,Mountain,No,Fall,1,4.5,9,Training
+239,3,21.6,No View,No,Spring,0,4.9,10,Training
+243,2,5.8,Mountain,No,Summer,1,4.2,21,Training
+332,5,2.8,Mountain,Yes,Spring,1,4.3,75,Validation
+248,3,4.7,Lake,No,Winter,0,4.7,20,Training
+199,2,12.6,No View,No,Summer,0,4.6,49,Validation
+348,4,4.2,Lake,No,Fall,0,5.0,36,Training
+242,2,0.9,No View,No,Fall,0,4.6,54,Training
+190,2,4.6,No View,No,Fall,0,4.4,21,Training
+231,4,3.3,Mountain,No,Winter,0,4.1,25,Test
+240,3,8.9,No View,No,Fall,0,4.5,11,Training
+310,4,9.1,Mountain,No,Summer,0,5.0,35,Training
+227,2,20.4,No View,No,Fall,1,4.5,32,Training
+193,2,4.0,Lake,No,Winter,0,4.0,20,Training
+221,2,6.1,Mountain,No,Summer,1,4.3,49,Test
+197,3,13.5,Mountain,No,Spring,0,4.2,53,Training
+242,4,3.7,Mountain,No,Winter,0,4.5,17,Training
+286,4,3.4,No View,No,Summer,0,4.3,31,Training
+348,5,1.9,Mountain,No,Summer,0,4.2,28,Validation
+234,2,13.0,Mountain,Yes,Fall,0,4.1,16,Training
+294,4,8.9,Mountain,Yes,Fall,0,4.3,8,Training
+287,5,4.0,No View,No,Spring,0,4.5,25,Validation
+201,2,2.0,No View,No,Winter,0,4.7,12,Test
+201,1,12.8,Mountain,No,Summer,1,4.2,35,Training
+201,1,15.6,Mountain,No,Fall,0,4.7,67,Training
+269,4,3.2,Mountain,Yes,Fall,0,3.8,26,Test
+270,4,3.4,No View,No,Spring,0,4.9,15,Training
+100,2,14.9,No View,Yes,Spring,0,3.9,17,Validation
+318,5,2.8,No View,Yes,Summer,0,4.2,45,Training
+191,2,4.0,No View,No,Fall,1,4.3,8,Validation
+297,3,1.8,Lake,No,Fall,0,4.2,14,Training
+249,2,5.7,Lake,No,Spring,1,5.0,33,Training
+251,4,14.7,No View,Yes,Summer,0,4.2,31,Training
+166,1,17.9,Mountain,No,Spring,0,5.0,21,Test
+184,3,15.0,No View,Yes,Fall,0,3.4,44,Training
+206,2,10.2,No View,Yes,Winter,0,3.7,31,Training
+237,3,15.7,Mountain,No,Spring,1,4.4,54,Training
+243,4,3.8,No View,No,Fall,0,4.0,59,Training
+168,2,15.8,Mountain,Yes,Summer,0,3.9,52,Training
+324,5,2.3,Mountain,No,Winter,1,4.3,53,Validation
+214,3,6.3,No View,No,Winter,0,4.2,16,Training
+185,2,9.6,No View,No,Fall,1,4.2,39,Validation
+196,2,9.9,Mountain,No,Summer,0,4.2,19,Validation
+234,1,3.8,Mountain,Yes,Fall,1,4.4,30,Training
+190,1,8.0,Mountain,Yes,Fall,1,4.5,55,Validation
+317,4,16.6,No View,Yes,Winter,0,4.6,11,Training
+146,1,10.2,Mountain,Yes,Spring,1,4.4,18,Training
+219,3,15.8,No View,Yes,Summer,0,4.0,25,Test
+237,3,1.7,Mountain,Yes,Spring,1,4.1,15,Training
+240,3,1.1,No View,No,Spring,0,4.2,20,Test
+299,3,2.0,Lake,No,Fall,0,4.6,18,Validation
+207,1,3.2,No View,No,Summer,1,4.0,33,Test
+233,2,10.4,No View,Yes,Fall,0,4.7,90,Training
+183,3,9.2,Mountain,No,Spring,0,4.0,5,Training
+370,4,0.3,Mountain,Yes,Fall,0,4.4,14,Training
+204,3,9.0,Mountain,No,Spring,1,4.3,19,Training
+254,2,10.4,Mountain,No,Summer,1,4.6,23,Test
+303,4,7.1,Mountain,No,Summer,0,4.7,8,Training
+132,1,6.0,Lake,No,Spring,1,4.3,3,Training
+305,3,1.9,No View,No,Summer,0,4.2,31,Test
+302,5,8.3,No View,No,Fall,0,4.6,20,Training
+187,2,3.3,No View,No,Fall,1,4.2,10,Validation
+191,2,14.8,Mountain,No,Spring,1,4.5,8,Training
+163,2,4.9,Mountain,No,Winter,1,4.4,19,Training
+258,3,7.7,Mountain,Yes,Winter,0,4.2,10,Validation
+252,4,6.3,No View,No,Fall,0,4.2,24,Training
+349,3,5.1,Lake,Yes,Winter,1,4.6,24,Validation
+256,2,9.5,Mountain,Yes,Winter,0,4.5,16,Training
+163,2,14.0,No View,No,Spring,1,4.1,29,Training
+197,3,1.9,No View,No,Winter,0,4.0,38,Training
+218,3,8.9,Mountain,No,Spring,0,4.7,9,Test
+278,1,17.4,Mountain,Yes,Winter,0,5.0,16,Training
+231,3,4.3,Mountain,No,Spring,0,4.4,48,Training
+249,3,4.7,No View,No,Fall,1,4.3,40,Training
+171,1,6.5,No View,Yes,Fall,0,4.6,9,Training
+284,4,3.7,No View,No,Summer,0,4.2,64,Training
+202,1,4.6,No View,Yes,Winter,1,4.0,70,Test
+220,1,3.8,Mountain,Yes,Fall,0,4.6,81,Test
+244,3,16.1,Mountain,Yes,Summer,0,4.3,34,Training
+228,4,12.2,No View,No,Winter,1,4.8,4,Training
+292,3,6.6,No View,No,Summer,1,4.5,96,Test
+305,3,7.4,Mountain,No,Fall,1,4.6,13,Training
+178,1,3.9,Lake,No,Fall,0,4.2,25,Training
+219,3,12.8,No View,No,Spring,1,4.6,38,Validation
+188,3,3.3,Mountain,No,Winter,0,4.3,59,Training
+191,1,9.6,No View,No,Fall,1,4.7,47,Training
+291,4,9.9,Mountain,No,Summer,0,4.8,27,Training
+173,2,10.4,No View,No,Fall,0,4.4,22,Training
+296,3,3.0,Mountain,Yes,Fall,0,4.3,56,Training
+206,3,8.0,No View,No,Summer,1,3.9,57,Test
+323,3,1.7,Mountain,No,Fall,1,4.9,29,Test
+351,4,9.1,Mountain,Yes,Fall,0,5.0,23,Test
+309,4,6.4,Mountain,No,Fall,0,4.8,8,Training
+216,2,1.6,Mountain,Yes,Spring,1,4.0,14,Training
+233,2,10.4,Mountain,No,Fall,0,4.4,28,Training
+208,2,5.4,No View,Yes,Winter,0,4.1,16,Validation
+183,2,8.5,No View,No,Fall,0,4.4,90,Training
+296,3,5.6,Mountain,Yes,Summer,1,4.3,26,Validation
+249,3,3.4,No View,Yes,Summer,0,4.3,51,Validation
+145,3,8.6,Mountain,No,Winter,0,3.8,18,Training
+299,3,1.7,Lake,No,Spring,1,4.4,29,Training
+250,2,8.4,No View,Yes,Winter,1,4.7,3,Training
+363,4,2.5,Mountain,Yes,Fall,1,4.3,28,Validation
+257,3,8.6,No View,No,Summer,1,4.1,13,Validation
+248,4,3.2,No View,No,Winter,1,4.1,11,Training
+266,5,8.7,No View,Yes,Spring,0,4.2,66,Test
+164,3,11.9,Mountain,No,Winter,0,4.2,53,Training
+344,3,1.8,Lake,Yes,Summer,0,4.2,88,Training
+374,4,1.4,No View,No,Summer,0,5.0,8,Training

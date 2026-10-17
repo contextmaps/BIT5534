@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stacking Readmission Models, Four Families and Four Networks</title>
+<style>
+:root {
+  --c-text:#1a1a1a; --c-muted:#4a4a4a;
+  --c-meta-bg:#f4f6f9; --c-meta-border:#d0d7e2;
+  --c-obj-bg:#eef4fb; --c-obj-accent:#1a5da0;
+  --c-ctx-bg:#fffbf0; --c-ctx-border:#e8d8a0; --c-ctx-label:#5c4400;
+  --c-ctx-s-bg:#f0f7ff; --c-ctx-s-border:#a0c8f0; --c-ctx-s-label:#1a4a80;
+  --c-nar-bg:#f9f9f9; --c-nar-border:#bbb;
+  --c-dis-bg:#f0f4ff; --c-dis-border:#8090cc; --c-dis-label:#1e2e80;
+  --c-sys-bg:#f3f0ff; --c-sys-border:#9080d0; --c-sys-label:#3a2090;
+  --c-scr-bg:#fff8e8; --c-scr-border:#d0a030; --c-scr-label:#6b4a00;
+  --c-s-bg:#f0faf4; --c-s-border:#70c090; --c-s-id:#14552f;
+  --c-r-bg:#fff8f0; --c-r-border:#d0a040; --c-r-id:#6b3e00;
+  --c-mk-bg:#f0f0ff; --c-mk-border:#8080c8; --c-mk-id:#2a2a80;
+  --c-m-bg:#f0f8ff; --c-m-border:#70a8d0; --c-m-id:#0a4a70;
+  --c-mc-bg:#f8f8ff; --c-mc-border:#a0a0d0;
+  --c-btn:#14552f; --c-btn-r:#6b3e00; --c-btn-mk:#2a2a80;
+  --c-btn-mo:#0a4a70; --c-btn-mc:#3a3a6a;
+  --c-q-bg:#f0fafd; --c-q-border:#70b8d0; --c-q-id:#0a5070;
+  --c-btn-q:#0a5070;
+  --c-o-bg:#fef6f0; --c-o-border:#e89870; --c-o-id:#a04510;
+  --c-btn-o:#a04510;
+  --radius:8px; --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --page:1100px;
+}
+/* Two layers. The wrapper takes the width Canvas gives it, up to --page, so it
+   never overflows a narrow frame and never needs a per-machine number. Everything
+   inside fills the block it sits in. */
+.plib-wrap{font-family:var(--font);color:var(--c-text);max-width:min(var(--page),100% - 2rem);margin:0 auto;padding:1rem 0}
+/* Every block spans the page so their left and right edges line up down the
+   column, and the text inside fills the block.
+
+   There is no reading column. D-032 put prose in a 720px column inside a 1100px
+   wrapper, and on 2026-09-02 the instructor read the rendered result and rejected
+   it: every text block stopped two thirds of the way across its own card and
+   stranded the rest, and a bordered box that stops short of the card it sits in
+   reads as broken rather than as typography. The wrapper's own
+   min(1100px, 100% - 2rem) is now the only bound, so a line never exceeds about
+   1055px. The cost is real and is worth stating. A long paragraph at 1055px reads
+   worse than the same paragraph at 800, and what pays for it is the writing
+   standard's rule on paragraph length, which now carries the load the column used
+   to carry. Recorded as D-043, amending D-032. */
+.plib-wrap > *{max-width:100%}
+.plib-submit{margin:2rem 0 1rem;padding:1.4rem 1.6rem;border-radius:var(--radius);background:var(--c-obj-bg);border:2px solid var(--c-obj-accent)}
+.plib-submit-title{font-size:13px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--c-obj-accent)}
+.plib-submit-p{margin:.5rem 0 1rem;font-size:15px;line-height:1.65}
+.plib-submit-btn{display:inline-block;background:var(--c-obj-accent);color:#fff;text-decoration:none;font-size:16px;font-weight:600;padding:.7rem 1.4rem;border-radius:var(--radius)}
+.plib-submit-btn:hover{filter:brightness(1.12)}
+.plib-submit-btn:focus{outline:3px solid var(--c-obj-accent);outline-offset:3px}
+.plib-submit-note{margin-top:.55rem;font-size:13px;color:var(--c-muted)}
+.plib-material{margin:1.6rem 0;padding:1.2rem 1.4rem;border-radius:var(--radius);background:var(--c-s-bg);border:1px solid var(--c-s-border)}
+.plib-material-tag{font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--c-s-id)}
+.plib-material-title{margin-top:.3rem;font-size:17px;font-weight:600;color:var(--c-text)}
+.plib-material-box{margin:.9rem 0 1.1rem;padding:.9rem 1rem;max-height:22rem;overflow:auto;background:#fff;border:1px solid var(--c-s-border);border-radius:6px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;color:var(--c-text)}
+.plib-material-box:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+.plib-material-btns{display:flex;flex-wrap:wrap;gap:.6rem}
+.plib-material-copies{margin:.9rem 0 0;display:flex;flex-wrap:wrap;gap:.8rem}
+.plib-copyrow{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;padding:.55rem .7rem;background:#fff;border:1px solid var(--c-s-border);border-radius:6px}
+.plib-copyrow-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-s-id)}
+.plib-copyrow-code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;color:var(--c-text)}
+.plib-copy-btn-row{padding:.3rem .6rem;font-size:12px}
+.plib-material-btn{display:inline-block;background:var(--c-s-id);color:#fff;text-decoration:none;font-size:15px;font-weight:600;padding:.6rem 1.2rem;border-radius:var(--radius)}
+.plib-material-btn:hover{filter:brightness(1.25)}
+.plib-material-btn:focus{outline:3px solid var(--c-s-id);outline-offset:3px}
+.plib-material-note{margin-top:.55rem;font-size:13px;color:var(--c-muted)}
+.plib-section{margin:2.25rem 0 1.1rem;padding-top:.9rem;border-top:3px solid var(--c-obj-accent)}
+.plib-section-n{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--c-muted)}
+.plib-section-t{font-size:23px;font-weight:700;letter-spacing:.04em;color:var(--c-obj-accent);margin-top:2px}
+.plib-wrap > .plib-section:first-child{margin-top:.5rem}
+.plib-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;margin-bottom:1.25rem}
+.plib-tile{background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);padding:.9rem;display:flex;flex-direction:column}
+.plib-tile img{width:100%;height:auto;border-radius:4px;background:#faf7f8}
+.plib-tile figure,.plib-tile{margin:0}
+/* A drawing narrower than its grid cell is centred in it. render_tiles caps the
+   wrapper at the SVG's own viewBox width so a 400px card is not blown up to the
+   full row, and without this the drawing sat against the left edge with the slack
+   stranded on the right, which is the same fault D-043 removed from the prose. */
+.plib-tile-svg{width:100%;margin-left:auto;margin-right:auto}
+.plib-tile-svg svg{width:100%;height:auto;display:block}
+.plib-tile-caption{font-size:13px;line-height:1.55;color:var(--c-text);margin-top:auto;padding-top:.6rem}
+.plib-meta{background:var(--c-meta-bg);border:1px solid var(--c-meta-border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1.5rem}
+.plib-meta-course{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--c-muted);margin-bottom:4px}
+.plib-meta-title{font-size:20px;font-weight:600;margin:4px 0 8px}
+.plib-meta-week{font-size:13px;color:var(--c-muted);margin-bottom:2px}
+.plib-meta-details{font-size:12px;color:var(--c-muted);margin-top:8px}
+.plib-objectives{background:var(--c-obj-bg);border-left:4px solid var(--c-obj-accent);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.5rem}
+.plib-objectives-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-obj-accent);font-weight:700;margin-bottom:8px}
+.plib-objectives-intro{margin:0 0 8px;font-size:14px;line-height:1.6;font-style:italic;color:var(--c-muted)}
+.plib-objectives-list{margin:0;padding-left:1.25rem}
+.plib-objectives-list li{margin-bottom:6px;font-size:14px;line-height:1.6}
+.plib-context{background:var(--c-ctx-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-context-student{background:var(--c-ctx-s-bg);border-color:var(--c-ctx-s-border)}
+.plib-context-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-ctx-label);font-weight:700;margin-bottom:8px}
+.plib-context-student .plib-context-label{color:var(--c-ctx-s-label)}
+.plib-context-body p{margin:4px 0;font-size:13px;line-height:1.6;color:var(--c-muted)}
+.plib-formula{margin:1rem 0;padding:1rem 1.25rem;background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);text-align:center}
+.plib-formula-body{overflow-x:auto;color:var(--c-text);padding:2px 0}
+.plib-formula-svg{max-width:100%;height:auto}
+.plib-formula-caption{margin-top:.85rem;font-size:13px;line-height:1.6;color:var(--c-muted);text-align:left}
+.plib-formula-missing{font-size:13px;color:var(--c-muted);text-align:left}
+.plib-formula-note{font-size:12px;margin-top:6px}
+.plib-formula-source{margin-top:.85rem;text-align:left}
+.plib-formula-source summary{font-size:12px;color:var(--c-muted);cursor:pointer}
+.plib-formula-latex{margin:6px 0 0;padding:8px 10px;background:var(--c-ctx-bg);border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.5;white-space:pre-wrap;color:var(--c-muted)}
+.plib-context-pre{margin:8px 0;padding:10px 12px;background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.55;color:var(--c-text);white-space:pre;overflow-x:auto}
+.plib-context-bullet{font-size:13px;color:var(--c-muted);padding-left:1rem;position:relative;margin-bottom:3px}
+.plib-context-bullet::before{content:"\2022";position:absolute;left:0}
+.plib-script{background:var(--c-scr-bg);border:1px solid var(--c-scr-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-script-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-scr-label);font-weight:700;margin-bottom:10px}
+.plib-script-list{margin:0;padding-left:1.25rem}
+.plib-script-list li{font-size:14px;line-height:1.6;margin-bottom:8px}
+.plib-script-time{font-weight:700;color:var(--c-scr-label);font-family:monospace;background:rgba(208,160,48,.15);padding:1px 6px;border-radius:3px}
+.plib-narration{background:var(--c-nar-bg);border-left:3px solid var(--c-nar-border);padding:.9rem 1.25rem;margin-bottom:1rem;border-radius:0 var(--radius) var(--radius) 0}
+.plib-narration p{margin:0 0 8px;font-size:14px;line-height:1.7}
+.plib-narration p:last-child{margin-bottom:0}
+.plib-narration-list{margin:4px 0;padding-left:1.25rem}
+.plib-narration-list li{font-size:14px;line-height:1.6;margin-bottom:4px}
+.plib-discussion{background:var(--c-dis-bg);border:1px solid var(--c-dis-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-slide{margin:0 0 1.25rem;text-align:center}
+.plib-slide-img{max-width:100%;height:auto;border:1px solid var(--c-dis-border);border-radius:var(--radius);box-shadow:0 1px 4px rgba(0,0,0,.08);background:#faf7f8;min-height:60px}
+.plib-slide-caption{font-size:13px;color:var(--c-muted);margin-top:.4rem}
+.plib-slide-script{margin-top:.6rem;text-align:left;font-size:13px;color:var(--c-muted)}
+.plib-slide-script summary{cursor:pointer;font-weight:600}
+.plib-slide-script-body{white-space:pre-wrap;background:rgba(0,0,0,.04);border-radius:var(--radius);padding:.6rem .8rem;margin-top:.4rem}
+.plib-discussion-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-dis-label);font-weight:700;margin-bottom:8px}
+.plib-discussion-intro{margin:0 0 8px;font-size:14px;line-height:1.6;font-style:italic;color:var(--c-dis-label)}
+.plib-discussion-list{margin:0;padding-left:1.25rem}
+.plib-discussion-list li{font-size:14px;line-height:1.6;margin-bottom:6px;color:var(--c-dis-label)}
+.plib-scenarios{margin-bottom:1rem}
+.plib-scenarios-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:#630031;font-weight:700;margin-bottom:8px}
+.plib-scenario-card{background:var(--c-ctx-s-bg);border:1px solid var(--c-ctx-s-border);border-left:4px solid #630031;border-radius:var(--radius);padding:.7rem 1rem;margin-bottom:.6rem}
+.plib-scenario-title{font-weight:700;font-size:14px;color:#630031;margin-bottom:4px}
+.plib-scenario-body{margin:0 0 4px;font-size:14px;line-height:1.6}
+.plib-scenario-line{font-size:13px;line-height:1.55;margin:2px 0 0;padding-left:1rem;position:relative}
+.plib-scenario-line::before{content:"›";position:absolute;left:.2rem;color:#CF4420;font-weight:700}
+.plib-system{background:var(--c-sys-bg);border:1px solid var(--c-sys-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-system-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-sys-label);font-weight:700;margin-bottom:8px}
+.plib-system-note{font-weight:400;text-transform:none;letter-spacing:0;font-style:italic}
+.plib-prompt-s-ref{opacity:.92;border-style:dashed}
+.plib-ref-note{font-size:12px;color:var(--c-muted);font-style:italic;margin-top:6px}
+.plib-prompt-text{display:none}
+.plib-prompt-display{font-size:14px;line-height:1.7;white-space:pre-wrap;background:rgba(255,255,255,.6);border-radius:4px;padding:.6rem .8rem;margin-bottom:10px}
+.plib-prompt-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.plib-prompt-id{font-size:12px;font-weight:700;font-family:monospace;padding:2px 7px;border-radius:4px}
+.plib-prompt-type-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-muted);font-weight:600}
+.plib-prompt-s{background:var(--c-s-bg);border:1px solid var(--c-s-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-prompt-s .plib-prompt-id{color:var(--c-s-id);background:rgba(20,85,47,.1)}
+.plib-prompt-r{background:var(--c-r-bg);border:1px solid var(--c-r-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-r-id{color:var(--c-r-id)!important;background:rgba(107,62,0,.1)!important}
+.plib-reflect-label{color:var(--c-r-id)!important}
+.plib-reflect-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-prompt-marker{background:var(--c-mk-bg);border:2px solid var(--c-mk-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-marker-id{color:var(--c-mk-id)!important;background:rgba(42,42,128,.1)!important}
+.plib-marker-label{color:var(--c-mk-id)!important}
+.plib-marker-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-marker-display{border-left:3px solid var(--c-mk-border);max-height:18em;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;box-shadow:inset 0 -10px 10px -10px rgba(0,0,0,.18)}
+.plib-prompt-m{background:var(--c-m-bg);border:1.5px solid var(--c-m-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:.5rem}
+.plib-m-id{color:var(--c-m-id)!important;background:rgba(10,74,112,.1)!important}
+.plib-m-label{color:var(--c-m-id)!important}
+.plib-m-badge{font-size:11px;background:var(--c-m-id);color:#fff;padding:2px 8px;border-radius:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.plib-m-instructions{background:rgba(255,255,255,.7);border-radius:6px;padding:10px 14px;margin-bottom:12px}
+.plib-m-instructions-label{font-size:12px;font-weight:700;color:var(--c-m-id);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.plib-m-steps{margin:0;padding-left:1.25rem}
+.plib-m-steps li{font-size:13px;line-height:1.6;margin-bottom:4px}
+.plib-m-seed{background:rgba(255,255,255,.5);border-left:3px solid var(--c-m-border);padding:8px 12px;margin-bottom:12px;border-radius:0 4px 4px 0}
+.plib-m-seed-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-m-id);margin-bottom:4px}
+.plib-m-seed-text{font-size:13px;line-height:1.6;white-space:pre-wrap}
+.plib-prompt-m-close{background:var(--c-mc-bg);border:1px dashed var(--c-mc-border);border-radius:var(--radius);padding:.75rem 1.25rem;margin-bottom:1.25rem}
+.plib-m-close-label{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.plib-m-close-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-copy-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;font-size:13px;font-weight:500;border:1.5px solid var(--c-btn);background:transparent;color:var(--c-btn);border-radius:6px;cursor:pointer;transition:background .15s,color .15s}
+.plib-copy-btn:hover{background:var(--c-btn);color:#fff}
+.plib-copy-btn:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+.plib-copy-btn.copied{background:#333;color:#fff;border-color:#333}
+.plib-copy-btn-reflect{border-color:var(--c-btn-r);color:var(--c-btn-r)}
+.plib-copy-btn-reflect:hover{background:var(--c-btn-r);color:#fff}
+.plib-copy-btn-marker{border-color:var(--c-btn-mk);color:var(--c-btn-mk)}
+.plib-copy-btn-marker:hover{background:var(--c-btn-mk);color:#fff}
+.plib-copy-btn-m-open{border-color:var(--c-btn-mo);color:var(--c-btn-mo)}
+.plib-copy-btn-m-open:hover{background:var(--c-btn-mo);color:#fff}
+.plib-copy-btn-m-close{border-color:var(--c-btn-mc);color:var(--c-btn-mc)}
+.plib-copy-btn-m-close:hover{background:var(--c-btn-mc);color:#fff}
+.plib-textarea{display:block;width:100%;box-sizing:border-box;padding:10px 12px;font-size:14px;font-family:var(--font);line-height:1.6;border:1.5px solid var(--c-r-border);border-radius:6px;margin-bottom:10px;background:#fff;color:var(--c-text);resize:vertical;min-height:120px}
+.plib-prompt-input{min-height:0;margin:10px 0 6px}
+.plib-textarea:focus{outline:3px solid #005fcc;outline-offset:2px;border-color:#005fcc}
+.plib-counter{font-size:13px;color:var(--c-muted);margin-bottom:8px;font-variant-numeric:tabular-nums}
+.plib-counter.at-limit{color:#b00020;font-weight:600}
+.plib-counter .plib-count-ok{color:#14552f}
+.plib-counter .plib-count-warn{color:#8a4a00}
+.plib-counter .plib-count-bad{color:#b00020;font-weight:600}
+.plib-counter-min{font-size:12px;color:var(--c-muted);margin-left:8px}
+.plib-warn{font-size:13px;color:#b00020;font-weight:600;margin-bottom:8px;min-height:20px}
+.plib-prompt-q{background:var(--c-q-bg);border:1px solid var(--c-q-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-q-id{color:var(--c-q-id)!important;background:rgba(10,80,112,.1)!important}
+.plib-q-label{color:var(--c-q-id)!important}
+.plib-q-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-q-items{display:flex;flex-direction:column;gap:14px;margin-bottom:10px}
+.plib-q-item{background:rgba(255,255,255,.6);border-radius:6px;padding:10px 12px}
+.plib-q-question{font-size:14px;font-weight:500;display:block;margin-bottom:8px;line-height:1.5}
+.plib-q-item-num{font-family:monospace;font-weight:700;color:var(--c-q-id);margin-right:6px}
+.plib-q-cap-note{font-weight:400;font-style:italic;color:var(--c-muted);margin-left:6px;font-size:13px}
+.plib-q-select{width:100%;padding:6px 8px;font-size:14px;border:1px solid var(--c-q-border);border-radius:4px;background:#fff}
+.plib-q-likert{display:flex;flex-wrap:wrap;gap:10px}
+.plib-q-likert-opt{display:flex;align-items:center;gap:5px;font-size:14px;cursor:pointer}
+.plib-q-checkboxes{display:flex;flex-direction:column;gap:6px}
+.plib-q-check-opt{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.plib-q-check-opt input[disabled] + span{opacity:.5}
+.plib-copy-btn-q{border-color:var(--c-btn-q);color:var(--c-btn-q)}
+.plib-copy-btn-q:hover{background:var(--c-btn-q);color:#fff}
+.plib-prompt-o{background:var(--c-o-bg);border:1px solid var(--c-o-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-o-id{color:var(--c-o-id)!important;background:rgba(160,69,16,.1)!important}
+.plib-o-label{color:var(--c-o-id)!important}
+.plib-o-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-o-question{font-size:14px;font-weight:500;margin-bottom:10px;line-height:1.5}
+.plib-o-list{list-style:none;padding:0;margin:0 0 10px 0;display:flex;flex-direction:column;gap:6px}
+.plib-o-item{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.7);border-radius:6px;padding:8px 10px;font-size:14px}
+.plib-o-rank{font-family:monospace;font-weight:700;color:var(--c-o-id);min-width:1.5em;text-align:right}
+.plib-o-item-text{flex:1}
+.plib-o-controls{display:flex;flex-direction:column;gap:2px}
+.plib-o-arrow{background:transparent;border:1px solid var(--c-o-border);color:var(--c-o-id);width:28px;height:22px;font-size:14px;line-height:1;cursor:pointer;border-radius:3px;padding:0}
+.plib-o-arrow:hover:not([disabled]){background:var(--c-o-border);color:#fff}
+.plib-o-arrow[disabled]{opacity:.25;cursor:default}
+.plib-copy-btn-o{border-color:var(--c-btn-o);color:var(--c-btn-o)}
+.plib-copy-btn-o:hover{background:var(--c-btn-o);color:#fff}
+.plib-demo-badge{font-size:11px;color:var(--c-muted);background:rgba(0,0,0,.05);padding:2px 8px;border-radius:3px;font-style:italic;margin-left:8px}
+.plib-ai-badge{font-size:11px;padding:2px 8px;border-radius:3px;font-family:monospace;margin-left:8px}
+.plib-ai-respond{background:#e8f5e8;color:#2c5e2c}
+.plib-ai-acknowledge{background:#fef0e6;color:#8c4a1a}
+.plib-ai-archive{background:#f0e8f5;color:#5a2c8c}
+</style>
+</head>
+<body>
+<a href="#main-content" class="plib-skip-link">Skip to main content</a>
+<style>.plib-skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;}.plib-skip-link:focus{position:static;width:auto;height:auto;background:#005fcc;color:#fff;padding:8px 16px;font-size:14px;font-weight:600;border-radius:4px;text-decoration:none;display:inline-block;margin:8px;}</style>
+<main id="main-content">
+<div class="plib-wrap">
+<div class="plib-meta">
+  <div class="plib-meta-course">BIT 5534 Applied Business Intelligence and Analytics</div>
+  <div class="plib-meta-week">Week 8 · Homework 7 · Part 2 of 2</div>
+  <div class="plib-meta-title">Stacking Readmission Models, Four Families and Four Networks</div>
+  <div class="plib-meta-details"><span><strong>Platform:</strong> Hokie AI (conversation) + local Python (run)</span>&ensp;·&ensp;<span><strong>Submission:</strong> Thread exported as a .zip and uploaded to Canvas</span></div>
+</div>
+
+<div class="plib-objectives">
+  <div class="plib-objectives-label">Learning Objectives</div>
+  <p class="plib-objectives-intro">By the end of this part, students will be able to:</p>
+  <ol class="plib-objectives-list">
+    <li>Build a stack for a category target from the saved probabilities of four base models, on a fold column the file supplies.</li>
+    <li>Read a logistic regression meta-model's coefficients and logworths as the weight it gives each base model.</li>
+    <li>Compare a logistic regression meta-model with a support vector machine meta-model through their test confusion tables.</li>
+    <li>Explain why a missed readmission and a false alarm do not cost the same, and let that difference decide between two meta-models.</li>
+    <li>Recognize an overfitted network from its train and validation figures, and say what a stack of networks gains over its best member.</li>
+  </ol>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 1 of 4</div><div class="plib-section-t">ORIENTATION</div></div>
+
+<div class="plib-context plib-context-student">
+  <div class="plib-context-label">&#128203; Note for Students</div>
+  <div class="plib-context-body">
+    <p>Part 2 of homework 7 runs in one Hokie AI thread and holds two cases. Do the cases in order and do not start a new conversation between them.</p>
+    <p>Make a folder for part 2 inside the HomeWork folder.</p>
+    <pre class="plib-context-pre">BIT5534/
+    HomeWork/
+        hw7_2/</pre>
+    <p>Put the data file and the four scripts in there.</p>
+  </div>
+</div>
+
+<div class="plib-narration">
+  <p>Part 2 is about the stacking from the week 8 lectures, on one file. Case one stacks four model families. Case two stacks four neural networks.</p>
+  <p>The file is readmissions.csv from Wrenfield Regional Hospital, a hospital made up for this homework. Each row is one patient discharged after a stay. Readmitted is Yes when the patient came back as an inpatient within 30 days, and No otherwise. A transitions nurse at Wrenfield can call a limited number of patients in the week after discharge, and the hospital wants a model that tells the nurse whom to call.</p>
+  <p>Two kinds of error matter here, and they are not the same size. A false negative is a patient the model calls No who is readmitted, a patient the nurse never called. A false positive is a patient the model calls Yes who would have been fine, a call the nurse did not need to make. Neither case asks for a dollar figure. Both cases ask you to say which error is worse for Wrenfield, and to let that judgment decide between two meta-models.</p>
+</div>
+
+<div class="plib-narration">
+  <p>The file carries its own Fold column. Every row is marked validation_1 to validation_5 or test, five folds of 210 rows and 450 test rows. Use that column in every fit. Each base model then saves, for every row, a probability from the fold model that did not see the row, and every test row takes the average of the five fold models.</p>
+  <p>Your regression, tree and support vector machine figures are the same on every machine, and the checks on this page give them to the third decimal. Your network figures may differ from a classmate's, because a network's random start plays out differently from one machine to another. Your meta-models are fitted on your own saved columns, so their figures may differ too. The rubric reads your figures for consistency with each other, so report what your tools show.</p>
+  <p>Part 2 is worth 100 points, split evenly. Case one is worth 50, 35 for the exchange in the M block and 15 for the reflection. Case two is worth 50, on the same split. Pasting a prompt earns nothing, because it is not work.</p>
+  <p>Work alone. Your notes and both week 8 lectures are open to you. Do not ask Hokie AI to write your reflections. Take as long as you need.</p>
+</div>
+
+<div class="plib-material" id="plib-material-7">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The readmission file, for both cases</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="readmissions.csv" download="readmissions.csv" target="_blank" rel="noopener noreferrer">Download readmissions.csv</a>
+  </div>
+  <div class="plib-material-note">1500 patients and 11 columns, in this order. Readmitted (Yes or No), Age, Length_of_Stay, Prior_Admissions, Medications, ER_Visits, Diagnosis, Discharge_To, Lives_Alone, Follow_Up_Booked, Fold (validation_1 to validation_5 with 210 rows each, test with 450). Save the file into your hw7_2 folder.</div>
+</div>
+
+<div class="plib-material" id="plib-material-8">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The regression tool</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="reg_explorer.py" download="reg_explorer.py" target="_blank" rel="noopener noreferrer">Download reg_explorer.py</a>
+  </div>
+  <div class="plib-material-note">Logistic regression, for a base model in case one and the meta-model in both cases. If the browser opens the code as a page of text, right click the link and use Save link as.</div>
+</div>
+
+<div class="plib-material" id="plib-material-9">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The tree tool</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="tree_explorer.py" download="tree_explorer.py" target="_blank" rel="noopener noreferrer">Download tree_explorer.py</a>
+  </div>
+  <div class="plib-material-note">The decision tree, for a base model in case one.</div>
+</div>
+
+<div class="plib-material" id="plib-material-10">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The network tool</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="nn_explorer.py" download="nn_explorer.py" target="_blank" rel="noopener noreferrer">Download nn_explorer.py</a>
+  </div>
+  <div class="plib-material-note">The neural network, for a base model in case one and all four base models in case two. The week 8 copy is older. This one names each saved column after the network's shape, such as NN 6 tanh prob Yes, so four networks save four columns. Use this copy.</div>
+</div>
+
+<div class="plib-material" id="plib-material-11">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The support vector machine tool</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="svm_explorer.py" download="svm_explorer.py" target="_blank" rel="noopener noreferrer">Download svm_explorer.py</a>
+  </div>
+  <div class="plib-material-note">The support vector machine, for a base model in case one and the second meta-model in both cases.</div>
+</div>
+
+<div class="plib-material" id="plib-material-12">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">Install the packages on Windows</div>
+  <pre class="plib-material-box" tabindex="0" id="plib-material-12-prompt" data-copy="py -m pip install pandas numpy matplotlib scipy scikit-learn statsmodels" aria-label="Specification text, scrollable">py -m pip install pandas numpy matplotlib scipy scikit-learn statsmodels</pre>
+  <button class="plib-copy-btn" onclick="copyPrompt('plib-material-12-prompt', this)" aria-label="Copy the text above to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy the text above
+  </button>
+  <div class="plib-material-note">Paste into Command Prompt or PowerShell and press Enter. You can skip this if the week 8 tools already run on your machine.</div>
+</div>
+
+<div class="plib-material" id="plib-material-13">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">Install the packages on a Mac</div>
+  <pre class="plib-material-box" tabindex="0" id="plib-material-13-prompt" data-copy="python3 -m pip install pandas numpy matplotlib scipy scikit-learn statsmodels" aria-label="Specification text, scrollable">python3 -m pip install pandas numpy matplotlib scipy scikit-learn statsmodels</pre>
+  <button class="plib-copy-btn" onclick="copyPrompt('plib-material-13-prompt', this)" aria-label="Copy the text above to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy the text above
+  </button>
+  <div class="plib-material-note">Paste into Terminal and press Enter. You can skip this if the week 8 tools already run on your machine.</div>
+</div>
+
+<div class="plib-narration">
+  <p>Hokie AI never sees your fits. You do not attach the data, and that is deliberate. Everything Hokie AI knows about your fits is what you write in your prompts, so every number and every comparison in the thread has to come from you. A prompt that reports what you saw, says what you make of it and asks to be challenged gives Hokie AI something to test.</p>
+  <p>Every fit in this part uses the file's Fold column. If Hokie AI suggests another way to validate, tell Hokie AI that the validation is part of the design of the homework.</p>
+  <p>Paste the block below into a new Hokie AI thread and wait for the acknowledgment. Do not write anything else in that message. Everything after this goes in the same thread.</p>
+</div>
+
+<div class="plib-prompt-marker" role="region" aria-label="Session Opener">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-marker-id">TH7.2</span>
+    <span class="plib-prompt-type-label plib-marker-label">Session Opener</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-marker-instruction">Copy this block and paste it into Hokie AI to begin your session.</p>
+  <div class="plib-prompt-display plib-marker-display">You are an analysis partner for BIT 5534 Applied Business Intelligence and Analytics, a graduate course at Virginia Tech. The student holds graduate standing, has some statistics background, and is working through a homework case on their own with no instructor present. Speak to them as a capable adult. Be direct, say when something is uncertain or contested, and do not pad your answers. When a student pushes back on something you said, take the challenge seriously and do not concede immediately to be agreeable. When they ask about your reasoning, say what you assumed and what you cannot settle for them because it depends on something you were not told.
+
+In this homework the student builds stacked models in local tools that you cannot see, on a file they have not attached. The file describes patients discharged from a fictional hospital, and the target is whether a patient was readmitted within 30 days. Everything you know about their fits is what they write. Never invent a misclassification rate, a coefficient, a logworth, a count from a confusion table or any other number from their fits. When you need one, ask for it. Your job is to test their reading of the results and the conclusions they draw for the hospital, to say where a conclusion goes further than the numbers support, and to argue the other side when they ask you to. Every fit uses a fold column the file supplies, with five validation folds and a test share, and settings the page gives. Treat that as the design of the exercise. Do not propose other validation schemes, other models, threshold changes or more data, and judge the student's conclusions by what their fits support. Do not turn the comparison of errors into a dollar calculation; the student is asked for a judgment about which error matters more, not for costs. A network's random start differs between machines, so the student's network figures may differ from another student's, and that is expected.
+---
+**AI Interaction Protocol**
+
+In this session, you will receive blocks of content with the
+following structural pattern:
+
+```
+### &lt;BlockID&gt;
+----------
+&lt;content&gt;
+----------
+###
+```
+
+Some blocks include an interaction-mode directive on a separate
+line inside the dashed envelope:
+
+```
+### &lt;BlockID&gt;
+----------
+[ai_interaction=&lt;mode&gt;]
+&lt;content&gt;
+----------
+###
+```
+
+Three modes determine your response:
+
+  - **respond**: Engage substantively with the block content.
+    Treat it as a prompt, question, or task that wants your
+    analytical response. Default for S blocks (prompts) and X
+    blocks (free exploration).
+
+  - **acknowledge**: Confirm receipt with one brief sentence
+    naming the block ID. Do not analyze, comment on, or expand on
+    the content. The student is filing the block for the record,
+    not asking for engagement. Default for T blocks (this opener),
+    R blocks (reflections), M CLOSE blocks (closing markers), Q
+    blocks (structured selections), and O blocks (ordering
+    selections).
+
+  - **archive**: Respond with only the block ID and nothing else.
+    Used for batched archival pastes where even brief
+    acknowledgment would clutter the thread.
+
+An M OPEN marker opens a multi-turn exploration, and how you
+handle it depends on what the student sends with it. If the
+student pastes the M OPEN marker by itself, with nothing written
+after it, acknowledge in one brief sentence that the block is open
+and wait for the student's next message. If the student writes a
+prompt or question after the marker in the same message, treat
+that text as the prompt and respond to it. Always acknowledge an
+M CLOSE marker.
+
+If a block has no explicit `[ai_interaction=...]` directive, apply
+the block-type default per the list above.
+
+This protocol applies for the remainder of this session.
+---</div>
+  <div class="plib-prompt-text" id="text_prompt_15" data-copy="### TH7.2&#10;----------&#10;You are an analysis partner for BIT 5534 Applied Business Intelligence and Analytics, a graduate course at Virginia Tech. The student holds graduate standing, has some statistics background, and is working through a homework case on their own with no instructor present. Speak to them as a capable adult. Be direct, say when something is uncertain or contested, and do not pad your answers. When a student pushes back on something you said, take the challenge seriously and do not concede immediately to be agreeable. When they ask about your reasoning, say what you assumed and what you cannot settle for them because it depends on something you were not told.&#10;&#10;In this homework the student builds stacked models in local tools that you cannot see, on a file they have not attached. The file describes patients discharged from a fictional hospital, and the target is whether a patient was readmitted within 30 days. Everything you know about their fits is what they write. Never invent a misclassification rate, a coefficient, a logworth, a count from a confusion table or any other number from their fits. When you need one, ask for it. Your job is to test their reading of the results and the conclusions they draw for the hospital, to say where a conclusion goes further than the numbers support, and to argue the other side when they ask you to. Every fit uses a fold column the file supplies, with five validation folds and a test share, and settings the page gives. Treat that as the design of the exercise. Do not propose other validation schemes, other models, threshold changes or more data, and judge the student's conclusions by what their fits support. Do not turn the comparison of errors into a dollar calculation; the student is asked for a judgment about which error matters more, not for costs. A network's random start differs between machines, so the student's network figures may differ from another student's, and that is expected.&#10;---&#10;**AI Interaction Protocol**&#10;&#10;In this session, you will receive blocks of content with the&#10;following structural pattern:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Some blocks include an interaction-mode directive on a separate&#10;line inside the dashed envelope:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;[ai_interaction=&lt;mode&gt;]&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Three modes determine your response:&#10;&#10;  - **respond**: Engage substantively with the block content.&#10;    Treat it as a prompt, question, or task that wants your&#10;    analytical response. Default for S blocks (prompts) and X&#10;    blocks (free exploration).&#10;&#10;  - **acknowledge**: Confirm receipt with one brief sentence&#10;    naming the block ID. Do not analyze, comment on, or expand on&#10;    the content. The student is filing the block for the record,&#10;    not asking for engagement. Default for T blocks (this opener),&#10;    R blocks (reflections), M CLOSE blocks (closing markers), Q&#10;    blocks (structured selections), and O blocks (ordering&#10;    selections).&#10;&#10;  - **archive**: Respond with only the block ID and nothing else.&#10;    Used for batched archival pastes where even brief&#10;    acknowledgment would clutter the thread.&#10;&#10;An M OPEN marker opens a multi-turn exploration, and how you&#10;handle it depends on what the student sends with it. If the&#10;student pastes the M OPEN marker by itself, with nothing written&#10;after it, acknowledge in one brief sentence that the block is open&#10;and wait for the student's next message. If the student writes a&#10;prompt or question after the marker in the same message, treat&#10;that text as the prompt and respond to it. Always acknowledge an&#10;M CLOSE marker.&#10;&#10;If a block has no explicit `[ai_interaction=...]` directive, apply&#10;the block-type default per the list above.&#10;&#10;This protocol applies for the remainder of this session.&#10;---&#10;----------&#10;###"></div>
+  <button class="plib-copy-btn plib-copy-btn-marker" onclick="copyPrompt('text_prompt_15', this)"
+          aria-label="Copy session opener to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy session opener
+  </button>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 2 of 4</div><div class="plib-section-t">CASE ONE</div></div>
+
+<div class="plib-narration">
+  <p>Case one is worth 50 points, 35 for the exchange in the M block and 15 for the reflection.</p>
+  <p>The panel is the same in all four tools, so set it the same way every time. Target column Readmitted, type category, positive class Yes. The five numeric inputs start selected. Click Diagnosis, Discharge_To, Lives_Alone and Follow_Up_Booked to add them, so nine inputs are selected. Use the column reads Fold. Press nothing else in the Validation column box.</p>
+  <p>Step 1, logistic regression. Open readmissions.csv in reg_explorer.py, set the panel and fit. Read the test row and the test confusion table on the Fit tab. Press Save probabilities and keep the name the tool offers, readmissions_stack.csv.</p>
+  <p>Step 2, the tree. Open readmissions_stack.csv in tree_explorer.py, set the panel, leave 4 splits and a smallest leaf of 5, and fit. The column REG prob Yes starts unselected, and it stays that way. Save probabilities over readmissions_stack.csv.</p>
+  <p>Step 3, the network. Open readmissions_stack.csv in nn_explorer.py, set the panel, leave 3 tanh in the first layer, 1 start and seed 123, and fit. Save probabilities over the same file.</p>
+  <p>Step 4, the support vector machine. Open readmissions_stack.csv in svm_explorer.py, set the panel, choose RBF, C 1 and an empty Gamma, and fit. Save probabilities over the same file.</p>
+  <p>Check three things. The Validation column tab lists five folds of 210 rows and 450 test rows. Logistic regression gives average validation misclassification 0.174 and test 0.216, with 64 readmitted patients predicted No on the test rows. The support vector machine gives average validation 0.176 and test 0.187, with 59 readmitted patients predicted No.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-19">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Three checks before you read anything. The Validation column tab lists five folds of 210 rows and 450 test rows. Logistic regression gives average validation misclassification 0.174 and test 0.216, with 64 readmitted patients predicted No. The support vector machine gives average validation 0.176 and test 0.187, with 59 readmitted patients predicted No."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 194" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="194" rx="10" fill="#faf7f8"/><rect x="21" y="20" width="958" height="154" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><text x="46" y="58" font-size="18" font-weight="600" fill="#630031">Three checks before you read anything</text><text x="46" y="86" font-size="16" fill="#2b2b2b">The Validation column tab lists five folds of 210 rows and 450 test rows. Logistic regression gives average validation</text><text x="46" y="108" font-size="16" fill="#2b2b2b">misclassification 0.174 and test 0.216, with 64 readmitted patients predicted No. The support vector machine gives average</text><text x="46" y="130" font-size="16" fill="#2b2b2b">validation 0.176 and test 0.187, with 59 readmitted patients predicted No.</text><text x="46" y="156" font-size="14" fill="#6b6b6b">Readmitted on nine inputs, positive class Yes, the file’s Fold column.</text></svg></div>
+    <figcaption class="plib-tile-caption">Readmitted on nine inputs, positive class Yes, the file's Fold column.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>Now the two meta-models, both on the four saved columns alone.</p>
+  <p>Open readmissions_stack.csv in reg_explorer.py. Target Readmitted, category, positive class Yes. Click the five numeric inputs off, and click REG prob Yes, TREE prob Yes, NN 3 tanh prob Yes and SVM prob Yes on. Use the column reads Fold. Fit. Read the Terms table on the Fit tab, the estimate and the logworth of each saved column, and the test confusion table.</p>
+  <p>Then open the same file in svm_explorer.py, choose the same four columns as the only inputs, RBF, C 1 and an empty Gamma, and fit. Read its test confusion table.</p>
+  <p>For every fit in this case, write down the average validation misclassification, the test misclassification, and from the test confusion table the readmitted patients predicted No and the patients who were not readmitted but were predicted Yes. On the test rows 173 patients were readmitted and 277 were not, in every fit.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-21">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Five boxes joined by AND, the fits in order and what to record. Four base models, each saving probabilities into readmissions_stack.csv. The logistic meta-model on the four prob Yes columns alone. The support vector meta-model on the same four columns. Read the Terms table, an estimate and a logworth for each saved column. For every fit, average validation and test misclassification, readmitted patients predicted No, and patients not readmitted predicted Yes."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 269" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="269" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">The fits in order, and what to record</text><rect x="21" y="46" width="153" height="201" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Four base</text><text x="66" y="103" font-size="17" font-weight="600" fill="#2b2b2b">models</text><text x="37" y="134" font-size="14" fill="#6b6b6b">each saving</text><text x="37" y="153" font-size="14" fill="#6b6b6b">probabilities into</text><text x="37" y="172" font-size="14" fill="#6b6b6b">readmissions_stack.csv</text><text x="198" y="152" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="222" y="46" width="153" height="201" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="246" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="246" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="267" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Logistic</text><text x="267" y="103" font-size="17" font-weight="600" fill="#2b2b2b">meta-model</text><text x="238" y="134" font-size="14" fill="#6b6b6b">on the four prob</text><text x="238" y="153" font-size="14" fill="#6b6b6b">Yes columns alone</text><text x="399" y="152" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="423" y="46" width="153" height="201" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="447" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="447" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="468" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Support</text><text x="468" y="103" font-size="17" font-weight="600" fill="#2b2b2b">vector</text><text x="468" y="124" font-size="17" font-weight="600" fill="#2b2b2b">meta-model</text><text x="439" y="155" font-size="14" fill="#6b6b6b">on the same four</text><text x="439" y="174" font-size="14" fill="#6b6b6b">columns</text><text x="601" y="152" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="625" y="46" width="153" height="201" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="649" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="649" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="670" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The Terms</text><text x="670" y="103" font-size="17" font-weight="600" fill="#2b2b2b">table</text><text x="641" y="134" font-size="14" fill="#6b6b6b">an estimate and a</text><text x="641" y="153" font-size="14" fill="#6b6b6b">logworth for each</text><text x="641" y="172" font-size="14" fill="#6b6b6b">saved column</text><text x="802" y="152" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="826" y="46" width="153" height="201" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="850" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="850" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">5</text><text x="871" y="82" font-size="17" font-weight="600" fill="#2b2b2b">For every</text><text x="871" y="103" font-size="17" font-weight="600" fill="#2b2b2b">fit</text><text x="842" y="134" font-size="14" fill="#6b6b6b">validation and test</text><text x="842" y="153" font-size="14" fill="#6b6b6b">misclassification,</text><text x="842" y="172" font-size="14" fill="#6b6b6b">readmitted</text><text x="842" y="191" font-size="14" fill="#6b6b6b">predicted No, not</text><text x="842" y="210" font-size="14" fill="#6b6b6b">readmitted</text><text x="842" y="229" font-size="14" fill="#6b6b6b">predicted Yes</text></svg></div>
+    <figcaption class="plib-tile-caption">The test rows hold 173 readmitted patients and 277 who were not, in every fit.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>Four moves, in order. The card below carries the four moves.</p>
+  <p>Move one frames the errors AND move two reports the four base models AND move three reads the logistic meta-model AND move four sets the two meta-models side by side and chooses. All four.</p>
+  <p>Move one opens the block. Write in your prompt that you fit these models yourself in tools Hokie AI cannot see, that you will report what the tools show, and that you want each reading tested. Before any number, say what a false negative and a false positive mean for a patient at Wrenfield and for the transitions nurse, and which of the two you think is worse, and why. Ask Hokie AI to argue the other side.</p>
+  <p>Move two reports the four base models, each with its average validation and test misclassification, its false negatives and its false positives on the test rows. Say which base model is best on misclassification and whether it is also the one that misses the fewest readmitted patients.</p>
+  <p>Move three reads the logistic meta-model. Report its test figures and its four estimates with their logworths. Say which base model the meta-model leans on, which number shows it, and whether a large estimate with a small logworth deserves the same trust as one with a large logworth.</p>
+  <p>Move four sets the two meta-models side by side. Report the support vector meta-model's test misclassification and its false negatives and false positives, and say how many readmitted patients one meta-model catches that the other misses, and at how many extra calls. The logistic meta-model tells you which base model it trusts, and the support vector meta-model does not. Say which meta-model you would give the nurse's call list, given the error you named in move one, and defend the choice against Hokie AI's strongest objection.</p>
+  <p>One move is not one message. Ten messages inside the block is the ceiling, and a ceiling is not a target.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-23">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four moves joined by AND. Frame the errors before any number, what a false negative and a false positive mean at Wrenfield and which is worse. Report the four base models with average validation and test misclassification, false negatives and false positives. Read the logistic meta-model, its test figures and four estimates with logworths, and the base model it leans on. Set the two meta-models side by side, the patients caught and the extra calls, choose one for the call list, and defend the choice."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 212" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="212" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Four moves. Name the worse error first</text><rect x="21" y="46" width="204" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Frame the errors</text><text x="37" y="122" font-size="14" fill="#6b6b6b">a false negative and a false</text><text x="37" y="141" font-size="14" fill="#6b6b6b">positive at Wrenfield,</text><text x="37" y="160" font-size="14" fill="#6b6b6b">before any number</text><text x="248" y="123" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Four base models</text><text x="288" y="122" font-size="14" fill="#6b6b6b">validation and test, false</text><text x="288" y="141" font-size="14" fill="#6b6b6b">negatives and false</text><text x="288" y="160" font-size="14" fill="#6b6b6b">positives</text><text x="500" y="123" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Logistic</text><text x="569" y="103" font-size="17" font-weight="600" fill="#2b2b2b">meta-model</text><text x="540" y="134" font-size="14" fill="#6b6b6b">four estimates with</text><text x="540" y="153" font-size="14" fill="#6b6b6b">logworths, and the model it</text><text x="540" y="172" font-size="14" fill="#6b6b6b">leans on</text><text x="752" y="123" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Two meta-models</text><text x="792" y="122" font-size="14" fill="#6b6b6b">patients caught, extra calls,</text><text x="792" y="141" font-size="14" fill="#6b6b6b">and the one for the call list</text></svg></div>
+    <figcaption class="plib-tile-caption">Four moves. A missed readmission and an extra call are both errors, and they are not the same error.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-prompt-m" role="region" aria-label="Multi-turn Block MH7.2.1, Begin">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-m-id">MH7.2.1</span>
+    <span class="plib-prompt-type-label plib-m-label">Multi-turn · Consolidation</span>
+    <span class="plib-m-badge">Summative</span>
+    <span class="plib-ai-badge plib-ai-respond">AI: respond</span>
+  </div>
+  <div class="plib-m-instructions">
+    <div class="plib-m-instructions-label">&#128221; How this block works</div>
+    <ol class="plib-m-steps">
+      <li>Click <strong>Copy opening marker</strong> and paste it into Hokie AI to begin this block.</li>
+      <li>Interact with Hokie AI: ask questions, explore, respond. All of this exchange belongs to this block.</li>
+      <li>When finished, use the <strong>Copy closing marker</strong> button below to close the block in your thread.</li>
+    </ol>
+  </div>
+  <div class="plib-prompt-text" id="text_m_open_24" data-copy="### MH7.2.1 OPEN&#10;----------&#10;"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-open" onclick="copyPrompt('text_m_open_24', this)"
+          aria-label="Copy opening marker for block MH7.2.1">
+    <span aria-hidden="true">&#9654;</span> Copy opening marker
+  </button>
+</div>
+
+<div class="plib-prompt-m-close" role="region" aria-label="Multi-turn Block MH7.2.1, End">
+  <div class="plib-m-close-label">
+    <span class="plib-prompt-id plib-m-id">MH7.2.1</span>
+    <span class="plib-prompt-type-label plib-m-label">End of Multi-turn Block</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-m-close-instruction">When you have finished your exchange, copy this closing marker and paste it into Hokie AI to close the block.</p>
+  <div class="plib-prompt-text" id="text_m_close_25" data-copy="&#10;----------&#10;### MH7.2.1 CLOSE"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-close" onclick="copyPrompt('text_m_close_25', this)"
+          aria-label="Copy closing marker for block MH7.2.1">
+    <span aria-hidden="true">&#9646;&#9646;</span> Copy closing marker
+  </button>
+</div>
+
+<div class="plib-narration">
+  <p>Now write your reflection for case one, in your own words and without help from the AI.</p>
+  <p>Your reflection needs all four parts below. Say which error is worse for Wrenfield, a missed readmission or an extra call, and why AND give the test misclassification and the false negatives of the best base model and of both meta-models AND name the base model the logistic meta-model leaned on, and the number that shows it AND say which meta-model you would give the transitions nurse, and what you give up with that choice. Respond to all four parts.</p>
+  <p>The fourth part is where a reflection separates itself. The lower misclassification is easy to find. Whether it is the right model for this call list is a judgment.</p>
+  <p>Write 100 to 200 words.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-28">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four boxes joined by AND. Which error is worse for Wrenfield, a missed readmission or an extra call, and why. The test misclassification and false negatives of the best base model and both meta-models. The base model the logistic meta-model leaned on, and the number that shows it. The meta-model you would give the nurse, and what you give up."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 219" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="219" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">All four parts of the case one reflection</text><rect x="21" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The worse error</text><text x="37" y="122" font-size="14" fill="#6b6b6b">a missed readmission or an</text><text x="37" y="141" font-size="14" fill="#6b6b6b">extra call, and why</text><text x="248" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The figures</text><text x="288" y="122" font-size="14" fill="#6b6b6b">test misclassification and</text><text x="288" y="141" font-size="14" fill="#6b6b6b">false negatives, best base</text><text x="288" y="160" font-size="14" fill="#6b6b6b">model and both</text><text x="288" y="179" font-size="14" fill="#6b6b6b">meta-models</text><text x="500" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The leaned on</text><text x="569" y="103" font-size="17" font-weight="600" fill="#2b2b2b">model</text><text x="540" y="134" font-size="14" fill="#6b6b6b">and the number that shows</text><text x="540" y="153" font-size="14" fill="#6b6b6b">it</text><text x="752" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The meta-model</text><text x="820" y="103" font-size="17" font-weight="600" fill="#2b2b2b">for the nurse</text><text x="792" y="134" font-size="14" fill="#6b6b6b">and what you give up</text></svg></div>
+    <figcaption class="plib-tile-caption">All four parts of the case one reflection, inside 100 to 200 words.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution RH7.2.1">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">RH7.2.1</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Case one reflection</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 100 to 200 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_29" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for RH7.2.1"
+            data-maxwords="200" data-maxchars="2000"
+            oninput="updateCounter('prompt_29', 'textarea_29')"></textarea>
+  <div class="plib-counter" id="counter_prompt_29" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_29">0</span> / 200 words&nbsp;·&nbsp;
+    <span id="cc_prompt_29">0</span> / 2000 characters
+    <span class="plib-counter-min">minimum: 100 words</span>
+  </div>
+  <div class="plib-warn" id="warn_prompt_29" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_29"
+       data-prefix="### RH7.2.1&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_29"
+       data-maxwords="200"
+       data-maxchars="2000"
+       data-minwords="100"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_29', this)"
+          aria-label="Copy contribution RH7.2.1 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 3 of 4</div><div class="plib-section-t">CASE TWO</div></div>
+
+<div class="plib-narration">
+  <p>Case two is worth 50 points, 35 for the exchange in the M block and 15 for the reflection.</p>
+  <p>Case one stacked four families. Case two stacks four networks of different shapes on the same file, the same nine inputs and the same Fold column. A stack of networks asks a different question. Every member is the same kind of model, so the meta-model shows how much one shape adds to another, and whether a network that overfits still adds anything.</p>
+  <p>Open readmissions.csv, the original file and not the case one stack, in nn_explorer.py. Set the panel as in case one. Set Number of starts to 10 and leave the seed at 123 for all four networks. Fit them in this order, setting the counts in the tanh column. First 6 tanh in the first layer and 0 in the second. Then 24 tanh in the first layer and 0 in the second. Then 3 tanh in each layer. Last, 12 tanh in each layer.</p>
+  <p>Save probabilities after each fit. On the first save, type the name readmissions_nets_stack.csv, so case one's file is left alone, and save over that name after the other three. The saved columns are NN 6 tanh prob Yes, NN 24 tanh prob Yes, NN 3 tanh + 3 tanh prob Yes and NN 12 tanh + 12 tanh prob Yes.</p>
+  <p>Check two things, because the figures after them depend on your machine. The Fit tab's Parameters line gives 98 for 6 tanh, 386 for 24 tanh, 62 for 3 tanh + 3 tanh and 350 for 12 tanh + 12 tanh. The network sees 13 inputs, because the four text columns become 0 or 1 columns.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-33">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Two checks on the four networks. The Fit tab's Parameters line gives 98 for 6 tanh, 386 for 24 tanh, 62 for 3 tanh + 3 tanh and 350 for 12 tanh + 12 tanh. The network sees 13 inputs, because the four text columns become 0 or 1 columns."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 172" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="172" rx="10" fill="#faf7f8"/><rect x="21" y="20" width="958" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><text x="46" y="58" font-size="18" font-weight="600" fill="#630031">Two checks on the four networks</text><text x="46" y="86" font-size="16" fill="#2b2b2b">The Fit tab’s Parameters line gives 98 for 6 tanh, 386 for 24 tanh, 62 for 3 tanh + 3 tanh and 350 for 12 tanh + 12 tanh. The</text><text x="46" y="108" font-size="16" fill="#2b2b2b">network sees 13 inputs, because the four text columns become 0 or 1 columns.</text><text x="46" y="134" font-size="14" fill="#6b6b6b">Ten starts and seed 123 for every network. The figures after the checks depend on your machine.</text></svg></div>
+    <figcaption class="plib-tile-caption">Ten starts and seed 123 for every network. The figures after the checks depend on your machine.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>For every network, write down the train misclassification in the five folds, the average validation misclassification, the test misclassification, and the false negatives and false positives on the test rows.</p>
+  <p>Then the two meta-models on readmissions_nets_stack.csv, exactly as in case one. The logistic meta-model in reg_explorer.py on the four NN prob Yes columns alone, with its Terms table and its test confusion table. Then the support vector meta-model in svm_explorer.py on the same four columns, RBF, C 1 and an empty Gamma, with its test confusion table.</p>
+</div>
+
+<div class="plib-narration">
+  <p>Four moves, in order. The card below carries the four moves.</p>
+  <p>Move one reports the four networks AND move two reads the logistic meta-model AND move three sets the two meta-models side by side AND move four sets the stack of networks beside the stack of families and recommends. All four.</p>
+  <p>Move one opens the block. Write in your prompt that these are the four networks from the same file, fitted with ten starts and seed 123, and that your figures may differ from a classmate's. Report each network's parameters, its train figures in the folds, its average validation and its test misclassification. Name the networks that overfit and give the figures that show it. Ask Hokie AI why more parameters did not help on 840 rows a fold.</p>
+  <p>Move two reads the logistic meta-model. Report its test figures and the four estimates with their logworths. Say which network the meta-model leans on, and whether it is the network with the best validation figure. Ask Hokie AI why an overfitted network can still earn a weight.</p>
+  <p>Move three reports the support vector meta-model's test misclassification, false negatives and false positives beside the logistic meta-model's. Say which one you would give the nurse, given the error you named in case one, and what you give up.</p>
+  <p>Move four sets this stack beside case one's. Report the better meta-model of each case with its test misclassification and false negatives. Four networks are one kind of model in four shapes, and four families are four kinds. Say which stack you would put into use at Wrenfield, with the figures behind the choice, and defend it against Hokie AI's strongest objection.</p>
+  <p>One move is not one message. Ten messages inside the block is the ceiling, and a ceiling is not a target.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-36">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four moves joined by AND. Report the four networks, parameters, train figures in the folds, validation and test, and name the networks that overfit. Read the logistic meta-model, four estimates with logworths, and the network it leans on. Set the two meta-models side by side on false negatives and false positives, and choose one for the nurse. Set this stack beside case one's stack and recommend one for Wrenfield."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 212" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="212" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Four moves. Four shapes of one model</text><rect x="21" y="46" width="204" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Four networks</text><text x="37" y="122" font-size="14" fill="#6b6b6b">parameters, train in the</text><text x="37" y="141" font-size="14" fill="#6b6b6b">folds, validation and test,</text><text x="37" y="160" font-size="14" fill="#6b6b6b">and which overfit</text><text x="248" y="123" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Logistic</text><text x="318" y="103" font-size="17" font-weight="600" fill="#2b2b2b">meta-model</text><text x="288" y="134" font-size="14" fill="#6b6b6b">four estimates with</text><text x="288" y="153" font-size="14" fill="#6b6b6b">logworths, and the network</text><text x="288" y="172" font-size="14" fill="#6b6b6b">it leans on</text><text x="500" y="123" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Two meta-models</text><text x="540" y="122" font-size="14" fill="#6b6b6b">false negatives and false</text><text x="540" y="141" font-size="14" fill="#6b6b6b">positives, and the one for</text><text x="540" y="160" font-size="14" fill="#6b6b6b">the nurse</text><text x="752" y="123" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Networks or</text><text x="820" y="103" font-size="17" font-weight="600" fill="#2b2b2b">families</text><text x="792" y="134" font-size="14" fill="#6b6b6b">this stack beside case</text><text x="792" y="153" font-size="14" fill="#6b6b6b">one’s, and a</text><text x="792" y="172" font-size="14" fill="#6b6b6b">recommendation</text></svg></div>
+    <figcaption class="plib-tile-caption">Four moves. Four shapes of one model, set beside four kinds of model.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-prompt-m" role="region" aria-label="Multi-turn Block MH7.2.2, Begin">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-m-id">MH7.2.2</span>
+    <span class="plib-prompt-type-label plib-m-label">Multi-turn · Exploration</span>
+    <span class="plib-m-badge">Summative</span>
+    <span class="plib-ai-badge plib-ai-respond">AI: respond</span>
+  </div>
+  <div class="plib-m-instructions">
+    <div class="plib-m-instructions-label">&#128221; How this block works</div>
+    <ol class="plib-m-steps">
+      <li>Click <strong>Copy opening marker</strong> and paste it into Hokie AI to begin this block.</li>
+      <li>Interact with Hokie AI: ask questions, explore, respond. All of this exchange belongs to this block.</li>
+      <li>When finished, use the <strong>Copy closing marker</strong> button below to close the block in your thread.</li>
+    </ol>
+  </div>
+  <div class="plib-prompt-text" id="text_m_open_37" data-copy="### MH7.2.2 OPEN&#10;----------&#10;"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-open" onclick="copyPrompt('text_m_open_37', this)"
+          aria-label="Copy opening marker for block MH7.2.2">
+    <span aria-hidden="true">&#9654;</span> Copy opening marker
+  </button>
+</div>
+
+<div class="plib-prompt-m-close" role="region" aria-label="Multi-turn Block MH7.2.2, End">
+  <div class="plib-m-close-label">
+    <span class="plib-prompt-id plib-m-id">MH7.2.2</span>
+    <span class="plib-prompt-type-label plib-m-label">End of Multi-turn Block</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-m-close-instruction">When you have finished your exchange, copy this closing marker and paste it into Hokie AI to close the block.</p>
+  <div class="plib-prompt-text" id="text_m_close_38" data-copy="&#10;----------&#10;### MH7.2.2 CLOSE"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-close" onclick="copyPrompt('text_m_close_38', this)"
+          aria-label="Copy closing marker for block MH7.2.2">
+    <span aria-hidden="true">&#9646;&#9646;</span> Copy closing marker
+  </button>
+</div>
+
+<div class="plib-narration">
+  <p>Now write your reflection for case two, in your own words and without help from the AI.</p>
+  <p>Your reflection needs all four parts below. Name the network that overfit most, with its parameters and its train and validation figures AND name the network the logistic meta-model leaned on most, and the number that shows it AND give the test misclassification and false negatives of both meta-models in this case, and say which you would give the nurse AND say which stack you would put into use at Wrenfield, the four networks or case one's four families, and why. Respond to all four parts.</p>
+  <p>The fourth part is where a reflection separates itself. A stack can only combine what its members know, so the question is what each set of members brings.</p>
+  <p>Write 100 to 200 words.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-41">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four boxes joined by AND. The network that overfit most, with its parameters and its train and validation figures. The network the logistic meta-model leaned on most, and the number that shows it. Both meta-models' test misclassification and false negatives, and the one for the nurse. The stack you would put into use at Wrenfield, networks or families, and why."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 200" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="200" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">All four parts of the case two reflection</text><rect x="21" y="46" width="204" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The most overfit</text><text x="66" y="103" font-size="17" font-weight="600" fill="#2b2b2b">network</text><text x="37" y="134" font-size="14" fill="#6b6b6b">parameters, train and</text><text x="37" y="153" font-size="14" fill="#6b6b6b">validation figures</text><text x="248" y="117" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The leaned on</text><text x="318" y="103" font-size="17" font-weight="600" fill="#2b2b2b">network</text><text x="288" y="134" font-size="14" fill="#6b6b6b">and the number that shows</text><text x="288" y="153" font-size="14" fill="#6b6b6b">it</text><text x="500" y="117" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Both meta-models</text><text x="540" y="122" font-size="14" fill="#6b6b6b">test misclassification and</text><text x="540" y="141" font-size="14" fill="#6b6b6b">false negatives, and the</text><text x="540" y="160" font-size="14" fill="#6b6b6b">one for the nurse</text><text x="752" y="117" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The stack for</text><text x="820" y="103" font-size="17" font-weight="600" fill="#2b2b2b">Wrenfield</text><text x="792" y="134" font-size="14" fill="#6b6b6b">networks or families, and</text><text x="792" y="153" font-size="14" fill="#6b6b6b">why</text></svg></div>
+    <figcaption class="plib-tile-caption">All four parts of the case two reflection, inside 100 to 200 words.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution RH7.2.2">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">RH7.2.2</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Case two reflection</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 100 to 200 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_42" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for RH7.2.2"
+            data-maxwords="200" data-maxchars="2000"
+            oninput="updateCounter('prompt_42', 'textarea_42')"></textarea>
+  <div class="plib-counter" id="counter_prompt_42" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_42">0</span> / 200 words&nbsp;·&nbsp;
+    <span id="cc_prompt_42">0</span> / 2000 characters
+    <span class="plib-counter-min">minimum: 100 words</span>
+  </div>
+  <div class="plib-warn" id="warn_prompt_42" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_42"
+       data-prefix="### RH7.2.2&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_42"
+       data-maxwords="200"
+       data-maxchars="2000"
+       data-minwords="100"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_42', this)"
+          aria-label="Copy contribution RH7.2.2 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 4 of 4</div><div class="plib-section-t">SUBMISSION</div></div>
+
+<div class="plib-narration">
+  <p>You are done with part 2. Both cases are in one thread, and that thread is what you submit.</p>
+  <p>Export the whole conversation from Hokie AI as a .zip and upload the .zip to the Canvas assignment for part 2.</p>
+  <p>Leave the turns where something went wrong. How you recovered is part of what is being read, and a tidied thread reads as a thinner one.</p>
+</div>
+
+<div class="plib-material" id="plib-material-46">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">Homework 7 part 2 on Canvas</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="https://canvas.vt.edu/courses/233475/assignments/2877692" target="_blank" rel="noopener noreferrer">Open the part 2 assignment</a>
+  </div>
+  <div class="plib-material-note">Upload the exported .zip of this thread here. Part 1 has its own assignment, so check the title on the page before you upload.</div>
+</div>
+
+<div class="plib-submit">
+  <div class="plib-submit-title">Turn it in</div>
+  <p class="plib-submit-p">Export this thread as a .zip file, then upload it to the Canvas assignment for this part. Leave the file as it came out. Your work is not submitted until Canvas shows your file.</p>
+</div>
+
+</div>
+</main>
+<script>
+function countWords(text) {
+  return text.trim() === '' ? 0 : text.trim().split(/[ \t\n\r]+/).length;
+}
+function announce(msg) {
+  var el = document.getElementById('plib-live');
+  if (!el) { el = document.createElement('div'); el.id = 'plib-live';
+    el.setAttribute('aria-live','polite'); el.setAttribute('aria-atomic','true');
+    el.style.cssText='position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;';
+    document.body.appendChild(el); }
+  el.textContent = ''; setTimeout(function(){ el.textContent = msg; }, 50);
+}
+function autoResize(ta) {
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(ta.scrollHeight + 2, 600) + 'px';
+}
+function updateCounter(bid, tid) {
+  var ta = document.getElementById(tid);
+  var textEl = document.getElementById('text_' + bid);
+  var wcEl = document.getElementById('wc_' + bid);
+  var ccEl = document.getElementById('cc_' + bid);
+  var ctrEl = document.getElementById('counter_' + bid);
+  if (!ta) return;
+  autoResize(ta);
+  var maxwords = textEl ? parseInt(textEl.getAttribute('data-maxwords') || '0') : 0;
+  var maxchars = textEl ? parseInt(textEl.getAttribute('data-maxchars') || '0') : 0;
+  var minwords = textEl ? parseInt(textEl.getAttribute('data-minwords') || '0') : 0;
+  var text = ta.value;
+  var words = countWords(text);
+  var chars = text.length;
+  if (maxchars && chars > maxchars) {
+    ta.value = text.substring(0, maxchars);
+    text = ta.value; words = countWords(text); chars = text.length;
+  }
+  if (wcEl) wcEl.textContent = words;
+  if (ccEl) ccEl.textContent = chars;
+  if (ctrEl && maxwords) {
+    var pct = words / maxwords;
+    var cls = pct >= 1.0 ? 'bad' : (pct >= 0.8 || (minwords && words < minwords)) ? 'warn' : 'ok';
+    if (pct >= 1.0) { ctrEl.className = 'plib-counter at-limit'; }
+    else { ctrEl.className = 'plib-counter'; }
+    if (wcEl) wcEl.className = 'plib-count-' + cls;
+    if (ccEl) ccEl.className = 'plib-count-' + cls;
+  }
+}
+function copyPrompt(id, btn) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var text = (el.getAttribute('data-copy') || el.textContent || '').replace(/&#10;/g, '\n');
+  var label = (btn.getAttribute('aria-label') || 'item').replace('Copy ','').replace(' to clipboard','');
+  doCopy(text, btn, label + ' copied.', '&#10003; Copied', 2000);
+}
+function copyWithInput(bid, btn) {
+  var el = document.getElementById('text_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!el) return;
+  var tid = el.getAttribute('data-tid');
+  var inputEl = document.getElementById(tid);
+  var prefix = (el.getAttribute('data-prefix') || '').replace(/&#10;/g, '\n');
+  var suffix = (el.getAttribute('data-suffix') || '').replace(/&#10;/g, '\n');
+  var userText = inputEl ? inputEl.value.trim() : '';
+  if (userText.replace(/[\t\n\r ]/g, '').length < 2) {
+    if (warnEl) warnEl.textContent = 'Please write your response before copying.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  var maxwords = parseInt(el.getAttribute('data-maxwords') || '0');
+  var maxchars = parseInt(el.getAttribute('data-maxchars') || '0');
+  var minwords = parseInt(el.getAttribute('data-minwords') || '0');
+  if (minwords && countWords(userText) < minwords) {
+    if (warnEl) warnEl.textContent = 'Response is below the minimum of ' + minwords + ' words.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  if (maxwords && countWords(userText) > maxwords) {
+    if (warnEl) warnEl.textContent = 'Response exceeds the ' + maxwords + ' word limit.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  if (warnEl) warnEl.textContent = '';
+  doCopy(prefix + userText + suffix, btn, 'Copied. Paste into Hokie AI.', '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+function doCopy(text, btn, announcement, label, duration) {
+  function ok() {
+    var orig = btn.innerHTML; btn.innerHTML = label; btn.classList.add('copied');
+    announce(announcement);
+    setTimeout(function() { btn.innerHTML = orig; btn.classList.remove('copied'); }, duration);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(ok).catch(function() { fallback(text, ok); });
+  } else { fallback(text, ok); }
+}
+function fallback(text, cb) {
+  var ta = document.createElement('textarea'); ta.value = text;
+  ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); cb(); } catch(e) {}
+  document.body.removeChild(ta);
+}
+function copyStructured(bid, blockId, btn) {
+  var container = document.getElementById('qitems_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!container) return;
+  var outerDiv = container.closest('.plib-prompt-q');
+  var aiDirective = outerDiv ? (outerDiv.getAttribute('data-ai-directive') || '') : '';
+  var items = container.querySelectorAll('.plib-q-item');
+  var lines = [];
+  var emptyItems = [];
+
+  items.forEach(function(itemEl) {
+    var n = itemEl.getAttribute('data-item-n');
+    var render = itemEl.getAttribute('data-render');
+    var selections = [];
+
+    if (render === 'dropdown') {
+      var sel = itemEl.querySelector('select');
+      if (sel && sel.value) selections.push(sel.value);
+    } else if (render === 'likert') {
+      var checkedRadio = itemEl.querySelector('input[type="radio"]:checked');
+      if (checkedRadio) selections.push(checkedRadio.value);
+    } else if (render === 'checkbox') {
+      var checks = itemEl.querySelectorAll('input[type="checkbox"]:checked');
+      checks.forEach(function(c) { selections.push(c.value); });
+    }
+
+    if (selections.length === 0) {
+      emptyItems.push(n);
+    } else {
+      lines.push('ITEM ' + n + ': ' + selections.join(', '));
+    }
+  });
+
+  if (emptyItems.length > 0) {
+    if (warnEl) {
+      warnEl.textContent = 'Please make a selection for ITEM '
+        + emptyItems.join(', ITEM ') + ' before copying.';
+    }
+    return;
+  }
+
+  if (warnEl) warnEl.textContent = '';
+
+  var directiveLine = aiDirective ? aiDirective + '\n' : '';
+  var envelope = '### ' + blockId + '\n----------\n' + directiveLine + 'RESPONSE:\n'
+    + lines.join('\n') + '\n----------\n###';
+  doCopy(envelope, btn,
+    'Structured response copied. Paste into Hokie AI.',
+    '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+function enforceCheckboxCap(itemEl) {
+  var max = parseInt(itemEl.getAttribute('data-max-select') || '0', 10);
+  if (!max || max < 2) return;
+  var checks = itemEl.querySelectorAll('input[type="checkbox"]');
+  var checked = itemEl.querySelectorAll('input[type="checkbox"]:checked');
+  var atCap = checked.length >= max;
+  checks.forEach(function(c) {
+    if (!c.checked) c.disabled = atCap;
+  });
+}
+function moveItem(btn, direction) {
+  var li = btn.closest('.plib-o-item');
+  if (!li) return;
+  var list = li.parentElement;
+  if (!list) return;
+  if (direction === 'up') {
+    var prev = li.previousElementSibling;
+    if (prev) list.insertBefore(li, prev);
+  } else if (direction === 'down') {
+    var next = li.nextElementSibling;
+    if (next) list.insertBefore(next, li);
+  }
+  updateArrowStates(list);
+}
+function updateArrowStates(list) {
+  var items = list.querySelectorAll('.plib-o-item');
+  items.forEach(function(li, idx) {
+    var rankEl = li.querySelector('.plib-o-rank');
+    if (rankEl) rankEl.textContent = (idx + 1) + '.';
+    var upBtn = li.querySelector('.plib-o-arrow-up');
+    var downBtn = li.querySelector('.plib-o-arrow-down');
+    if (upBtn) upBtn.disabled = (idx === 0);
+    if (downBtn) downBtn.disabled = (idx === items.length - 1);
+    var itemText = li.getAttribute('data-item-text') || '';
+    if (upBtn) upBtn.setAttribute('aria-label', 'Move ' + itemText + ' up');
+    if (downBtn) downBtn.setAttribute('aria-label', 'Move ' + itemText + ' down');
+  });
+}
+function copyOrdered(bid, blockId, btn) {
+  var list = document.getElementById('oitems_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!list) return;
+  var outerDiv = list.closest('.plib-prompt-o');
+  var aiDirective = outerDiv ? (outerDiv.getAttribute('data-ai-directive') || '') : '';
+  var question = list.getAttribute('data-question') || '';
+  var items = list.querySelectorAll('.plib-o-item');
+  var lines = [];
+  items.forEach(function(li, idx) {
+    var itemText = li.getAttribute('data-item-text') || '';
+    lines.push((idx + 1) + '. ' + itemText);
+  });
+  if (warnEl) warnEl.textContent = '';
+  var directiveLine = aiDirective ? aiDirective + '\n' : '';
+  var envelope = '### ' + blockId + '\n----------\n' + directiveLine + 'RESPONSE:\nQuestion: '
+    + question + '\n' + lines.join('\n') + '\n----------\n###';
+  doCopy(envelope, btn,
+    'Ordered response copied. Paste into Hokie AI.',
+    '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var checkboxItems = document.querySelectorAll('.plib-q-item[data-render="checkbox"]');
+  checkboxItems.forEach(function(itemEl) {
+    var checks = itemEl.querySelectorAll('input[type="checkbox"]');
+    checks.forEach(function(c) {
+      c.addEventListener('change', function() { enforceCheckboxCap(itemEl); });
+    });
+  });
+  var oLists = document.querySelectorAll('.plib-o-list');
+  oLists.forEach(function(list) {
+    updateArrowStates(list);
+  });
+});
+</script>
+</body>
+</html>

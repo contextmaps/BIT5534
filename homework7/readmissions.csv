@@ -1,0 +1,1501 @@
+Readmitted,Age,Length_of_Stay,Prior_Admissions,Medications,ER_Visits,Diagnosis,Discharge_To,Lives_Alone,Follow_Up_Booked,Fold
+No,73,5,1,7,1,COPD,Home,Yes,Yes,validation_4
+No,71,5,0,13,0,COPD,Home,No,No,test
+No,87,2,0,2,0,Diabetes,Home,No,No,test
+No,60,1,0,12,3,Other,Home Health,No,Yes,validation_1
+Yes,75,5,3,7,1,Diabetes,Rehab,Yes,No,validation_4
+No,64,4,2,7,0,Diabetes,Home Health,No,Yes,validation_5
+No,51,5,1,4,0,Other,Home Health,Yes,Yes,validation_5
+Yes,91,2,1,9,1,Other,Home,No,Yes,test
+No,81,3,0,7,0,COPD,Home,No,Yes,test
+No,62,5,2,14,0,Other,Home Health,No,Yes,validation_5
+No,74,4,0,8,1,COPD,Rehab,No,No,validation_3
+No,74,1,1,1,1,Other,Rehab,No,Yes,test
+No,87,5,0,5,0,Pneumonia,Home,Yes,No,validation_5
+Yes,60,7,2,15,2,COPD,Home,No,No,validation_2
+No,61,5,1,9,0,Other,Home,Yes,Yes,test
+No,73,5,1,4,2,Other,Home,No,Yes,test
+No,82,5,0,16,2,Other,Home,Yes,No,test
+Yes,52,6,0,11,1,COPD,Rehab,Yes,No,validation_3
+Yes,71,12,1,17,0,Heart Failure,Home Health,No,No,test
+No,57,10,0,4,3,Diabetes,Home Health,No,Yes,validation_3
+No,82,4,0,7,0,Diabetes,Home,No,Yes,validation_3
+No,84,5,1,10,0,Heart Failure,Rehab,Yes,Yes,validation_4
+Yes,57,4,1,6,0,Other,Home,Yes,No,test
+No,60,2,1,9,0,Other,Home Health,No,Yes,test
+No,60,4,1,12,0,Pneumonia,Home,Yes,Yes,test
+No,77,5,1,10,0,Other,Home,No,No,validation_2
+No,71,2,0,7,0,Other,Home,No,No,validation_5
+No,76,2,0,8,0,Pneumonia,Home,No,Yes,test
+No,47,2,2,11,0,Pneumonia,Home,No,No,validation_4
+Yes,60,3,0,17,3,Heart Failure,Rehab,No,No,validation_3
+No,78,8,0,7,0,Diabetes,Home,Yes,No,validation_1
+Yes,91,2,1,9,2,Heart Failure,Home,Yes,No,validation_1
+No,72,1,0,6,0,COPD,Rehab,No,Yes,test
+No,44,2,2,6,0,Other,Home Health,Yes,Yes,validation_1
+No,50,3,1,6,0,Pneumonia,Home Health,Yes,No,validation_4
+Yes,81,9,0,1,2,Diabetes,Home,Yes,No,validation_5
+Yes,79,10,1,9,1,Pneumonia,Home,No,Yes,validation_4
+No,82,8,0,16,0,Other,Home,No,Yes,validation_1
+No,45,2,1,7,1,Pneumonia,Home,No,No,validation_3
+No,63,4,1,10,2,Other,Home,No,Yes,validation_4
+No,64,3,1,13,0,Diabetes,Home,Yes,Yes,test
+Yes,54,5,1,18,1,COPD,Home,Yes,No,validation_3
+No,84,7,2,16,0,Other,Home Health,No,No,validation_4
+Yes,85,2,0,12,0,Heart Failure,Home,No,No,test
+Yes,71,2,0,13,1,Heart Failure,Home,No,Yes,validation_2
+Yes,75,9,1,9,3,Pneumonia,Home,Yes,Yes,validation_2
+No,72,12,0,8,0,COPD,Home,No,No,validation_5
+Yes,43,3,2,5,0,Other,Home,No,Yes,validation_2
+No,92,1,1,11,1,Diabetes,Home Health,No,No,validation_2
+No,55,5,2,6,0,Heart Failure,Rehab,No,No,test
+No,88,4,0,12,0,Diabetes,Home,No,Yes,validation_1
+Yes,78,2,1,8,1,Heart Failure,Home,No,No,validation_2
+No,77,4,1,9,1,COPD,Home,No,Yes,test
+No,68,1,0,11,0,Other,Home Health,No,Yes,validation_4
+Yes,74,3,3,1,0,Heart Failure,Home Health,No,No,test
+Yes,71,1,4,4,0,Other,Home,No,Yes,validation_2
+Yes,87,3,2,8,0,Heart Failure,Home,Yes,No,validation_1
+No,50,4,1,12,0,Diabetes,Rehab,No,No,validation_1
+No,71,4,1,14,0,COPD,Rehab,No,Yes,validation_2
+No,49,1,0,13,0,Other,Home,No,Yes,validation_4
+Yes,40,2,3,11,0,Heart Failure,Home Health,Yes,Yes,validation_2
+Yes,74,1,3,16,0,Pneumonia,Home,No,Yes,validation_1
+No,68,3,1,8,1,COPD,Home,No,Yes,test
+Yes,51,3,2,5,2,Heart Failure,Home,No,No,validation_1
+No,52,1,0,9,0,Other,Home,No,Yes,validation_2
+Yes,79,4,4,9,0,Heart Failure,Home,No,Yes,validation_2
+Yes,58,1,2,9,1,Diabetes,Home,No,Yes,validation_3
+No,69,6,0,14,1,COPD,Home,Yes,Yes,validation_1
+No,64,6,0,4,1,Heart Failure,Home,No,Yes,test
+No,82,2,0,4,1,Other,Home Health,No,Yes,validation_1
+No,78,8,2,8,0,Diabetes,Home,No,Yes,validation_3
+No,49,2,0,6,0,Other,Home,No,Yes,validation_5
+Yes,58,1,1,12,0,Other,Home,Yes,No,test
+Yes,91,5,0,10,2,Other,Rehab,Yes,Yes,validation_5
+No,86,3,0,1,1,Diabetes,Home,Yes,Yes,validation_1
+Yes,90,7,0,12,0,Heart Failure,Home,No,No,validation_1
+No,62,7,2,10,0,Diabetes,Home,No,Yes,validation_4
+Yes,33,4,1,6,1,Heart Failure,Rehab,Yes,No,test
+Yes,72,1,0,10,1,COPD,Rehab,Yes,No,test
+No,75,7,1,16,0,Diabetes,Home,No,Yes,test
+No,49,3,3,8,0,Other,Home Health,No,No,validation_1
+No,50,7,2,10,0,Heart Failure,Home Health,No,Yes,test
+Yes,71,5,1,10,0,Diabetes,Rehab,Yes,No,validation_1
+No,69,2,0,11,0,Pneumonia,Home,No,No,validation_1
+Yes,68,3,1,10,0,Other,Home,Yes,No,test
+Yes,81,2,1,4,0,Other,Home,No,Yes,test
+No,88,6,1,9,0,Other,Home Health,No,Yes,test
+No,42,3,1,7,0,Diabetes,Home,No,Yes,test
+Yes,53,12,1,12,3,COPD,Rehab,Yes,No,validation_2
+Yes,68,11,2,6,0,COPD,Home,No,Yes,validation_5
+No,81,3,0,8,0,Heart Failure,Home,No,Yes,test
+Yes,61,8,3,5,1,COPD,Home,No,No,validation_2
+No,68,6,0,6,0,Diabetes,Home,No,Yes,validation_2
+Yes,73,1,0,14,1,Heart Failure,Home,No,No,validation_2
+No,77,2,0,14,0,Other,Home,No,Yes,validation_2
+Yes,65,10,1,5,2,Pneumonia,Home,No,Yes,validation_2
+Yes,79,1,2,12,0,Other,Home,Yes,No,test
+No,70,9,3,7,1,Other,Home,No,Yes,validation_1
+No,75,11,1,6,0,Other,Home,No,No,validation_3
+Yes,64,5,1,7,0,COPD,Home,Yes,No,test
+No,87,7,0,7,0,Heart Failure,Home,No,Yes,test
+No,50,1,0,14,1,Other,Home,Yes,Yes,validation_5
+Yes,44,1,2,6,0,COPD,Home,No,No,validation_4
+No,67,2,0,9,1,Other,Rehab,No,Yes,validation_2
+No,54,4,2,12,0,Other,Home Health,No,Yes,test
+Yes,87,12,0,16,1,COPD,Home,No,Yes,validation_5
+No,68,1,1,13,1,Pneumonia,Home Health,No,No,test
+Yes,45,2,1,4,1,Heart Failure,Home,Yes,No,validation_1
+Yes,46,2,1,5,0,Heart Failure,Home,No,No,test
+No,52,6,1,6,0,Other,Home,No,No,validation_5
+Yes,73,2,1,5,1,Other,Home,No,Yes,validation_4
+No,77,4,0,4,0,Heart Failure,Home,Yes,No,validation_4
+No,67,5,0,12,0,Diabetes,Home,Yes,No,validation_2
+No,75,8,1,7,0,Other,Home,Yes,Yes,validation_2
+No,66,11,2,11,0,COPD,Home Health,No,Yes,validation_2
+No,77,5,1,12,0,COPD,Home Health,No,No,validation_4
+Yes,78,6,1,12,0,COPD,Home,Yes,No,validation_4
+No,80,6,0,12,1,Other,Home,No,Yes,test
+Yes,76,3,0,8,1,Heart Failure,Home,Yes,No,validation_5
+Yes,56,12,1,8,1,Other,Home,No,Yes,validation_3
+No,53,11,0,13,1,Other,Home,No,No,test
+No,75,9,1,13,2,Pneumonia,Rehab,No,No,validation_1
+No,59,4,1,7,0,Diabetes,Rehab,Yes,Yes,validation_3
+Yes,65,10,1,8,2,Other,Home Health,Yes,Yes,validation_2
+No,74,8,0,5,1,Heart Failure,Home,Yes,Yes,validation_1
+No,54,11,1,15,0,Pneumonia,Home,No,No,test
+No,78,4,0,17,1,Pneumonia,Home,No,No,validation_5
+No,71,3,0,8,1,Other,Home,No,No,validation_1
+No,73,4,1,1,0,Heart Failure,Home,No,No,test
+No,67,4,1,11,0,Diabetes,Rehab,No,No,validation_5
+No,39,5,1,6,1,Other,Home Health,No,Yes,validation_1
+No,53,7,0,4,0,Other,Home Health,Yes,Yes,validation_4
+Yes,62,1,1,13,0,Pneumonia,Home,Yes,No,validation_5
+No,52,3,2,11,0,Other,Home,No,Yes,validation_3
+No,50,3,1,6,0,Pneumonia,Home,No,Yes,test
+No,60,1,0,9,1,Pneumonia,Home,Yes,No,validation_2
+No,27,5,2,2,1,Other,Home Health,No,Yes,validation_2
+Yes,80,1,2,13,1,Diabetes,Home,No,No,test
+No,95,5,0,12,0,Heart Failure,Home,No,Yes,validation_1
+No,68,5,0,8,0,Diabetes,Home,Yes,No,validation_5
+No,70,3,0,5,1,Diabetes,Home Health,No,Yes,validation_4
+Yes,48,9,0,3,3,Heart Failure,Home,No,No,validation_4
+No,58,2,0,10,0,Other,Rehab,Yes,No,validation_2
+Yes,79,11,1,9,0,Heart Failure,Home,No,Yes,test
+No,50,2,0,3,0,Pneumonia,Rehab,Yes,Yes,test
+Yes,86,1,1,12,0,COPD,Home,Yes,No,validation_2
+No,75,3,0,10,2,COPD,Home Health,No,Yes,test
+Yes,57,7,0,14,0,Heart Failure,Home,No,Yes,validation_3
+No,82,3,0,9,0,Diabetes,Rehab,No,No,validation_2
+No,92,3,0,3,0,COPD,Home,Yes,Yes,validation_3
+Yes,49,1,1,10,2,Heart Failure,Home,No,Yes,validation_2
+No,67,11,0,7,0,Pneumonia,Home Health,No,Yes,test
+No,72,2,1,6,0,Other,Home,No,Yes,validation_3
+No,51,3,0,9,2,Other,Rehab,No,Yes,validation_4
+Yes,68,5,3,5,1,COPD,Rehab,No,Yes,validation_2
+No,63,12,0,2,0,Heart Failure,Home,No,No,validation_2
+No,79,4,1,10,0,Other,Home Health,No,Yes,validation_3
+Yes,54,2,2,6,0,COPD,Home,No,Yes,validation_1
+No,51,4,1,9,1,COPD,Rehab,No,Yes,validation_3
+No,78,3,1,8,0,Diabetes,Home,No,Yes,validation_2
+No,54,5,1,1,1,Pneumonia,Rehab,Yes,Yes,test
+Yes,48,6,3,11,1,Heart Failure,Home,Yes,No,validation_2
+No,73,4,2,10,1,Diabetes,Rehab,Yes,Yes,test
+No,71,3,1,12,0,COPD,Home Health,No,No,validation_4
+Yes,68,3,2,7,0,Heart Failure,Home,No,No,test
+No,69,3,0,14,1,Diabetes,Home,No,Yes,validation_1
+No,59,7,1,6,0,Other,Home,No,Yes,validation_1
+No,78,1,1,4,0,Other,Home,No,Yes,validation_5
+No,51,6,1,7,2,Other,Home,No,Yes,validation_1
+Yes,47,1,0,16,1,Heart Failure,Rehab,No,Yes,validation_5
+No,51,5,1,4,0,Other,Home Health,No,No,validation_1
+Yes,62,1,0,13,0,Heart Failure,Home,Yes,Yes,test
+No,61,8,1,10,0,Pneumonia,Home Health,Yes,Yes,validation_1
+No,65,8,0,9,1,Other,Home Health,Yes,No,validation_4
+No,36,6,1,15,1,Other,Home,No,No,validation_2
+No,65,8,0,5,1,Pneumonia,Home,No,No,validation_2
+No,74,7,0,12,1,Heart Failure,Home,No,No,validation_2
+No,43,3,0,11,1,Diabetes,Home,No,Yes,validation_3
+No,82,3,0,12,1,Other,Home,No,No,test
+No,77,6,1,7,0,Other,Home Health,No,Yes,validation_2
+Yes,61,7,2,8,2,Diabetes,Home Health,Yes,No,test
+Yes,91,6,1,14,0,COPD,Rehab,Yes,Yes,validation_2
+No,61,5,1,5,0,Other,Home,No,No,validation_4
+Yes,64,6,1,4,0,Heart Failure,Home,No,Yes,validation_5
+No,79,1,0,13,0,Pneumonia,Home,No,No,validation_3
+Yes,61,5,3,11,1,COPD,Home,No,Yes,validation_1
+No,72,3,0,7,0,Diabetes,Rehab,No,No,validation_2
+Yes,78,8,5,4,1,Other,Home,No,Yes,test
+No,70,6,2,12,1,Diabetes,Home,No,Yes,test
+No,69,15,0,6,0,Diabetes,Home,No,Yes,validation_2
+No,61,11,1,5,0,Pneumonia,Home,No,No,test
+Yes,86,3,1,14,1,Heart Failure,Home,No,No,validation_3
+No,51,11,0,4,2,Other,Home,No,Yes,validation_3
+Yes,63,4,2,8,3,COPD,Home,Yes,Yes,validation_3
+Yes,56,4,2,6,1,COPD,Home,Yes,No,validation_3
+No,58,3,0,9,0,Heart Failure,Home Health,No,No,validation_5
+Yes,42,5,1,9,1,Other,Home,No,Yes,validation_2
+Yes,75,8,1,11,1,COPD,Home,Yes,No,validation_4
+No,54,5,1,2,1,Pneumonia,Home Health,No,Yes,validation_3
+No,88,7,1,8,0,Other,Rehab,Yes,Yes,validation_2
+Yes,83,13,1,1,1,Heart Failure,Home,No,Yes,validation_2
+No,52,3,0,12,1,Other,Rehab,No,No,validation_4
+No,75,17,1,12,1,Diabetes,Home Health,Yes,Yes,validation_4
+No,71,5,0,4,0,Diabetes,Home,No,No,validation_4
+No,80,4,1,12,0,Other,Home,No,No,test
+No,47,11,1,10,0,Diabetes,Home,Yes,No,validation_2
+No,75,4,1,13,0,Other,Home Health,No,No,validation_2
+Yes,68,6,2,3,1,Pneumonia,Home,No,Yes,test
+No,66,1,0,11,1,Other,Home Health,No,Yes,validation_3
+Yes,78,1,1,15,1,Other,Home Health,Yes,No,validation_2
+No,73,3,1,13,1,Other,Home Health,No,No,validation_3
+Yes,41,5,1,9,1,COPD,Home,No,Yes,test
+No,61,3,1,5,0,Heart Failure,Rehab,No,Yes,validation_5
+No,76,4,0,11,1,Other,Home,No,No,test
+Yes,59,8,1,12,2,Heart Failure,Home,No,No,validation_3
+No,35,3,2,14,1,Diabetes,Home,No,Yes,validation_4
+No,60,3,0,8,1,Other,Home,Yes,Yes,test
+No,66,3,0,10,0,COPD,Rehab,No,No,test
+Yes,51,2,1,8,1,Pneumonia,Rehab,Yes,Yes,validation_1
+Yes,53,6,2,13,2,Heart Failure,Home Health,Yes,Yes,validation_2
+Yes,60,3,5,12,0,Heart Failure,Home,No,No,test
+No,53,6,1,8,0,Diabetes,Home,No,No,validation_5
+No,79,3,3,6,0,Other,Home Health,No,No,test
+No,63,2,1,7,0,Other,Home Health,No,Yes,test
+No,61,5,0,14,1,COPD,Home,No,No,test
+No,88,11,0,12,0,Other,Home Health,No,No,validation_2
+Yes,82,5,2,15,1,Diabetes,Home,Yes,Yes,validation_1
+No,92,1,0,7,1,Pneumonia,Rehab,No,Yes,validation_4
+No,74,4,0,11,0,Pneumonia,Home,No,Yes,validation_5
+Yes,47,3,2,5,2,Pneumonia,Home,Yes,No,validation_1
+No,81,4,1,2,0,Other,Home,No,No,validation_2
+No,48,6,0,14,0,Diabetes,Home,No,No,test
+Yes,65,5,2,12,1,Pneumonia,Rehab,No,Yes,test
+Yes,49,2,2,16,1,Heart Failure,Home,Yes,No,test
+Yes,60,1,1,10,0,Other,Home,Yes,No,test
+Yes,85,8,2,16,3,Heart Failure,Home,No,Yes,validation_5
+No,60,9,2,11,0,Heart Failure,Home,Yes,Yes,test
+Yes,83,5,0,4,0,COPD,Home,No,Yes,validation_2
+Yes,82,4,0,17,0,Heart Failure,Home,No,Yes,test
+No,50,6,0,14,0,Diabetes,Rehab,Yes,No,validation_4
+No,54,5,0,12,0,Other,Home Health,No,Yes,test
+No,87,6,3,8,0,Pneumonia,Home Health,No,No,validation_5
+Yes,45,3,0,8,0,COPD,Home,Yes,Yes,validation_3
+No,53,18,1,8,0,Other,Home Health,No,No,validation_4
+Yes,84,9,1,10,2,Diabetes,Home,No,No,validation_5
+No,42,5,1,11,2,Other,Home,No,No,validation_5
+Yes,87,5,2,12,0,Heart Failure,Home,Yes,Yes,test
+No,63,5,0,8,0,Diabetes,Home,No,Yes,validation_1
+No,71,2,0,6,0,Other,Home Health,No,No,validation_2
+No,81,3,0,15,1,Pneumonia,Rehab,No,Yes,validation_3
+Yes,52,1,1,14,1,Other,Home,No,Yes,validation_4
+Yes,72,1,3,21,2,COPD,Home,Yes,Yes,validation_4
+No,74,7,0,1,1,Diabetes,Home Health,No,No,validation_5
+Yes,71,2,2,12,1,Heart Failure,Rehab,Yes,No,validation_5
+Yes,67,1,1,9,2,Pneumonia,Home,No,Yes,validation_2
+No,77,4,2,7,1,Diabetes,Home,Yes,Yes,validation_5
+No,83,8,1,8,0,Other,Home Health,No,No,validation_5
+Yes,85,10,1,12,1,Heart Failure,Home,Yes,No,test
+No,63,4,1,14,2,Diabetes,Home,No,Yes,validation_2
+No,64,2,1,7,0,Other,Rehab,Yes,Yes,validation_3
+No,66,2,2,12,0,Other,Home,No,Yes,validation_4
+No,80,6,0,7,1,Diabetes,Home,No,No,test
+No,57,2,0,8,0,Diabetes,Home,Yes,Yes,test
+No,56,4,1,7,2,Other,Home,No,No,validation_3
+Yes,71,1,1,6,2,Diabetes,Home Health,No,Yes,validation_3
+No,80,9,0,7,1,Other,Home,No,Yes,validation_1
+Yes,69,8,3,8,0,Diabetes,Home,No,Yes,test
+No,65,4,1,4,1,Diabetes,Home,No,No,validation_2
+No,55,4,1,15,1,Diabetes,Home,No,Yes,test
+Yes,71,2,1,9,0,COPD,Rehab,No,Yes,validation_4
+Yes,86,2,1,3,1,Other,Home,Yes,No,validation_4
+Yes,79,2,1,4,3,Diabetes,Home,No,No,test
+No,69,6,0,14,1,Other,Rehab,No,Yes,validation_5
+No,63,3,0,11,0,Pneumonia,Home,No,Yes,validation_3
+No,58,12,0,8,0,Other,Home,Yes,Yes,validation_4
+Yes,78,1,1,7,0,COPD,Home Health,No,Yes,validation_2
+Yes,40,2,2,11,0,Heart Failure,Home,No,No,validation_1
+No,56,5,0,12,1,Diabetes,Home,No,Yes,validation_2
+No,58,8,1,11,0,Heart Failure,Home,No,Yes,validation_5
+No,38,5,0,9,0,Pneumonia,Rehab,Yes,Yes,validation_5
+No,76,11,0,12,1,Diabetes,Home Health,No,No,validation_4
+Yes,58,15,2,8,1,Heart Failure,Home Health,No,Yes,validation_2
+Yes,33,2,1,7,2,Pneumonia,Home,No,No,validation_1
+Yes,69,1,2,9,0,Heart Failure,Home,Yes,No,validation_3
+No,86,1,0,6,0,COPD,Home Health,No,Yes,validation_5
+No,57,1,0,12,1,Diabetes,Home,No,Yes,validation_5
+No,62,5,2,5,0,Pneumonia,Home,No,Yes,validation_3
+Yes,63,2,3,7,0,Diabetes,Rehab,No,No,validation_1
+No,37,4,1,13,0,Other,Home Health,No,Yes,validation_3
+Yes,57,9,1,13,1,Pneumonia,Home,Yes,Yes,validation_1
+No,51,7,0,18,1,Other,Home,Yes,Yes,validation_3
+Yes,65,3,3,6,0,Heart Failure,Home,No,Yes,test
+No,69,8,0,7,1,Heart Failure,Home Health,No,No,validation_4
+No,57,3,0,10,0,COPD,Home Health,No,Yes,validation_1
+No,58,6,0,16,0,COPD,Home,Yes,Yes,validation_4
+No,70,3,3,4,0,COPD,Home Health,No,No,validation_2
+Yes,36,11,1,3,0,Heart Failure,Home,No,No,test
+No,57,1,1,14,0,Diabetes,Rehab,No,Yes,validation_3
+Yes,50,6,2,9,0,Heart Failure,Home Health,No,Yes,test
+No,52,4,0,10,0,Heart Failure,Home Health,No,No,validation_5
+No,67,6,0,15,2,Diabetes,Home Health,Yes,Yes,validation_4
+Yes,58,5,0,23,1,Diabetes,Home Health,No,Yes,validation_2
+Yes,88,1,0,8,1,Other,Home,Yes,No,test
+No,60,9,1,12,2,Pneumonia,Home,No,Yes,validation_1
+No,73,5,1,4,1,Other,Home,Yes,Yes,test
+No,74,2,1,2,0,COPD,Home,No,Yes,validation_5
+No,81,3,0,8,0,Other,Home,Yes,Yes,test
+No,56,6,0,4,2,Other,Home Health,Yes,No,validation_1
+Yes,84,9,1,3,1,Diabetes,Home,No,Yes,test
+No,78,6,1,9,0,Other,Rehab,No,Yes,validation_3
+No,57,2,0,1,0,Heart Failure,Home,No,No,validation_3
+Yes,76,3,1,4,0,Heart Failure,Home Health,Yes,No,validation_1
+No,69,3,0,10,1,Diabetes,Home,Yes,No,validation_2
+No,59,1,0,9,2,Other,Rehab,No,Yes,validation_5
+Yes,91,5,0,14,1,Heart Failure,Rehab,Yes,No,validation_1
+Yes,76,5,3,19,1,Other,Home,Yes,Yes,test
+No,57,6,2,12,1,Diabetes,Home Health,No,Yes,validation_3
+No,83,3,1,7,0,COPD,Home Health,Yes,Yes,test
+No,64,7,1,6,1,COPD,Rehab,Yes,Yes,validation_3
+No,50,2,0,4,0,Heart Failure,Rehab,Yes,Yes,validation_3
+Yes,53,5,1,6,1,Diabetes,Home Health,Yes,No,test
+Yes,86,24,1,7,1,COPD,Home,No,Yes,validation_2
+No,63,7,0,2,1,Other,Home Health,No,Yes,validation_4
+Yes,79,4,1,13,0,Heart Failure,Home,Yes,No,validation_2
+No,71,8,1,7,0,Diabetes,Home,No,Yes,validation_4
+No,49,3,0,8,0,COPD,Home Health,No,Yes,validation_3
+No,53,5,1,11,2,Diabetes,Home,Yes,Yes,validation_4
+No,55,3,1,9,1,Pneumonia,Home,Yes,No,test
+Yes,75,1,0,15,0,Heart Failure,Rehab,Yes,No,validation_5
+Yes,79,1,2,9,0,Heart Failure,Home,No,Yes,test
+No,49,4,1,10,0,Pneumonia,Home Health,No,No,validation_3
+No,51,9,0,14,0,Heart Failure,Home,No,No,validation_3
+No,62,1,1,10,0,Diabetes,Home Health,No,No,validation_3
+No,60,4,2,7,0,Pneumonia,Home Health,No,Yes,test
+Yes,61,10,2,14,0,Heart Failure,Home,No,No,validation_3
+No,92,11,1,5,0,Other,Home,No,Yes,test
+No,56,1,1,6,1,Pneumonia,Home,No,No,validation_2
+No,78,5,0,7,0,Heart Failure,Rehab,No,Yes,validation_4
+No,60,9,1,9,0,Pneumonia,Rehab,No,Yes,test
+No,64,1,1,6,0,Other,Home,No,No,validation_3
+Yes,39,7,4,13,0,Heart Failure,Home,No,Yes,validation_3
+No,65,3,0,5,1,Diabetes,Home Health,Yes,Yes,test
+Yes,53,3,2,2,0,Other,Home,Yes,No,validation_5
+No,59,1,2,6,0,Pneumonia,Home,No,No,validation_3
+No,67,3,0,11,0,Heart Failure,Home,Yes,Yes,validation_2
+No,83,8,1,7,0,Pneumonia,Home,Yes,Yes,validation_4
+No,76,3,0,8,0,Diabetes,Home Health,No,No,validation_4
+No,66,5,1,8,0,Heart Failure,Home Health,No,Yes,validation_3
+Yes,60,5,2,7,1,Pneumonia,Home,Yes,No,validation_3
+No,73,6,0,12,0,Other,Home Health,Yes,No,validation_5
+Yes,55,8,5,10,1,Diabetes,Rehab,No,No,validation_3
+No,77,4,0,2,1,Heart Failure,Rehab,No,No,test
+No,56,11,0,9,1,Other,Home Health,No,No,test
+Yes,77,1,1,4,0,COPD,Home,No,No,validation_3
+No,82,10,0,8,1,Other,Rehab,No,Yes,validation_2
+No,81,2,0,13,0,Other,Home Health,No,Yes,validation_3
+No,71,5,1,9,0,Pneumonia,Home,No,No,validation_1
+No,68,4,0,7,3,Diabetes,Rehab,Yes,Yes,test
+No,58,5,0,4,0,Diabetes,Home,Yes,No,validation_5
+No,79,9,1,6,1,Other,Home,No,Yes,validation_3
+Yes,48,4,2,4,0,Other,Home,Yes,Yes,validation_3
+No,60,6,0,15,0,Other,Home,No,No,validation_4
+No,45,2,0,8,1,Diabetes,Rehab,Yes,Yes,test
+No,71,6,2,15,0,Other,Rehab,No,No,validation_2
+Yes,81,4,1,7,0,COPD,Home,Yes,No,test
+No,71,9,0,11,1,Pneumonia,Home Health,No,Yes,test
+No,68,6,0,11,0,Pneumonia,Rehab,No,Yes,test
+Yes,79,3,3,7,1,Pneumonia,Home Health,Yes,Yes,validation_4
+No,68,6,0,12,0,Diabetes,Home,No,Yes,validation_1
+Yes,69,3,0,14,0,COPD,Home,Yes,No,validation_5
+No,68,11,0,7,1,Other,Rehab,No,Yes,test
+Yes,33,7,0,13,3,COPD,Home,No,Yes,validation_1
+No,72,4,1,6,0,Heart Failure,Home Health,Yes,Yes,test
+No,83,4,1,11,0,Other,Home,No,Yes,validation_5
+Yes,46,5,2,16,0,Heart Failure,Home,Yes,No,validation_2
+No,59,9,1,12,0,Diabetes,Home,No,No,test
+No,81,3,1,4,1,COPD,Home Health,Yes,Yes,test
+Yes,74,3,1,16,0,Heart Failure,Home,No,No,validation_5
+No,58,1,0,5,0,Pneumonia,Home,No,Yes,validation_2
+No,59,5,0,19,0,Other,Home,No,No,test
+Yes,53,6,1,2,2,COPD,Home,No,No,test
+No,79,3,0,14,0,Diabetes,Home Health,Yes,Yes,test
+No,73,4,0,6,2,Diabetes,Home,No,No,validation_1
+No,61,6,0,11,0,COPD,Home,No,Yes,validation_5
+No,43,3,2,11,0,Diabetes,Home Health,No,Yes,test
+Yes,51,5,1,9,0,Heart Failure,Home,Yes,Yes,validation_2
+No,66,3,2,14,0,Diabetes,Home,No,No,validation_1
+Yes,53,5,2,4,1,Heart Failure,Home,No,No,validation_4
+No,36,4,1,6,0,COPD,Rehab,Yes,Yes,validation_3
+Yes,38,3,2,7,0,Heart Failure,Home,No,No,test
+Yes,35,10,1,1,0,Heart Failure,Rehab,Yes,No,validation_1
+Yes,93,12,0,14,0,Heart Failure,Home,Yes,Yes,validation_2
+No,49,3,1,8,0,Other,Home,Yes,No,test
+Yes,84,1,3,12,0,Pneumonia,Home,No,No,validation_1
+Yes,61,5,3,7,2,Heart Failure,Home,Yes,Yes,validation_2
+No,78,6,1,4,0,COPD,Home,No,Yes,validation_2
+Yes,65,2,2,11,0,Other,Rehab,No,Yes,validation_4
+No,58,5,0,11,1,Other,Home Health,No,No,validation_1
+Yes,51,13,2,1,0,Heart Failure,Home,Yes,No,validation_5
+No,67,2,1,9,0,Diabetes,Home,No,Yes,validation_3
+No,77,9,1,12,0,Other,Home,No,No,validation_3
+No,66,2,0,4,0,Heart Failure,Rehab,No,Yes,validation_4
+No,51,3,0,3,0,Heart Failure,Home,No,Yes,validation_5
+No,61,7,1,10,1,Diabetes,Rehab,No,No,test
+No,77,5,0,8,0,Heart Failure,Home,No,No,test
+Yes,70,11,1,9,1,Pneumonia,Home,Yes,No,test
+Yes,60,13,1,11,1,COPD,Home,No,Yes,validation_4
+No,50,6,0,13,0,Heart Failure,Home,No,Yes,test
+No,78,4,0,3,0,COPD,Rehab,No,No,validation_5
+No,35,12,0,10,2,Diabetes,Home,No,Yes,test
+No,95,9,0,11,0,Other,Home,No,Yes,validation_3
+No,66,1,1,15,0,Heart Failure,Home Health,Yes,Yes,validation_1
+No,59,1,1,4,0,COPD,Home Health,No,Yes,validation_1
+Yes,72,4,0,8,0,Heart Failure,Home,Yes,No,test
+No,57,4,0,10,0,Other,Home Health,No,Yes,validation_1
+Yes,84,3,2,8,2,COPD,Home Health,No,Yes,test
+No,67,3,0,14,1,Heart Failure,Home,Yes,Yes,test
+No,36,6,0,12,1,Diabetes,Home Health,No,Yes,test
+No,83,10,0,10,0,Other,Rehab,No,No,test
+No,58,2,0,3,0,COPD,Rehab,No,Yes,validation_2
+No,68,4,1,14,0,COPD,Home,No,No,validation_5
+No,72,1,1,9,0,Other,Home,Yes,Yes,validation_2
+No,78,5,0,1,1,Diabetes,Rehab,No,Yes,test
+Yes,74,2,0,8,1,Diabetes,Rehab,Yes,No,validation_3
+No,65,2,0,11,0,Other,Home,Yes,Yes,validation_2
+No,83,6,1,16,0,COPD,Home Health,No,No,validation_1
+Yes,53,9,3,10,3,Other,Home,No,Yes,validation_1
+No,85,6,0,13,1,Other,Home,Yes,No,validation_1
+Yes,66,3,3,16,2,Other,Rehab,No,Yes,validation_5
+No,67,7,0,10,0,Other,Home,No,No,validation_4
+Yes,47,6,2,4,1,Pneumonia,Home,No,Yes,validation_3
+Yes,61,2,2,8,0,Heart Failure,Home,No,Yes,validation_2
+Yes,78,5,0,15,2,Heart Failure,Home,No,Yes,validation_1
+No,54,2,0,7,0,Heart Failure,Home Health,Yes,Yes,test
+Yes,56,1,1,19,0,COPD,Home,Yes,No,validation_1
+No,78,5,0,5,1,Other,Home,No,No,test
+No,56,5,0,15,0,Diabetes,Home,No,Yes,validation_5
+Yes,84,10,1,6,1,Heart Failure,Home,Yes,Yes,validation_4
+No,52,3,1,6,0,Other,Home Health,No,No,validation_3
+No,51,4,2,12,1,COPD,Home,No,Yes,validation_4
+No,67,2,1,13,2,Diabetes,Home,No,Yes,test
+No,76,2,0,16,0,Other,Home,No,Yes,test
+No,48,2,1,8,0,Pneumonia,Home,No,No,validation_2
+No,53,5,0,4,0,Diabetes,Home,Yes,No,validation_1
+Yes,57,2,2,9,0,Heart Failure,Home,No,Yes,validation_3
+No,51,8,1,6,2,Pneumonia,Home,No,No,validation_2
+Yes,78,8,0,1,0,COPD,Home,Yes,No,test
+Yes,43,1,3,7,1,Pneumonia,Home,Yes,Yes,validation_4
+No,61,5,1,14,1,Other,Home Health,Yes,No,validation_5
+No,73,4,0,7,0,COPD,Home Health,Yes,No,test
+Yes,56,11,2,7,0,Other,Home,No,Yes,validation_1
+No,66,1,0,16,0,Pneumonia,Home,Yes,Yes,test
+No,66,3,1,16,0,Diabetes,Home,No,No,test
+Yes,76,1,1,11,1,Heart Failure,Home,Yes,Yes,validation_2
+No,88,4,0,12,0,Other,Home,Yes,Yes,validation_5
+Yes,94,2,0,8,1,Heart Failure,Home,No,Yes,validation_2
+No,65,4,3,8,0,COPD,Home,Yes,Yes,validation_3
+Yes,78,1,1,10,0,Diabetes,Home,No,No,validation_5
+Yes,74,2,1,1,0,COPD,Home,No,Yes,validation_2
+No,50,3,0,7,0,Other,Home,Yes,No,validation_1
+Yes,57,2,2,4,2,Other,Rehab,No,Yes,validation_1
+No,53,7,0,7,0,Heart Failure,Home,No,Yes,test
+No,74,4,0,10,0,Other,Home Health,No,No,test
+Yes,51,4,1,11,1,Heart Failure,Home,No,Yes,validation_4
+No,82,3,3,8,0,Other,Home,Yes,Yes,validation_1
+No,71,4,0,6,0,Heart Failure,Home,Yes,Yes,validation_4
+No,87,4,0,9,0,Other,Home,No,No,validation_4
+No,73,3,0,9,1,Pneumonia,Home,No,No,validation_4
+Yes,73,4,2,12,0,Heart Failure,Home Health,No,No,test
+No,60,5,1,13,0,Diabetes,Home Health,No,No,test
+Yes,43,8,2,8,0,COPD,Home,No,Yes,test
+No,63,5,1,4,0,Diabetes,Home Health,Yes,No,validation_5
+No,66,9,1,9,0,Heart Failure,Home,No,No,validation_5
+No,71,4,0,8,1,Pneumonia,Home,No,Yes,validation_5
+No,57,4,1,7,1,COPD,Rehab,No,No,validation_4
+No,51,10,0,5,2,Other,Home Health,No,No,validation_3
+Yes,88,5,0,11,1,Pneumonia,Home,Yes,No,test
+Yes,75,2,1,12,3,Pneumonia,Home,No,Yes,validation_2
+No,53,9,0,10,1,Diabetes,Home,No,No,test
+No,57,3,0,5,0,Other,Home,No,No,validation_1
+No,49,4,1,15,2,Other,Rehab,No,No,validation_2
+Yes,85,15,0,7,2,COPD,Home,No,No,validation_4
+No,61,1,1,10,1,Diabetes,Home,No,Yes,validation_1
+No,68,3,0,5,0,Pneumonia,Home,No,No,validation_1
+Yes,55,1,1,6,0,Heart Failure,Home,Yes,Yes,test
+No,74,1,0,2,0,Heart Failure,Home,Yes,Yes,validation_1
+Yes,58,2,1,5,0,Heart Failure,Home,No,No,test
+No,78,4,1,11,0,Other,Home,No,No,validation_4
+No,59,8,0,5,1,Other,Home,No,No,test
+Yes,81,5,1,14,1,COPD,Home,No,No,test
+No,68,9,1,8,2,Pneumonia,Home Health,Yes,Yes,validation_4
+No,65,4,1,2,0,COPD,Home,Yes,Yes,validation_3
+Yes,54,2,0,22,2,Heart Failure,Home Health,Yes,Yes,test
+Yes,52,15,1,11,0,Heart Failure,Rehab,No,No,validation_4
+No,68,9,1,5,0,COPD,Home,No,No,validation_5
+No,59,1,1,10,0,Other,Home,No,Yes,validation_4
+No,73,3,0,12,0,Diabetes,Home Health,No,No,validation_2
+No,59,5,2,9,1,Heart Failure,Home,No,No,validation_1
+No,69,3,1,8,1,Diabetes,Home,No,No,validation_3
+Yes,69,5,2,13,1,COPD,Rehab,No,No,test
+No,68,1,0,5,1,Pneumonia,Home Health,No,No,validation_5
+No,62,2,0,11,1,Diabetes,Rehab,No,No,validation_5
+No,46,4,0,8,0,COPD,Rehab,No,Yes,validation_3
+No,65,3,1,10,0,Heart Failure,Home,No,Yes,test
+Yes,42,11,2,7,2,Pneumonia,Home,No,No,validation_3
+No,50,1,0,4,1,Other,Home Health,No,Yes,test
+Yes,68,6,2,15,0,Heart Failure,Home,No,No,validation_3
+No,68,3,0,11,0,Pneumonia,Rehab,No,No,validation_4
+No,66,8,2,8,0,Other,Home,No,No,test
+No,59,15,0,13,0,Other,Home Health,No,Yes,validation_4
+No,52,7,2,12,1,Other,Home,No,Yes,validation_5
+No,71,5,0,13,0,Diabetes,Home,No,Yes,validation_5
+No,70,9,1,11,0,Heart Failure,Home Health,No,Yes,validation_1
+No,53,4,1,6,1,Diabetes,Home,Yes,Yes,validation_1
+Yes,54,8,1,7,0,Heart Failure,Home,No,Yes,validation_1
+No,76,3,0,11,1,Heart Failure,Home Health,Yes,Yes,validation_3
+No,48,7,0,9,0,Other,Rehab,Yes,Yes,validation_1
+Yes,84,10,0,10,2,Heart Failure,Home,No,Yes,validation_5
+Yes,76,11,1,14,0,Pneumonia,Home,No,Yes,validation_3
+Yes,80,1,1,8,0,Pneumonia,Home,Yes,No,validation_1
+Yes,60,7,1,4,0,Heart Failure,Home,No,No,validation_4
+Yes,71,10,0,9,1,Heart Failure,Home,No,No,validation_4
+Yes,80,14,3,10,0,Diabetes,Home Health,No,No,validation_3
+No,78,9,1,10,1,Pneumonia,Home,No,No,validation_5
+Yes,76,6,1,7,3,Heart Failure,Home Health,No,No,validation_4
+No,71,7,1,6,0,Other,Rehab,No,Yes,test
+Yes,58,7,1,1,2,COPD,Rehab,Yes,Yes,validation_5
+No,43,5,1,15,1,Diabetes,Home,Yes,Yes,validation_3
+Yes,68,2,3,12,0,Other,Rehab,Yes,Yes,test
+No,52,11,1,6,0,Other,Home,No,Yes,validation_1
+No,57,4,1,12,0,Heart Failure,Home Health,No,No,validation_3
+No,83,21,2,8,0,Pneumonia,Home,No,No,validation_3
+Yes,88,7,1,12,2,Heart Failure,Home,No,Yes,validation_1
+No,61,4,0,5,0,Other,Home Health,No,Yes,validation_2
+No,75,5,0,5,1,Other,Home,No,No,validation_5
+No,68,3,0,7,1,Other,Home,No,Yes,validation_1
+Yes,34,7,0,13,1,Heart Failure,Home,No,Yes,test
+No,39,3,1,7,1,Other,Home,Yes,Yes,validation_3
+Yes,76,1,0,6,2,Diabetes,Home,No,No,validation_2
+No,79,1,0,15,0,Other,Home,No,No,validation_5
+Yes,57,3,1,11,0,Heart Failure,Rehab,No,No,validation_1
+No,64,4,0,13,1,Other,Rehab,No,No,validation_5
+No,68,5,3,3,1,Other,Home,No,Yes,validation_2
+Yes,66,3,2,14,1,Other,Home,Yes,No,test
+Yes,92,2,1,12,1,COPD,Home,No,Yes,validation_4
+No,41,4,0,7,2,Heart Failure,Home,No,Yes,test
+No,59,5,0,3,1,Heart Failure,Home Health,No,No,validation_1
+No,67,1,1,8,2,Heart Failure,Home Health,Yes,Yes,test
+No,57,12,0,5,0,COPD,Home Health,No,Yes,validation_2
+No,89,6,0,12,0,Other,Home,No,Yes,validation_1
+No,65,9,0,13,0,Other,Home Health,Yes,No,validation_3
+No,52,3,1,1,0,Other,Home Health,No,Yes,validation_1
+Yes,86,4,0,6,2,Heart Failure,Home,No,Yes,test
+No,66,12,0,11,1,Pneumonia,Home,No,Yes,validation_3
+No,65,18,1,15,0,Other,Home,No,Yes,validation_2
+No,73,9,1,8,0,Other,Home,No,No,validation_5
+No,60,6,0,9,0,Heart Failure,Home Health,Yes,No,test
+No,69,3,1,9,1,Heart Failure,Home Health,No,No,validation_5
+No,59,4,0,2,0,Other,Home,No,Yes,test
+No,51,8,1,14,0,COPD,Home Health,Yes,No,validation_2
+No,63,1,0,12,1,Other,Home Health,Yes,Yes,validation_4
+No,57,2,0,12,0,COPD,Rehab,No,No,validation_1
+No,44,1,0,6,2,Other,Home,No,No,test
+Yes,95,6,1,4,0,Heart Failure,Home,Yes,No,validation_3
+No,54,4,1,8,0,Heart Failure,Home,No,No,validation_4
+Yes,77,5,1,6,0,Other,Home,No,No,validation_5
+Yes,91,13,0,9,3,COPD,Home Health,No,No,test
+No,50,6,1,15,0,Pneumonia,Home,Yes,No,validation_1
+No,87,6,0,6,1,Pneumonia,Home,No,Yes,test
+No,63,5,2,8,1,COPD,Home Health,No,Yes,validation_2
+No,63,1,0,5,0,COPD,Home,No,No,validation_1
+Yes,75,9,0,13,0,Other,Home,Yes,No,validation_3
+Yes,54,2,1,5,2,COPD,Home,Yes,No,test
+No,63,2,0,10,0,Pneumonia,Rehab,Yes,Yes,validation_1
+No,95,6,0,10,0,Heart Failure,Rehab,No,Yes,validation_4
+No,86,8,1,2,0,Other,Home,No,Yes,test
+No,67,13,1,8,2,Pneumonia,Home,No,Yes,validation_3
+Yes,52,2,2,12,0,Heart Failure,Rehab,No,No,validation_1
+No,51,4,1,13,0,Other,Home,No,Yes,test
+No,64,3,0,11,0,Other,Home Health,No,No,validation_3
+No,70,2,1,8,1,Pneumonia,Home,Yes,No,test
+No,89,1,0,7,1,Heart Failure,Home,Yes,Yes,validation_1
+No,59,4,0,4,0,Other,Home Health,No,Yes,validation_3
+Yes,78,7,2,9,1,Heart Failure,Home,No,Yes,validation_2
+No,57,1,1,11,1,Other,Home Health,No,Yes,test
+No,63,6,1,9,0,Diabetes,Home,No,No,validation_2
+Yes,78,6,5,12,1,Other,Home,No,No,validation_2
+Yes,75,8,2,14,1,Other,Home,No,No,test
+Yes,77,8,3,11,1,Diabetes,Home,No,Yes,validation_5
+Yes,57,13,0,13,0,COPD,Rehab,Yes,No,validation_1
+No,75,3,0,7,2,Other,Home Health,No,Yes,test
+No,56,9,0,9,2,Pneumonia,Home,No,Yes,validation_2
+No,51,7,2,10,0,Pneumonia,Home,No,No,test
+No,40,2,1,12,0,Other,Rehab,No,Yes,validation_2
+No,70,4,0,5,1,Heart Failure,Home,Yes,No,test
+Yes,54,2,1,6,1,Pneumonia,Home,No,No,validation_1
+Yes,69,4,0,8,0,COPD,Home,No,No,test
+No,54,6,1,7,0,Other,Home,No,Yes,validation_4
+No,61,10,0,10,0,Other,Home,No,Yes,validation_1
+No,52,9,2,3,1,Other,Home Health,No,No,test
+Yes,87,1,1,5,0,COPD,Home,No,Yes,validation_3
+Yes,72,2,0,16,1,Heart Failure,Rehab,No,Yes,test
+No,67,5,2,6,0,COPD,Home,No,Yes,validation_4
+No,83,3,1,12,0,Other,Home,No,Yes,validation_5
+Yes,87,1,2,1,0,Heart Failure,Home Health,No,No,test
+No,81,4,0,9,0,COPD,Rehab,No,Yes,validation_4
+No,48,2,0,14,2,Diabetes,Home Health,No,No,validation_4
+No,69,10,0,7,0,Heart Failure,Home,No,Yes,test
+No,71,4,0,11,0,Heart Failure,Home Health,No,Yes,validation_2
+No,57,3,0,14,1,COPD,Home,No,No,validation_3
+Yes,57,1,0,5,0,Heart Failure,Home,No,Yes,test
+Yes,58,5,0,11,2,COPD,Rehab,No,No,validation_5
+No,55,2,1,4,0,Other,Home,Yes,Yes,validation_4
+No,77,4,0,7,1,Heart Failure,Home,Yes,Yes,test
+No,82,1,1,14,2,Diabetes,Home,Yes,Yes,validation_4
+Yes,53,6,1,10,2,COPD,Home,No,No,validation_3
+No,58,2,0,1,0,Other,Home,No,No,validation_2
+Yes,77,2,2,10,0,Other,Home,No,No,validation_2
+No,54,3,2,6,0,Other,Home,Yes,No,validation_2
+No,40,2,0,1,0,Heart Failure,Home,No,Yes,validation_5
+No,70,7,2,4,2,Other,Home Health,No,Yes,validation_2
+No,69,5,0,6,0,Diabetes,Home,Yes,Yes,validation_3
+Yes,60,7,2,11,1,Diabetes,Home,Yes,No,validation_2
+No,76,7,0,12,0,Other,Home,No,No,validation_5
+No,33,7,2,14,0,Diabetes,Home,No,No,test
+No,82,1,1,9,0,Diabetes,Rehab,No,No,test
+No,59,14,0,10,0,Other,Rehab,Yes,Yes,validation_2
+Yes,68,12,2,6,0,Other,Home,Yes,Yes,test
+Yes,70,8,2,12,0,Heart Failure,Home,No,No,validation_1
+Yes,68,4,4,7,1,COPD,Home,Yes,Yes,validation_3
+No,78,3,1,1,0,Diabetes,Home,No,Yes,validation_5
+No,86,3,1,4,0,Diabetes,Rehab,No,Yes,validation_4
+No,78,6,0,14,0,Diabetes,Rehab,No,Yes,validation_5
+No,56,6,0,3,2,Other,Home Health,No,Yes,test
+Yes,71,1,1,7,0,Pneumonia,Home,No,Yes,test
+No,56,9,0,9,0,Diabetes,Home,No,Yes,validation_3
+Yes,38,5,4,6,0,Pneumonia,Home,No,Yes,validation_4
+No,59,1,1,6,0,Other,Home,No,Yes,test
+No,86,9,1,6,0,Other,Home,No,No,validation_4
+No,58,4,1,8,0,Pneumonia,Home,No,No,validation_1
+No,79,7,1,1,0,Pneumonia,Home Health,Yes,Yes,validation_3
+No,71,4,0,2,0,Diabetes,Home,No,No,test
+No,66,9,1,6,1,Diabetes,Home,No,No,validation_3
+No,73,3,1,5,0,Pneumonia,Home Health,Yes,No,test
+Yes,52,8,0,13,1,Heart Failure,Home,No,Yes,test
+No,66,6,0,1,1,COPD,Rehab,No,No,validation_5
+Yes,80,2,0,8,1,Pneumonia,Rehab,Yes,No,validation_2
+No,68,4,1,16,0,Other,Home,No,Yes,validation_5
+No,72,7,1,7,0,Other,Home,No,No,test
+Yes,65,2,1,14,0,Diabetes,Home Health,Yes,No,validation_5
+No,62,9,0,8,0,Diabetes,Home Health,No,No,validation_2
+No,69,10,1,6,0,Other,Home,No,Yes,test
+No,58,4,1,9,2,Pneumonia,Home Health,No,No,validation_3
+No,63,11,1,14,1,Diabetes,Home,Yes,Yes,validation_1
+No,62,2,0,19,0,Pneumonia,Home,Yes,Yes,validation_5
+No,90,6,0,8,0,Other,Rehab,Yes,Yes,validation_1
+No,94,8,1,7,0,Other,Home,Yes,No,validation_3
+No,62,2,1,11,0,Heart Failure,Home,Yes,Yes,test
+No,70,2,0,13,0,COPD,Home Health,No,No,validation_1
+No,70,5,2,8,0,Diabetes,Home,Yes,Yes,validation_3
+No,61,7,0,7,1,Diabetes,Rehab,No,Yes,validation_3
+No,84,5,0,10,1,Pneumonia,Home,No,Yes,validation_1
+Yes,95,1,2,2,0,Pneumonia,Home,Yes,No,validation_5
+No,73,10,0,11,0,Pneumonia,Home Health,Yes,Yes,validation_2
+No,72,7,1,11,0,Other,Home,No,No,test
+Yes,73,5,3,1,1,Diabetes,Home,No,No,test
+No,66,6,0,10,1,COPD,Rehab,No,No,validation_2
+Yes,63,7,2,12,0,Other,Home,Yes,Yes,test
+Yes,63,4,2,11,0,Heart Failure,Rehab,Yes,No,validation_4
+Yes,68,4,1,8,0,Heart Failure,Home,No,Yes,validation_1
+No,51,4,0,9,0,Heart Failure,Home Health,No,Yes,validation_2
+No,64,2,1,8,0,Other,Rehab,Yes,Yes,validation_2
+No,88,5,0,9,0,Other,Home,No,No,test
+No,60,5,1,7,0,Pneumonia,Home,Yes,No,validation_4
+No,57,6,2,9,0,Other,Rehab,No,Yes,test
+No,78,9,1,2,1,Other,Home Health,Yes,No,validation_2
+No,64,20,1,11,0,Heart Failure,Home Health,No,Yes,test
+Yes,64,1,1,6,0,COPD,Home Health,Yes,No,validation_2
+No,71,6,0,13,0,Other,Home,Yes,No,test
+No,78,3,0,2,1,Other,Home,No,No,test
+No,92,5,1,2,0,Pneumonia,Home,No,Yes,validation_1
+No,80,6,1,12,1,Other,Rehab,No,No,validation_5
+Yes,58,4,2,10,2,Pneumonia,Rehab,Yes,No,test
+No,53,2,1,8,1,COPD,Home Health,No,No,validation_1
+No,49,3,0,11,0,Other,Rehab,No,Yes,validation_5
+Yes,73,19,2,10,0,Other,Home,Yes,No,validation_5
+Yes,74,2,0,13,0,COPD,Home,Yes,Yes,validation_3
+No,52,3,0,5,1,Other,Home Health,Yes,No,validation_3
+Yes,72,1,2,5,1,Heart Failure,Home Health,Yes,No,validation_3
+Yes,70,5,1,10,3,COPD,Home,No,Yes,validation_4
+No,66,3,0,5,0,Pneumonia,Rehab,Yes,No,test
+Yes,30,2,2,15,1,Pneumonia,Home,No,Yes,test
+No,86,6,0,6,0,Other,Home,No,Yes,validation_5
+Yes,66,7,2,13,0,COPD,Rehab,Yes,Yes,validation_5
+No,84,8,1,9,2,Other,Home,No,No,validation_3
+No,73,1,0,15,0,Pneumonia,Home,No,Yes,validation_4
+No,47,8,0,9,0,Diabetes,Home,Yes,No,validation_1
+Yes,78,2,1,10,0,Other,Home,No,Yes,validation_3
+No,41,4,1,13,2,Other,Home,No,No,validation_5
+No,68,9,0,11,0,Heart Failure,Home,No,Yes,validation_1
+No,66,3,0,9,2,COPD,Home,No,Yes,test
+Yes,68,1,1,17,2,Other,Home,No,Yes,validation_1
+No,50,5,1,11,2,Heart Failure,Home,No,No,validation_1
+Yes,65,2,0,9,0,Heart Failure,Home Health,Yes,No,validation_4
+No,75,9,1,10,0,Diabetes,Home Health,No,No,validation_5
+Yes,47,15,2,14,0,Heart Failure,Home,Yes,No,validation_1
+Yes,49,3,2,14,1,Diabetes,Home Health,Yes,No,validation_2
+No,70,5,1,7,2,Diabetes,Home,No,Yes,test
+Yes,35,4,3,13,1,Heart Failure,Home Health,No,No,validation_1
+Yes,45,10,4,5,0,Other,Home,No,Yes,validation_4
+No,75,5,2,10,0,Other,Home Health,No,No,test
+No,65,5,0,17,0,Pneumonia,Home Health,Yes,Yes,validation_2
+Yes,69,5,1,10,0,Heart Failure,Home,No,No,test
+No,51,3,0,8,1,Pneumonia,Home,Yes,No,validation_3
+No,84,8,1,8,0,Diabetes,Rehab,Yes,Yes,validation_4
+No,69,2,1,1,1,Other,Home,No,No,validation_3
+No,60,4,1,16,0,Other,Home Health,No,Yes,validation_4
+No,51,8,1,8,1,Other,Home,No,Yes,validation_3
+Yes,62,7,3,5,0,Heart Failure,Home,Yes,No,validation_2
+No,77,13,0,11,0,Other,Home Health,No,Yes,validation_3
+No,71,7,0,10,1,Diabetes,Home,Yes,No,test
+No,50,3,2,9,2,Diabetes,Home,Yes,Yes,validation_5
+No,59,8,0,3,1,Diabetes,Home,No,Yes,test
+No,76,3,0,9,1,Other,Home,No,Yes,validation_4
+Yes,64,4,3,12,1,COPD,Home Health,No,Yes,test
+No,53,1,0,10,1,Diabetes,Home,No,No,validation_2
+No,76,6,1,10,2,Pneumonia,Home,No,No,validation_5
+No,64,6,1,5,0,Diabetes,Home Health,No,No,validation_2
+No,67,4,0,10,0,Pneumonia,Home,Yes,Yes,validation_1
+Yes,61,2,1,5,1,Other,Home,Yes,No,validation_5
+No,52,1,0,14,0,Diabetes,Home,Yes,Yes,validation_5
+Yes,52,11,3,13,0,Heart Failure,Home,No,No,validation_2
+No,58,3,1,6,1,Diabetes,Home,No,Yes,validation_2
+Yes,63,3,1,10,1,Heart Failure,Home Health,Yes,No,test
+Yes,49,3,0,13,0,Diabetes,Rehab,Yes,No,validation_2
+No,71,15,0,10,1,Pneumonia,Home,No,Yes,validation_4
+Yes,65,11,3,5,0,Pneumonia,Rehab,No,No,validation_4
+Yes,46,2,1,13,1,Heart Failure,Home,Yes,Yes,test
+No,45,1,0,12,3,Diabetes,Rehab,No,Yes,validation_1
+No,40,6,2,6,0,Diabetes,Home,No,No,validation_5
+No,67,1,1,11,1,Other,Rehab,Yes,Yes,validation_2
+Yes,62,1,3,8,0,COPD,Home,No,Yes,validation_4
+No,50,7,1,7,0,Heart Failure,Home Health,No,No,validation_1
+No,70,4,0,4,1,Pneumonia,Home,Yes,No,validation_2
+No,73,3,0,11,1,Pneumonia,Rehab,No,Yes,validation_2
+No,69,10,0,11,0,Diabetes,Rehab,Yes,Yes,test
+No,67,17,1,8,0,Pneumonia,Rehab,No,Yes,validation_5
+Yes,91,4,1,14,0,Heart Failure,Home,No,No,validation_2
+No,56,8,0,1,0,Other,Home,No,Yes,validation_5
+No,73,4,1,13,0,Diabetes,Home Health,Yes,Yes,validation_4
+No,54,2,0,10,1,Heart Failure,Home,Yes,Yes,validation_1
+No,84,3,0,1,0,Pneumonia,Home Health,No,No,validation_3
+No,69,8,0,2,0,Other,Home,No,Yes,test
+Yes,54,3,2,7,2,Other,Rehab,No,No,validation_3
+Yes,70,7,2,6,1,Heart Failure,Home,Yes,Yes,test
+No,47,3,0,10,1,Heart Failure,Home,No,No,validation_1
+Yes,46,7,0,6,1,Heart Failure,Home,Yes,No,test
+No,72,3,1,6,0,Heart Failure,Home,No,Yes,validation_1
+Yes,57,8,2,6,1,Heart Failure,Home,No,No,validation_5
+Yes,76,4,1,12,1,Heart Failure,Home,No,Yes,validation_4
+No,66,5,0,11,0,Heart Failure,Home,No,Yes,validation_4
+No,47,7,2,1,0,Diabetes,Rehab,No,No,validation_5
+No,83,6,1,5,0,Pneumonia,Home,Yes,Yes,validation_4
+Yes,58,1,1,13,0,COPD,Home,Yes,Yes,validation_2
+Yes,65,3,2,4,1,Other,Home,Yes,No,validation_4
+No,84,9,0,15,1,COPD,Home,No,No,test
+No,71,5,0,7,0,Heart Failure,Home,Yes,Yes,validation_4
+Yes,70,1,1,13,0,Diabetes,Rehab,No,Yes,validation_4
+No,83,14,1,3,0,Diabetes,Home Health,No,Yes,validation_4
+Yes,69,16,0,9,0,Heart Failure,Home,No,No,validation_5
+Yes,68,7,3,14,1,Heart Failure,Home,No,Yes,test
+No,50,6,0,3,1,Heart Failure,Home Health,Yes,Yes,test
+No,70,8,0,8,1,Heart Failure,Home Health,Yes,No,validation_1
+Yes,62,9,3,12,2,COPD,Home,No,Yes,test
+Yes,83,17,3,8,2,Other,Home,No,No,test
+No,56,1,1,10,1,Pneumonia,Home,No,Yes,validation_5
+Yes,85,5,1,9,0,Diabetes,Home Health,Yes,No,test
+Yes,77,5,1,7,2,COPD,Rehab,No,Yes,validation_3
+No,70,3,1,3,0,Pneumonia,Home Health,Yes,Yes,validation_5
+Yes,77,2,1,6,0,COPD,Home Health,No,No,test
+No,66,3,0,8,0,COPD,Home,No,Yes,test
+No,70,6,2,12,1,Other,Home Health,No,Yes,validation_4
+Yes,72,3,2,3,1,Heart Failure,Home,No,Yes,validation_2
+Yes,52,5,2,22,0,Diabetes,Home Health,No,Yes,test
+No,66,6,0,8,1,Heart Failure,Rehab,No,Yes,validation_5
+Yes,84,13,1,13,1,Other,Home,No,No,test
+No,75,7,1,13,0,Diabetes,Home,No,No,validation_1
+Yes,84,5,1,16,1,Other,Home Health,No,No,validation_2
+No,61,4,0,6,0,Other,Home,Yes,No,test
+No,79,12,1,5,0,COPD,Home,No,Yes,validation_3
+Yes,81,4,1,3,1,Heart Failure,Home,No,No,test
+Yes,82,9,3,9,1,Other,Home,No,Yes,validation_3
+Yes,77,3,0,12,0,Heart Failure,Rehab,Yes,No,test
+No,68,2,0,6,1,Heart Failure,Home,Yes,Yes,test
+No,59,3,0,7,0,Other,Home,Yes,Yes,validation_4
+No,61,12,0,11,0,Heart Failure,Home Health,Yes,Yes,test
+Yes,63,6,2,4,0,Heart Failure,Home,No,Yes,test
+Yes,61,3,3,12,1,Other,Rehab,No,No,test
+Yes,70,2,0,12,0,Other,Home,No,Yes,test
+No,60,2,0,11,2,Pneumonia,Home Health,Yes,No,validation_4
+Yes,65,10,3,11,1,Heart Failure,Home Health,No,No,test
+Yes,58,1,2,13,1,Heart Failure,Home,Yes,No,test
+No,56,8,1,7,1,Other,Home Health,Yes,No,test
+Yes,69,2,3,15,0,Other,Home,No,No,test
+No,66,5,1,14,0,Other,Rehab,Yes,No,test
+No,75,7,0,11,1,Other,Home Health,No,No,test
+No,95,3,0,13,0,COPD,Home,Yes,Yes,validation_3
+No,61,3,2,5,1,Diabetes,Home,No,Yes,test
+No,73,5,1,3,2,Other,Home,No,No,validation_4
+No,83,3,1,2,2,Diabetes,Home,No,No,validation_2
+No,81,4,1,11,3,Diabetes,Home,Yes,Yes,validation_3
+Yes,38,11,2,3,0,Heart Failure,Home Health,Yes,Yes,test
+Yes,64,8,3,11,2,Heart Failure,Home,Yes,Yes,validation_2
+Yes,69,3,2,1,0,Heart Failure,Home,No,Yes,validation_5
+No,54,6,2,9,0,COPD,Home,No,Yes,test
+No,52,4,1,8,0,Diabetes,Home,No,Yes,validation_5
+Yes,56,13,0,9,1,Heart Failure,Home Health,Yes,No,test
+Yes,47,2,0,7,1,Heart Failure,Home Health,No,Yes,validation_1
+Yes,92,2,2,16,2,COPD,Home,No,Yes,validation_2
+No,64,4,1,12,0,COPD,Home,No,No,validation_4
+Yes,67,15,0,10,0,Other,Home,Yes,No,validation_1
+No,61,5,1,4,1,COPD,Home Health,No,Yes,test
+No,67,1,1,8,1,Diabetes,Home Health,No,No,test
+Yes,95,3,1,10,0,Heart Failure,Home,Yes,Yes,validation_4
+Yes,56,4,1,1,3,Heart Failure,Home Health,Yes,Yes,validation_3
+Yes,59,7,1,7,0,Diabetes,Home,Yes,No,validation_2
+No,53,4,1,10,0,Diabetes,Home,No,No,validation_2
+No,80,4,0,2,2,Diabetes,Home,Yes,Yes,validation_3
+Yes,37,2,1,15,1,Diabetes,Home,No,Yes,validation_2
+No,61,6,1,5,0,COPD,Home,No,No,test
+No,71,6,0,6,1,Diabetes,Rehab,No,Yes,validation_5
+Yes,66,6,3,5,2,COPD,Home,No,Yes,validation_1
+No,74,2,0,12,1,Other,Home Health,No,Yes,validation_1
+No,77,8,0,18,2,Other,Rehab,No,Yes,validation_1
+No,65,3,0,4,0,Diabetes,Home,No,Yes,test
+No,58,1,0,3,0,Diabetes,Rehab,No,No,validation_2
+No,55,14,1,9,0,Other,Home,No,Yes,validation_3
+Yes,67,5,1,4,2,Heart Failure,Home,No,No,validation_3
+Yes,78,2,2,3,1,Heart Failure,Rehab,No,No,test
+No,72,4,1,7,0,Other,Home,No,No,validation_4
+No,65,5,1,11,0,COPD,Home,No,Yes,validation_1
+No,74,3,0,12,0,Other,Home Health,Yes,Yes,validation_3
+No,80,5,2,1,2,Other,Home Health,No,Yes,test
+No,64,6,0,6,0,Pneumonia,Home Health,No,Yes,validation_1
+No,55,16,0,16,0,Other,Home,No,Yes,validation_4
+No,84,4,0,10,1,Other,Home,No,No,test
+No,46,5,0,10,0,Pneumonia,Home,No,Yes,validation_5
+No,65,2,1,9,1,Diabetes,Home,No,No,validation_2
+Yes,76,6,1,5,1,Other,Home,No,No,validation_4
+No,61,6,0,6,0,Diabetes,Home,Yes,Yes,validation_3
+No,60,6,0,11,0,Diabetes,Home,No,No,test
+Yes,72,2,0,15,0,COPD,Home,Yes,Yes,validation_2
+No,54,11,0,10,2,Pneumonia,Home,Yes,Yes,validation_2
+No,65,4,1,8,1,COPD,Home,No,Yes,validation_2
+No,76,4,0,6,0,Other,Rehab,No,Yes,test
+No,78,1,0,11,0,Diabetes,Home,No,Yes,validation_5
+Yes,51,2,3,8,1,Heart Failure,Home,No,Yes,test
+No,41,5,2,8,1,Other,Home,No,Yes,test
+No,72,5,1,2,1,Other,Rehab,Yes,Yes,validation_4
+No,46,6,1,14,1,Other,Home,Yes,No,test
+No,46,3,0,5,0,Diabetes,Home,No,Yes,validation_2
+Yes,49,7,0,14,1,Heart Failure,Home,Yes,Yes,validation_3
+Yes,80,2,1,2,1,Pneumonia,Rehab,Yes,Yes,validation_4
+No,85,6,0,11,1,Heart Failure,Home,No,No,validation_5
+No,59,1,0,14,0,Diabetes,Home,No,No,validation_2
+No,81,10,1,14,0,Heart Failure,Home Health,No,Yes,validation_4
+No,40,3,0,15,0,Other,Home,No,No,test
+Yes,73,6,1,12,1,Other,Home Health,Yes,Yes,validation_2
+No,65,2,1,9,1,Other,Home,No,Yes,validation_4
+No,46,2,0,7,0,Diabetes,Home,No,Yes,validation_3
+No,68,4,0,6,0,Pneumonia,Home,No,Yes,test
+No,51,4,1,10,0,Heart Failure,Home,No,No,validation_3
+Yes,74,4,0,14,0,Heart Failure,Home,Yes,No,validation_1
+No,55,7,1,14,0,Diabetes,Home,Yes,Yes,test
+Yes,59,8,1,17,0,Heart Failure,Home,No,No,validation_2
+Yes,95,5,1,7,0,COPD,Home,No,Yes,validation_5
+No,72,3,0,9,0,Heart Failure,Home,No,Yes,validation_3
+Yes,80,5,1,10,0,Heart Failure,Home,Yes,No,test
+Yes,75,2,1,5,2,Pneumonia,Home,No,No,validation_3
+No,80,6,2,12,0,Other,Home Health,Yes,Yes,test
+Yes,63,2,1,6,0,Other,Home,Yes,No,validation_5
+No,54,6,1,15,0,Other,Home,Yes,No,validation_3
+No,74,5,1,4,1,Diabetes,Home,No,No,validation_2
+No,49,5,2,4,2,Other,Home Health,No,Yes,validation_1
+Yes,47,5,2,3,1,Pneumonia,Home,No,No,test
+Yes,63,6,3,11,0,Heart Failure,Home,No,No,validation_2
+No,70,8,0,5,0,Other,Home Health,No,Yes,validation_5
+Yes,73,1,0,14,1,Diabetes,Home,No,Yes,validation_2
+No,65,3,1,8,0,COPD,Home Health,No,Yes,validation_5
+No,71,9,0,10,0,Other,Home Health,No,No,validation_5
+No,72,8,1,13,1,COPD,Home,No,Yes,test
+No,55,2,0,10,0,Diabetes,Home,No,Yes,validation_2
+No,75,5,1,14,1,Heart Failure,Home Health,No,Yes,validation_1
+No,58,6,0,10,1,Other,Home,Yes,No,test
+No,59,10,0,10,1,Other,Home,Yes,Yes,test
+No,66,12,0,13,0,Other,Home,No,Yes,test
+No,61,2,0,4,1,Pneumonia,Home,No,No,validation_1
+Yes,50,3,1,7,0,Heart Failure,Home,Yes,Yes,test
+Yes,70,6,1,2,2,COPD,Home,No,Yes,test
+Yes,60,7,1,12,1,COPD,Rehab,Yes,No,validation_5
+No,57,5,2,2,0,Pneumonia,Home,Yes,Yes,test
+Yes,62,4,3,6,1,Heart Failure,Home,No,Yes,test
+Yes,69,1,0,13,3,Diabetes,Home,Yes,Yes,test
+No,69,2,0,14,0,COPD,Home Health,No,Yes,test
+No,69,8,0,7,1,Pneumonia,Rehab,No,No,validation_5
+No,64,3,0,6,2,COPD,Home Health,No,Yes,validation_3
+Yes,40,5,2,10,1,Heart Failure,Home Health,No,No,test
+No,56,4,1,8,0,COPD,Home,Yes,Yes,validation_2
+No,78,5,0,6,0,Diabetes,Home Health,No,Yes,validation_4
+Yes,73,4,1,15,1,Heart Failure,Home,Yes,No,test
+No,32,1,0,4,0,COPD,Home,Yes,Yes,validation_3
+No,55,8,1,7,1,Diabetes,Home,No,No,validation_5
+No,73,8,2,5,0,Heart Failure,Home Health,Yes,No,validation_3
+No,57,6,0,7,0,Diabetes,Home Health,Yes,Yes,validation_4
+No,40,4,2,1,1,Heart Failure,Home Health,No,No,test
+Yes,73,12,2,10,0,Heart Failure,Rehab,No,No,validation_3
+Yes,88,6,1,11,1,Other,Rehab,Yes,No,validation_1
+Yes,69,9,0,7,1,Other,Home,Yes,No,validation_3
+No,61,13,1,12,1,Pneumonia,Home,No,Yes,validation_4
+No,59,9,1,12,0,Pneumonia,Home,No,Yes,validation_4
+No,62,7,1,3,1,Diabetes,Home,Yes,Yes,validation_4
+Yes,43,13,3,11,0,Pneumonia,Home,No,Yes,test
+No,89,3,0,11,1,Other,Home,Yes,Yes,validation_1
+No,54,1,0,10,0,Diabetes,Home Health,Yes,No,test
+No,49,3,1,4,0,Other,Home,No,Yes,validation_4
+No,40,6,0,7,1,Other,Rehab,No,No,validation_2
+Yes,80,3,2,13,0,Heart Failure,Home,Yes,Yes,test
+No,62,5,0,11,0,Diabetes,Home Health,Yes,Yes,validation_3
+No,58,7,0,11,0,COPD,Home,Yes,Yes,validation_2
+No,72,8,1,13,0,COPD,Home Health,No,Yes,test
+No,69,6,2,11,0,Heart Failure,Home,No,No,validation_5
+Yes,83,7,1,8,2,COPD,Home,No,Yes,validation_1
+No,78,3,0,6,0,Diabetes,Home,No,Yes,validation_2
+No,74,2,0,10,0,Diabetes,Rehab,No,No,validation_3
+No,58,9,1,9,1,Other,Home,No,Yes,test
+No,63,11,3,8,0,Pneumonia,Home,No,No,test
+No,61,14,1,9,0,Other,Home Health,No,Yes,validation_4
+Yes,82,3,0,18,2,COPD,Rehab,No,Yes,validation_5
+Yes,94,2,1,7,0,Heart Failure,Rehab,No,No,validation_2
+No,80,7,3,9,0,Diabetes,Rehab,No,Yes,validation_1
+No,59,1,1,1,0,Pneumonia,Home Health,No,Yes,test
+No,76,23,1,12,0,Diabetes,Home,Yes,Yes,validation_3
+No,60,3,2,2,1,COPD,Home Health,No,Yes,validation_5
+No,58,3,1,6,1,Pneumonia,Home Health,Yes,Yes,validation_1
+No,64,1,0,8,0,Pneumonia,Home Health,No,No,validation_3
+No,64,4,1,4,0,Heart Failure,Home Health,No,No,test
+No,65,5,1,2,0,Pneumonia,Home,Yes,No,validation_2
+Yes,72,5,0,10,1,Heart Failure,Home,Yes,No,validation_3
+Yes,78,6,3,10,0,COPD,Home,Yes,No,test
+No,60,5,0,14,1,COPD,Home,No,Yes,validation_3
+No,74,8,0,13,0,Diabetes,Rehab,No,No,test
+No,76,3,0,7,0,Diabetes,Home Health,No,Yes,test
+No,48,4,1,6,0,Other,Home,No,Yes,validation_4
+No,63,10,1,10,1,Heart Failure,Home Health,No,No,validation_1
+Yes,53,5,0,11,3,Other,Home,No,No,validation_5
+No,71,7,2,12,0,Other,Home Health,No,Yes,validation_1
+Yes,75,2,1,8,2,COPD,Home,Yes,Yes,test
+Yes,71,14,0,9,1,Heart Failure,Home,No,Yes,validation_1
+Yes,64,7,2,3,0,Heart Failure,Home,No,Yes,validation_5
+No,52,1,1,10,1,Other,Home Health,No,Yes,validation_1
+Yes,36,5,1,13,2,COPD,Home Health,Yes,No,test
+No,63,3,0,14,1,Other,Rehab,No,Yes,validation_5
+Yes,72,4,2,12,1,Heart Failure,Home,Yes,Yes,test
+No,85,14,2,13,0,Other,Rehab,No,No,validation_3
+No,68,1,1,10,0,Pneumonia,Home Health,No,Yes,validation_3
+Yes,63,2,3,8,1,Diabetes,Rehab,No,No,validation_3
+No,71,4,0,10,1,Diabetes,Home,No,Yes,validation_1
+No,53,3,0,16,0,Other,Home,No,Yes,validation_5
+No,65,10,0,9,0,Pneumonia,Rehab,No,Yes,test
+No,87,1,1,5,1,Other,Home Health,No,Yes,validation_5
+Yes,77,9,0,7,0,Heart Failure,Rehab,Yes,Yes,test
+Yes,81,14,3,15,0,Other,Home,Yes,No,validation_1
+Yes,72,2,1,9,0,Heart Failure,Home,No,No,test
+No,69,4,1,6,0,COPD,Home,No,No,validation_3
+No,68,9,1,16,2,Diabetes,Home,No,Yes,validation_2
+No,51,4,1,6,1,Other,Rehab,No,Yes,validation_1
+Yes,68,3,3,15,2,Diabetes,Home,Yes,No,test
+No,54,2,0,10,1,Diabetes,Rehab,No,No,validation_1
+Yes,67,17,0,9,1,Other,Home,Yes,No,validation_4
+No,62,5,1,10,3,Other,Home,No,Yes,test
+No,84,7,0,10,0,COPD,Home,No,Yes,test
+No,77,4,1,11,1,Pneumonia,Home Health,No,Yes,validation_1
+No,74,2,1,11,1,Other,Home,No,No,validation_2
+Yes,61,3,4,13,1,Diabetes,Home,Yes,No,validation_5
+No,41,10,0,5,0,Other,Home,Yes,Yes,validation_4
+Yes,73,7,0,10,1,Heart Failure,Home,Yes,No,validation_1
+No,64,4,0,6,1,Other,Home,Yes,Yes,validation_1
+No,73,5,2,6,0,COPD,Home,No,No,validation_4
+No,88,5,0,4,0,Other,Home,No,No,test
+Yes,63,2,3,14,0,Heart Failure,Rehab,Yes,No,test
+No,67,3,0,10,1,Heart Failure,Home,Yes,Yes,validation_3
+No,77,8,1,6,0,Diabetes,Home,No,No,validation_1
+No,59,6,1,16,0,Diabetes,Home,Yes,No,validation_4
+No,66,9,1,10,2,Diabetes,Home,No,Yes,test
+No,74,2,1,15,0,Diabetes,Home,No,No,test
+No,68,2,1,8,0,Other,Home Health,No,Yes,validation_1
+No,74,6,1,15,2,Other,Home Health,No,No,validation_2
+No,49,5,1,8,0,Other,Home,No,No,validation_5
+No,44,4,0,8,0,Pneumonia,Home,Yes,No,validation_1
+Yes,59,6,3,8,1,Heart Failure,Rehab,No,Yes,validation_5
+No,57,4,0,4,0,Other,Home,No,No,validation_4
+No,64,2,1,11,0,Heart Failure,Home Health,No,Yes,validation_3
+No,67,5,0,12,0,Other,Home,No,Yes,test
+No,80,4,0,11,1,Other,Home,No,No,validation_2
+No,68,3,1,14,0,Diabetes,Home,No,No,test
+Yes,62,10,1,10,0,Pneumonia,Rehab,Yes,No,validation_1
+No,65,3,2,13,0,Other,Home,No,No,validation_4
+No,72,7,0,23,0,Other,Home,No,No,validation_4
+Yes,52,10,1,16,0,COPD,Home,Yes,No,validation_3
+Yes,88,3,2,15,1,Other,Home,No,No,validation_1
+No,53,2,1,11,0,Pneumonia,Home,No,No,validation_3
+No,56,4,1,4,1,Pneumonia,Rehab,No,Yes,validation_5
+No,60,5,0,14,0,Heart Failure,Home,No,No,validation_3
+No,80,4,1,7,1,Other,Home Health,No,No,validation_1
+Yes,72,6,2,12,0,Heart Failure,Home Health,Yes,No,test
+No,90,9,0,6,0,Diabetes,Home,No,Yes,validation_2
+Yes,66,4,0,19,1,Other,Home,Yes,Yes,test
+No,69,4,0,9,0,Diabetes,Rehab,Yes,No,validation_4
+No,72,8,1,5,0,Other,Rehab,No,No,validation_1
+No,43,1,2,6,0,Other,Home Health,Yes,Yes,validation_5
+Yes,68,11,1,4,0,Heart Failure,Rehab,No,Yes,validation_4
+Yes,64,2,2,1,1,Other,Home,Yes,No,test
+No,76,4,0,3,1,Pneumonia,Home Health,No,Yes,validation_4
+No,40,8,0,7,3,COPD,Home,No,Yes,validation_4
+No,50,2,0,2,0,Pneumonia,Home Health,Yes,No,validation_3
+No,66,4,0,8,0,Diabetes,Home,No,No,test
+No,60,1,1,1,2,Pneumonia,Home Health,No,Yes,validation_4
+Yes,57,4,0,13,2,Diabetes,Home,No,No,test
+No,62,4,0,14,2,Pneumonia,Home,No,Yes,validation_3
+No,77,5,2,8,0,Diabetes,Home,No,No,test
+No,69,7,0,12,0,Diabetes,Home,No,Yes,validation_5
+No,78,15,1,4,0,Other,Home,No,No,validation_4
+No,66,5,1,8,1,Other,Home,No,Yes,test
+No,91,2,0,9,1,Pneumonia,Rehab,No,Yes,test
+No,49,3,1,6,0,Diabetes,Home Health,Yes,No,validation_1
+No,81,3,1,11,1,Heart Failure,Home,No,No,test
+No,80,6,0,13,3,Other,Home,Yes,Yes,validation_4
+Yes,55,7,1,7,1,Heart Failure,Home,No,No,test
+Yes,66,2,1,5,1,COPD,Home,No,Yes,validation_5
+No,80,5,1,11,0,Diabetes,Home Health,No,Yes,validation_5
+No,63,4,2,9,0,COPD,Home Health,No,Yes,validation_5
+No,88,4,1,5,0,Other,Home Health,No,No,validation_5
+No,52,6,0,6,0,Other,Home,No,No,validation_5
+Yes,58,3,2,7,0,Heart Failure,Home,No,Yes,test
+No,64,2,2,9,0,Diabetes,Home Health,No,Yes,validation_1
+No,54,6,1,6,1,COPD,Home Health,No,No,validation_4
+No,58,8,0,12,1,Pneumonia,Home,No,Yes,test
+Yes,60,2,2,6,1,Other,Home,Yes,Yes,validation_3
+No,80,4,1,11,1,Diabetes,Home Health,No,No,validation_2
+Yes,86,2,1,5,1,Pneumonia,Home Health,No,No,validation_4
+No,59,2,0,1,0,Diabetes,Home Health,No,Yes,test
+No,62,2,1,7,0,Pneumonia,Home,No,No,validation_5
+Yes,55,4,1,10,4,Heart Failure,Home Health,No,No,test
+No,75,12,0,5,1,COPD,Home,No,Yes,validation_1
+No,70,7,2,12,1,Other,Home,No,No,validation_2
+No,76,4,2,5,1,Other,Home,No,No,test
+Yes,61,7,4,9,0,Pneumonia,Home,No,Yes,test
+No,55,12,1,8,1,Pneumonia,Home,No,No,test
+No,63,6,1,7,0,Pneumonia,Rehab,No,Yes,validation_3
+No,67,13,0,14,0,Diabetes,Home,No,Yes,validation_5
+No,73,5,1,8,1,Other,Home Health,No,No,test
+No,67,5,0,14,0,Other,Home Health,No,No,test
+No,91,3,0,10,0,Pneumonia,Home,No,Yes,validation_1
+No,70,8,0,8,0,COPD,Home Health,No,Yes,validation_3
+No,45,2,0,5,0,Pneumonia,Home,No,Yes,test
+No,78,3,1,12,2,Heart Failure,Home Health,No,No,validation_4
+No,66,3,0,3,1,Heart Failure,Rehab,No,No,validation_5
+No,61,3,1,10,1,Other,Home,Yes,No,test
+Yes,88,5,0,12,0,COPD,Rehab,Yes,No,validation_4
+No,63,10,0,17,0,Diabetes,Home,No,No,validation_1
+No,81,11,0,2,0,Diabetes,Home,No,No,validation_1
+No,94,7,0,10,0,Pneumonia,Home Health,No,Yes,validation_4
+Yes,82,2,0,13,2,Pneumonia,Home,Yes,Yes,test
+Yes,56,2,1,14,1,Heart Failure,Home,Yes,No,validation_2
+No,68,5,0,5,2,COPD,Home Health,Yes,No,validation_5
+No,61,1,0,7,0,Pneumonia,Home,No,Yes,validation_3
+No,42,4,1,18,0,Diabetes,Home,No,Yes,test
+No,66,7,1,12,0,COPD,Home,Yes,Yes,validation_3
+Yes,78,12,0,6,2,Other,Home,Yes,Yes,validation_3
+Yes,68,5,2,15,0,COPD,Home,Yes,Yes,validation_1
+No,48,4,0,13,0,Heart Failure,Home Health,Yes,Yes,validation_5
+No,44,1,0,5,1,Pneumonia,Home,Yes,Yes,validation_3
+No,79,4,1,7,0,Other,Home,No,No,test
+No,45,1,0,5,1,Other,Home,No,No,test
+Yes,84,2,5,14,0,Other,Home Health,Yes,No,test
+No,61,2,1,5,1,Other,Home,No,No,validation_3
+No,58,5,2,11,0,Other,Home Health,No,No,test
+Yes,51,3,1,17,2,Other,Home,Yes,No,validation_3
+No,58,2,0,11,0,Other,Home,Yes,No,validation_3
+No,71,1,1,9,0,COPD,Home,No,No,test
+No,52,8,1,11,0,Pneumonia,Home,No,Yes,validation_5
+Yes,59,4,2,10,0,Heart Failure,Home Health,Yes,No,validation_1
+No,90,4,1,7,0,Pneumonia,Home,No,No,test
+No,69,3,0,12,0,Heart Failure,Home Health,No,Yes,test
+No,78,5,0,7,1,Diabetes,Home,No,Yes,test
+Yes,74,1,3,7,0,Diabetes,Home,No,Yes,validation_1
+Yes,79,2,1,8,0,Other,Home,No,No,validation_1
+No,38,8,0,13,2,Pneumonia,Home Health,No,Yes,test
+No,76,10,0,14,0,Diabetes,Home Health,No,Yes,validation_5
+Yes,95,2,2,5,1,Diabetes,Home Health,Yes,Yes,validation_2
+Yes,53,1,1,15,0,Heart Failure,Home,Yes,No,validation_4
+No,68,6,0,9,0,Pneumonia,Home,No,Yes,validation_3
+Yes,70,7,1,5,1,Heart Failure,Rehab,No,No,validation_4
+No,68,3,0,9,0,COPD,Home,No,Yes,test
+No,87,6,1,14,0,Diabetes,Home Health,No,No,test
+No,61,1,0,10,0,Other,Home Health,No,No,validation_2
+Yes,48,9,2,15,1,Diabetes,Rehab,Yes,No,validation_5
+No,51,18,1,8,0,COPD,Home Health,No,No,test
+No,68,1,2,6,0,COPD,Home Health,No,No,validation_2
+No,49,5,0,7,0,COPD,Home,No,No,test
+Yes,74,6,3,12,1,Heart Failure,Home Health,Yes,No,validation_2
+No,72,1,1,4,0,Pneumonia,Home,No,No,validation_4
+No,59,7,2,3,0,Pneumonia,Home,No,Yes,validation_1
+Yes,94,2,0,8,2,Heart Failure,Home,No,No,test
+No,69,1,0,12,3,Pneumonia,Home Health,No,Yes,validation_3
+Yes,70,6,1,12,0,Heart Failure,Rehab,Yes,No,test
+Yes,66,1,2,6,0,Heart Failure,Home,No,No,validation_4
+Yes,47,13,0,15,2,Heart Failure,Home,Yes,Yes,test
+No,68,5,1,8,1,Other,Home,No,Yes,test
+No,53,8,0,8,0,Other,Home,No,No,validation_5
+No,81,2,0,14,1,Other,Home Health,No,Yes,validation_3
+Yes,69,5,4,9,0,Pneumonia,Home Health,No,Yes,validation_2
+No,94,3,1,7,0,Other,Home Health,No,No,validation_4
+No,57,5,1,5,1,Heart Failure,Home Health,No,No,validation_3
+Yes,61,1,1,13,1,Diabetes,Rehab,No,No,validation_5
+No,40,2,0,4,1,Heart Failure,Home Health,Yes,Yes,test
+Yes,73,8,1,10,0,Heart Failure,Home,No,Yes,validation_1
+Yes,74,6,1,7,2,Heart Failure,Home,No,No,test
+No,62,3,0,13,2,Heart Failure,Home,Yes,Yes,validation_5
+Yes,79,12,2,7,0,Other,Rehab,No,Yes,test
+No,81,5,1,10,0,Other,Home,No,Yes,test
+No,51,4,2,7,0,COPD,Rehab,No,No,validation_2
+No,71,9,1,4,0,Pneumonia,Home,No,Yes,test
+Yes,93,2,2,14,0,Pneumonia,Home,No,Yes,validation_5
+No,51,8,0,1,0,Heart Failure,Home,No,Yes,validation_2
+Yes,69,1,1,2,2,Other,Home Health,No,Yes,validation_3
+No,73,5,0,12,1,Other,Home,No,Yes,validation_5
+No,80,3,0,4,2,Other,Home,No,No,validation_2
+Yes,54,1,3,5,2,Other,Home Health,Yes,Yes,validation_2
+No,78,4,0,4,0,COPD,Home Health,No,Yes,validation_1
+No,66,4,1,10,0,Other,Home,No,Yes,validation_3
+Yes,58,9,0,16,0,COPD,Home,No,Yes,validation_3
+No,82,2,0,5,0,COPD,Home Health,No,No,validation_4
+Yes,64,10,4,11,2,Diabetes,Home,No,Yes,validation_5
+No,70,2,0,10,0,Heart Failure,Home,No,No,validation_1
+Yes,78,6,1,4,1,Heart Failure,Home,Yes,No,validation_3
+No,75,2,2,10,0,Pneumonia,Home Health,No,Yes,validation_1
+No,69,9,0,1,1,Diabetes,Home Health,No,Yes,validation_4
+No,73,2,1,11,1,Pneumonia,Home,No,No,validation_4
+No,66,2,1,8,0,Other,Home Health,No,Yes,validation_5
+No,81,3,1,1,2,Diabetes,Home Health,Yes,Yes,validation_4
+Yes,66,1,1,7,0,Heart Failure,Home,No,Yes,validation_4
+No,48,7,1,13,0,Heart Failure,Home,No,Yes,validation_5
+Yes,75,5,1,10,0,Heart Failure,Rehab,No,Yes,validation_4
+No,56,3,1,4,0,Other,Home Health,Yes,No,validation_3
+No,89,3,0,16,1,Other,Home,No,No,test
+Yes,59,2,1,8,0,Other,Home Health,Yes,Yes,validation_4
+No,80,3,1,7,1,Other,Home,No,Yes,validation_5
+No,82,3,1,8,1,Heart Failure,Home,No,Yes,validation_5
+Yes,83,9,2,7,1,Heart Failure,Rehab,Yes,Yes,test
+Yes,68,2,1,11,2,Heart Failure,Home Health,No,No,validation_4
+No,73,7,1,10,1,Heart Failure,Home Health,No,Yes,test
+No,95,3,1,9,0,Pneumonia,Rehab,No,No,validation_4
+Yes,78,3,1,6,0,Heart Failure,Home,No,Yes,validation_1
+No,42,4,0,6,0,Diabetes,Home,No,Yes,test
+No,64,12,1,10,0,Pneumonia,Home Health,No,No,validation_5
+No,82,6,0,10,1,Other,Rehab,No,Yes,validation_3
+No,85,3,1,11,0,Pneumonia,Home,Yes,Yes,validation_4
+No,79,5,1,7,1,Heart Failure,Rehab,No,No,validation_3
+Yes,70,5,1,1,0,Heart Failure,Home,Yes,No,validation_3
+No,70,14,2,8,1,Other,Rehab,Yes,Yes,test
+No,67,6,1,13,0,Other,Rehab,No,No,validation_5
+No,68,1,0,8,0,Pneumonia,Home,Yes,No,test
+No,75,5,0,9,0,Other,Rehab,Yes,Yes,validation_3
+No,57,5,0,7,1,COPD,Home,No,No,validation_3
+No,70,3,0,13,1,Other,Rehab,No,Yes,validation_5
+No,61,4,0,17,1,Diabetes,Rehab,Yes,Yes,validation_4
+No,54,5,0,15,2,Diabetes,Home Health,No,No,test
+No,36,2,2,8,0,Other,Home,No,No,test
+Yes,73,7,1,10,2,COPD,Rehab,No,Yes,validation_5
+Yes,95,12,2,13,0,Other,Home,No,Yes,test
+Yes,65,4,0,9,0,Heart Failure,Home Health,Yes,No,validation_2
+No,40,4,0,7,0,Pneumonia,Home,No,No,validation_5
+No,67,6,0,8,1,Other,Home,No,Yes,validation_4
+Yes,84,3,5,11,2,Other,Home Health,Yes,Yes,validation_1
+Yes,68,6,2,7,1,Heart Failure,Rehab,No,No,validation_4
+No,72,3,0,4,0,Other,Rehab,Yes,No,validation_5
+Yes,90,1,2,7,0,Other,Home,No,Yes,test
+No,75,4,1,8,0,Pneumonia,Home Health,Yes,No,test
+No,60,4,1,10,1,Pneumonia,Home,No,Yes,test
+No,64,3,3,3,0,Other,Home,Yes,Yes,validation_1
+No,82,8,0,8,0,Heart Failure,Home,No,Yes,validation_2
+No,65,8,0,16,1,Pneumonia,Rehab,No,No,validation_1
+Yes,47,8,1,12,2,Heart Failure,Home,Yes,No,test
+No,68,1,1,5,0,Heart Failure,Home,No,No,test
+No,53,1,0,15,1,COPD,Home Health,No,Yes,test
+No,60,7,1,8,0,Diabetes,Home Health,No,Yes,validation_3
+No,45,9,1,10,0,Diabetes,Home,No,No,validation_1
+No,72,4,1,7,1,Heart Failure,Home,Yes,Yes,validation_3
+No,72,6,1,6,1,Pneumonia,Home,No,No,validation_2
+No,74,9,1,13,0,Other,Home Health,No,Yes,validation_2
+Yes,52,5,2,6,1,COPD,Home,No,No,validation_2
+No,73,3,2,1,0,Diabetes,Home,No,Yes,validation_2
+No,76,7,2,6,1,Heart Failure,Home,No,Yes,validation_1
+No,54,7,1,12,2,Other,Home,Yes,Yes,test
+No,49,14,1,7,2,Other,Home,No,No,test
+Yes,59,2,0,2,3,Heart Failure,Home,No,No,validation_4
+No,56,5,0,10,1,Diabetes,Home,No,No,validation_1
+No,78,4,1,13,1,Diabetes,Home,Yes,Yes,validation_3
+Yes,78,3,2,11,0,Heart Failure,Rehab,No,Yes,validation_2
+No,53,9,0,7,0,Heart Failure,Home,No,No,validation_5
+No,60,10,0,13,0,Other,Home Health,No,No,validation_1
+No,84,6,0,7,0,Pneumonia,Home,Yes,No,validation_5
+No,61,6,0,6,0,Diabetes,Home,No,Yes,validation_5
+No,61,1,0,12,0,Other,Home,No,No,validation_1
+No,57,5,0,14,0,Diabetes,Home,No,No,validation_4
+No,82,8,1,11,0,Heart Failure,Home Health,No,Yes,validation_3
+No,57,5,2,12,0,Pneumonia,Home,No,Yes,validation_1
+Yes,65,5,3,7,1,Pneumonia,Home,No,Yes,test
+Yes,53,2,2,6,0,Heart Failure,Home Health,Yes,No,test
+No,76,3,3,11,0,Other,Home Health,No,Yes,test
+Yes,71,8,3,4,1,Diabetes,Home,Yes,No,test
+No,61,3,0,11,0,Diabetes,Rehab,Yes,Yes,test
+No,68,1,1,8,0,Diabetes,Home,No,No,test
+Yes,65,5,5,7,0,Heart Failure,Home,Yes,Yes,validation_3
+No,52,1,0,6,1,COPD,Home Health,No,No,validation_4
+No,62,5,0,7,0,Other,Home,No,Yes,validation_5
+No,60,6,2,8,0,Other,Home,No,No,validation_4
+Yes,51,4,3,7,2,Diabetes,Home,No,No,validation_4
+No,63,5,0,16,2,Pneumonia,Home,No,No,test
+Yes,59,10,2,1,2,Other,Home,No,No,validation_3
+No,58,6,1,5,0,COPD,Home,Yes,Yes,validation_3
+No,60,3,2,8,0,COPD,Rehab,No,No,test
+Yes,43,10,2,5,1,Heart Failure,Home Health,No,No,test
+No,75,4,0,2,0,Diabetes,Home,No,Yes,test
+No,63,10,0,12,0,Heart Failure,Rehab,Yes,No,validation_2
+No,60,3,3,14,0,Diabetes,Home,Yes,Yes,validation_4
+Yes,73,1,3,12,0,Pneumonia,Home,Yes,No,validation_2
+Yes,40,6,2,14,1,COPD,Home,Yes,Yes,validation_1
+No,82,9,1,9,0,COPD,Home,No,Yes,validation_4
+Yes,31,10,1,11,0,Heart Failure,Home,Yes,No,test
+No,62,3,2,9,0,COPD,Home,No,No,validation_5
+No,48,4,0,8,0,Pneumonia,Home,Yes,No,test
+No,63,10,0,1,0,Heart Failure,Home,No,No,test
+No,62,7,0,3,0,Pneumonia,Home,No,Yes,validation_4
+No,65,11,0,12,2,Other,Home Health,Yes,No,validation_5
+No,65,5,2,2,1,Other,Home,No,Yes,validation_2
+Yes,58,3,2,6,2,Other,Home,Yes,No,test
+No,62,2,0,5,0,Pneumonia,Home,No,Yes,test
+No,49,6,0,9,1,Other,Home,No,Yes,test
+Yes,58,2,1,9,1,Other,Home,No,Yes,validation_4
+No,71,5,1,2,0,Other,Home Health,No,No,validation_1
+No,61,8,1,11,1,Diabetes,Home,No,Yes,validation_2
+No,69,2,0,7,1,Diabetes,Rehab,No,No,test
+No,78,3,0,10,0,Other,Home,No,Yes,validation_5
+Yes,60,5,2,3,1,COPD,Home,No,No,validation_4
+No,63,1,0,12,1,Pneumonia,Home,No,Yes,validation_1
+Yes,78,3,1,15,1,Heart Failure,Home Health,No,Yes,test
+Yes,66,7,0,7,0,Heart Failure,Home Health,Yes,No,validation_2
+No,62,8,0,9,0,Heart Failure,Rehab,No,No,validation_5
+Yes,66,10,2,10,0,Heart Failure,Home,No,Yes,validation_5
+No,71,7,2,5,0,Other,Home,Yes,Yes,validation_1
+No,57,2,0,2,0,Pneumonia,Rehab,Yes,No,test
+No,95,4,1,8,0,Pneumonia,Home,No,Yes,validation_5
+No,68,6,0,7,0,Heart Failure,Home,Yes,Yes,test
+No,62,10,0,9,1,Pneumonia,Rehab,No,Yes,validation_4
+No,59,2,2,10,1,Other,Home,No,No,test
+Yes,48,5,2,6,1,COPD,Home,No,No,validation_2
+Yes,84,5,2,6,1,Diabetes,Home,No,No,validation_5
+No,65,4,1,4,1,Diabetes,Home,Yes,Yes,test
+No,49,9,0,9,0,Diabetes,Rehab,No,Yes,validation_3
+No,77,7,0,1,0,Diabetes,Rehab,No,Yes,validation_1
+No,49,8,2,12,0,Other,Home Health,No,Yes,validation_4
+No,68,7,1,11,2,Other,Home,No,No,test
+No,78,10,1,11,0,Other,Home,No,Yes,test
+Yes,51,1,4,7,0,Heart Failure,Home,Yes,No,validation_2
+No,82,3,0,13,0,Other,Home,No,Yes,validation_4
+Yes,59,5,2,3,0,Pneumonia,Home,Yes,No,validation_3
+No,65,5,1,7,0,Pneumonia,Rehab,No,Yes,validation_5
+No,88,8,0,3,0,Pneumonia,Rehab,No,Yes,test
+No,56,3,1,12,0,Other,Home Health,No,No,validation_5
+Yes,67,1,1,13,0,Heart Failure,Rehab,No,Yes,test
+No,56,2,0,9,0,Pneumonia,Home Health,Yes,No,validation_5
+No,69,8,0,13,1,Other,Home,Yes,Yes,test
+No,79,1,2,9,0,Pneumonia,Home,No,No,validation_3
+Yes,63,3,0,9,0,Heart Failure,Home,No,Yes,validation_5
+Yes,48,2,0,4,2,COPD,Rehab,No,No,test
+Yes,46,1,2,4,2,Other,Home,Yes,No,validation_3
+Yes,89,10,3,4,0,Other,Home Health,Yes,No,validation_5
+Yes,53,2,1,12,1,COPD,Home,No,No,validation_5
+No,64,3,1,12,1,Other,Home,Yes,No,test
+Yes,68,7,3,12,0,Pneumonia,Home,No,Yes,validation_2
+No,59,3,1,9,0,Other,Home Health,Yes,Yes,validation_5
+No,64,6,1,19,1,Pneumonia,Home,No,Yes,validation_4
+No,63,3,0,11,0,Other,Home Health,Yes,Yes,validation_4
+Yes,63,3,1,7,1,Diabetes,Home,No,Yes,validation_3
+No,81,6,1,7,1,Other,Rehab,No,No,validation_4
+No,77,5,0,10,0,Pneumonia,Home,No,No,validation_3
+No,71,9,0,16,1,Heart Failure,Home,No,No,test
+No,60,8,2,14,0,Other,Home,No,Yes,test
+No,70,4,1,11,0,COPD,Home,No,Yes,test
+No,65,2,0,12,0,COPD,Home,No,Yes,validation_1
+Yes,69,2,1,11,2,Other,Home,Yes,No,validation_1
+No,65,5,2,8,1,Heart Failure,Home Health,No,No,test
+Yes,68,4,1,12,2,COPD,Rehab,No,Yes,validation_4
+Yes,63,5,1,12,2,Diabetes,Home,No,No,test
+No,71,2,0,3,2,Other,Rehab,Yes,Yes,validation_5
+No,66,5,0,7,0,Heart Failure,Home,Yes,No,validation_1
+No,59,9,2,8,1,Other,Home Health,No,Yes,test
+No,69,4,1,10,2,Other,Home,No,Yes,validation_3
+No,60,8,1,9,0,Pneumonia,Home,No,No,validation_5
+No,78,2,1,1,0,Pneumonia,Home Health,No,No,validation_2
+No,42,9,1,12,0,Other,Home,No,No,test
+No,60,1,1,15,0,Heart Failure,Home Health,No,Yes,validation_1
+Yes,49,2,1,1,0,Heart Failure,Home,No,Yes,validation_2
+No,59,5,0,13,0,Other,Home,No,Yes,validation_3
+No,72,5,2,11,0,Diabetes,Home,No,No,validation_4
+No,77,3,1,7,0,Other,Home,Yes,Yes,validation_5
+Yes,72,4,2,4,1,Other,Home,Yes,No,validation_2
+No,49,9,0,8,1,Diabetes,Home Health,No,No,validation_5
+No,42,1,0,10,1,Diabetes,Home Health,No,No,test
+Yes,80,2,2,7,1,Heart Failure,Home Health,No,Yes,validation_4
+Yes,70,5,1,7,1,Other,Rehab,Yes,No,validation_4
+No,61,11,0,10,0,Heart Failure,Home,No,No,validation_3
+Yes,59,12,1,12,0,Pneumonia,Home Health,No,Yes,test
+Yes,68,12,0,10,0,COPD,Rehab,No,Yes,test
+No,72,10,1,7,0,Diabetes,Home Health,No,Yes,test
+No,55,14,2,8,0,Pneumonia,Home,Yes,Yes,validation_2
+Yes,48,20,4,5,0,Heart Failure,Home Health,No,Yes,test
+No,67,1,0,7,1,Pneumonia,Rehab,No,Yes,test
+No,74,6,1,11,0,Other,Home,No,No,validation_5
+No,48,11,1,8,0,Heart Failure,Home,No,Yes,test
+Yes,57,1,3,7,1,Other,Home,No,Yes,validation_2
+No,73,2,1,7,0,Pneumonia,Home,No,Yes,validation_2
+No,74,5,1,3,0,Other,Home,Yes,Yes,validation_5
+No,56,3,0,12,0,COPD,Home,No,Yes,validation_5
+No,49,12,0,11,0,Other,Rehab,Yes,Yes,validation_2
+No,76,6,0,11,2,Other,Home,No,Yes,validation_5
+Yes,54,4,1,15,0,Heart Failure,Home Health,Yes,No,test
+No,75,11,0,9,0,Other,Home,No,Yes,validation_2
+No,95,5,1,9,0,Pneumonia,Home Health,No,Yes,test
+Yes,69,12,1,3,0,Heart Failure,Home,No,Yes,test
+Yes,79,10,2,13,2,Other,Rehab,No,Yes,validation_3
+No,64,1,0,18,1,Pneumonia,Home,Yes,Yes,test
+No,67,5,1,9,1,Pneumonia,Home Health,No,No,validation_1
+No,67,5,0,7,0,Pneumonia,Home,No,No,test
+No,57,13,0,17,1,Pneumonia,Home,No,No,validation_5
+Yes,70,1,1,8,1,Heart Failure,Home Health,Yes,Yes,validation_1
+No,43,3,2,7,0,Other,Home,Yes,Yes,validation_1
+Yes,69,3,4,14,0,Heart Failure,Home,No,Yes,test
+Yes,75,3,2,5,0,Heart Failure,Home,Yes,No,test
+No,58,6,1,14,1,Other,Rehab,No,No,test
+No,63,6,0,13,0,COPD,Home Health,No,No,validation_5
+No,52,2,0,8,0,COPD,Rehab,No,Yes,validation_5
+Yes,60,7,0,13,0,COPD,Home Health,Yes,No,test
+No,56,1,0,7,1,Diabetes,Home,No,Yes,validation_4
+No,36,7,1,11,1,Diabetes,Home,No,No,test
+No,59,3,1,10,1,Other,Home,No,Yes,validation_2
+No,49,2,0,3,0,Heart Failure,Home,No,Yes,validation_4
+Yes,86,2,0,5,0,Pneumonia,Home,No,No,test
+No,58,3,1,6,2,Diabetes,Home,No,Yes,validation_1
+No,69,7,0,10,1,Other,Home,No,Yes,test
+Yes,73,5,3,6,0,Diabetes,Home Health,Yes,No,validation_4
+No,90,12,0,7,0,Other,Home,No,No,test
+No,74,8,0,15,0,COPD,Home,No,Yes,test
+Yes,68,2,1,10,0,Diabetes,Home,Yes,No,test
+No,79,10,0,5,3,Other,Home Health,No,Yes,validation_4
+Yes,92,2,1,17,0,Diabetes,Home Health,No,No,test
+No,67,1,1,13,0,Other,Home,No,Yes,validation_2
+No,31,4,0,11,0,Other,Home,No,Yes,test
+Yes,51,1,1,8,0,Other,Home Health,Yes,No,test
+No,73,20,1,2,1,Other,Home,No,Yes,validation_5
+No,60,3,2,9,0,Other,Home,No,No,validation_1
+Yes,75,3,1,7,0,COPD,Rehab,Yes,No,test
+No,60,1,0,10,0,Diabetes,Home,No,Yes,validation_3
+No,59,2,0,8,2,Other,Home,No,No,validation_5
+No,89,6,0,10,0,Diabetes,Home,Yes,Yes,validation_3
+Yes,61,11,1,7,2,Heart Failure,Home,Yes,No,validation_4
+No,49,1,0,8,1,Other,Home,No,No,validation_5
+No,95,7,1,8,0,Other,Home,Yes,Yes,validation_3
+Yes,69,1,3,4,0,Other,Home Health,No,Yes,validation_5
+Yes,70,3,2,6,1,COPD,Home,Yes,Yes,validation_2
+No,54,5,0,12,1,Diabetes,Home,No,No,validation_3
+No,51,2,0,6,0,Diabetes,Home,No,Yes,validation_1
+No,60,7,0,4,1,Other,Home Health,Yes,Yes,validation_4
+No,87,4,1,10,1,Pneumonia,Home,No,Yes,validation_2
+Yes,83,5,1,9,0,Heart Failure,Rehab,No,No,test
+Yes,50,1,0,10,1,COPD,Rehab,No,No,test
+Yes,76,2,0,11,2,Heart Failure,Home,No,Yes,validation_4
+No,59,6,1,13,0,COPD,Home,No,Yes,validation_2
+Yes,72,2,1,15,0,COPD,Home,No,No,validation_4
+Yes,95,2,2,8,1,Other,Rehab,Yes,Yes,test
+No,77,9,2,3,1,Pneumonia,Home,No,No,test
+No,74,9,1,2,0,COPD,Home,No,No,validation_3
+No,65,10,0,1,1,Diabetes,Home,No,Yes,validation_5
+Yes,95,5,2,8,0,Other,Home,No,No,validation_2
+Yes,63,2,1,13,0,Heart Failure,Home,Yes,Yes,validation_1
+No,62,3,1,12,1,Heart Failure,Home,No,Yes,validation_1
+No,71,4,1,14,0,COPD,Home,No,No,test
+No,67,3,2,13,0,Other,Home,No,No,test
+No,59,1,1,11,0,Other,Rehab,Yes,Yes,test
+No,56,4,0,9,0,Diabetes,Home Health,No,Yes,validation_4
+No,62,3,1,3,1,Other,Home,No,No,validation_2
+No,73,4,0,15,0,Other,Home Health,No,No,validation_4
+No,53,1,1,12,0,COPD,Home Health,No,No,test
+No,56,2,0,9,1,Diabetes,Home,Yes,Yes,validation_1
+No,65,4,0,9,0,Other,Rehab,No,Yes,test
+Yes,42,2,2,17,0,COPD,Home,Yes,Yes,validation_2
+No,81,6,1,12,0,Other,Home,No,No,validation_5
+No,72,1,2,10,0,Other,Home,No,Yes,validation_2
+Yes,95,1,0,13,2,Diabetes,Home,No,No,validation_4
+No,64,5,2,6,2,Other,Home,No,Yes,validation_1
+Yes,64,4,1,1,1,Heart Failure,Home Health,No,No,validation_4
+No,38,2,2,4,1,Other,Home Health,Yes,Yes,validation_5
+No,52,5,0,10,1,Pneumonia,Home,No,No,validation_4
+No,81,4,1,14,0,Pneumonia,Home Health,No,No,validation_2
+No,61,1,0,9,1,Other,Home,No,No,validation_5
+No,57,5,3,8,0,Other,Home,No,Yes,validation_5
+No,74,5,0,1,0,Other,Home,No,No,validation_3
+No,78,7,1,9,1,Diabetes,Home,No,Yes,validation_5
+Yes,63,3,1,11,0,Heart Failure,Rehab,No,Yes,test
+No,68,5,1,3,1,COPD,Home Health,No,Yes,validation_3
+Yes,68,3,3,10,0,Other,Home,Yes,Yes,validation_4
+No,55,4,0,15,1,Heart Failure,Home Health,No,No,validation_1
+No,87,5,1,6,1,Other,Home,No,No,test
+Yes,60,3,0,5,1,COPD,Home,Yes,No,test
+No,92,9,0,2,1,Heart Failure,Rehab,No,Yes,validation_4
+No,50,1,1,9,0,Other,Home Health,Yes,Yes,validation_5
+No,61,5,2,10,0,Pneumonia,Home,No,Yes,validation_1
+Yes,85,2,1,10,1,Diabetes,Home,Yes,No,validation_2
+Yes,81,11,1,15,1,Pneumonia,Home,No,Yes,validation_4
+Yes,74,9,2,8,0,Pneumonia,Home Health,Yes,No,validation_4
+Yes,57,4,4,11,0,Heart Failure,Home,No,No,validation_4
+No,79,4,0,6,0,Other,Rehab,No,Yes,validation_4
+Yes,56,11,2,7,1,Other,Home,No,No,test
+No,63,1,2,4,1,Pneumonia,Home Health,No,Yes,test
+No,48,1,0,7,0,COPD,Home Health,No,Yes,validation_1
+Yes,66,5,1,14,0,Heart Failure,Home,No,No,test
+Yes,81,10,1,11,2,Diabetes,Home,Yes,No,validation_4
+No,89,3,1,8,0,Pneumonia,Home,No,No,validation_3
+No,67,5,1,5,1,Pneumonia,Rehab,No,Yes,validation_4
+No,74,4,1,6,0,Diabetes,Home Health,No,No,validation_5
+No,42,6,1,8,1,COPD,Home,No,No,validation_1
+Yes,50,12,2,8,0,COPD,Home,No,Yes,test
+No,69,3,1,1,1,COPD,Home Health,No,No,validation_5
+No,65,7,0,12,0,Heart Failure,Home,No,No,test
+No,95,12,1,6,0,Pneumonia,Home Health,No,Yes,validation_1
+No,84,3,1,6,1,Diabetes,Home Health,Yes,Yes,validation_4
+No,48,2,1,8,2,Other,Home Health,No,No,validation_3
+No,76,1,0,10,1,Pneumonia,Home,No,No,validation_2
+No,42,11,1,12,0,Other,Home,No,No,validation_2
+No,63,8,0,9,1,COPD,Home Health,Yes,No,validation_4
+Yes,77,11,1,10,0,Pneumonia,Home,No,No,test
+No,56,7,1,10,1,Other,Rehab,No,Yes,validation_1
+No,73,2,0,15,0,Other,Rehab,No,No,validation_1
+No,83,7,1,6,0,COPD,Home,No,No,validation_4
+Yes,95,1,1,5,0,COPD,Home Health,No,No,validation_5
+No,50,9,1,13,0,Diabetes,Home Health,No,No,validation_3
+Yes,68,1,2,11,0,Heart Failure,Home,No,Yes,validation_2
+No,72,4,1,8,0,Pneumonia,Home Health,No,Yes,test
+Yes,79,11,1,6,0,COPD,Home Health,No,No,validation_3
+Yes,72,6,1,9,1,COPD,Home,No,No,validation_2
+Yes,73,25,0,7,1,Heart Failure,Home Health,Yes,No,test
+Yes,57,3,1,9,3,Heart Failure,Home,No,No,validation_4
+Yes,76,5,2,15,1,Other,Home,No,Yes,test
+No,43,2,0,8,1,Heart Failure,Home Health,No,Yes,validation_1
+Yes,65,4,0,11,1,Heart Failure,Home,Yes,No,validation_3
+Yes,95,2,0,15,1,Pneumonia,Home,Yes,Yes,test
+Yes,82,2,2,7,0,Heart Failure,Home Health,No,No,validation_3
+Yes,62,4,1,16,1,Other,Rehab,No,No,validation_4
+No,34,1,1,12,0,Other,Home Health,No,Yes,validation_1
+Yes,48,2,0,16,0,COPD,Rehab,No,No,validation_1
+Yes,80,12,0,2,0,Diabetes,Rehab,Yes,No,validation_1
+No,77,6,0,15,0,Heart Failure,Home Health,No,Yes,validation_5
+Yes,33,1,3,6,0,Pneumonia,Home,No,No,test
+Yes,65,3,1,8,0,Heart Failure,Rehab,Yes,Yes,validation_3
+Yes,81,5,3,4,2,Other,Home,No,Yes,validation_4
+No,70,3,2,10,0,COPD,Home Health,No,Yes,validation_2
+No,65,5,1,6,0,Diabetes,Rehab,No,Yes,test
+Yes,42,4,1,13,0,Heart Failure,Home,Yes,Yes,validation_2
+No,57,4,0,8,0,Other,Home,No,No,validation_1
+No,66,3,1,1,1,Pneumonia,Home,No,Yes,validation_1
+Yes,89,2,0,12,2,COPD,Home,No,No,test
+No,37,9,0,14,1,Diabetes,Home,Yes,No,validation_3
+Yes,65,13,1,11,0,Heart Failure,Home,No,No,validation_3
+No,71,4,1,9,0,Pneumonia,Home,Yes,No,validation_3
+No,83,6,0,7,1,Diabetes,Home,No,Yes,test
+Yes,65,5,1,10,1,COPD,Home,No,No,test
+No,57,7,0,16,0,Diabetes,Home,No,Yes,validation_3
+No,55,2,0,10,1,Other,Home,No,Yes,validation_3
+No,75,4,0,13,0,Pneumonia,Home Health,Yes,Yes,validation_1
+No,44,6,1,9,0,COPD,Home,No,No,validation_5
+No,74,7,1,12,0,COPD,Home,No,No,validation_5
+Yes,95,5,2,9,1,COPD,Home Health,No,No,validation_1
+No,58,5,0,12,2,Other,Home,No,No,validation_2
+Yes,86,2,1,15,0,Heart Failure,Home,No,No,test
+Yes,52,2,1,13,0,Other,Home,Yes,No,validation_1
+No,79,4,1,8,0,COPD,Rehab,No,No,validation_2
+Yes,81,2,1,9,1,Heart Failure,Rehab,No,Yes,validation_1
+Yes,65,5,2,16,1,Heart Failure,Home,Yes,Yes,test
