@@ -10,16 +10,19 @@ The left side lists the rows from the highest probability to the lowest, with th
 actual label, the predicted label and the type of each row: TP, FP, FN or TN.
 The Higher and Lower buttons (or Page Up and Page Down) move the threshold to the next larger or smaller
 probability that occurs in the column, so each press moves at least one row
-across the line. The right side shows the confusion matrix, the matrix divided by
+across the line. The Tables tab shows the confusion matrix, the matrix divided by
 its row sums (TPR, FNR, FPR, TNR), the matrix divided by its column sums
-(precision and the other three), F1, accuracy and misclassification.
+(precision and the other three), F1, accuracy and misclassification. The Curves
+tab draws recall, precision, F1, accuracy and misclassification across every
+threshold, each with a checkbox, with a red line at the current threshold and
+the five values at that line printed above the plot.
 
     python threshold_explorer.py                      opens the window
     python threshold_explorer.py FILE                 opens the window on FILE
     python threshold_explorer.py --selftest FILE ACTUAL PROB POSITIVE [ROLECOL ROLEVALUE] [THRESHOLD]
                                                       prints the numbers, opens no window
 
-Needs pandas and numpy. Tkinter comes with Python.
+Needs pandas, numpy and matplotlib. Tkinter comes with Python.
 """
 import math
 import sys
@@ -126,7 +129,7 @@ def report(m, t, positive, negative):
          "Divided by the row sums (the actual class)",
          f"  TPR, recall, sensitivity      {fmt(m['TPR'])}",
          f"  FNR, miss rate                {fmt(m['FNR'])}",
-         f"  FPR, false alarm rate         {fmt(m['FPR'])}",
+         f"  FPR, fall out                 {fmt(m['FPR'])}",
          f"  TNR, specificity              {fmt(m['TNR'])}",
          "",
          "Divided by the column sums (the predicted class)",
@@ -163,7 +166,7 @@ def main(path=None):
 
     root = tk.Tk()
     root.title("Threshold explorer")
-    root.geometry("1280x760")
+    root.geometry("1420x840")
     st = {"df": None, "path": None, "levels": None, "t": 0.5}
 
     top = ttk.Frame(root, padding=6); top.pack(fill="x")
@@ -203,7 +206,9 @@ def main(path=None):
     tree.configure(yscrollcommand=sb.set)
     tree.pack(side="left", fill="both", expand=True); sb.pack(side="left", fill="y")
 
-    right = tk.Frame(body, padx=14); right.pack(side="left", fill="both")
+    nb = ttk.Notebook(body); nb.pack(side="left", fill="both", expand=True)
+    right = tk.Frame(nb, padx=14); nb.add(right, text="  Tables  ")
+    curves = tk.Frame(nb, padx=8, pady=6); nb.add(curves, text="  Curves  ")
     BIG = ("Segoe UI", 12); HEAD = ("Segoe UI", 12, "bold"); SMALL = ("Segoe UI", 10)
 
     def cell(parent, r, c, text="", bg="white", font=BIG, w=16):
@@ -235,7 +240,7 @@ def main(path=None):
     rn["FPR"] = cell(g2, 2, 1, "", TYPE_COLORS["FP"]); rn["TNR"] = cell(g2, 2, 2, "", TYPE_COLORS["TN"])
     tk.Label(right, font=SMALL, justify="left", anchor="w", text=(
         "TPR, true positive rate: recall, sensitivity        FNR, false negative rate: miss rate\n"
-        "FPR, false positive rate: false alarm rate             TNR, true negative rate: specificity")).pack(fill="x")
+        "FPR, false positive rate: fall out                     TNR, true negative rate: specificity")).pack(fill="x")
 
     g3 = section("Divided by the column sums, the predicted class")
     cn = {}
@@ -251,6 +256,60 @@ def main(path=None):
     tail = tk.Label(right, font=("Segoe UI", 13, "bold"), anchor="w", justify="left"); tail.pack(fill="x")
     tk.Label(right, font=SMALL, anchor="w", justify="left",
              text="F1 = 2 × precision × recall / (precision + recall), the harmonic mean of the two").pack(fill="x")
+
+    # ---------------------------------------------------------- the Curves tab
+    from matplotlib.figure import Figure
+    from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+    CURVES = [("TPR", "recall", "#2f9e44"), ("precision", "precision", "#f08c00"), ("F1", "F1", "#7048e8"),
+              ("accuracy", "accuracy", "#1c7ed6"), ("misclassification", "misclassification", "#212529")]
+    readout = tk.Frame(curves); readout.pack(fill="x", pady=(0, 4))
+    t_read = tk.Label(readout, font=("Segoe UI", 13, "bold"), fg="#c92a2a", width=18, anchor="w")
+    t_read.pack(side="left")
+    show, vals = {}, {}
+    for key, lab, col in CURVES:
+        f = tk.Frame(readout); f.pack(side="left", padx=5)
+        show[key] = tk.BooleanVar(value=True)
+        tk.Checkbutton(f, text=lab, variable=show[key], fg=col, font=("Segoe UI", 11, "bold"),
+                       command=lambda: draw_curves()).pack(anchor="w")
+        vals[key] = tk.Label(f, font=("Segoe UI", 14, "bold"), fg=col); vals[key].pack(anchor="w")
+    fig = Figure(figsize=(7.4, 5.2), dpi=100)
+    ax = fig.add_subplot(111)
+    canvas = FigureCanvasTkAgg(fig, master=curves)
+    canvas.get_tk_widget().pack(fill="both", expand=True)
+    cur = {"line": None, "sweep": None}
+
+    def build_sweep(p, is_pos):
+        levels = thresholds(p)[::-1]
+        rows = [measures(classify(p, is_pos, t)[1]) for t in levels]
+        return levels, {k: np.array([r[k] for r in rows], float) for k, _, _ in CURVES}
+
+    def draw_curves():
+        ax.clear()
+        if cur["sweep"] is None:
+            canvas.draw_idle(); return
+        levels, ys = cur["sweep"]
+        for key, lab, col in CURVES:
+            if show[key].get():
+                ax.step(levels, ys[key], where="post", color=col, lw=2, label=lab)
+        ax.set_xlim(1.0, 0.0); ax.set_ylim(0, 1.02)
+        ax.set_xlabel("threshold, falling from left to right")
+        ax.grid(alpha=0.25)
+        for sp in ("top", "right"):
+            ax.spines[sp].set_visible(False)
+        cur["line"] = ax.axvline(1.0, color="#e03131", lw=2)
+        place_line()
+
+    def place_line():
+        if cur["line"] is None or "m" not in st:
+            return
+        t = st["t"]
+        xt = 1.0 if t == ABOVE else min(max(t, 0.0), 1.0)
+        cur["line"].set_xdata([xt, xt])
+        canvas.draw_idle()
+        m = st["m"]
+        t_read.config(text=f"threshold {tstr(t)}")
+        for key, _, _ in CURVES:
+            vals[key].config(text=fmt(m[key]))
 
     def numeric_cols(df):
         return [c for c in df.columns if pd.api.types.is_numeric_dtype(df[c])]
@@ -326,10 +385,10 @@ def main(path=None):
         line_at = int(pred.sum())
         for i, (pv, a, pr, k) in enumerate(zip(p, d[actual_cb.get()].astype(str), pred, kinds), 1):
             if i == line_at + 1:
-                tree.insert("", "end", values=("", f"threshold {tstr(t)}", "", "", ""), tags=("line",))
+                tree.insert("", "end", values=("", tstr(t), "threshold", "", ""), tags=("line",))
             tree.insert("", "end", values=(i, f"{pv:.4f}", a, pos if pr else neg, k), tags=(k,))
         if line_at == len(p):
-            tree.insert("", "end", values=("", f"threshold {tstr(t)}", "", "", ""), tags=("line",))
+            tree.insert("", "end", values=("", tstr(t), "threshold", "", ""), tags=("line",))
         n_items = len(p) + 1
         root.update_idletasks()
         tree.yview_moveto(max(0.0, (line_at - 13) / n_items))
@@ -349,6 +408,13 @@ def main(path=None):
             w.config(text=txt)
         tail.config(text=f"F1 {fmt(m['F1'])}     accuracy {fmt(m['accuracy'])}     "
                          f"misclassification {fmt(m['misclassification'])}")
+        key = (id(st["df"]), actual_cb.get(), prob_cb.get(), pos_cb.get(), role_cb.get(), rval_cb.get())
+        if cur.get("key") != key:
+            cur["key"] = key
+            cur["sweep"] = build_sweep(p, is_pos)
+            draw_curves()
+        else:
+            place_line()
         status.config(text=f"{m['n']} rows, {len(st['levels'])} distinct probabilities. "
                            f"{m['predicted positive']} rows at or above the threshold are predicted {pos}.")
 
