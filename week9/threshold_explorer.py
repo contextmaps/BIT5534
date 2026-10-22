@@ -15,7 +15,11 @@ its row sums (TPR, FNR, FPR, TNR), the matrix divided by its column sums
 (precision and the other three), F1, accuracy and misclassification. The Curves
 tab draws recall, precision, F1, accuracy and misclassification across every
 threshold, each with a checkbox, with a red line at the current threshold and
-the five values at that line printed above the plot.
+the five values at that line printed above the plot. The ROC tab draws TPR against
+FPR over every threshold with the AUC, the optimal threshold (the point furthest
+from the diagonal, largest TPR - FPR) and a red point at the current threshold. The
+Lift tab draws lift against PP%, the share of rows at or above the threshold, with
+a red point at the current threshold.
 
     python threshold_explorer.py                      opens the window
     python threshold_explorer.py FILE                 opens the window on FILE
@@ -107,6 +111,41 @@ def measures(kinds):
     return m
 
 
+def roc_lift(p, is_pos):
+    """ROC and lift over every threshold, highest first.
+
+    The ROC starts at (0, 0), a threshold above every row, and each step down to the
+    next probability in the column adds the rows at that probability, so tied rows
+    move together. AUC is the trapezoid sum of 0.5 (TPR_i + TPR_i-1)(FPR_i - FPR_i-1).
+    The optimal threshold is the one whose point lies furthest from the diagonal,
+    which is the largest TPR - FPR. Lift at a threshold is TP / (PP x AP / N), the
+    precision over the share of positives in the rows, against PP% = PP / N."""
+    levels = thresholds(p)[::-1]
+    n, ap = len(p), int(is_pos.sum())
+    an = n - ap
+    tpr, fpr, ppc, lift = [0.0], [0.0], [], []
+    for t in levels:
+        pred = p >= t
+        tp = int((pred & is_pos).sum()); fp = int((pred & ~is_pos).sum()); pp = tp + fp
+        tpr.append(ratio(tp, ap)); fpr.append(ratio(fp, an))
+        ppc.append(pp / n); lift.append(ratio(tp, pp * ap / n) if ap else float("nan"))
+    tpr, fpr = np.array(tpr), np.array(fpr)
+    auc = float(np.sum(0.5 * (tpr[1:] + tpr[:-1]) * (fpr[1:] - fpr[:-1])))
+    j = tpr[1:] - fpr[1:]
+    k = int(np.nanargmax(j))
+    best = {"threshold": float(levels[k]), "FPR": float(fpr[k + 1]), "TPR": float(tpr[k + 1]), "J": float(j[k])}
+    return {"levels": levels, "tpr": tpr, "fpr": fpr, "auc": auc, "best": best,
+            "pp_pct": np.array(ppc), "lift": np.array(lift), "base": ap / n if n else float("nan")}
+
+
+def lift_at(m, base):
+    """Lift and PP% at the current threshold, from its measures."""
+    pp, n = m["predicted positive"], m["n"]
+    if pp == 0 or not n:
+        return float("nan"), 0.0
+    return ratio(m["precision"], base), pp / n
+
+
 def fmt(x, digits=3):
     if isinstance(x, (int, np.integer)):
         return str(int(x))
@@ -156,7 +195,13 @@ def selftest(args):
     d, p, is_pos = prepare(df, actual, prob, positive)
     _, kinds = classify(p, is_pos, t)
     neg = [str(v) for v in pd.unique(d[actual].astype(str)) if str(v) != str(positive)]
-    print(report(measures(kinds), t, positive, neg[0] if len(neg) == 1 else "other"))
+    m = measures(kinds)
+    print(report(m, t, positive, neg[0] if len(neg) == 1 else "other"))
+    R = roc_lift(p, is_pos)
+    b = R["best"]
+    lf, pc = lift_at(m, R["base"])
+    print(f"\nAUC {R['auc']:.3f}   optimal threshold {b['threshold']:.4f}: FPR {b['FPR']:.3f}, TPR {b['TPR']:.3f}, TPR - FPR {b['J']:.3f}")
+    print(f"Lift at this threshold {fmt(lf)} with {pc:.1%} of the rows predicted {positive}")
 
 
 # ------------------------------------------------------------------ the window
@@ -209,6 +254,8 @@ def main(path=None):
     nb = ttk.Notebook(body); nb.pack(side="left", fill="both", expand=True)
     right = tk.Frame(nb, padx=14); nb.add(right, text="  Tables  ")
     curves = tk.Frame(nb, padx=8, pady=6); nb.add(curves, text="  Curves  ")
+    roc_tab = tk.Frame(nb, padx=8, pady=6); nb.add(roc_tab, text="  ROC  ")
+    lift_tab = tk.Frame(nb, padx=8, pady=6); nb.add(lift_tab, text="  Lift  ")
     BIG = ("Segoe UI", 12); HEAD = ("Segoe UI", 12, "bold"); SMALL = ("Segoe UI", 10)
 
     def cell(parent, r, c, text="", bg="white", font=BIG, w=16):
@@ -276,7 +323,64 @@ def main(path=None):
     ax = fig.add_subplot(111)
     canvas = FigureCanvasTkAgg(fig, master=curves)
     canvas.get_tk_widget().pack(fill="both", expand=True)
-    cur = {"line": None, "sweep": None}
+    cur = {"line": None, "sweep": None, "roc": None, "rocpt": None, "liftpt": None}
+
+    def head(parent):
+        f = tk.Frame(parent); f.pack(fill="x", pady=(0, 4))
+        dyn = tk.Label(f, font=("Segoe UI", 14, "bold"), fg="#c92a2a", anchor="w", justify="left")
+        dyn.pack(fill="x")
+        sta = tk.Label(f, font=("Segoe UI", 12), fg="#343a40", anchor="w", justify="left")
+        sta.pack(fill="x")
+        return dyn, sta
+    roc_dyn, roc_sta = head(roc_tab)
+    rfig = Figure(figsize=(6.4, 5.6), dpi=100); rax = rfig.add_subplot(111)
+    rcanvas = FigureCanvasTkAgg(rfig, master=roc_tab); rcanvas.get_tk_widget().pack(fill="both", expand=True)
+    lift_dyn, lift_sta = head(lift_tab)
+    lfig = Figure(figsize=(7.4, 5.2), dpi=100); lax = lfig.add_subplot(111)
+    lcanvas = FigureCanvasTkAgg(lfig, master=lift_tab); lcanvas.get_tk_widget().pack(fill="both", expand=True)
+
+    def draw_roc_lift():
+        R = cur["roc"]
+        rax.clear(); lax.clear()
+        if R is None:
+            rcanvas.draw_idle(); lcanvas.draw_idle(); return
+        rax.plot([0, 1], [0, 1], color="#adb5bd", lw=1.2, ls="--", label="random, AUC 0.5")
+        rax.plot(R["fpr"], R["tpr"], color="#1971c2", lw=2.2, label=f"ROC, AUC {R['auc']:.3f}")
+        b = R["best"]
+        rax.plot([b["FPR"], b["FPR"]], [b["FPR"], b["TPR"]], color="#2f9e44", lw=1.5, ls=":")
+        rax.plot([b["FPR"]], [b["TPR"]], marker="s", ms=9, color="#2f9e44", label="optimal, furthest from the diagonal")
+        rax.set_xlim(-0.01, 1.01); rax.set_ylim(-0.01, 1.01); rax.set_aspect("equal")
+        rax.set_xlabel("FPR, false positive rate"); rax.set_ylabel("TPR, true positive rate, recall")
+        rax.grid(alpha=0.25); rax.legend(loc="lower right", frameon=False, fontsize=9)
+        cur["rocpt"], = rax.plot([0], [0], marker="o", ms=13, color="#e03131", zorder=5)
+        roc_sta.config(text=f"AUC {R['auc']:.3f}      optimal threshold {b['threshold']:.4f}:  "
+                            f"FPR {b['FPR']:.3f}, TPR {b['TPR']:.3f}")
+        lax.axhline(1.0, color="#adb5bd", lw=1.2, ls="--", label="baseline, lift 1")
+        lax.plot(R["pp_pct"] * 100, R["lift"], color="#7048e8", lw=2.0, label="lift")
+        lax.set_xlim(0, 100); top = np.nanmax(R["lift"]) if len(R["lift"]) else 1
+        lax.set_ylim(0, max(1.2, top * 1.1))
+        lax.set_xlabel("PP%, the share of rows at or above the threshold, from the top of the table")
+        lax.set_ylabel("lift, precision divided by AP / N")
+        lax.grid(alpha=0.25); lax.legend(loc="upper right", frameon=False, fontsize=9)
+        cur["liftpt"], = lax.plot([np.nan], [np.nan], marker="o", ms=13, color="#e03131", zorder=5)
+        lift_sta.config(text=f"baseline AP / N = {R['base']:.3f}: picking rows at random finds positives at this rate, lift 1")
+        place_points()
+
+    def place_points():
+        R = cur["roc"]
+        if R is None or "m" not in st or cur["rocpt"] is None:
+            return
+        m, t = st["m"], st["t"]
+        cur["rocpt"].set_data([m["FPR"]], [m["TPR"]])
+        roc_dyn.config(text=f"threshold {tstr(t)}      FPR {fmt(m['FPR'])}      TPR {fmt(m['TPR'])}")
+        lf, pc = lift_at(m, R["base"])
+        if lf == lf:
+            cur["liftpt"].set_data([pc * 100], [lf])
+            lift_dyn.config(text=f"threshold {tstr(t)}      PP% {pc:.1%}      lift {lf:.3f}")
+        else:
+            cur["liftpt"].set_data([np.nan], [np.nan])
+            lift_dyn.config(text=f"threshold {tstr(t)}      no row is predicted positive yet, so lift is undefined")
+        rcanvas.draw_idle(); lcanvas.draw_idle()
 
     def build_sweep(p, is_pos):
         levels = thresholds(p)[::-1]
@@ -412,9 +516,12 @@ def main(path=None):
         if cur.get("key") != key:
             cur["key"] = key
             cur["sweep"] = build_sweep(p, is_pos)
+            cur["roc"] = roc_lift(p, is_pos)
             draw_curves()
+            draw_roc_lift()
         else:
             place_line()
+            place_points()
         status.config(text=f"{m['n']} rows, {len(st['levels'])} distinct probabilities. "
                            f"{m['predicted positive']} rows at or above the threshold are predicted {pos}.")
 
@@ -428,6 +535,11 @@ def main(path=None):
         if "m" not in st:
             return
         txt = report(st["m"], st["t"], pos_cb.get(), st["neg"])
+        R = cur.get("roc")
+        if R is not None:
+            b = R["best"]; lf, pc = lift_at(st["m"], R["base"])
+            txt += (f"\n\nAUC {R['auc']:.3f}   optimal threshold {b['threshold']:.4f}: FPR {b['FPR']:.3f}, TPR {b['TPR']:.3f}"
+                    f"\nLift at this threshold {fmt(lf)} with {pc:.1%} of the rows predicted {pos_cb.get()}")
         root.clipboard_clear(); root.clipboard_append(txt)
         status.config(text="Results copied to the clipboard.")
 
