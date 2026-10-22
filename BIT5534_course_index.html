@@ -138,12 +138,12 @@
   /* ---------- Macro structure strip ---------- */
   .macro {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 14px;
     margin-bottom: 48px;
   }
   @media (max-width: 1040px) {
-    .macro { grid-template-columns: repeat(2, 1fr); }
+    .macro { grid-template-columns: 1fr; }
   }
   @media (max-width: 560px) {
     .macro { grid-template-columns: 1fr; }
@@ -468,27 +468,21 @@
   <nav class="macro" aria-label="Course phases">
     <a class="macro-card" data-phase="1" href="#phase-1" style="text-decoration:none;">
       <p class="macro-eyebrow">Phase I</p>
-      <p class="macro-title">Foundations</p>
-      <p class="macro-desc">The thread workflow, data discovery, and the two regression models everything else is measured against.</p>
-      <p class="macro-weeks">Weeks 1&ndash;3 &middot; 6 lectures</p>
+      <p class="macro-title">Foundations, Structure &amp; Segmentation</p>
+      <p class="macro-desc">The thread workflow, data discovery, and the two regression models everything else is measured against, then the shape of data without a target: components, distances, and segments you can defend.</p>
+      <p class="macro-weeks">Weeks 1&ndash;5 &middot; 10 lectures</p>
     </a>
     <a class="macro-card" data-phase="2" href="#phase-2" style="text-decoration:none;">
       <p class="macro-eyebrow">Phase II</p>
-      <p class="macro-title">Structure &amp; Segmentation</p>
-      <p class="macro-desc">Finding the shape of data without a target variable: components, distances, and segments you can defend.</p>
-      <p class="macro-weeks">Weeks 4&ndash;5 &middot; 4 lectures</p>
+      <p class="macro-title">Prediction &amp; Comparison</p>
+      <p class="macro-desc">Trees, networks, margins, and ensembles, then model comparison and text analytics.</p>
+      <p class="macro-weeks">Weeks 6&ndash;10 &middot; 10 lectures</p>
     </a>
     <a class="macro-card" data-phase="3" href="#phase-3" style="text-decoration:none;">
       <p class="macro-eyebrow">Phase III</p>
-      <p class="macro-title">Prediction &amp; Comparison</p>
-      <p class="macro-desc">Trees, networks, margins, and ensembles, then an honest harness that scores them all the same way.</p>
-      <p class="macro-weeks">Weeks 6&ndash;11 &middot; 12 lectures</p>
-    </a>
-    <a class="macro-card" data-phase="4" href="#phase-4" style="text-decoration:none;">
-      <p class="macro-eyebrow">Phase IV</p>
       <p class="macro-title">Project &amp; Delivery</p>
       <p class="macro-desc">Team-built business intelligence and analytics dashboards, developed in class and presented to peers.</p>
-      <p class="macro-weeks">Weeks 12&ndash;15 &middot; 7 lectures</p>
+      <p class="macro-weeks">Weeks 11&ndash;15 &middot; 9 lectures</p>
     </a>
   </nav>
 
@@ -526,31 +520,24 @@
 const PHASES = [
   {
     n: 1,
-    kicker: "Phase I \u00b7 Weeks 1\u20133",
-    title: "Foundations",
-    sub: "How the course works now, what a dataset tells you before any model touches it, and the two regression models that every later method is measured against.",
-    weeks: [1, 2, 3],
+    kicker: "Phase I \u00b7 Weeks 1\u20135",
+    title: "Foundations, Structure, and Segmentation",
+    sub: "How the course works now, what a dataset tells you before any model touches it, and the two regression models that every later method is measured against. Then structure with no target variable, components that recover the true dimensionality of a process, and distances that turn customers into segments a business can act on.",
+    weeks: [1, 2, 3, 4, 5],
   },
   {
     n: 2,
-    kicker: "Phase II \u00b7 Weeks 4\u20135",
-    title: "Structure and Segmentation",
-    sub: "Finding structure with no target variable. Components that recover the true dimensionality of a process, and distances that turn customers into segments a business can act on.",
-    weeks: [4, 5],
+    kicker: "Phase II \u00b7 Weeks 6\u201310",
+    title: "Prediction and Comparison",
+    sub: "Trees, neural networks, margins, and ensembles, each built and verified in turn, then compared on the same test rows by the confusion matrix, ROC, AUC and lift. Text analytics closes the phase.",
+    weeks: [6, 7, 8, 9, 10],
   },
   {
     n: 3,
-    kicker: "Phase III \u00b7 Weeks 6\u201311",
-    title: "Prediction and Comparison",
-    sub: "Trees, neural networks, margins, and ensembles, each built and verified in turn, then scored against one another on a harness that does not flatter any of them. Text enters last and has to earn its place.",
-    weeks: [6, 7, 8, 9, 10, 11],
-  },
-  {
-    n: 4,
-    kicker: "Phase IV \u00b7 Weeks 12\u201315",
+    kicker: "Phase III \u00b7 Weeks 11\u201315",
     title: "Project and Delivery",
-    sub: "Team-built business intelligence and analytics dashboards. Four in-class development sessions, presentations to the other teams, and a closing session on what the semester established.",
-    weeks: [12, 13, 14, 15],
+    sub: "Team-built business intelligence and analytics dashboards. Six in-class development sessions, presentations to the other teams, and a closing session on what the semester established.",
+    weeks: [11, 12, 13, 14, 15],
   },
 ];
 
@@ -572,64 +559,64 @@ const LECTURES = [
     business: "Many inputs at once on the same churn file, columns of categories turned into columns of numbers, and a tool that ranks every term by logworth." },
 
   // Week 4
-  { id: "lec4_1",  week: 4,  phase: 2, mode: "exploratory",  tool: true, title: "Principal component analysis, scores and loadings",
+  { id: "lec4_1",  week: 4,  phase: 1, mode: "exploratory",  tool: true, title: "Principal component analysis, scores and loadings",
     business: "Twenty acoustic monitors watching a process you cannot see; verifying the tool against a known eigenvalue before trusting a plot." },
-  { id: "lec4_2",  week: 4,  phase: 2, mode: "exploratory",  title: "Principal component analysis, how many components",
+  { id: "lec4_2",  week: 4,  phase: 1, mode: "exploratory",  title: "Principal component analysis, how many components",
     business: "Three datasets and three component counts; what standardization brings out when raw dollars hide everything but size." },
   // Week 5
-  { id: "lec5_1",  week: 5,  phase: 2, mode: "exploratory",  tool: true, title: "Hierarchical Clustering",
+  { id: "lec5_1",  week: 5,  phase: 1, mode: "exploratory",  tool: true, title: "Hierarchical Clustering",
     business: "A dendrogram read as the recorded history of a merging loop, then a tool built to draw it and five linkage rules that cut the same file differently." },
-  { id: "lec5_2",  week: 5,  phase: 2, mode: "exploratory",  tool: true, title: "K-Means Clustering",
+  { id: "lec5_2",  week: 5,  phase: 1, mode: "exploratory",  tool: true, title: "K-Means Clustering",
     business: "Lloyd's two steps written out by hand, then a tool built from a specification and a silhouette curve that names a k without saying how thin the win is." },
 
   // Week 6
-  { id: "lec6_1",  week: 6,  phase: 3, mode: "exploratory",  tool: true, title: "Decision Trees",
+  { id: "lec6_1",  week: 6,  phase: 2, mode: "exploratory",  tool: true, title: "Decision Trees",
     business: "Every cut on every column tried and scored, a tree grown one split at a time, and each leaf read as a rule someone could act on." },
-  { id: "lec6_2",  week: 6,  phase: 3, mode: "consolidation", tool: true, title: "Regression Trees",
+  { id: "lec6_2",  week: 6,  phase: 2, mode: "consolidation", tool: true, title: "Regression Trees",
     business: "The same split search pointed at GPA, each cut scored by the squared error it removes, and Tuesday's tool extended to grow regression trees." },
   // Week 7
-  { id: "lec7_1",  week: 7,  phase: 3, mode: "exploratory",  tool: true, title: "Neural Networks, Building and Validating a Network",
+  { id: "lec7_1",  week: 7,  phase: 2, mode: "exploratory",  tool: true, title: "Neural Networks, Building and Validating a Network",
     business: "The neuron, four activations and the parameter count, then networks fitted from random starts on 804 used cars and judged on a validation column made from a seed." },
-  { id: "lec7_2",  week: 7,  phase: 3, mode: "consolidation", title: "Neural Networks, Settings, Overfitting and Classification",
+  { id: "lec7_2",  week: 7,  phase: 2, mode: "consolidation", title: "Neural Networks, Settings, Overfitting and Classification",
     business: "Overfitting on a curve from one to eighty neurons, starts drawn as climbers, a settings grid read as ranges, a holdout against five folds, and MedPrice read from a confusion table." },
   // Week 8
-  { id: "lec8_1",  week: 8,  phase: 3, mode: "exploratory",  tool: true, title: "Support Vector Machines for Classification and Regression",
+  { id: "lec8_1",  week: 8,  phase: 2, mode: "exploratory",  tool: true, title: "Support Vector Machines for Classification and Regression",
     business: "The hard and soft margin, the support vectors that decide the boundary, the RBF kernel and the epsilon tube, then a C by gamma grid judged on a test share." },
-  { id: "lec8_2",  week: 8,  phase: 3, mode: "consolidation", title: "Ensemble Modeling and Stacking",
+  { id: "lec8_2",  week: 8,  phase: 2, mode: "consolidation", title: "Ensemble Modeling and Stacking",
     business: "Four tools on one panel save out of fold predictions, and a meta-model on those columns is set against the best single model on diabetes progression." },
   // Week 9
-  { id: "lec9_1",  week: 9,  phase: 3, mode: "exploratory",  tool: true, title: "Model Comparison: Building an Honest Evaluation Harness",
-    business: "One harness, every model from the semester, scored the same way on the same splits." },
-  { id: "lec9_2",  week: 9,  phase: 3, mode: "consolidation", title: "Cross-Validation and Leakage: Making a Performance Number Mean Something",
-    business: "Finding the leak that made a model look excellent, and reporting the corrected number without excuses." },
+  { id: "lec9_1",  week: 9,  phase: 2, mode: "exploratory",  tool: true, title: "Performance Measures and the Confusion Matrix",
+    business: "Error measures for a number target, then the confusion matrix read by its rows and its columns, with recall, precision and F1 followed in a threshold explorer as the threshold falls on saved probabilities of diabetes progression." },
+  { id: "lec9_2",  week: 9,  phase: 2, mode: "exploratory",  tool: true, title: "ROC, AUC and Lift",
+    business: "Two doctors ranking the same patients, then four models compared by the area under the ROC curve and by lift for a clinic that can call 27 patients." },
   // Week 10
-  { id: "lec10_1", week: 10, phase: 3, mode: "exploratory",  title: "Comparing Models Across Metrics: Accuracy, Lift, and Business Cost",
-    business: "When the most accurate model is the wrong one, priced in the currency of the decision it supports." },
-  { id: "lec10_2", week: 10, phase: 3, mode: "consolidation", title: "Choosing a Model and Defending the Choice",
-    business: "Writing the selection argument a sponsor would accept, including a statement of what would change your mind." },
+  { id: "lec10_1", week: 10, phase: 2, mode: "exploratory",  title: "Text Analytics 1",
+    business: "Topic to be confirmed." },
+  { id: "lec10_2", week: 10, phase: 2, mode: "consolidation", title: "Text Analytics 2",
+    business: "Topic to be confirmed." },
   // Week 11
-  { id: "lec11_1", week: 11, phase: 3, mode: "exploratory",  tool: true, title: "Text Mining: From Documents to Features",
-    business: "Turning free-text customer feedback into something a model can use, and naming what is lost on the way." },
-  { id: "lec11_2", week: 11, phase: 3, mode: "consolidation", title: "Sentiment, Topics, and What Text Adds to a Structured Model",
-    business: "Measuring whether the text columns earned their place beside the numeric ones, or only looked as though they had." },
+  { id: "lec11_1", week: 11, phase: 3, mode: "project_lab", title: "Project Development I",
+    business: "Dashboard build session. Topic to be confirmed." },
+  { id: "lec11_2", week: 11, phase: 3, mode: "project_lab", title: "Project Development II",
+    business: "Dashboard build session. Topic to be confirmed." },
 
   // Week 12
-  { id: "lec12_1", week: 12, phase: 4, mode: "project_lab", title: "Project Development I",
+  { id: "lec12_1", week: 12, phase: 3, mode: "project_lab", title: "Project Development III",
     business: "Dashboard build session. Topic to be confirmed." },
-  { id: "lec12_2", week: 12, phase: 4, mode: "project_lab", title: "Project Development II",
+  { id: "lec12_2", week: 12, phase: 3, mode: "project_lab", title: "Project Development IV",
     business: "Dashboard build session. Topic to be confirmed." },
   // Week 13
-  { id: "lec13_1", week: 13, phase: 4, mode: "project_lab", title: "Project Development III",
+  { id: "lec13_1", week: 13, phase: 3, mode: "project_lab", title: "Project Development V",
     business: "Dashboard build session. Topic to be confirmed." },
-  { id: "lec13_2", week: 13, phase: 4, mode: "project_lab", title: "Project Development IV",
+  { id: "lec13_2", week: 13, phase: 3, mode: "project_lab", title: "Project Development VI",
     business: "Dashboard build session. Topic to be confirmed." },
   // Week 14
-  { id: "lec14_1", week: 14, phase: 4, mode: "capstone_demonstration", title: "Dashboard Presentations: Session 1",
+  { id: "lec14_1", week: 14, phase: 3, mode: "capstone_demonstration", title: "Dashboard Presentations: Session 1",
     business: "Teams present the dashboard and the analysis behind it, evaluated by the other teams." },
-  { id: "lec14_2", week: 14, phase: 4, mode: "capstone_demonstration", title: "Dashboard Presentations: Session 2",
+  { id: "lec14_2", week: 14, phase: 3, mode: "capstone_demonstration", title: "Dashboard Presentations: Session 2",
     business: "Teams present the dashboard and the analysis behind it, evaluated by the other teams." },
   // Week 15
-  { id: "lec15_1", week: 15, phase: 4, mode: "consolidation", title: "Course Wrap-Up and Closing Reflections",
+  { id: "lec15_1", week: 15, phase: 3, mode: "consolidation", title: "Course Wrap-Up and Closing Reflections",
     business: "What the semester established about building analytics with an assistant, and where the habit goes after this course." },
 ];
 
@@ -667,11 +654,11 @@ const WEEKS = {
   6:  { title: "Decision and Regression Trees",       dates: "09/29, 10/01", due: "HW 5, teams finalized" },
   7:  { title: "Neural Networks",                     dates: "10/06, 10/08", due: "HW 6" },
   8:  { title: "Margins and Ensembles",               dates: "10/13, 10/15", due: "HW 7" },
-  9:  { title: "Evaluating Honestly",                 dates: "10/20, 10/22", due: "HW 8, Deliverable 1" },
-  10: { title: "Choosing and Defending a Model",      dates: "10/27, 10/29", due: "HW 9" },
-  11: { title: "Text as Evidence",                    dates: "11/03, 11/05", due: "" },
-  12: { title: "Project Development I and II",        dates: "11/10, 11/12", due: "Deliverable 2" },
-  13: { title: "Project Development III and IV",      dates: "11/17, 11/19", due: "Deliverable 3, Mon 11/30" },
+  9:  { title: "Model Comparison",                    dates: "10/20, 10/22", due: "HW 8, Deliverable 1" },
+  10: { title: "Text Analytics",                      dates: "10/27, 10/29", due: "HW 9" },
+  11: { title: "Project Development I and II",        dates: "11/03, 11/05", due: "" },
+  12: { title: "Project Development III and IV",      dates: "11/10, 11/12", due: "Deliverable 2" },
+  13: { title: "Project Development V and VI",        dates: "11/17, 11/19", due: "Deliverable 3, Mon 11/30" },
   14: { title: "Dashboard Presentations",             dates: "12/01, 12/03", due: "Presentations" },
   15: { title: "Course Wrap-Up",                      dates: "12/08",        due: "Not graded" },
 };
