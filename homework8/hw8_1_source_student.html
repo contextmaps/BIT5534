@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Choosing a Threshold for a Breakdown Model</title>
+<style>
+:root {
+  --c-text:#1a1a1a; --c-muted:#4a4a4a;
+  --c-meta-bg:#f4f6f9; --c-meta-border:#d0d7e2;
+  --c-obj-bg:#eef4fb; --c-obj-accent:#1a5da0;
+  --c-ctx-bg:#fffbf0; --c-ctx-border:#e8d8a0; --c-ctx-label:#5c4400;
+  --c-ctx-s-bg:#f0f7ff; --c-ctx-s-border:#a0c8f0; --c-ctx-s-label:#1a4a80;
+  --c-nar-bg:#f9f9f9; --c-nar-border:#bbb;
+  --c-dis-bg:#f0f4ff; --c-dis-border:#8090cc; --c-dis-label:#1e2e80;
+  --c-sys-bg:#f3f0ff; --c-sys-border:#9080d0; --c-sys-label:#3a2090;
+  --c-scr-bg:#fff8e8; --c-scr-border:#d0a030; --c-scr-label:#6b4a00;
+  --c-s-bg:#f0faf4; --c-s-border:#70c090; --c-s-id:#14552f;
+  --c-r-bg:#fff8f0; --c-r-border:#d0a040; --c-r-id:#6b3e00;
+  --c-mk-bg:#f0f0ff; --c-mk-border:#8080c8; --c-mk-id:#2a2a80;
+  --c-m-bg:#f0f8ff; --c-m-border:#70a8d0; --c-m-id:#0a4a70;
+  --c-mc-bg:#f8f8ff; --c-mc-border:#a0a0d0;
+  --c-btn:#14552f; --c-btn-r:#6b3e00; --c-btn-mk:#2a2a80;
+  --c-btn-mo:#0a4a70; --c-btn-mc:#3a3a6a;
+  --c-q-bg:#f0fafd; --c-q-border:#70b8d0; --c-q-id:#0a5070;
+  --c-btn-q:#0a5070;
+  --c-o-bg:#fef6f0; --c-o-border:#e89870; --c-o-id:#a04510;
+  --c-btn-o:#a04510;
+  --radius:8px; --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --page:1100px;
+}
+/* Two layers. The wrapper takes the width Canvas gives it, up to --page, so it
+   never overflows a narrow frame and never needs a per-machine number. Everything
+   inside fills the block it sits in. */
+.plib-wrap{font-family:var(--font);color:var(--c-text);max-width:min(var(--page),100% - 2rem);margin:0 auto;padding:1rem 0}
+/* Every block spans the page so their left and right edges line up down the
+   column, and the text inside fills the block.
+
+   There is no reading column. D-032 put prose in a 720px column inside a 1100px
+   wrapper, and on 2026-09-02 the instructor read the rendered result and rejected
+   it: every text block stopped two thirds of the way across its own card and
+   stranded the rest, and a bordered box that stops short of the card it sits in
+   reads as broken rather than as typography. The wrapper's own
+   min(1100px, 100% - 2rem) is now the only bound, so a line never exceeds about
+   1055px. The cost is real and is worth stating. A long paragraph at 1055px reads
+   worse than the same paragraph at 800, and what pays for it is the writing
+   standard's rule on paragraph length, which now carries the load the column used
+   to carry. Recorded as D-043, amending D-032. */
+.plib-wrap > *{max-width:100%}
+.plib-submit{margin:2rem 0 1rem;padding:1.4rem 1.6rem;border-radius:var(--radius);background:var(--c-obj-bg);border:2px solid var(--c-obj-accent)}
+.plib-submit-title{font-size:13px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--c-obj-accent)}
+.plib-submit-p{margin:.5rem 0 1rem;font-size:15px;line-height:1.65}
+.plib-submit-btn{display:inline-block;background:var(--c-obj-accent);color:#fff;text-decoration:none;font-size:16px;font-weight:600;padding:.7rem 1.4rem;border-radius:var(--radius)}
+.plib-submit-btn:hover{filter:brightness(1.12)}
+.plib-submit-btn:focus{outline:3px solid var(--c-obj-accent);outline-offset:3px}
+.plib-submit-note{margin-top:.55rem;font-size:13px;color:var(--c-muted)}
+.plib-material{margin:1.6rem 0;padding:1.2rem 1.4rem;border-radius:var(--radius);background:var(--c-s-bg);border:1px solid var(--c-s-border)}
+.plib-material-tag{font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--c-s-id)}
+.plib-material-title{margin-top:.3rem;font-size:17px;font-weight:600;color:var(--c-text)}
+.plib-material-box{margin:.9rem 0 1.1rem;padding:.9rem 1rem;max-height:22rem;overflow:auto;background:#fff;border:1px solid var(--c-s-border);border-radius:6px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;color:var(--c-text)}
+.plib-material-box:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+.plib-material-btns{display:flex;flex-wrap:wrap;gap:.6rem}
+.plib-material-copies{margin:.9rem 0 0;display:flex;flex-wrap:wrap;gap:.8rem}
+.plib-copyrow{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;padding:.55rem .7rem;background:#fff;border:1px solid var(--c-s-border);border-radius:6px}
+.plib-copyrow-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-s-id)}
+.plib-copyrow-code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;color:var(--c-text)}
+.plib-copy-btn-row{padding:.3rem .6rem;font-size:12px}
+.plib-material-btn{display:inline-block;background:var(--c-s-id);color:#fff;text-decoration:none;font-size:15px;font-weight:600;padding:.6rem 1.2rem;border-radius:var(--radius)}
+.plib-material-btn:hover{filter:brightness(1.25)}
+.plib-material-btn:focus{outline:3px solid var(--c-s-id);outline-offset:3px}
+.plib-material-note{margin-top:.55rem;font-size:13px;color:var(--c-muted)}
+.plib-section{margin:2.25rem 0 1.1rem;padding-top:.9rem;border-top:3px solid var(--c-obj-accent)}
+.plib-section-n{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--c-muted)}
+.plib-section-t{font-size:23px;font-weight:700;letter-spacing:.04em;color:var(--c-obj-accent);margin-top:2px}
+.plib-wrap > .plib-section:first-child{margin-top:.5rem}
+.plib-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;margin-bottom:1.25rem}
+.plib-tile{background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);padding:.9rem;display:flex;flex-direction:column}
+.plib-tile img{width:100%;height:auto;border-radius:4px;background:#faf7f8}
+.plib-tile figure,.plib-tile{margin:0}
+/* A drawing narrower than its grid cell is centred in it. render_tiles caps the
+   wrapper at the SVG's own viewBox width so a 400px card is not blown up to the
+   full row, and without this the drawing sat against the left edge with the slack
+   stranded on the right, which is the same fault D-043 removed from the prose. */
+.plib-tile-svg{width:100%;margin-left:auto;margin-right:auto}
+.plib-tile-svg svg{width:100%;height:auto;display:block}
+.plib-tile-caption{font-size:13px;line-height:1.55;color:var(--c-text);margin-top:auto;padding-top:.6rem}
+.plib-meta{background:var(--c-meta-bg);border:1px solid var(--c-meta-border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1.5rem}
+.plib-meta-course{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--c-muted);margin-bottom:4px}
+.plib-meta-title{font-size:20px;font-weight:600;margin:4px 0 8px}
+.plib-meta-week{font-size:13px;color:var(--c-muted);margin-bottom:2px}
+.plib-meta-details{font-size:12px;color:var(--c-muted);margin-top:8px}
+.plib-objectives{background:var(--c-obj-bg);border-left:4px solid var(--c-obj-accent);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.5rem}
+.plib-objectives-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-obj-accent);font-weight:700;margin-bottom:8px}
+.plib-objectives-intro{margin:0 0 8px;font-size:14px;line-height:1.6;font-style:italic;color:var(--c-muted)}
+.plib-objectives-list{margin:0;padding-left:1.25rem}
+.plib-objectives-list li{margin-bottom:6px;font-size:14px;line-height:1.6}
+.plib-context{background:var(--c-ctx-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-context-student{background:var(--c-ctx-s-bg);border-color:var(--c-ctx-s-border)}
+.plib-context-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-ctx-label);font-weight:700;margin-bottom:8px}
+.plib-context-student .plib-context-label{color:var(--c-ctx-s-label)}
+.plib-context-body p{margin:4px 0;font-size:13px;line-height:1.6;color:var(--c-muted)}
+.plib-formula{margin:1rem 0;padding:1rem 1.25rem;background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);text-align:center}
+.plib-formula-body{overflow-x:auto;color:var(--c-text);padding:2px 0}
+.plib-formula-svg{max-width:100%;height:auto}
+.plib-formula-caption{margin-top:.85rem;font-size:13px;line-height:1.6;color:var(--c-muted);text-align:left}
+.plib-formula-missing{font-size:13px;color:var(--c-muted);text-align:left}
+.plib-formula-note{font-size:12px;margin-top:6px}
+.plib-formula-source{margin-top:.85rem;text-align:left}
+.plib-formula-source summary{font-size:12px;color:var(--c-muted);cursor:pointer}
+.plib-formula-latex{margin:6px 0 0;padding:8px 10px;background:var(--c-ctx-bg);border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.5;white-space:pre-wrap;color:var(--c-muted)}
+.plib-context-pre{margin:8px 0;padding:10px 12px;background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.55;color:var(--c-text);white-space:pre;overflow-x:auto}
+.plib-context-bullet{font-size:13px;color:var(--c-muted);padding-left:1rem;position:relative;margin-bottom:3px}
+.plib-context-bullet::before{content:"\2022";position:absolute;left:0}
+.plib-script{background:var(--c-scr-bg);border:1px solid var(--c-scr-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-script-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-scr-label);font-weight:700;margin-bottom:10px}
+.plib-script-list{margin:0;padding-left:1.25rem}
+.plib-script-list li{font-size:14px;line-height:1.6;margin-bottom:8px}
+.plib-script-time{font-weight:700;color:var(--c-scr-label);font-family:monospace;background:rgba(208,160,48,.15);padding:1px 6px;border-radius:3px}
+.plib-narration{background:var(--c-nar-bg);border-left:3px solid var(--c-nar-border);padding:.9rem 1.25rem;margin-bottom:1rem;border-radius:0 var(--radius) var(--radius) 0}
+.plib-narration p{margin:0 0 8px;font-size:14px;line-height:1.7}
+.plib-narration p:last-child{margin-bottom:0}
+.plib-narration-list{margin:4px 0;padding-left:1.25rem}
+.plib-narration-list li{font-size:14px;line-height:1.6;margin-bottom:4px}
+.plib-discussion{background:var(--c-dis-bg);border:1px solid var(--c-dis-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-slide{margin:0 0 1.25rem;text-align:center}
+.plib-slide-img{max-width:100%;height:auto;border:1px solid var(--c-dis-border);border-radius:var(--radius);box-shadow:0 1px 4px rgba(0,0,0,.08);background:#faf7f8;min-height:60px}
+.plib-slide-caption{font-size:13px;color:var(--c-muted);margin-top:.4rem}
+.plib-slide-script{margin-top:.6rem;text-align:left;font-size:13px;color:var(--c-muted)}
+.plib-slide-script summary{cursor:pointer;font-weight:600}
+.plib-slide-script-body{white-space:pre-wrap;background:rgba(0,0,0,.04);border-radius:var(--radius);padding:.6rem .8rem;margin-top:.4rem}
+.plib-discussion-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-dis-label);font-weight:700;margin-bottom:8px}
+.plib-discussion-intro{margin:0 0 8px;font-size:14px;line-height:1.6;font-style:italic;color:var(--c-dis-label)}
+.plib-discussion-list{margin:0;padding-left:1.25rem}
+.plib-discussion-list li{font-size:14px;line-height:1.6;margin-bottom:6px;color:var(--c-dis-label)}
+.plib-scenarios{margin-bottom:1rem}
+.plib-scenarios-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:#630031;font-weight:700;margin-bottom:8px}
+.plib-scenario-card{background:var(--c-ctx-s-bg);border:1px solid var(--c-ctx-s-border);border-left:4px solid #630031;border-radius:var(--radius);padding:.7rem 1rem;margin-bottom:.6rem}
+.plib-scenario-title{font-weight:700;font-size:14px;color:#630031;margin-bottom:4px}
+.plib-scenario-body{margin:0 0 4px;font-size:14px;line-height:1.6}
+.plib-scenario-line{font-size:13px;line-height:1.55;margin:2px 0 0;padding-left:1rem;position:relative}
+.plib-scenario-line::before{content:"›";position:absolute;left:.2rem;color:#CF4420;font-weight:700}
+.plib-system{background:var(--c-sys-bg);border:1px solid var(--c-sys-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-system-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-sys-label);font-weight:700;margin-bottom:8px}
+.plib-system-note{font-weight:400;text-transform:none;letter-spacing:0;font-style:italic}
+.plib-prompt-s-ref{opacity:.92;border-style:dashed}
+.plib-ref-note{font-size:12px;color:var(--c-muted);font-style:italic;margin-top:6px}
+.plib-prompt-text{display:none}
+.plib-prompt-display{font-size:14px;line-height:1.7;white-space:pre-wrap;background:rgba(255,255,255,.6);border-radius:4px;padding:.6rem .8rem;margin-bottom:10px}
+.plib-prompt-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.plib-prompt-id{font-size:12px;font-weight:700;font-family:monospace;padding:2px 7px;border-radius:4px}
+.plib-prompt-type-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-muted);font-weight:600}
+.plib-prompt-s{background:var(--c-s-bg);border:1px solid var(--c-s-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-prompt-s .plib-prompt-id{color:var(--c-s-id);background:rgba(20,85,47,.1)}
+.plib-prompt-r{background:var(--c-r-bg);border:1px solid var(--c-r-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-r-id{color:var(--c-r-id)!important;background:rgba(107,62,0,.1)!important}
+.plib-reflect-label{color:var(--c-r-id)!important}
+.plib-reflect-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-prompt-marker{background:var(--c-mk-bg);border:2px solid var(--c-mk-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-marker-id{color:var(--c-mk-id)!important;background:rgba(42,42,128,.1)!important}
+.plib-marker-label{color:var(--c-mk-id)!important}
+.plib-marker-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-marker-display{border-left:3px solid var(--c-mk-border);max-height:18em;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;box-shadow:inset 0 -10px 10px -10px rgba(0,0,0,.18)}
+.plib-prompt-m{background:var(--c-m-bg);border:1.5px solid var(--c-m-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:.5rem}
+.plib-m-id{color:var(--c-m-id)!important;background:rgba(10,74,112,.1)!important}
+.plib-m-label{color:var(--c-m-id)!important}
+.plib-m-badge{font-size:11px;background:var(--c-m-id);color:#fff;padding:2px 8px;border-radius:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.plib-m-instructions{background:rgba(255,255,255,.7);border-radius:6px;padding:10px 14px;margin-bottom:12px}
+.plib-m-instructions-label{font-size:12px;font-weight:700;color:var(--c-m-id);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.plib-m-steps{margin:0;padding-left:1.25rem}
+.plib-m-steps li{font-size:13px;line-height:1.6;margin-bottom:4px}
+.plib-m-seed{background:rgba(255,255,255,.5);border-left:3px solid var(--c-m-border);padding:8px 12px;margin-bottom:12px;border-radius:0 4px 4px 0}
+.plib-m-seed-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-m-id);margin-bottom:4px}
+.plib-m-seed-text{font-size:13px;line-height:1.6;white-space:pre-wrap}
+.plib-prompt-m-close{background:var(--c-mc-bg);border:1px dashed var(--c-mc-border);border-radius:var(--radius);padding:.75rem 1.25rem;margin-bottom:1.25rem}
+.plib-m-close-label{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.plib-m-close-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-copy-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;font-size:13px;font-weight:500;border:1.5px solid var(--c-btn);background:transparent;color:var(--c-btn);border-radius:6px;cursor:pointer;transition:background .15s,color .15s}
+.plib-copy-btn:hover{background:var(--c-btn);color:#fff}
+.plib-copy-btn:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+.plib-copy-btn.copied{background:#333;color:#fff;border-color:#333}
+.plib-copy-btn-reflect{border-color:var(--c-btn-r);color:var(--c-btn-r)}
+.plib-copy-btn-reflect:hover{background:var(--c-btn-r);color:#fff}
+.plib-copy-btn-marker{border-color:var(--c-btn-mk);color:var(--c-btn-mk)}
+.plib-copy-btn-marker:hover{background:var(--c-btn-mk);color:#fff}
+.plib-copy-btn-m-open{border-color:var(--c-btn-mo);color:var(--c-btn-mo)}
+.plib-copy-btn-m-open:hover{background:var(--c-btn-mo);color:#fff}
+.plib-copy-btn-m-close{border-color:var(--c-btn-mc);color:var(--c-btn-mc)}
+.plib-copy-btn-m-close:hover{background:var(--c-btn-mc);color:#fff}
+.plib-textarea{display:block;width:100%;box-sizing:border-box;padding:10px 12px;font-size:14px;font-family:var(--font);line-height:1.6;border:1.5px solid var(--c-r-border);border-radius:6px;margin-bottom:10px;background:#fff;color:var(--c-text);resize:vertical;min-height:120px}
+.plib-prompt-input{min-height:0;margin:10px 0 6px}
+.plib-textarea:focus{outline:3px solid #005fcc;outline-offset:2px;border-color:#005fcc}
+.plib-counter{font-size:13px;color:var(--c-muted);margin-bottom:8px;font-variant-numeric:tabular-nums}
+.plib-counter.at-limit{color:#b00020;font-weight:600}
+.plib-counter .plib-count-ok{color:#14552f}
+.plib-counter .plib-count-warn{color:#8a4a00}
+.plib-counter .plib-count-bad{color:#b00020;font-weight:600}
+.plib-counter-min{font-size:12px;color:var(--c-muted);margin-left:8px}
+.plib-warn{font-size:13px;color:#b00020;font-weight:600;margin-bottom:8px;min-height:20px}
+.plib-prompt-q{background:var(--c-q-bg);border:1px solid var(--c-q-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-q-id{color:var(--c-q-id)!important;background:rgba(10,80,112,.1)!important}
+.plib-q-label{color:var(--c-q-id)!important}
+.plib-q-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-q-items{display:flex;flex-direction:column;gap:14px;margin-bottom:10px}
+.plib-q-item{background:rgba(255,255,255,.6);border-radius:6px;padding:10px 12px}
+.plib-q-question{font-size:14px;font-weight:500;display:block;margin-bottom:8px;line-height:1.5}
+.plib-q-item-num{font-family:monospace;font-weight:700;color:var(--c-q-id);margin-right:6px}
+.plib-q-cap-note{font-weight:400;font-style:italic;color:var(--c-muted);margin-left:6px;font-size:13px}
+.plib-q-select{width:100%;padding:6px 8px;font-size:14px;border:1px solid var(--c-q-border);border-radius:4px;background:#fff}
+.plib-q-likert{display:flex;flex-wrap:wrap;gap:10px}
+.plib-q-likert-opt{display:flex;align-items:center;gap:5px;font-size:14px;cursor:pointer}
+.plib-q-checkboxes{display:flex;flex-direction:column;gap:6px}
+.plib-q-check-opt{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.plib-q-check-opt input[disabled] + span{opacity:.5}
+.plib-copy-btn-q{border-color:var(--c-btn-q);color:var(--c-btn-q)}
+.plib-copy-btn-q:hover{background:var(--c-btn-q);color:#fff}
+.plib-prompt-o{background:var(--c-o-bg);border:1px solid var(--c-o-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-o-id{color:var(--c-o-id)!important;background:rgba(160,69,16,.1)!important}
+.plib-o-label{color:var(--c-o-id)!important}
+.plib-o-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-o-question{font-size:14px;font-weight:500;margin-bottom:10px;line-height:1.5}
+.plib-o-list{list-style:none;padding:0;margin:0 0 10px 0;display:flex;flex-direction:column;gap:6px}
+.plib-o-item{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.7);border-radius:6px;padding:8px 10px;font-size:14px}
+.plib-o-rank{font-family:monospace;font-weight:700;color:var(--c-o-id);min-width:1.5em;text-align:right}
+.plib-o-item-text{flex:1}
+.plib-o-controls{display:flex;flex-direction:column;gap:2px}
+.plib-o-arrow{background:transparent;border:1px solid var(--c-o-border);color:var(--c-o-id);width:28px;height:22px;font-size:14px;line-height:1;cursor:pointer;border-radius:3px;padding:0}
+.plib-o-arrow:hover:not([disabled]){background:var(--c-o-border);color:#fff}
+.plib-o-arrow[disabled]{opacity:.25;cursor:default}
+.plib-copy-btn-o{border-color:var(--c-btn-o);color:var(--c-btn-o)}
+.plib-copy-btn-o:hover{background:var(--c-btn-o);color:#fff}
+.plib-demo-badge{font-size:11px;color:var(--c-muted);background:rgba(0,0,0,.05);padding:2px 8px;border-radius:3px;font-style:italic;margin-left:8px}
+.plib-ai-badge{font-size:11px;padding:2px 8px;border-radius:3px;font-family:monospace;margin-left:8px}
+.plib-ai-respond{background:#e8f5e8;color:#2c5e2c}
+.plib-ai-acknowledge{background:#fef0e6;color:#8c4a1a}
+.plib-ai-archive{background:#f0e8f5;color:#5a2c8c}
+</style>
+</head>
+<body>
+<a href="#main-content" class="plib-skip-link">Skip to main content</a>
+<style>.plib-skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;}.plib-skip-link:focus{position:static;width:auto;height:auto;background:#005fcc;color:#fff;padding:8px 16px;font-size:14px;font-weight:600;border-radius:4px;text-decoration:none;display:inline-block;margin:8px;}</style>
+<main id="main-content">
+<div class="plib-wrap">
+<div class="plib-meta">
+  <div class="plib-meta-course">BIT 5534 Applied Business Intelligence and Analytics</div>
+  <div class="plib-meta-week">Week 9 · Homework 8 · Part 1 of 2</div>
+  <div class="plib-meta-title">Choosing a Threshold for a Breakdown Model</div>
+  <div class="plib-meta-details"><span><strong>Platform:</strong> Hokie AI (conversation) + local Python (run)</span>&ensp;·&ensp;<span><strong>Submission:</strong> Thread exported as a .zip and uploaded to Canvas</span></div>
+</div>
+
+<div class="plib-objectives">
+  <div class="plib-objectives-label">Learning Objectives</div>
+  <p class="plib-objectives-intro">By the end of this part, students will be able to:</p>
+  <ol class="plib-objectives-list">
+    <li>Read a confusion matrix at a threshold and say what each of its four counts means for a delivery fleet.</li>
+    <li>Read precision, recall, F1 and accuracy at two thresholds, and explain why accuracy can stay level while the other three move.</li>
+    <li>Find the threshold with the largest F1 on validation rows, carry it to test rows, and say which test figure to report.</li>
+    <li>Find the ROC optimal threshold and compare the number of vans each threshold sends to the garage.</li>
+    <li>Say which threshold fits a fleet when a missed breakdown costs about the same as an unneeded inspection, less, or more.</li>
+  </ol>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 1 of 4</div><div class="plib-section-t">ORIENTATION</div></div>
+
+<div class="plib-context plib-context-student">
+  <div class="plib-context-label">&#128203; Note for Students</div>
+  <div class="plib-context-body">
+    <p>Part 1 of homework 8 runs in one Hokie AI thread and holds two cases. Do the cases in order and do not start a new conversation between them.</p>
+    <p>Make a folder for part 1 inside the HomeWork folder.</p>
+    <pre class="plib-context-pre">BIT5534/
+    HomeWork/
+        hw8_1/</pre>
+    <p>Put the data file and the tool in there.</p>
+  </div>
+</div>
+
+<div class="plib-narration">
+  <p>Part 1 is about choosing a threshold, from the week 9 lectures, on one model and one file. In case one you read the confusion matrix and F1. In case two you read the ROC curve and decide which threshold fits which kind of month.</p>
+  <p>The file is fleet_saved.csv from Thistledown Parcel, a delivery company made up for this homework. Each row is one van at the start of a month. Breakdown is Yes when the van broke down on a route within the next 30 days, and No otherwise. The fleet manager wants a model that says which vans to send to the garage for an inspection before they break down.</p>
+</div>
+
+<div class="plib-narration">
+  <p>The four probability columns are already in the file, so you fit nothing in this homework. The week 8 tools made them at their default settings, the same four base models you saved in case one of homework 7 part 2. REG prob Yes is the logistic regression, and part 1 uses only that column. Every row is marked validation or test in the Sample column, 4200 validation rows and 1800 test rows. A validation row's probability comes from a model that did not see that row, and a test row's probability comes from models fitted without any test rows.</p>
+  <p>The probabilities are in the file, so every figure is the same on every machine, and the checks on this page give them exactly. A figure that differs from a check most likely means Rows is set to the wrong sample.</p>
+  <p>Part 1 is worth 100 points, split evenly. Case one is worth 50, 35 for the exchange in the M block and 15 for the reflection. Case two is worth 50, on the same split. You earn nothing for pasting a prompt, because pasting is not work.</p>
+  <p>Work alone. Your notes and both week 9 lectures are open to you. Do not ask Hokie AI to write your reflections. Take as long as you need.</p>
+</div>
+
+<div class="plib-material" id="plib-material-7">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The fleet file, for both cases</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="fleet_saved.csv" download="fleet_saved.csv" target="_blank" rel="noopener noreferrer">Download fleet_saved.csv</a>
+  </div>
+  <div class="plib-material-note">6000 vans and 17 columns, in this order. Van_ID, Breakdown (Yes or No), Sample (validation or test), Route_Type, Vehicle_Age, Odometer_K, Miles_Since_Service, Daily_Stops, Brake_Wear_Pct, Engine_Alerts, Harsh_Events, Oil_Pressure_Var, Days_Since_Repair, REG prob Yes, TREE prob Yes, NN prob Yes, SVM prob Yes. Save the file into your hw8_1 folder.</div>
+</div>
+
+<div class="plib-material" id="plib-material-8">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The threshold tool</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="threshold_explorer.py" download="threshold_explorer.py" target="_blank" rel="noopener noreferrer">Download threshold_explorer.py</a>
+  </div>
+  <div class="plib-material-note">The week 9 tool with two additions. The Curves tab now prints the largest F1 in the column and the threshold that gives it, under the five values, and marks it on the plot with a dotted purple line. And a threshold you type that matches one the tool printed, to four decimals, gives exactly the counts the tool reported for it. The lec9_2 copy has neither, so use this copy. If the browser opens the code as a page of text, right click the link and use Save link as.</div>
+</div>
+
+<div class="plib-material" id="plib-material-9">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">Install the packages on Windows</div>
+  <pre class="plib-material-box" tabindex="0" id="plib-material-9-prompt" data-copy="py -m pip install pandas numpy matplotlib" aria-label="Specification text, scrollable">py -m pip install pandas numpy matplotlib</pre>
+  <button class="plib-copy-btn" onclick="copyPrompt('plib-material-9-prompt', this)" aria-label="Copy the text above to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy the text above
+  </button>
+  <div class="plib-material-note">Paste into Command Prompt or PowerShell and press Enter. You can skip this if the week 9 tool already runs on your machine.</div>
+</div>
+
+<div class="plib-material" id="plib-material-10">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">Install the packages on a Mac</div>
+  <pre class="plib-material-box" tabindex="0" id="plib-material-10-prompt" data-copy="python3 -m pip install pandas numpy matplotlib" aria-label="Specification text, scrollable">python3 -m pip install pandas numpy matplotlib</pre>
+  <button class="plib-copy-btn" onclick="copyPrompt('plib-material-10-prompt', this)" aria-label="Copy the text above to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy the text above
+  </button>
+  <div class="plib-material-note">Paste into Terminal and press Enter. You can skip this if the week 9 tool already runs on your machine.</div>
+</div>
+
+<div class="plib-narration">
+  <p>Hokie AI never sees your tool. You do not attach the data, and that is deliberate. Everything Hokie AI knows about the thresholds is what you write in your prompts, so every number and every comparison in the thread has to come from you. A prompt that reports what you saw, says what you make of it and asks to be challenged gives Hokie AI something to test.</p>
+  <p>Paste the block below into a new Hokie AI thread and wait for the acknowledgment. Do not write anything else in that message. Everything after this goes in the same thread.</p>
+</div>
+
+<div class="plib-prompt-marker" role="region" aria-label="Session Opener">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-marker-id">TH8.1</span>
+    <span class="plib-prompt-type-label plib-marker-label">Session Opener</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-marker-instruction">Copy this block and paste it into Hokie AI to begin your session.</p>
+  <div class="plib-prompt-display plib-marker-display">You are an analysis partner for BIT 5534 Applied Business Intelligence and Analytics, a graduate course at Virginia Tech. The student holds graduate standing, has some statistics background, and is working through a homework case on their own with no instructor present. Speak to them as a capable adult. Be direct, say when something is uncertain or contested, and do not pad your answers. When a student pushes back on something you said, take the challenge seriously and do not concede immediately to be agreeable. When they ask about your reasoning, say what you assumed and what you cannot settle for them because it depends on something you were not told.
+
+In this homework the student reads a local tool that you cannot see, on a file they have not attached. The file describes delivery vans at a fictional company, and the target is whether a van broke down on a route within 30 days. The file already contains a logistic regression's saved probability of a breakdown for every van, split into validation rows and test rows, and the student moves a threshold on that probability and reads the confusion matrix, precision, recall, F1, accuracy and the ROC curve. Everything you know about their results is what they write. Never invent a count, a rate, a threshold, an AUC or any other number from their tool. When you need one, ask for it. Your job is to test their reading of the results and the conclusions they draw for the fleet, to say where a conclusion goes further than the numbers support, and to argue the other side when they ask you to. The model, the file and the samples are the design of the exercise. Do not propose other models, refitting, other validation schemes or more data, and judge the student's conclusions by what their figures support. Do not turn the comparison of errors into a dollar calculation; the student is asked for a judgment about which error matters more, not for costs.
+---
+**AI Interaction Protocol**
+
+In this session, you will receive blocks of content with the
+following structural pattern:
+
+```
+### &lt;BlockID&gt;
+----------
+&lt;content&gt;
+----------
+###
+```
+
+Some blocks include an interaction-mode directive on a separate
+line inside the dashed envelope:
+
+```
+### &lt;BlockID&gt;
+----------
+[ai_interaction=&lt;mode&gt;]
+&lt;content&gt;
+----------
+###
+```
+
+Three modes determine your response:
+
+  - **respond**: Engage substantively with the block content.
+    Treat it as a prompt, question, or task that wants your
+    analytical response. Default for S blocks (prompts) and X
+    blocks (free exploration).
+
+  - **acknowledge**: Confirm receipt with one brief sentence
+    naming the block ID. Do not analyze, comment on, or expand on
+    the content. The student is filing the block for the record,
+    not asking for engagement. Default for T blocks (this opener),
+    R blocks (reflections), M CLOSE blocks (closing markers), Q
+    blocks (structured selections), and O blocks (ordering
+    selections).
+
+  - **archive**: Respond with only the block ID and nothing else.
+    Used for batched archival pastes where even brief
+    acknowledgment would clutter the thread.
+
+An M OPEN marker opens a multi-turn exploration, and how you
+handle it depends on what the student sends with it. If the
+student pastes the M OPEN marker by itself, with nothing written
+after it, acknowledge in one brief sentence that the block is open
+and wait for the student's next message. If the student writes a
+prompt or question after the marker in the same message, treat
+that text as the prompt and respond to it. Always acknowledge an
+M CLOSE marker.
+
+If a block has no explicit `[ai_interaction=...]` directive, apply
+the block-type default per the list above.
+
+This protocol applies for the remainder of this session.
+---</div>
+  <div class="plib-prompt-text" id="text_prompt_12" data-copy="### TH8.1&#10;----------&#10;You are an analysis partner for BIT 5534 Applied Business Intelligence and Analytics, a graduate course at Virginia Tech. The student holds graduate standing, has some statistics background, and is working through a homework case on their own with no instructor present. Speak to them as a capable adult. Be direct, say when something is uncertain or contested, and do not pad your answers. When a student pushes back on something you said, take the challenge seriously and do not concede immediately to be agreeable. When they ask about your reasoning, say what you assumed and what you cannot settle for them because it depends on something you were not told.&#10;&#10;In this homework the student reads a local tool that you cannot see, on a file they have not attached. The file describes delivery vans at a fictional company, and the target is whether a van broke down on a route within 30 days. The file already contains a logistic regression's saved probability of a breakdown for every van, split into validation rows and test rows, and the student moves a threshold on that probability and reads the confusion matrix, precision, recall, F1, accuracy and the ROC curve. Everything you know about their results is what they write. Never invent a count, a rate, a threshold, an AUC or any other number from their tool. When you need one, ask for it. Your job is to test their reading of the results and the conclusions they draw for the fleet, to say where a conclusion goes further than the numbers support, and to argue the other side when they ask you to. The model, the file and the samples are the design of the exercise. Do not propose other models, refitting, other validation schemes or more data, and judge the student's conclusions by what their figures support. Do not turn the comparison of errors into a dollar calculation; the student is asked for a judgment about which error matters more, not for costs.&#10;---&#10;**AI Interaction Protocol**&#10;&#10;In this session, you will receive blocks of content with the&#10;following structural pattern:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Some blocks include an interaction-mode directive on a separate&#10;line inside the dashed envelope:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;[ai_interaction=&lt;mode&gt;]&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Three modes determine your response:&#10;&#10;  - **respond**: Engage substantively with the block content.&#10;    Treat it as a prompt, question, or task that wants your&#10;    analytical response. Default for S blocks (prompts) and X&#10;    blocks (free exploration).&#10;&#10;  - **acknowledge**: Confirm receipt with one brief sentence&#10;    naming the block ID. Do not analyze, comment on, or expand on&#10;    the content. The student is filing the block for the record,&#10;    not asking for engagement. Default for T blocks (this opener),&#10;    R blocks (reflections), M CLOSE blocks (closing markers), Q&#10;    blocks (structured selections), and O blocks (ordering&#10;    selections).&#10;&#10;  - **archive**: Respond with only the block ID and nothing else.&#10;    Used for batched archival pastes where even brief&#10;    acknowledgment would clutter the thread.&#10;&#10;An M OPEN marker opens a multi-turn exploration, and how you&#10;handle it depends on what the student sends with it. If the&#10;student pastes the M OPEN marker by itself, with nothing written&#10;after it, acknowledge in one brief sentence that the block is open&#10;and wait for the student's next message. If the student writes a&#10;prompt or question after the marker in the same message, treat&#10;that text as the prompt and respond to it. Always acknowledge an&#10;M CLOSE marker.&#10;&#10;If a block has no explicit `[ai_interaction=...]` directive, apply&#10;the block-type default per the list above.&#10;&#10;This protocol applies for the remainder of this session.&#10;---&#10;----------&#10;###"></div>
+  <button class="plib-copy-btn plib-copy-btn-marker" onclick="copyPrompt('text_prompt_12', this)"
+          aria-label="Copy session opener to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy session opener
+  </button>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 2 of 4</div><div class="plib-section-t">CASE ONE</div></div>
+
+<div class="plib-narration">
+  <p>Case one is worth 50 points, 35 for the exchange in the M block and 15 for the reflection.</p>
+  <p>Open fleet_saved.csv in threshold_explorer.py. The window opens with Actual set to Breakdown, Probability set to REG prob Yes, Positive class set to Yes, Rows set to Sample and equal to set to test. Change equal to from test to validation. Every row at or above the threshold is predicted Yes, a van the model would send to the garage.</p>
+  <p>Check three things. The status line reads 4200 rows. The Tables tab at threshold 0.5 shows TP 317, FP 112, FN 351 and TN 3420, and a row sum of 668 for actual Yes. The Curves tab prints largest F1 0.632 at threshold 0.3882, in purple under the five values.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-16">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Three checks before you read anything. Rows Sample equal to validation, and the status line reads 4200 rows. The Tables tab at threshold 0.5 shows TP 317, FP 112, FN 351 and TN 3420, and a row sum of 668 for actual Yes. The Curves tab prints largest F1 0.632 at threshold 0.3882 under the five values."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 194" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="194" rx="10" fill="#faf7f8"/><rect x="21" y="20" width="958" height="154" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><text x="46" y="58" font-size="18" font-weight="600" fill="#630031">Three checks before you read anything</text><text x="46" y="86" font-size="16" fill="#2b2b2b">Rows Sample equal to validation, and the status line reads 4200 rows. The Tables tab at threshold 0.5 shows TP 317, FP</text><text x="46" y="108" font-size="16" fill="#2b2b2b">112, FN 351 and TN 3420, and a row sum of 668 for actual Yes. The Curves tab prints largest F1 0.632 at threshold</text><text x="46" y="130" font-size="16" fill="#2b2b2b">0.3882 under the five values.</text><text x="46" y="156" font-size="14" fill="#6b6b6b">Actual Breakdown, Probability REG prob Yes, Positive class Yes.</text></svg></div>
+    <figcaption class="plib-tile-caption">Actual Breakdown, Probability REG prob Yes, Positive class Yes.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>Now record three thresholds. At 0.5 on the validation rows, write down the four counts, precision, recall, F1 and accuracy from the Tables tab, where recall is shown as TPR. Then type 0.3882 into the Threshold box, press Enter, and write down the same figures again. The Curves tab named 0.3882 as the threshold with the largest F1.</p>
+  <p>Last, change equal to from validation to test, leave the threshold at 0.3882, and write down the same figures for the test rows. The Curves tab now prints the largest F1 of the test rows and its own threshold. Write that down too, and leave the threshold where it is.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-18">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Three boxes joined by AND, three thresholds and what to record at each. 0.5 on validation, the four counts, precision, recall, F1 and accuracy. 0.3882 on validation, the threshold with the largest F1, the same five figures. 0.3882 on test, the same five figures, and the test rows' own largest F1."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 190" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="190" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Three thresholds, and what to record at each</text><rect x="21" y="46" width="287" height="122" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">0.5 on validation</text><text x="37" y="122" font-size="14" fill="#6b6b6b">the four counts, precision, recall, F1</text><text x="37" y="141" font-size="14" fill="#6b6b6b">and accuracy</text><text x="332" y="112" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="356" y="46" width="287" height="122" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="380" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="380" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="401" y="82" font-size="17" font-weight="600" fill="#2b2b2b">0.3882 on validation</text><text x="372" y="122" font-size="14" fill="#6b6b6b">the threshold with the largest F1, the</text><text x="372" y="141" font-size="14" fill="#6b6b6b">same five figures</text><text x="668" y="112" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="692" y="46" width="287" height="122" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="716" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="716" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="737" y="82" font-size="17" font-weight="600" fill="#2b2b2b">0.3882 on test</text><text x="708" y="122" font-size="14" fill="#6b6b6b">the same five figures, and the test</text><text x="708" y="141" font-size="14" fill="#6b6b6b">rows’ own largest F1</text></svg></div>
+    <figcaption class="plib-tile-caption">A van at or above the threshold is predicted Yes and goes to the garage.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>Four moves, in order. The four moves are on the card below.</p>
+  <p>Move one frames the two errors AND move two reads the matrix at 0.5 AND move three reads the largest F1 threshold AND move four carries that threshold to the test rows. All four moves.</p>
+  <p>Move one opens the block. Write in your prompt that you read a tool Hokie AI cannot see, that you will report what the tool shows, and that you want each reading tested. Before any number, say what a false negative and a false positive mean for Thistledown, a van that broke down on a route without being sent to the garage, and a healthy van taken off the road for an inspection it did not need. Say which of the two errors you think is worse, and why. Ask Hokie AI to argue the other side.</p>
+  <p>Move two reads the matrix at 0.5 on the validation rows. Report the four counts, precision and recall, and say in the fleet's words what each of those two rates means. Say what a recall of that size means for the vans that will break down this month.</p>
+  <p>Move three reads the threshold with the largest F1. Report the same figures at 0.3882, and say how many more breakdowns the lower threshold catches and how many more healthy vans it sends to the garage. Report accuracy at both thresholds, and say what accuracy does not show here.</p>
+  <p>Move four carries 0.3882 to the test rows. Report the test figures at 0.3882 beside the test rows' own largest F1 and its threshold. Say which F1 you would give the fleet manager as the model's expected performance, and why the other one would overstate it. Defend the choice against Hokie AI's strongest objection.</p>
+  <p>One move is not one message. Ten messages inside the block is the ceiling, and a ceiling is not a target.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-20">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four moves joined by AND. The two errors, a missed breakdown and an unneeded inspection, before any number. The matrix at 0.5, the four counts, precision and recall, in the fleet's words. The largest F1, what moved from 0.5, and what accuracy did not show. The test rows, the validation threshold on test, and the figure for the manager."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 200" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="200" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Four moves. Name the two errors first</text><rect x="21" y="46" width="204" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The two errors</text><text x="37" y="122" font-size="14" fill="#6b6b6b">a missed breakdown and</text><text x="37" y="141" font-size="14" fill="#6b6b6b">an unneeded inspection,</text><text x="37" y="160" font-size="14" fill="#6b6b6b">before any number</text><text x="248" y="117" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The matrix at 0.5</text><text x="288" y="122" font-size="14" fill="#6b6b6b">the four counts, precision</text><text x="288" y="141" font-size="14" fill="#6b6b6b">and recall, in the fleet’s</text><text x="288" y="160" font-size="14" fill="#6b6b6b">words</text><text x="500" y="117" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The largest F1</text><text x="540" y="122" font-size="14" fill="#6b6b6b">what moved from 0.5,</text><text x="540" y="141" font-size="14" fill="#6b6b6b">and what accuracy did</text><text x="540" y="160" font-size="14" fill="#6b6b6b">not show</text><text x="752" y="117" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The test rows</text><text x="792" y="122" font-size="14" fill="#6b6b6b">the validation threshold</text><text x="792" y="141" font-size="14" fill="#6b6b6b">on test, and the figure for</text><text x="792" y="160" font-size="14" fill="#6b6b6b">the manager</text></svg></div>
+    <figcaption class="plib-tile-caption">Four moves. Choose the threshold on the validation rows and report it on the test rows.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-prompt-m" role="region" aria-label="Multi-turn Block MH8.1.1, Begin">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-m-id">MH8.1.1</span>
+    <span class="plib-prompt-type-label plib-m-label">Multi-turn · Consolidation</span>
+    <span class="plib-m-badge">Summative</span>
+    <span class="plib-ai-badge plib-ai-respond">AI: respond</span>
+  </div>
+  <div class="plib-m-instructions">
+    <div class="plib-m-instructions-label">&#128221; How this block works</div>
+    <ol class="plib-m-steps">
+      <li>Click <strong>Copy opening marker</strong> and paste it into Hokie AI to begin this block.</li>
+      <li>Interact with Hokie AI: ask questions, explore, respond. All of this exchange belongs to this block.</li>
+      <li>When finished, use the <strong>Copy closing marker</strong> button below to close the block in your thread.</li>
+    </ol>
+  </div>
+  <div class="plib-prompt-text" id="text_m_open_21" data-copy="### MH8.1.1 OPEN&#10;----------&#10;"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-open" onclick="copyPrompt('text_m_open_21', this)"
+          aria-label="Copy opening marker for block MH8.1.1">
+    <span aria-hidden="true">&#9654;</span> Copy opening marker
+  </button>
+</div>
+
+<div class="plib-prompt-m-close" role="region" aria-label="Multi-turn Block MH8.1.1, End">
+  <div class="plib-m-close-label">
+    <span class="plib-prompt-id plib-m-id">MH8.1.1</span>
+    <span class="plib-prompt-type-label plib-m-label">End of Multi-turn Block</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-m-close-instruction">When you have finished your exchange, copy this closing marker and paste it into Hokie AI to close the block.</p>
+  <div class="plib-prompt-text" id="text_m_close_22" data-copy="&#10;----------&#10;### MH8.1.1 CLOSE"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-close" onclick="copyPrompt('text_m_close_22', this)"
+          aria-label="Copy closing marker for block MH8.1.1">
+    <span aria-hidden="true">&#9646;&#9646;</span> Copy closing marker
+  </button>
+</div>
+
+<div class="plib-narration">
+  <p>Now write your reflection for case one, in your own words and without help from the AI.</p>
+  <p>Your reflection needs all four parts below. Say which error is worse for Thistledown, a missed breakdown or an unneeded inspection, and why AND give the four counts at 0.5 and at the largest F1 threshold on the validation rows AND give accuracy at both thresholds and say what changed underneath it AND give the test F1 you would report to the fleet manager and say why that one. Respond to all four parts.</p>
+  <p>Most of the difference between reflections is in the fourth part. Two test F1 figures are on your screen, and only one of them was earned without looking at the test rows.</p>
+  <p>Write 100 to 200 words.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-25">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four boxes joined by AND. The two errors, which one is worse for Thistledown, and why. Two matrices, the counts at 0.5 and at the largest F1 threshold, on validation. What accuracy hid, accuracy at both thresholds, and what changed underneath. The figure for the manager, the test F1 you would report, and why that one."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 212" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="212" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">All four parts of the case one reflection</text><rect x="21" y="46" width="204" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The two errors</text><text x="37" y="122" font-size="14" fill="#6b6b6b">which one is worse for</text><text x="37" y="141" font-size="14" fill="#6b6b6b">Thistledown, and why</text><text x="248" y="123" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Two matrices</text><text x="288" y="122" font-size="14" fill="#6b6b6b">the counts at 0.5 and at</text><text x="288" y="141" font-size="14" fill="#6b6b6b">the largest F1 threshold,</text><text x="288" y="160" font-size="14" fill="#6b6b6b">on validation</text><text x="500" y="123" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">What accuracy</text><text x="569" y="103" font-size="17" font-weight="600" fill="#2b2b2b">hid</text><text x="540" y="134" font-size="14" fill="#6b6b6b">accuracy at both</text><text x="540" y="153" font-size="14" fill="#6b6b6b">thresholds, and what</text><text x="540" y="172" font-size="14" fill="#6b6b6b">changed underneath</text><text x="752" y="123" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The figure for</text><text x="820" y="103" font-size="17" font-weight="600" fill="#2b2b2b">the manager</text><text x="792" y="134" font-size="14" fill="#6b6b6b">the test F1 you would</text><text x="792" y="153" font-size="14" fill="#6b6b6b">report, and why that one</text></svg></div>
+    <figcaption class="plib-tile-caption">All four parts of the case one reflection, inside 100 to 200 words.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution RH8.1.1">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">RH8.1.1</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Case one reflection</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 100 to 200 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_26" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for RH8.1.1"
+            data-maxwords="200" data-maxchars="2000"
+            oninput="updateCounter('prompt_26', 'textarea_26')"></textarea>
+  <div class="plib-counter" id="counter_prompt_26" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_26">0</span> / 200 words&nbsp;·&nbsp;
+    <span id="cc_prompt_26">0</span> / 2000 characters
+    <span class="plib-counter-min">minimum: 100 words</span>
+  </div>
+  <div class="plib-warn" id="warn_prompt_26" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_26"
+       data-prefix="### RH8.1.1&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_26"
+       data-maxwords="200"
+       data-maxchars="2000"
+       data-minwords="100"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_26', this)"
+          aria-label="Copy contribution RH8.1.1 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 3 of 4</div><div class="plib-section-t">CASE TWO</div></div>
+
+<div class="plib-narration">
+  <p>Case two is worth 50 points, 35 for the exchange in the M block and 15 for the reflection.</p>
+  <p>In case one you found the threshold with the largest F1. In case two you find a second candidate on the ROC curve, and decide which threshold fits which kind of month at Thistledown. Change equal to back to validation, and open the ROC tab. It draws TPR against FPR over every threshold, prints the AUC, and marks the optimal threshold with a green square, the point furthest above the diagonal.</p>
+  <p>Check two things. The ROC tab prints AUC 0.893 and the optimal threshold 0.1716, with FPR 0.167 and TPR 0.811. Type 0.1716 into the Threshold box and press Enter, and the Tables tab shows TP 542, FP 589, FN 126 and TN 2943.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-30">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Two checks on the ROC tab. Rows Sample equal to validation. The ROC tab prints AUC 0.893 and the optimal threshold 0.1716, with FPR 0.167 and TPR 0.811. At that threshold the Tables tab shows TP 542, FP 589, FN 126 and TN 2943."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 172" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="172" rx="10" fill="#faf7f8"/><rect x="21" y="20" width="958" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><text x="46" y="58" font-size="18" font-weight="600" fill="#630031">Two checks on the ROC tab</text><text x="46" y="86" font-size="16" fill="#2b2b2b">Rows Sample equal to validation. The ROC tab prints AUC 0.893 and the optimal threshold 0.1716, with FPR 0.167 and</text><text x="46" y="108" font-size="16" fill="#2b2b2b">TPR 0.811. At that threshold the Tables tab shows TP 542, FP 589, FN 126 and TN 2943.</text><text x="46" y="134" font-size="14" fill="#6b6b6b">The optimal point is the one furthest above the diagonal, the largest TPR minus FPR.</text></svg></div>
+    <figcaption class="plib-tile-caption">The optimal point is the one furthest above the diagonal, the largest TPR minus FPR.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>You now have three thresholds for the same model, 0.5, 0.3882 and 0.1716. For each one, write down from the Tables tab the vans sent to the garage, which is TP plus FP, the breakdowns caught, which is TP, and the healthy vans sent, which is FP.</p>
+  <p>Each threshold rests on an assumption about the two errors. When a missed breakdown and an unneeded inspection cost about the same, the best threshold is the one with the fewest errors in total, which is where the accuracy curve on the Curves tab is highest. The ROC optimal threshold weighs one missed breakdown as heavily as about five unneeded inspections, because TPR is counted over the 668 vans that broke down and FPR over the 3532 that did not, and 3532 is about five times 668. The largest F1 has no such reading, because F1 never counts TN, the healthy vans left on the road.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-32">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Three boxes, three situations at Thistledown. Even, a missed breakdown and an unneeded inspection cost about the same. Inspections cost more, peak season, when every van is needed on the road and breakdowns near the depot are minor. Breakdowns cost more, a van stranded on a mountain route with a full load."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 200" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="200" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Three situations at Thistledown</text><rect x="21" y="46" width="287" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Even</text><text x="37" y="122" font-size="14" fill="#6b6b6b">a missed breakdown and an unneeded</text><text x="37" y="141" font-size="14" fill="#6b6b6b">inspection cost about the same</text><text x="332" y="117" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">·</text><rect x="356" y="46" width="287" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="380" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="380" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="401" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Inspections cost more</text><text x="372" y="122" font-size="14" fill="#6b6b6b">peak season, when every van is</text><text x="372" y="141" font-size="14" fill="#6b6b6b">needed on the road and breakdowns</text><text x="372" y="160" font-size="14" fill="#6b6b6b">near the depot are minor</text><text x="668" y="117" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">·</text><rect x="692" y="46" width="287" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="716" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="716" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="737" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Breakdowns cost more</text><text x="708" y="122" font-size="14" fill="#6b6b6b">a van stranded on a mountain route</text><text x="708" y="141" font-size="14" fill="#6b6b6b">with a full load</text></svg></div>
+    <figcaption class="plib-tile-caption">No dollar figures. Each situation is a judgment about which error costs Thistledown more.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>Four moves, in order. The four moves are on the card below.</p>
+  <p>Move one reads the ROC optimum AND move two says what each threshold assumes AND move three works through the three situations AND move four recommends a threshold for Thistledown's usual month. All four moves.</p>
+  <p>Move one opens the block. Report the AUC, the optimal threshold with its TPR and FPR, and its four counts. Report the vans sent to the garage, the breakdowns caught and the healthy vans sent at 0.5, at 0.3882 and at 0.1716. Ask Hokie AI to check that your counts agree with your TPR and FPR.</p>
+  <p>Move two says, in your own words, what each of the three thresholds assumes about a missed breakdown against an unneeded inspection, using the paragraph above. Find on the Curves tab where the accuracy curve is highest, and say which of the three thresholds sits closest to it.</p>
+  <p>Move three takes the three situations on the card one at a time. For each one, say whether you would move the threshold up or down from 0.5, and which of the three thresholds comes closest to what that situation needs, and why. Ask Hokie AI to argue against your answer for the situation you are least sure of.</p>
+  <p>Move four recommends one threshold for Thistledown's usual month. Say which situation you think a usual month is closest to, and why, then give the threshold, its counts and the vans it sends to the garage. Defend the choice against Hokie AI's strongest objection.</p>
+  <p>One move is not one message. Ten messages inside the block is the ceiling, and a ceiling is not a target.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-34">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four moves joined by AND. The ROC optimum, its threshold, TPR and FPR, matrix, and vans sent to the garage. What each assumes, about a missed breakdown against an unneeded inspection. Three situations, which way the threshold moves in each, and why. A recommendation, the threshold for Thistledown's usual month, defended."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 212" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="212" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Four moves. Three thresholds, three assumptions</text><rect x="21" y="46" width="204" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The ROC</text><text x="66" y="103" font-size="17" font-weight="600" fill="#2b2b2b">optimum</text><text x="37" y="134" font-size="14" fill="#6b6b6b">its threshold, TPR and</text><text x="37" y="153" font-size="14" fill="#6b6b6b">FPR, matrix, and vans</text><text x="37" y="172" font-size="14" fill="#6b6b6b">sent to the garage</text><text x="248" y="123" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">What each</text><text x="318" y="103" font-size="17" font-weight="600" fill="#2b2b2b">assumes</text><text x="288" y="134" font-size="14" fill="#6b6b6b">about a missed</text><text x="288" y="153" font-size="14" fill="#6b6b6b">breakdown against an</text><text x="288" y="172" font-size="14" fill="#6b6b6b">unneeded inspection</text><text x="500" y="123" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Three situations</text><text x="540" y="122" font-size="14" fill="#6b6b6b">which way the threshold</text><text x="540" y="141" font-size="14" fill="#6b6b6b">moves in each, and why</text><text x="752" y="123" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">A</text><text x="820" y="103" font-size="17" font-weight="600" fill="#2b2b2b">recommendation</text><text x="792" y="134" font-size="14" fill="#6b6b6b">the threshold for</text><text x="792" y="153" font-size="14" fill="#6b6b6b">Thistledown’s usual</text><text x="792" y="172" font-size="14" fill="#6b6b6b">month, defended</text></svg></div>
+    <figcaption class="plib-tile-caption">Four moves. A threshold is a judgment about which error costs more.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-prompt-m" role="region" aria-label="Multi-turn Block MH8.1.2, Begin">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-m-id">MH8.1.2</span>
+    <span class="plib-prompt-type-label plib-m-label">Multi-turn · Consolidation</span>
+    <span class="plib-m-badge">Summative</span>
+    <span class="plib-ai-badge plib-ai-respond">AI: respond</span>
+  </div>
+  <div class="plib-m-instructions">
+    <div class="plib-m-instructions-label">&#128221; How this block works</div>
+    <ol class="plib-m-steps">
+      <li>Click <strong>Copy opening marker</strong> and paste it into Hokie AI to begin this block.</li>
+      <li>Interact with Hokie AI: ask questions, explore, respond. All of this exchange belongs to this block.</li>
+      <li>When finished, use the <strong>Copy closing marker</strong> button below to close the block in your thread.</li>
+    </ol>
+  </div>
+  <div class="plib-prompt-text" id="text_m_open_35" data-copy="### MH8.1.2 OPEN&#10;----------&#10;"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-open" onclick="copyPrompt('text_m_open_35', this)"
+          aria-label="Copy opening marker for block MH8.1.2">
+    <span aria-hidden="true">&#9654;</span> Copy opening marker
+  </button>
+</div>
+
+<div class="plib-prompt-m-close" role="region" aria-label="Multi-turn Block MH8.1.2, End">
+  <div class="plib-m-close-label">
+    <span class="plib-prompt-id plib-m-id">MH8.1.2</span>
+    <span class="plib-prompt-type-label plib-m-label">End of Multi-turn Block</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-m-close-instruction">When you have finished your exchange, copy this closing marker and paste it into Hokie AI to close the block.</p>
+  <div class="plib-prompt-text" id="text_m_close_36" data-copy="&#10;----------&#10;### MH8.1.2 CLOSE"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-close" onclick="copyPrompt('text_m_close_36', this)"
+          aria-label="Copy closing marker for block MH8.1.2">
+    <span aria-hidden="true">&#9646;&#9646;</span> Copy closing marker
+  </button>
+</div>
+
+<div class="plib-narration">
+  <p>Now write your reflection for case two, in your own words and without help from the AI.</p>
+  <p>Your reflection needs all four parts below. Give the ROC optimal threshold with its TPR and FPR, and the vans it sends to the garage AND say what 0.5, the largest F1 threshold and the ROC optimum each assume about a missed breakdown against an unneeded inspection AND say which way you would move the threshold from 0.5 when inspections cost more, and which way when breakdowns cost more AND give the threshold you would set for Thistledown's usual month, and the judgment behind it. Respond to all four parts.</p>
+  <p>Most of the difference between reflections is in the fourth part. The three thresholds on your screen send very different numbers of vans to the garage, so the choice depends on which error costs Thistledown more in a usual month, and by roughly how much.</p>
+  <p>Write 100 to 200 words.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-39">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four boxes joined by AND. The ROC optimum, its threshold, TPR and FPR, and the vans it sends to the garage. What each threshold assumes, 0.5, the largest F1 and the ROC optimum. Two situations, which way you would move the threshold when inspections cost more, and when breakdowns do. Your threshold, for Thistledown's usual month, and the judgment behind it."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 219" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="219" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">All four parts of the case two reflection</text><rect x="21" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The ROC</text><text x="66" y="103" font-size="17" font-weight="600" fill="#2b2b2b">optimum</text><text x="37" y="134" font-size="14" fill="#6b6b6b">its threshold, TPR and</text><text x="37" y="153" font-size="14" fill="#6b6b6b">FPR, and the vans it sends</text><text x="37" y="172" font-size="14" fill="#6b6b6b">to the garage</text><text x="248" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">What each</text><text x="318" y="103" font-size="17" font-weight="600" fill="#2b2b2b">threshold</text><text x="318" y="124" font-size="17" font-weight="600" fill="#2b2b2b">assumes</text><text x="288" y="155" font-size="14" fill="#6b6b6b">0.5, the largest F1 and</text><text x="288" y="174" font-size="14" fill="#6b6b6b">the ROC optimum</text><text x="500" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Two situations</text><text x="540" y="122" font-size="14" fill="#6b6b6b">which way you would</text><text x="540" y="141" font-size="14" fill="#6b6b6b">move the threshold when</text><text x="540" y="160" font-size="14" fill="#6b6b6b">inspections cost more,</text><text x="540" y="179" font-size="14" fill="#6b6b6b">and when breakdowns do</text><text x="752" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Your threshold</text><text x="792" y="122" font-size="14" fill="#6b6b6b">for Thistledown’s usual</text><text x="792" y="141" font-size="14" fill="#6b6b6b">month, and the judgment</text><text x="792" y="160" font-size="14" fill="#6b6b6b">behind it</text></svg></div>
+    <figcaption class="plib-tile-caption">All four parts of the case two reflection, inside 100 to 200 words.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution RH8.1.2">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">RH8.1.2</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Case two reflection</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 100 to 200 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_40" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for RH8.1.2"
+            data-maxwords="200" data-maxchars="2000"
+            oninput="updateCounter('prompt_40', 'textarea_40')"></textarea>
+  <div class="plib-counter" id="counter_prompt_40" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_40">0</span> / 200 words&nbsp;·&nbsp;
+    <span id="cc_prompt_40">0</span> / 2000 characters
+    <span class="plib-counter-min">minimum: 100 words</span>
+  </div>
+  <div class="plib-warn" id="warn_prompt_40" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_40"
+       data-prefix="### RH8.1.2&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_40"
+       data-maxwords="200"
+       data-maxchars="2000"
+       data-minwords="100"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_40', this)"
+          aria-label="Copy contribution RH8.1.2 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 4 of 4</div><div class="plib-section-t">SUBMISSION</div></div>
+
+<div class="plib-narration">
+  <p>You are done with part 1. Both cases are in one thread, and that thread is what you submit.</p>
+  <p>Export the whole conversation from Hokie AI as a .zip and upload the .zip to the Canvas assignment for part 1.</p>
+  <p>Leave the turns where something went wrong. How you recovered is part of what is being read, and a tidied thread reads as a thinner one.</p>
+</div>
+
+<div class="plib-material" id="plib-material-44">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">Homework 8 part 1 on Canvas</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="https://canvas.vt.edu/courses/233475/assignments/2880988" target="_blank" rel="noopener noreferrer">Open the part 1 assignment</a>
+  </div>
+  <div class="plib-material-note">Upload the exported .zip of this thread here. Part 2 has its own assignment, so check the title on the page before you upload.</div>
+</div>
+
+<div class="plib-submit">
+  <div class="plib-submit-title">Turn it in</div>
+  <p class="plib-submit-p">Export this thread as a .zip file, then upload it to the Canvas assignment for this part. Leave the file as it came out. Your work is not submitted until Canvas shows your file.</p>
+</div>
+
+</div>
+</main>
+<script>
+function countWords(text) {
+  return text.trim() === '' ? 0 : text.trim().split(/[ \t\n\r]+/).length;
+}
+function announce(msg) {
+  var el = document.getElementById('plib-live');
+  if (!el) { el = document.createElement('div'); el.id = 'plib-live';
+    el.setAttribute('aria-live','polite'); el.setAttribute('aria-atomic','true');
+    el.style.cssText='position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;';
+    document.body.appendChild(el); }
+  el.textContent = ''; setTimeout(function(){ el.textContent = msg; }, 50);
+}
+function autoResize(ta) {
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(ta.scrollHeight + 2, 600) + 'px';
+}
+function updateCounter(bid, tid) {
+  var ta = document.getElementById(tid);
+  var textEl = document.getElementById('text_' + bid);
+  var wcEl = document.getElementById('wc_' + bid);
+  var ccEl = document.getElementById('cc_' + bid);
+  var ctrEl = document.getElementById('counter_' + bid);
+  if (!ta) return;
+  autoResize(ta);
+  var maxwords = textEl ? parseInt(textEl.getAttribute('data-maxwords') || '0') : 0;
+  var maxchars = textEl ? parseInt(textEl.getAttribute('data-maxchars') || '0') : 0;
+  var minwords = textEl ? parseInt(textEl.getAttribute('data-minwords') || '0') : 0;
+  var text = ta.value;
+  var words = countWords(text);
+  var chars = text.length;
+  if (maxchars && chars > maxchars) {
+    ta.value = text.substring(0, maxchars);
+    text = ta.value; words = countWords(text); chars = text.length;
+  }
+  if (wcEl) wcEl.textContent = words;
+  if (ccEl) ccEl.textContent = chars;
+  if (ctrEl && maxwords) {
+    var pct = words / maxwords;
+    var cls = pct >= 1.0 ? 'bad' : (pct >= 0.8 || (minwords && words < minwords)) ? 'warn' : 'ok';
+    if (pct >= 1.0) { ctrEl.className = 'plib-counter at-limit'; }
+    else { ctrEl.className = 'plib-counter'; }
+    if (wcEl) wcEl.className = 'plib-count-' + cls;
+    if (ccEl) ccEl.className = 'plib-count-' + cls;
+  }
+}
+function copyPrompt(id, btn) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var text = (el.getAttribute('data-copy') || el.textContent || '').replace(/&#10;/g, '\n');
+  var label = (btn.getAttribute('aria-label') || 'item').replace('Copy ','').replace(' to clipboard','');
+  doCopy(text, btn, label + ' copied.', '&#10003; Copied', 2000);
+}
+function copyWithInput(bid, btn) {
+  var el = document.getElementById('text_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!el) return;
+  var tid = el.getAttribute('data-tid');
+  var inputEl = document.getElementById(tid);
+  var prefix = (el.getAttribute('data-prefix') || '').replace(/&#10;/g, '\n');
+  var suffix = (el.getAttribute('data-suffix') || '').replace(/&#10;/g, '\n');
+  var userText = inputEl ? inputEl.value.trim() : '';
+  if (userText.replace(/[\t\n\r ]/g, '').length < 2) {
+    if (warnEl) warnEl.textContent = 'Please write your response before copying.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  var maxwords = parseInt(el.getAttribute('data-maxwords') || '0');
+  var maxchars = parseInt(el.getAttribute('data-maxchars') || '0');
+  var minwords = parseInt(el.getAttribute('data-minwords') || '0');
+  if (minwords && countWords(userText) < minwords) {
+    if (warnEl) warnEl.textContent = 'Response is below the minimum of ' + minwords + ' words.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  if (maxwords && countWords(userText) > maxwords) {
+    if (warnEl) warnEl.textContent = 'Response exceeds the ' + maxwords + ' word limit.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  if (warnEl) warnEl.textContent = '';
+  doCopy(prefix + userText + suffix, btn, 'Copied. Paste into Hokie AI.', '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+function doCopy(text, btn, announcement, label, duration) {
+  function ok() {
+    var orig = btn.innerHTML; btn.innerHTML = label; btn.classList.add('copied');
+    announce(announcement);
+    setTimeout(function() { btn.innerHTML = orig; btn.classList.remove('copied'); }, duration);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(ok).catch(function() { fallback(text, ok); });
+  } else { fallback(text, ok); }
+}
+function fallback(text, cb) {
+  var ta = document.createElement('textarea'); ta.value = text;
+  ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); cb(); } catch(e) {}
+  document.body.removeChild(ta);
+}
+function copyStructured(bid, blockId, btn) {
+  var container = document.getElementById('qitems_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!container) return;
+  var outerDiv = container.closest('.plib-prompt-q');
+  var aiDirective = outerDiv ? (outerDiv.getAttribute('data-ai-directive') || '') : '';
+  var items = container.querySelectorAll('.plib-q-item');
+  var lines = [];
+  var emptyItems = [];
+
+  items.forEach(function(itemEl) {
+    var n = itemEl.getAttribute('data-item-n');
+    var render = itemEl.getAttribute('data-render');
+    var selections = [];
+
+    if (render === 'dropdown') {
+      var sel = itemEl.querySelector('select');
+      if (sel && sel.value) selections.push(sel.value);
+    } else if (render === 'likert') {
+      var checkedRadio = itemEl.querySelector('input[type="radio"]:checked');
+      if (checkedRadio) selections.push(checkedRadio.value);
+    } else if (render === 'checkbox') {
+      var checks = itemEl.querySelectorAll('input[type="checkbox"]:checked');
+      checks.forEach(function(c) { selections.push(c.value); });
+    }
+
+    if (selections.length === 0) {
+      emptyItems.push(n);
+    } else {
+      lines.push('ITEM ' + n + ': ' + selections.join(', '));
+    }
+  });
+
+  if (emptyItems.length > 0) {
+    if (warnEl) {
+      warnEl.textContent = 'Please make a selection for ITEM '
+        + emptyItems.join(', ITEM ') + ' before copying.';
+    }
+    return;
+  }
+
+  if (warnEl) warnEl.textContent = '';
+
+  var directiveLine = aiDirective ? aiDirective + '\n' : '';
+  var envelope = '### ' + blockId + '\n----------\n' + directiveLine + 'RESPONSE:\n'
+    + lines.join('\n') + '\n----------\n###';
+  doCopy(envelope, btn,
+    'Structured response copied. Paste into Hokie AI.',
+    '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+function enforceCheckboxCap(itemEl) {
+  var max = parseInt(itemEl.getAttribute('data-max-select') || '0', 10);
+  if (!max || max < 2) return;
+  var checks = itemEl.querySelectorAll('input[type="checkbox"]');
+  var checked = itemEl.querySelectorAll('input[type="checkbox"]:checked');
+  var atCap = checked.length >= max;
+  checks.forEach(function(c) {
+    if (!c.checked) c.disabled = atCap;
+  });
+}
+function moveItem(btn, direction) {
+  var li = btn.closest('.plib-o-item');
+  if (!li) return;
+  var list = li.parentElement;
+  if (!list) return;
+  if (direction === 'up') {
+    var prev = li.previousElementSibling;
+    if (prev) list.insertBefore(li, prev);
+  } else if (direction === 'down') {
+    var next = li.nextElementSibling;
+    if (next) list.insertBefore(next, li);
+  }
+  updateArrowStates(list);
+}
+function updateArrowStates(list) {
+  var items = list.querySelectorAll('.plib-o-item');
+  items.forEach(function(li, idx) {
+    var rankEl = li.querySelector('.plib-o-rank');
+    if (rankEl) rankEl.textContent = (idx + 1) + '.';
+    var upBtn = li.querySelector('.plib-o-arrow-up');
+    var downBtn = li.querySelector('.plib-o-arrow-down');
+    if (upBtn) upBtn.disabled = (idx === 0);
+    if (downBtn) downBtn.disabled = (idx === items.length - 1);
+    var itemText = li.getAttribute('data-item-text') || '';
+    if (upBtn) upBtn.setAttribute('aria-label', 'Move ' + itemText + ' up');
+    if (downBtn) downBtn.setAttribute('aria-label', 'Move ' + itemText + ' down');
+  });
+}
+function copyOrdered(bid, blockId, btn) {
+  var list = document.getElementById('oitems_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!list) return;
+  var outerDiv = list.closest('.plib-prompt-o');
+  var aiDirective = outerDiv ? (outerDiv.getAttribute('data-ai-directive') || '') : '';
+  var question = list.getAttribute('data-question') || '';
+  var items = list.querySelectorAll('.plib-o-item');
+  var lines = [];
+  items.forEach(function(li, idx) {
+    var itemText = li.getAttribute('data-item-text') || '';
+    lines.push((idx + 1) + '. ' + itemText);
+  });
+  if (warnEl) warnEl.textContent = '';
+  var directiveLine = aiDirective ? aiDirective + '\n' : '';
+  var envelope = '### ' + blockId + '\n----------\n' + directiveLine + 'RESPONSE:\nQuestion: '
+    + question + '\n' + lines.join('\n') + '\n----------\n###';
+  doCopy(envelope, btn,
+    'Ordered response copied. Paste into Hokie AI.',
+    '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var checkboxItems = document.querySelectorAll('.plib-q-item[data-render="checkbox"]');
+  checkboxItems.forEach(function(itemEl) {
+    var checks = itemEl.querySelectorAll('input[type="checkbox"]');
+    checks.forEach(function(c) {
+      c.addEventListener('change', function() { enforceCheckboxCap(itemEl); });
+    });
+  });
+  var oLists = document.querySelectorAll('.plib-o-list');
+  oLists.forEach(function(list) {
+    updateArrowStates(list);
+  });
+});
+</script>
+</body>
+</html>
