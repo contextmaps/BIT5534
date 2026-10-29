@@ -590,10 +590,10 @@ const LECTURES = [
   { id: "lec9_2",  week: 9,  phase: 2, mode: "exploratory",  tool: true, title: "ROC, AUC and Lift",
     business: "Two doctors ranking the same patients, then four models compared by the area under the ROC curve and by lift for a clinic that can call 27 patients." },
   // Week 10
-  { id: "lec10_1", week: 10, phase: 2, mode: "exploratory",  title: "Text Analytics 1",
-    business: "Topic to be confirmed." },
-  { id: "lec10_2", week: 10, phase: 2, mode: "consolidation", title: "Text Analytics 2",
-    business: "Topic to be confirmed." },
+  { id: "lec10_1", week: 10, phase: 2, mode: "exploratory",  title: "Text Analytics with a Bag of Words",
+    business: "600 help desk tickets turned into a document term matrix and tf-idf weights, compared by cosine, reduced to LSA and NMF topics, mapped three ways, and fed to a model of which tickets get escalated." },
+  { id: "lec10_2", week: 10, phase: 2, mode: "consolidation", title: "Text Analytics with Embeddings and BERTopic",
+    business: "The same tickets read by a transformer, so one problem written in different words lands together, then grouped into BERTopic topics that predict hours to resolve and escalation better than Tuesday's topics." },
   // Week 11
   { id: "lec11_1", week: 11, phase: 3, mode: "project_lab", title: "Project Development I",
     business: "Dashboard build session. Topic to be confirmed." },
@@ -707,6 +707,10 @@ const HOMEWORK = [
     business: "A delivery fleet's breakdown model read at 0.5, at its largest F1 and at its ROC optimum, with the threshold chosen by whether a missed breakdown or an unneeded inspection costs more." },
   { id: "hw8_2", week: 9, part: 2, title: "Comparing Four Models by AUC and Lift",
     business: "Four models on the same fleet compared by AUC and by the breakdowns each finds when the garage can inspect one van in ten, ending in a rule for the monthly list." },
+  { id: "hw9_1", week: 10, part: 1, title: "Reading Guest Feedback as Words and as Meaning",
+    business: "400 hotel guest comments searched and grouped on tf-idf and on embeddings, with a complaint written in unusual words and a praise written in negated complaints as the test of each." },
+  { id: "hw9_2", week: 10, part: 2, title: "Predicting Guest Credits and Return Stays from Feedback Topics",
+    business: "NMF weights and BERTopic topics used to predict the dollars a hotel credits a guest and whether the guest books again, with the second result reversing the first." },
 ];
 
 /* Weeks with no homework show what the outline says is due instead. */
@@ -770,6 +774,8 @@ const HOMEWORK_LINKS = {
   "hw7_2":    "https://canvas.vt.edu/courses/233475/assignments/2877692",
   "hw8_1":    "https://canvas.vt.edu/courses/233475/assignments/2880988",
   "hw8_2":    "https://canvas.vt.edu/courses/233475/assignments/2880989",
+  "hw9_1":    "https://canvas.vt.edu/courses/233475/assignments/2883144",
+  "hw9_2":    "https://canvas.vt.edu/courses/233475/assignments/2883145",
 };
 
 /* ============ Render ============ */
