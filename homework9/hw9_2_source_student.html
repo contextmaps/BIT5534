@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Predicting Guest Credits and Return Stays from Feedback Topics</title>
+<style>
+:root {
+  --c-text:#1a1a1a; --c-muted:#4a4a4a;
+  --c-meta-bg:#f4f6f9; --c-meta-border:#d0d7e2;
+  --c-obj-bg:#eef4fb; --c-obj-accent:#1a5da0;
+  --c-ctx-bg:#fffbf0; --c-ctx-border:#e8d8a0; --c-ctx-label:#5c4400;
+  --c-ctx-s-bg:#f0f7ff; --c-ctx-s-border:#a0c8f0; --c-ctx-s-label:#1a4a80;
+  --c-nar-bg:#f9f9f9; --c-nar-border:#bbb;
+  --c-dis-bg:#f0f4ff; --c-dis-border:#8090cc; --c-dis-label:#1e2e80;
+  --c-sys-bg:#f3f0ff; --c-sys-border:#9080d0; --c-sys-label:#3a2090;
+  --c-scr-bg:#fff8e8; --c-scr-border:#d0a030; --c-scr-label:#6b4a00;
+  --c-s-bg:#f0faf4; --c-s-border:#70c090; --c-s-id:#14552f;
+  --c-r-bg:#fff8f0; --c-r-border:#d0a040; --c-r-id:#6b3e00;
+  --c-mk-bg:#f0f0ff; --c-mk-border:#8080c8; --c-mk-id:#2a2a80;
+  --c-m-bg:#f0f8ff; --c-m-border:#70a8d0; --c-m-id:#0a4a70;
+  --c-mc-bg:#f8f8ff; --c-mc-border:#a0a0d0;
+  --c-btn:#14552f; --c-btn-r:#6b3e00; --c-btn-mk:#2a2a80;
+  --c-btn-mo:#0a4a70; --c-btn-mc:#3a3a6a;
+  --c-q-bg:#f0fafd; --c-q-border:#70b8d0; --c-q-id:#0a5070;
+  --c-btn-q:#0a5070;
+  --c-o-bg:#fef6f0; --c-o-border:#e89870; --c-o-id:#a04510;
+  --c-btn-o:#a04510;
+  --radius:8px; --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --page:1100px;
+}
+/* Two layers. The wrapper takes the width Canvas gives it, up to --page, so it
+   never overflows a narrow frame and never needs a per-machine number. Everything
+   inside fills the block it sits in. */
+.plib-wrap{font-family:var(--font);color:var(--c-text);max-width:min(var(--page),100% - 2rem);margin:0 auto;padding:1rem 0}
+/* Every block spans the page so their left and right edges line up down the
+   column, and the text inside fills the block.
+
+   There is no reading column. D-032 put prose in a 720px column inside a 1100px
+   wrapper, and on 2026-09-02 the instructor read the rendered result and rejected
+   it: every text block stopped two thirds of the way across its own card and
+   stranded the rest, and a bordered box that stops short of the card it sits in
+   reads as broken rather than as typography. The wrapper's own
+   min(1100px, 100% - 2rem) is now the only bound, so a line never exceeds about
+   1055px. The cost is real and is worth stating. A long paragraph at 1055px reads
+   worse than the same paragraph at 800, and what pays for it is the writing
+   standard's rule on paragraph length, which now carries the load the column used
+   to carry. Recorded as D-043, amending D-032. */
+.plib-wrap > *{max-width:100%}
+.plib-submit{margin:2rem 0 1rem;padding:1.4rem 1.6rem;border-radius:var(--radius);background:var(--c-obj-bg);border:2px solid var(--c-obj-accent)}
+.plib-submit-title{font-size:13px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--c-obj-accent)}
+.plib-submit-p{margin:.5rem 0 1rem;font-size:15px;line-height:1.65}
+.plib-submit-btn{display:inline-block;background:var(--c-obj-accent);color:#fff;text-decoration:none;font-size:16px;font-weight:600;padding:.7rem 1.4rem;border-radius:var(--radius)}
+.plib-submit-btn:hover{filter:brightness(1.12)}
+.plib-submit-btn:focus{outline:3px solid var(--c-obj-accent);outline-offset:3px}
+.plib-submit-note{margin-top:.55rem;font-size:13px;color:var(--c-muted)}
+.plib-material{margin:1.6rem 0;padding:1.2rem 1.4rem;border-radius:var(--radius);background:var(--c-s-bg);border:1px solid var(--c-s-border)}
+.plib-material-tag{font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--c-s-id)}
+.plib-material-title{margin-top:.3rem;font-size:17px;font-weight:600;color:var(--c-text)}
+.plib-material-box{margin:.9rem 0 1.1rem;padding:.9rem 1rem;max-height:22rem;overflow:auto;background:#fff;border:1px solid var(--c-s-border);border-radius:6px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;color:var(--c-text)}
+.plib-material-box:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+.plib-material-btns{display:flex;flex-wrap:wrap;gap:.6rem}
+.plib-material-copies{margin:.9rem 0 0;display:flex;flex-wrap:wrap;gap:.8rem}
+.plib-copyrow{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;padding:.55rem .7rem;background:#fff;border:1px solid var(--c-s-border);border-radius:6px}
+.plib-copyrow-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-s-id)}
+.plib-copyrow-code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;color:var(--c-text)}
+.plib-copy-btn-row{padding:.3rem .6rem;font-size:12px}
+.plib-material-btn{display:inline-block;background:var(--c-s-id);color:#fff;text-decoration:none;font-size:15px;font-weight:600;padding:.6rem 1.2rem;border-radius:var(--radius)}
+.plib-material-btn:hover{filter:brightness(1.25)}
+.plib-material-btn:focus{outline:3px solid var(--c-s-id);outline-offset:3px}
+.plib-material-note{margin-top:.55rem;font-size:13px;color:var(--c-muted)}
+.plib-section{margin:2.25rem 0 1.1rem;padding-top:.9rem;border-top:3px solid var(--c-obj-accent)}
+.plib-section-n{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--c-muted)}
+.plib-section-t{font-size:23px;font-weight:700;letter-spacing:.04em;color:var(--c-obj-accent);margin-top:2px}
+.plib-wrap > .plib-section:first-child{margin-top:.5rem}
+.plib-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;margin-bottom:1.25rem}
+.plib-tile{background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);padding:.9rem;display:flex;flex-direction:column}
+.plib-tile img{width:100%;height:auto;border-radius:4px;background:#faf7f8}
+.plib-tile figure,.plib-tile{margin:0}
+/* A drawing narrower than its grid cell is centred in it. render_tiles caps the
+   wrapper at the SVG's own viewBox width so a 400px card is not blown up to the
+   full row, and without this the drawing sat against the left edge with the slack
+   stranded on the right, which is the same fault D-043 removed from the prose. */
+.plib-tile-svg{width:100%;margin-left:auto;margin-right:auto}
+.plib-tile-svg svg{width:100%;height:auto;display:block}
+.plib-tile-caption{font-size:13px;line-height:1.55;color:var(--c-text);margin-top:auto;padding-top:.6rem}
+.plib-meta{background:var(--c-meta-bg);border:1px solid var(--c-meta-border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1.5rem}
+.plib-meta-course{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--c-muted);margin-bottom:4px}
+.plib-meta-title{font-size:20px;font-weight:600;margin:4px 0 8px}
+.plib-meta-week{font-size:13px;color:var(--c-muted);margin-bottom:2px}
+.plib-meta-details{font-size:12px;color:var(--c-muted);margin-top:8px}
+.plib-objectives{background:var(--c-obj-bg);border-left:4px solid var(--c-obj-accent);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.5rem}
+.plib-objectives-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-obj-accent);font-weight:700;margin-bottom:8px}
+.plib-objectives-intro{margin:0 0 8px;font-size:14px;line-height:1.6;font-style:italic;color:var(--c-muted)}
+.plib-objectives-list{margin:0;padding-left:1.25rem}
+.plib-objectives-list li{margin-bottom:6px;font-size:14px;line-height:1.6}
+.plib-context{background:var(--c-ctx-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-context-student{background:var(--c-ctx-s-bg);border-color:var(--c-ctx-s-border)}
+.plib-context-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-ctx-label);font-weight:700;margin-bottom:8px}
+.plib-context-student .plib-context-label{color:var(--c-ctx-s-label)}
+.plib-context-body p{margin:4px 0;font-size:13px;line-height:1.6;color:var(--c-muted)}
+.plib-formula{margin:1rem 0;padding:1rem 1.25rem;background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);text-align:center}
+.plib-formula-body{overflow-x:auto;color:var(--c-text);padding:2px 0}
+.plib-formula-svg{max-width:100%;height:auto}
+.plib-formula-caption{margin-top:.85rem;font-size:13px;line-height:1.6;color:var(--c-muted);text-align:left}
+.plib-formula-missing{font-size:13px;color:var(--c-muted);text-align:left}
+.plib-formula-note{font-size:12px;margin-top:6px}
+.plib-formula-source{margin-top:.85rem;text-align:left}
+.plib-formula-source summary{font-size:12px;color:var(--c-muted);cursor:pointer}
+.plib-formula-latex{margin:6px 0 0;padding:8px 10px;background:var(--c-ctx-bg);border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.5;white-space:pre-wrap;color:var(--c-muted)}
+.plib-context-pre{margin:8px 0;padding:10px 12px;background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.55;color:var(--c-text);white-space:pre;overflow-x:auto}
+.plib-context-bullet{font-size:13px;color:var(--c-muted);padding-left:1rem;position:relative;margin-bottom:3px}
+.plib-context-bullet::before{content:"\2022";position:absolute;left:0}
+.plib-script{background:var(--c-scr-bg);border:1px solid var(--c-scr-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-script-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-scr-label);font-weight:700;margin-bottom:10px}
+.plib-script-list{margin:0;padding-left:1.25rem}
+.plib-script-list li{font-size:14px;line-height:1.6;margin-bottom:8px}
+.plib-script-time{font-weight:700;color:var(--c-scr-label);font-family:monospace;background:rgba(208,160,48,.15);padding:1px 6px;border-radius:3px}
+.plib-narration{background:var(--c-nar-bg);border-left:3px solid var(--c-nar-border);padding:.9rem 1.25rem;margin-bottom:1rem;border-radius:0 var(--radius) var(--radius) 0}
+.plib-narration p{margin:0 0 8px;font-size:14px;line-height:1.7}
+.plib-narration p:last-child{margin-bottom:0}
+.plib-narration-list{margin:4px 0;padding-left:1.25rem}
+.plib-narration-list li{font-size:14px;line-height:1.6;margin-bottom:4px}
+.plib-discussion{background:var(--c-dis-bg);border:1px solid var(--c-dis-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-slide{margin:0 0 1.25rem;text-align:center}
+.plib-slide-img{max-width:100%;height:auto;border:1px solid var(--c-dis-border);border-radius:var(--radius);box-shadow:0 1px 4px rgba(0,0,0,.08);background:#faf7f8;min-height:60px}
+.plib-slide-caption{font-size:13px;color:var(--c-muted);margin-top:.4rem}
+.plib-slide-script{margin-top:.6rem;text-align:left;font-size:13px;color:var(--c-muted)}
+.plib-slide-script summary{cursor:pointer;font-weight:600}
+.plib-slide-script-body{white-space:pre-wrap;background:rgba(0,0,0,.04);border-radius:var(--radius);padding:.6rem .8rem;margin-top:.4rem}
+.plib-discussion-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-dis-label);font-weight:700;margin-bottom:8px}
+.plib-discussion-intro{margin:0 0 8px;font-size:14px;line-height:1.6;font-style:italic;color:var(--c-dis-label)}
+.plib-discussion-list{margin:0;padding-left:1.25rem}
+.plib-discussion-list li{font-size:14px;line-height:1.6;margin-bottom:6px;color:var(--c-dis-label)}
+.plib-scenarios{margin-bottom:1rem}
+.plib-scenarios-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:#630031;font-weight:700;margin-bottom:8px}
+.plib-scenario-card{background:var(--c-ctx-s-bg);border:1px solid var(--c-ctx-s-border);border-left:4px solid #630031;border-radius:var(--radius);padding:.7rem 1rem;margin-bottom:.6rem}
+.plib-scenario-title{font-weight:700;font-size:14px;color:#630031;margin-bottom:4px}
+.plib-scenario-body{margin:0 0 4px;font-size:14px;line-height:1.6}
+.plib-scenario-line{font-size:13px;line-height:1.55;margin:2px 0 0;padding-left:1rem;position:relative}
+.plib-scenario-line::before{content:"›";position:absolute;left:.2rem;color:#CF4420;font-weight:700}
+.plib-system{background:var(--c-sys-bg);border:1px solid var(--c-sys-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-system-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-sys-label);font-weight:700;margin-bottom:8px}
+.plib-system-note{font-weight:400;text-transform:none;letter-spacing:0;font-style:italic}
+.plib-prompt-s-ref{opacity:.92;border-style:dashed}
+.plib-ref-note{font-size:12px;color:var(--c-muted);font-style:italic;margin-top:6px}
+.plib-prompt-text{display:none}
+.plib-prompt-display{font-size:14px;line-height:1.7;white-space:pre-wrap;background:rgba(255,255,255,.6);border-radius:4px;padding:.6rem .8rem;margin-bottom:10px}
+.plib-prompt-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.plib-prompt-id{font-size:12px;font-weight:700;font-family:monospace;padding:2px 7px;border-radius:4px}
+.plib-prompt-type-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-muted);font-weight:600}
+.plib-prompt-s{background:var(--c-s-bg);border:1px solid var(--c-s-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-prompt-s .plib-prompt-id{color:var(--c-s-id);background:rgba(20,85,47,.1)}
+.plib-prompt-r{background:var(--c-r-bg);border:1px solid var(--c-r-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-r-id{color:var(--c-r-id)!important;background:rgba(107,62,0,.1)!important}
+.plib-reflect-label{color:var(--c-r-id)!important}
+.plib-reflect-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-prompt-marker{background:var(--c-mk-bg);border:2px solid var(--c-mk-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-marker-id{color:var(--c-mk-id)!important;background:rgba(42,42,128,.1)!important}
+.plib-marker-label{color:var(--c-mk-id)!important}
+.plib-marker-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-marker-display{border-left:3px solid var(--c-mk-border);max-height:18em;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;box-shadow:inset 0 -10px 10px -10px rgba(0,0,0,.18)}
+.plib-prompt-m{background:var(--c-m-bg);border:1.5px solid var(--c-m-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:.5rem}
+.plib-m-id{color:var(--c-m-id)!important;background:rgba(10,74,112,.1)!important}
+.plib-m-label{color:var(--c-m-id)!important}
+.plib-m-badge{font-size:11px;background:var(--c-m-id);color:#fff;padding:2px 8px;border-radius:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.plib-m-instructions{background:rgba(255,255,255,.7);border-radius:6px;padding:10px 14px;margin-bottom:12px}
+.plib-m-instructions-label{font-size:12px;font-weight:700;color:var(--c-m-id);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.plib-m-steps{margin:0;padding-left:1.25rem}
+.plib-m-steps li{font-size:13px;line-height:1.6;margin-bottom:4px}
+.plib-m-seed{background:rgba(255,255,255,.5);border-left:3px solid var(--c-m-border);padding:8px 12px;margin-bottom:12px;border-radius:0 4px 4px 0}
+.plib-m-seed-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-m-id);margin-bottom:4px}
+.plib-m-seed-text{font-size:13px;line-height:1.6;white-space:pre-wrap}
+.plib-prompt-m-close{background:var(--c-mc-bg);border:1px dashed var(--c-mc-border);border-radius:var(--radius);padding:.75rem 1.25rem;margin-bottom:1.25rem}
+.plib-m-close-label{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.plib-m-close-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-copy-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;font-size:13px;font-weight:500;border:1.5px solid var(--c-btn);background:transparent;color:var(--c-btn);border-radius:6px;cursor:pointer;transition:background .15s,color .15s}
+.plib-copy-btn:hover{background:var(--c-btn);color:#fff}
+.plib-copy-btn:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+.plib-copy-btn.copied{background:#333;color:#fff;border-color:#333}
+.plib-copy-btn-reflect{border-color:var(--c-btn-r);color:var(--c-btn-r)}
+.plib-copy-btn-reflect:hover{background:var(--c-btn-r);color:#fff}
+.plib-copy-btn-marker{border-color:var(--c-btn-mk);color:var(--c-btn-mk)}
+.plib-copy-btn-marker:hover{background:var(--c-btn-mk);color:#fff}
+.plib-copy-btn-m-open{border-color:var(--c-btn-mo);color:var(--c-btn-mo)}
+.plib-copy-btn-m-open:hover{background:var(--c-btn-mo);color:#fff}
+.plib-copy-btn-m-close{border-color:var(--c-btn-mc);color:var(--c-btn-mc)}
+.plib-copy-btn-m-close:hover{background:var(--c-btn-mc);color:#fff}
+.plib-textarea{display:block;width:100%;box-sizing:border-box;padding:10px 12px;font-size:14px;font-family:var(--font);line-height:1.6;border:1.5px solid var(--c-r-border);border-radius:6px;margin-bottom:10px;background:#fff;color:var(--c-text);resize:vertical;min-height:120px}
+.plib-prompt-input{min-height:0;margin:10px 0 6px}
+.plib-textarea:focus{outline:3px solid #005fcc;outline-offset:2px;border-color:#005fcc}
+.plib-counter{font-size:13px;color:var(--c-muted);margin-bottom:8px;font-variant-numeric:tabular-nums}
+.plib-counter.at-limit{color:#b00020;font-weight:600}
+.plib-counter .plib-count-ok{color:#14552f}
+.plib-counter .plib-count-warn{color:#8a4a00}
+.plib-counter .plib-count-bad{color:#b00020;font-weight:600}
+.plib-counter-min{font-size:12px;color:var(--c-muted);margin-left:8px}
+.plib-warn{font-size:13px;color:#b00020;font-weight:600;margin-bottom:8px;min-height:20px}
+.plib-prompt-q{background:var(--c-q-bg);border:1px solid var(--c-q-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-q-id{color:var(--c-q-id)!important;background:rgba(10,80,112,.1)!important}
+.plib-q-label{color:var(--c-q-id)!important}
+.plib-q-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-q-items{display:flex;flex-direction:column;gap:14px;margin-bottom:10px}
+.plib-q-item{background:rgba(255,255,255,.6);border-radius:6px;padding:10px 12px}
+.plib-q-question{font-size:14px;font-weight:500;display:block;margin-bottom:8px;line-height:1.5}
+.plib-q-item-num{font-family:monospace;font-weight:700;color:var(--c-q-id);margin-right:6px}
+.plib-q-cap-note{font-weight:400;font-style:italic;color:var(--c-muted);margin-left:6px;font-size:13px}
+.plib-q-select{width:100%;padding:6px 8px;font-size:14px;border:1px solid var(--c-q-border);border-radius:4px;background:#fff}
+.plib-q-likert{display:flex;flex-wrap:wrap;gap:10px}
+.plib-q-likert-opt{display:flex;align-items:center;gap:5px;font-size:14px;cursor:pointer}
+.plib-q-checkboxes{display:flex;flex-direction:column;gap:6px}
+.plib-q-check-opt{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.plib-q-check-opt input[disabled] + span{opacity:.5}
+.plib-copy-btn-q{border-color:var(--c-btn-q);color:var(--c-btn-q)}
+.plib-copy-btn-q:hover{background:var(--c-btn-q);color:#fff}
+.plib-prompt-o{background:var(--c-o-bg);border:1px solid var(--c-o-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-o-id{color:var(--c-o-id)!important;background:rgba(160,69,16,.1)!important}
+.plib-o-label{color:var(--c-o-id)!important}
+.plib-o-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-o-question{font-size:14px;font-weight:500;margin-bottom:10px;line-height:1.5}
+.plib-o-list{list-style:none;padding:0;margin:0 0 10px 0;display:flex;flex-direction:column;gap:6px}
+.plib-o-item{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.7);border-radius:6px;padding:8px 10px;font-size:14px}
+.plib-o-rank{font-family:monospace;font-weight:700;color:var(--c-o-id);min-width:1.5em;text-align:right}
+.plib-o-item-text{flex:1}
+.plib-o-controls{display:flex;flex-direction:column;gap:2px}
+.plib-o-arrow{background:transparent;border:1px solid var(--c-o-border);color:var(--c-o-id);width:28px;height:22px;font-size:14px;line-height:1;cursor:pointer;border-radius:3px;padding:0}
+.plib-o-arrow:hover:not([disabled]){background:var(--c-o-border);color:#fff}
+.plib-o-arrow[disabled]{opacity:.25;cursor:default}
+.plib-copy-btn-o{border-color:var(--c-btn-o);color:var(--c-btn-o)}
+.plib-copy-btn-o:hover{background:var(--c-btn-o);color:#fff}
+.plib-demo-badge{font-size:11px;color:var(--c-muted);background:rgba(0,0,0,.05);padding:2px 8px;border-radius:3px;font-style:italic;margin-left:8px}
+.plib-ai-badge{font-size:11px;padding:2px 8px;border-radius:3px;font-family:monospace;margin-left:8px}
+.plib-ai-respond{background:#e8f5e8;color:#2c5e2c}
+.plib-ai-acknowledge{background:#fef0e6;color:#8c4a1a}
+.plib-ai-archive{background:#f0e8f5;color:#5a2c8c}
+</style>
+</head>
+<body>
+<a href="#main-content" class="plib-skip-link">Skip to main content</a>
+<style>.plib-skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;}.plib-skip-link:focus{position:static;width:auto;height:auto;background:#005fcc;color:#fff;padding:8px 16px;font-size:14px;font-weight:600;border-radius:4px;text-decoration:none;display:inline-block;margin:8px;}</style>
+<main id="main-content">
+<div class="plib-wrap">
+<div class="plib-meta">
+  <div class="plib-meta-course">BIT 5534 Applied Business Intelligence and Analytics</div>
+  <div class="plib-meta-week">Week 10 · Homework 9 · Part 2 of 2</div>
+  <div class="plib-meta-title">Predicting Guest Credits and Return Stays from Feedback Topics</div>
+  <div class="plib-meta-details"><span><strong>Platform:</strong> Hokie AI (conversation) + local Python (run)</span>&ensp;·&ensp;<span><strong>Submission:</strong> Thread exported as a .zip and uploaded to Canvas</span></div>
+</div>
+
+<div class="plib-objectives">
+  <div class="plib-objectives-label">Learning Objectives</div>
+  <p class="plib-objectives-intro">By the end of this part, students will be able to:</p>
+  <ol class="plib-objectives-list">
+    <li>Save NMF topic weights and a BERTopic topic column from text_explorer.py and use each as inputs to a regression in reg_explorer.py.</li>
+    <li>Compare the validation fit of the two inputs for a number target, and read the largest logworth term with its estimate.</li>
+    <li>Explain from a comment's own words why one input predicts its credit closer than the other.</li>
+    <li>Compare the two inputs for a category target, and explain from the topic tables why the result reverses.</li>
+    <li>Recommend which text input a hotel should use for which target, and say what each one cannot see.</li>
+  </ol>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 1 of 4</div><div class="plib-section-t">ORIENTATION</div></div>
+
+<div class="plib-context plib-context-student">
+  <div class="plib-context-label">&#128203; Note for Students</div>
+  <div class="plib-context-body">
+    <p>Part 2 of homework 9 runs in one Hokie AI thread and holds two cases. Do the cases in order and do not start a new conversation between them.</p>
+    <p>Make a folder for part 2 inside the HomeWork folder.</p>
+    <pre class="plib-context-pre">BIT5534/
+    HomeWork/
+        hw9_2/</pre>
+    <p>Put the data file, the embeddings file, text_explorer.py and reg_explorer.py in that one folder.</p>
+  </div>
+</div>
+
+<div class="plib-narration">
+  <p>Part 2 uses the topics from the week 10 lectures as inputs to the week 8 regression tool. In case one the target is a number, the dollars the hotel credited to a guest. In case two the target is a category, whether the guest booked again within a year.</p>
+  <p>The file is guest_feedback.csv from Wrenhollow Hotels, a hotel group made up for this homework with three properties called Downtown, Airport and Beachfront. Each row is one comment a guest typed after checkout. credit_dollars is what the hotel credited back to that guest, 0 for every praise comment. booked_again is Yes when the guest booked another stay within a year. The department column says which team the hotel sends the comment to, and Guest relations holds the praise. The Validation column marks 280 Training rows and 120 Validation rows, and every fit in this part is made on the Training rows and scored on the Validation rows.</p>
+</div>
+
+<div class="plib-narration">
+  <p>The embeddings are already made, in guest_feedback_embeddings.csv, with all-MiniLM-L6-v2, the model from the Thursday lecture. The NMF topic weights are the same on every machine. BERTopic depends on UMAP, so your BERTopic topics, their numbers and the figures that use them may differ from the reference run. Each step below that depends on BERTopic says so. When this page names a BERTopic topic by number, find yours by its words.</p>
+  <p>Part 2 is worth 100 points, split evenly. Case one is worth 50, 35 for the exchange in the M block and 15 for the reflection. Case two is worth 50, on the same split. You earn nothing for pasting a prompt, because pasting is not work.</p>
+  <p>Work alone. Your notes and both week 10 lectures are open to you. Do not ask Hokie AI to write your reflections. Take as long as you need.</p>
+</div>
+
+<div class="plib-material" id="plib-material-7">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The guest feedback file and its embeddings</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="guest_feedback.csv" download="guest_feedback.csv" target="_blank" rel="noopener noreferrer">Download guest_feedback.csv</a>
+    <a class="plib-material-btn" href="guest_feedback_embeddings.csv" download="guest_feedback_embeddings.csv" target="_blank" rel="noopener noreferrer">Download guest_feedback_embeddings.csv</a>
+  </div>
+  <div class="plib-material-note">guest_feedback.csv has 400 comments and 10 columns, in this order. comment_id, comment, department, property, stay_type, nights, loyalty_tier, credit_dollars, booked_again, Validation. guest_feedback_embeddings.csv has comment_id and E1 to E384. Save the two files into your hw9_2 folder with these exact names. If your browser adds (1) to a name, rename the file.</div>
+</div>
+
+<div class="plib-material" id="plib-material-8">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The two tools</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="text_explorer.py" download="text_explorer.py" target="_blank" rel="noopener noreferrer">Download text_explorer.py</a>
+    <a class="plib-material-btn" href="reg_explorer.py" download="reg_explorer.py" target="_blank" rel="noopener noreferrer">Download reg_explorer.py</a>
+  </div>
+  <div class="plib-material-copies">
+    <div class="plib-copyrow">
+      <div class="plib-copyrow-label">Windows, first line</div>
+      <code class="plib-copyrow-code" id="plib-material-8-copy-0" data-copy="py -m pip install pandas numpy umap-learn plotly statsmodels matplotlib">py -m pip install pandas numpy umap-learn plotly statsmodels matplotlib</code>
+      <button class="plib-copy-btn plib-copy-btn-row" onclick="copyPrompt('plib-material-8-copy-0', this)" aria-label="Copy Windows, first line to clipboard">
+        <span aria-hidden="true">&#128203;</span> Copy
+      </button>
+    </div>
+    <div class="plib-copyrow">
+      <div class="plib-copyrow-label">Windows, second line</div>
+      <code class="plib-copyrow-code" id="plib-material-8-copy-1" data-copy="py -m pip install -U scikit-learn">py -m pip install -U scikit-learn</code>
+      <button class="plib-copy-btn plib-copy-btn-row" onclick="copyPrompt('plib-material-8-copy-1', this)" aria-label="Copy Windows, second line to clipboard">
+        <span aria-hidden="true">&#128203;</span> Copy
+      </button>
+    </div>
+    <div class="plib-copyrow">
+      <div class="plib-copyrow-label">macOS, first line</div>
+      <code class="plib-copyrow-code" id="plib-material-8-copy-2" data-copy="python3 -m pip install pandas numpy umap-learn plotly statsmodels matplotlib">python3 -m pip install pandas numpy umap-learn plotly statsmodels matplotlib</code>
+      <button class="plib-copy-btn plib-copy-btn-row" onclick="copyPrompt('plib-material-8-copy-2', this)" aria-label="Copy macOS, first line to clipboard">
+        <span aria-hidden="true">&#128203;</span> Copy
+      </button>
+    </div>
+    <div class="plib-copyrow">
+      <div class="plib-copyrow-label">macOS, second line</div>
+      <code class="plib-copyrow-code" id="plib-material-8-copy-3" data-copy="python3 -m pip install -U scikit-learn">python3 -m pip install -U scikit-learn</code>
+      <button class="plib-copy-btn plib-copy-btn-row" onclick="copyPrompt('plib-material-8-copy-3', this)" aria-label="Copy macOS, second line to clipboard">
+        <span aria-hidden="true">&#128203;</span> Copy
+      </button>
+    </div>
+  </div>
+  <div class="plib-material-note">text_explorer.py is the Thursday copy, which reads an embeddings file and runs BERTopic. reg_explorer.py is the week 8 regression tool. If the browser opens the code as a page of text, right click the link and use Save link as.</div>
+</div>
+
+<div class="plib-narration">
+  <p>Hokie AI never sees your tools. You do not attach the data, and that is deliberate. Everything Hokie AI knows about the fits is what you write in your prompts, so every figure, every comment and every comparison in the thread has to come from you. A prompt that reports what you saw, says what you make of it and asks to be challenged gives Hokie AI something to test.</p>
+  <p>Paste the block below into a new Hokie AI thread and wait for the acknowledgment. Do not write anything else in that message. Everything after this goes in the same thread.</p>
+</div>
+
+<div class="plib-prompt-marker" role="region" aria-label="Session Opener">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-marker-id">TH9.2</span>
+    <span class="plib-prompt-type-label plib-marker-label">Session Opener</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-marker-instruction">Copy this block and paste it into Hokie AI to begin your session.</p>
+  <div class="plib-prompt-display plib-marker-display">You are an analysis partner for BIT 5534 Applied Business Intelligence and Analytics, a graduate course at Virginia Tech. The student holds graduate standing, has some statistics background, and is working through a homework case on their own with no instructor present. Speak to them as a capable adult. Be direct, say when something is uncertain or contested, and do not pad your answers. When a student pushes back on something you said, take the challenge seriously and do not concede immediately to be agreeable. When they ask about your reasoning, say what you assumed and what you cannot settle for them because it depends on something you were not told.
+
+In this homework the student reads two local tools that you cannot see, on a file they have not attached. The file holds 400 comments from guests of a fictional hotel group, with the dollars the hotel credited each guest and whether the guest booked again within a year. The student turns the comments into two kinds of input, ten NMF topic weights from tf-idf and one BERTopic topic column from sentence embeddings, and fits a regression on each, a multiple regression for the credit and a logistic regression for booking again, on Training rows scored on Validation rows. Everything you know about their results is what they write. Never invent an R squared, an RSquare (U), an estimate, a logworth, a prediction, a topic or any other figure from their tools. When you need one, ask for it. Your job is to test their reading of the fits and the comments, to say where a conclusion goes further than their figures support, and to argue the other side when they ask you to. The two inputs, the regression, the file and the settings are the design of the exercise. Do not propose other models, other inputs, sentiment tools, more data or different settings, and judge the student's conclusions by what their figures support.
+---
+**AI Interaction Protocol**
+
+In this session, you will receive blocks of content with the
+following structural pattern:
+
+```
+### &lt;BlockID&gt;
+----------
+&lt;content&gt;
+----------
+###
+```
+
+Some blocks include an interaction-mode directive on a separate
+line inside the dashed envelope:
+
+```
+### &lt;BlockID&gt;
+----------
+[ai_interaction=&lt;mode&gt;]
+&lt;content&gt;
+----------
+###
+```
+
+Three modes determine your response:
+
+  - **respond**: Engage substantively with the block content.
+    Treat it as a prompt, question, or task that wants your
+    analytical response. Default for S blocks (prompts) and X
+    blocks (free exploration).
+
+  - **acknowledge**: Confirm receipt with one brief sentence
+    naming the block ID. Do not analyze, comment on, or expand on
+    the content. The student is filing the block for the record,
+    not asking for engagement. Default for T blocks (this opener),
+    R blocks (reflections), M CLOSE blocks (closing markers), Q
+    blocks (structured selections), and O blocks (ordering
+    selections).
+
+  - **archive**: Respond with only the block ID and nothing else.
+    Used for batched archival pastes where even brief
+    acknowledgment would clutter the thread.
+
+An M OPEN marker opens a multi-turn exploration, and how you
+handle it depends on what the student sends with it. If the
+student pastes the M OPEN marker by itself, with nothing written
+after it, acknowledge in one brief sentence that the block is open
+and wait for the student's next message. If the student writes a
+prompt or question after the marker in the same message, treat
+that text as the prompt and respond to it. Always acknowledge an
+M CLOSE marker.
+
+If a block has no explicit `[ai_interaction=...]` directive, apply
+the block-type default per the list above.
+
+This protocol applies for the remainder of this session.
+---</div>
+  <div class="plib-prompt-text" id="text_prompt_10" data-copy="### TH9.2&#10;----------&#10;You are an analysis partner for BIT 5534 Applied Business Intelligence and Analytics, a graduate course at Virginia Tech. The student holds graduate standing, has some statistics background, and is working through a homework case on their own with no instructor present. Speak to them as a capable adult. Be direct, say when something is uncertain or contested, and do not pad your answers. When a student pushes back on something you said, take the challenge seriously and do not concede immediately to be agreeable. When they ask about your reasoning, say what you assumed and what you cannot settle for them because it depends on something you were not told.&#10;&#10;In this homework the student reads two local tools that you cannot see, on a file they have not attached. The file holds 400 comments from guests of a fictional hotel group, with the dollars the hotel credited each guest and whether the guest booked again within a year. The student turns the comments into two kinds of input, ten NMF topic weights from tf-idf and one BERTopic topic column from sentence embeddings, and fits a regression on each, a multiple regression for the credit and a logistic regression for booking again, on Training rows scored on Validation rows. Everything you know about their results is what they write. Never invent an R squared, an RSquare (U), an estimate, a logworth, a prediction, a topic or any other figure from their tools. When you need one, ask for it. Your job is to test their reading of the fits and the comments, to say where a conclusion goes further than their figures support, and to argue the other side when they ask you to. The two inputs, the regression, the file and the settings are the design of the exercise. Do not propose other models, other inputs, sentiment tools, more data or different settings, and judge the student's conclusions by what their figures support.&#10;---&#10;**AI Interaction Protocol**&#10;&#10;In this session, you will receive blocks of content with the&#10;following structural pattern:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Some blocks include an interaction-mode directive on a separate&#10;line inside the dashed envelope:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;[ai_interaction=&lt;mode&gt;]&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Three modes determine your response:&#10;&#10;  - **respond**: Engage substantively with the block content.&#10;    Treat it as a prompt, question, or task that wants your&#10;    analytical response. Default for S blocks (prompts) and X&#10;    blocks (free exploration).&#10;&#10;  - **acknowledge**: Confirm receipt with one brief sentence&#10;    naming the block ID. Do not analyze, comment on, or expand on&#10;    the content. The student is filing the block for the record,&#10;    not asking for engagement. Default for T blocks (this opener),&#10;    R blocks (reflections), M CLOSE blocks (closing markers), Q&#10;    blocks (structured selections), and O blocks (ordering&#10;    selections).&#10;&#10;  - **archive**: Respond with only the block ID and nothing else.&#10;    Used for batched archival pastes where even brief&#10;    acknowledgment would clutter the thread.&#10;&#10;An M OPEN marker opens a multi-turn exploration, and how you&#10;handle it depends on what the student sends with it. If the&#10;student pastes the M OPEN marker by itself, with nothing written&#10;after it, acknowledge in one brief sentence that the block is open&#10;and wait for the student's next message. If the student writes a&#10;prompt or question after the marker in the same message, treat&#10;that text as the prompt and respond to it. Always acknowledge an&#10;M CLOSE marker.&#10;&#10;If a block has no explicit `[ai_interaction=...]` directive, apply&#10;the block-type default per the list above.&#10;&#10;This protocol applies for the remainder of this session.&#10;---&#10;----------&#10;###"></div>
+  <button class="plib-copy-btn plib-copy-btn-marker" onclick="copyPrompt('text_prompt_10', this)"
+          aria-label="Copy session opener to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy session opener
+  </button>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 2 of 4</div><div class="plib-section-t">CASE ONE</div></div>
+
+<div class="plib-narration">
+  <p>Case one is worth 50 points, 35 for the exchange in the M block and 15 for the reflection.</p>
+  <p>First make the inputs. Open text_explorer.py and open guest_feedback.csv from its window. Set Text column to comment, Topics k to 10, LSA components to 5, Keep terms in at least this many documents to 2, and Minimum topic size to 10. It opens at 15, so change it. The Embeddings box names guest_feedback_embeddings.csv with Match rows by comment_id. If it says No embeddings file, press Choose file and pick guest_feedback_embeddings.csv. Press Run the analysis. The line under the page title reads 400 documents, 1041 terms, DTM 400 x 1041 with 7799 nonzero cells (1.87 percent full). Embeddings matched for every document, then a topic count that may differ from the reference run's 10.</p>
+  <p>Under Features for the week 8 tools, keep Topic weights and BERTopic topic ticked, clear LSA scores, Number of terms and BERTopic scores, and press Save file with them. Keep the name it offers, guest_feedback_features.csv, in your hw9_2 folder. The status line names 11 new columns, TOPIC_1 to TOPIC_10 and BT_topic.</p>
+</div>
+
+<div class="plib-narration">
+  <p>Now fit the first model. Open reg_explorer.py and open guest_feedback_features.csv. Set Target column to credit_dollars, which the tool fits as a number. In Input columns, nights and TOPIC_1 to TOPIC_10 are selected for you, so click nights to clear it. Validation column shows Use the column Validation. Press Fit the model.</p>
+  <p>Check three things on the Fit tab. The validation row reads 120 rows and R squared 0.630. The train row reads 280 rows and R squared 0.607. In the terms table, TOPIC_4 has the largest logworth, about 28.6, with an estimate of about 956. A newer or older scikit-learn can move the last decimal, nothing more.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-15">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Three checks before you read anything. Target credit_dollars, inputs TOPIC_1 to TOPIC_10 with nights cleared. Validation R squared 0.630 on 120 rows, train R squared 0.607 on 280 rows. TOPIC_4 has the largest logworth, about 28.6, with an estimate of about 956."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 172" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="172" rx="10" fill="#faf7f8"/><rect x="21" y="20" width="958" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><text x="46" y="58" font-size="18" font-weight="600" fill="#630031">Three checks before you read anything</text><text x="46" y="86" font-size="16" fill="#2b2b2b">Target credit_dollars, inputs TOPIC_1 to TOPIC_10 with nights cleared. Validation R squared 0.630 on 120 rows, train R</text><text x="46" y="108" font-size="16" fill="#2b2b2b">squared 0.607 on 280 rows. TOPIC_4 has the largest logworth, about 28.6, with an estimate of about 956.</text><text x="46" y="134" font-size="14" fill="#6b6b6b">The NMF weights are the same on every machine, so these checks hold to the last decimal or so.</text></svg></div>
+    <figcaption class="plib-tile-caption">The NMF weights are the same on every machine, so these checks hold to the last decimal or so.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>Save this model's predictions. Under Save for stacking, press Save predictions, type the name guest_feedback_topic_pred.csv, and save it in your hw9_2 folder. The file gets a column named REG pred credit_dollars.</p>
+  <p>Then fit the second model. In Input columns, click the ten TOPIC names to clear them, click BT_topic, and press Fit the model. The tool turns BT_topic into one column per topic after the first, so each estimate is in dollars against a comment in the first topic in the BERTopic table, BT0 or BT00. On the BERTopic tab of the text_explorer page, write down that first topic's top words. Then write down the validation and train R squared, and the term with the largest logworth with its estimate. On the reference run the validation R squared is 0.665 and the largest logworth belongs to the topic whose top words are bugs, red, bed and tiny, BT3 there, at about 37 with an estimate near 256 against BT0. On other runs the R squared lies between about 0.66 and 0.67, the bed bug topic may carry another number, and its logworth and estimate change with the first topic, so find it by its words and report your own figures. Save these predictions too, under the name guest_feedback_bt_pred.csv.</p>
+</div>
+
+<div class="plib-narration">
+  <p>Last, two comments from the Validation rows, GF20282 and GF20195. GF20282 never says bug or bed, and GF20195 never says charge or bill. Open guest_feedback_topic_pred.csv and guest_feedback_bt_pred.csv in Excel or any spreadsheet, find each comment by its comment_id, and write down credit_dollars and REG pred credit_dollars from each file. Then open guest_feedback_features.csv, find the same two rows, and write down the largest of the ten TOPIC weights in each row with its column name, and the BT_topic. Read the two comments in full on the text_explorer page. Use Find on the Map tab.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-18">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Three boxes joined by AND, what to record in case one. The TOPIC fit, validation and train R squared, and the largest logworth term with its estimate and its topic's top words. The BT_topic fit, the same figures, with the topic found by its words. Two comments, GF20282 and GF20195, the actual credit, the prediction from each saved file, the largest TOPIC weight and the BT_topic."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 219" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="219" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">What to record in case one</text><rect x="21" y="46" width="287" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The TOPIC fit</text><text x="37" y="122" font-size="14" fill="#6b6b6b">validation and train R squared, and the</text><text x="37" y="141" font-size="14" fill="#6b6b6b">largest logworth term with its estimate</text><text x="37" y="160" font-size="14" fill="#6b6b6b">and its topic’s top words</text><text x="332" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="356" y="46" width="287" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="380" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="380" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="401" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The BT_topic fit</text><text x="372" y="122" font-size="14" fill="#6b6b6b">the same figures, with the topic found</text><text x="372" y="141" font-size="14" fill="#6b6b6b">by its words</text><text x="668" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="692" y="46" width="287" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="716" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="716" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="737" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Two comments</text><text x="708" y="122" font-size="14" fill="#6b6b6b">GF20282 and GF20195, the actual</text><text x="708" y="141" font-size="14" fill="#6b6b6b">credit, the prediction from each saved</text><text x="708" y="160" font-size="14" fill="#6b6b6b">file, the largest TOPIC weight and the</text><text x="708" y="179" font-size="14" fill="#6b6b6b">BT_topic</text></svg></div>
+    <figcaption class="plib-tile-caption">Save each model's predictions under its own name, because the column name is the same in both files.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>Four moves, in order. The four moves are on the card below.</p>
+  <p>Move one predicts before you fit AND move two reads the TOPIC fit AND move three reads the BT_topic fit AND move four explains the two comments. All four moves.</p>
+  <p>Move one opens the block. Write in your prompt that you read tools Hokie AI cannot see, that you will report what they show, and that you want each reading tested. Before any figure, say which kinds of comment you expect to earn a large credit, and which input you expect to predict credit_dollars better on comments written in unusual words, ten NMF weights from tf-idf or one BERTopic topic from the embeddings, and why. Ask Hokie AI to argue against your expectation.</p>
+  <p>Move two reports the TOPIC fit, the validation and train R squared, and the term with the largest logworth with its estimate. Name that topic's top words from the Topics tab of the text_explorer page, and say what the estimate means for a comment whose weight on that topic is 0.1 higher.</p>
+  <p>Move three reports the BT_topic fit, the same figures, the topic with the largest logworth by its words, and the words of the first topic it is measured against. Say which input fits better on the Validation rows and by how much, and say what the BT_topic estimate means in dollars.</p>
+  <p>Move four quotes GF20282 and GF20195 and reports, for each, the actual credit, both predictions, the largest TOPIC weight with its column, and the BT_topic. Say which prediction is closer for each comment. For GF20282, explain from its words why its TOPIC weight is weak while BERTopic placed it with the bed bug complaints. For GF20195, the TOPIC weight and the BT_topic both point to billing, so explain why both predictions still sit below its actual credit. Defend the explanations against Hokie AI's strongest objection.</p>
+  <p>One move is not one message. Ten messages inside the block is the ceiling, and a ceiling is not a target.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-20">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four moves joined by AND. Predict, which comments earn large credits and which input should predict them, before any figure. The TOPIC fit, validation and train R squared, the largest logworth term, its words, its estimate, and what 0.1 more weight means. The BT_topic fit, the same figures, the topic by its words, its estimate in dollars against the first topic, and which input fits better. Two comments, GF20282 and GF20195, actual credit, both predictions, GF20282's weak weight, and why GF20195's predictions both sit low."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 257" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="257" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Four moves. Predict before you fit</text><rect x="21" y="46" width="204" height="189" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Predict</text><text x="37" y="122" font-size="14" fill="#6b6b6b">which comments earn</text><text x="37" y="141" font-size="14" fill="#6b6b6b">large credits and which</text><text x="37" y="160" font-size="14" fill="#6b6b6b">input should predict</text><text x="37" y="179" font-size="14" fill="#6b6b6b">them, before any figure</text><text x="248" y="146" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="189" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The TOPIC fit</text><text x="288" y="122" font-size="14" fill="#6b6b6b">validation and train R</text><text x="288" y="141" font-size="14" fill="#6b6b6b">squared, the largest</text><text x="288" y="160" font-size="14" fill="#6b6b6b">logworth term, its words,</text><text x="288" y="179" font-size="14" fill="#6b6b6b">its estimate, and what 0.1</text><text x="288" y="198" font-size="14" fill="#6b6b6b">more weight means</text><text x="500" y="146" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="189" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The BT_topic fit</text><text x="540" y="122" font-size="14" fill="#6b6b6b">the same figures, the</text><text x="540" y="141" font-size="14" fill="#6b6b6b">topic by its words, its</text><text x="540" y="160" font-size="14" fill="#6b6b6b">estimate in dollars against</text><text x="540" y="179" font-size="14" fill="#6b6b6b">the first topic, and which</text><text x="540" y="198" font-size="14" fill="#6b6b6b">input fits better</text><text x="752" y="146" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="189" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Two comments</text><text x="792" y="122" font-size="14" fill="#6b6b6b">GF20282 and GF20195,</text><text x="792" y="141" font-size="14" fill="#6b6b6b">actual credit, both</text><text x="792" y="160" font-size="14" fill="#6b6b6b">predictions, GF20282’s</text><text x="792" y="179" font-size="14" fill="#6b6b6b">weak weight, and why</text><text x="792" y="198" font-size="14" fill="#6b6b6b">GF20195’s predictions</text><text x="792" y="217" font-size="14" fill="#6b6b6b">both sit low</text></svg></div>
+    <figcaption class="plib-tile-caption">Four moves. A BERTopic estimate is dollars against a comment in the first topic.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-prompt-m" role="region" aria-label="Multi-turn Block MH9.2.1, Begin">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-m-id">MH9.2.1</span>
+    <span class="plib-prompt-type-label plib-m-label">Multi-turn · Consolidation</span>
+    <span class="plib-m-badge">Summative</span>
+    <span class="plib-ai-badge plib-ai-respond">AI: respond</span>
+  </div>
+  <div class="plib-m-instructions">
+    <div class="plib-m-instructions-label">&#128221; How this block works</div>
+    <ol class="plib-m-steps">
+      <li>Click <strong>Copy opening marker</strong> and paste it into Hokie AI to begin this block.</li>
+      <li>Interact with Hokie AI: ask questions, explore, respond. All of this exchange belongs to this block.</li>
+      <li>When finished, use the <strong>Copy closing marker</strong> button below to close the block in your thread.</li>
+    </ol>
+  </div>
+  <div class="plib-prompt-text" id="text_m_open_21" data-copy="### MH9.2.1 OPEN&#10;----------&#10;"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-open" onclick="copyPrompt('text_m_open_21', this)"
+          aria-label="Copy opening marker for block MH9.2.1">
+    <span aria-hidden="true">&#9654;</span> Copy opening marker
+  </button>
+</div>
+
+<div class="plib-prompt-m-close" role="region" aria-label="Multi-turn Block MH9.2.1, End">
+  <div class="plib-m-close-label">
+    <span class="plib-prompt-id plib-m-id">MH9.2.1</span>
+    <span class="plib-prompt-type-label plib-m-label">End of Multi-turn Block</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-m-close-instruction">When you have finished your exchange, copy this closing marker and paste it into Hokie AI to close the block.</p>
+  <div class="plib-prompt-text" id="text_m_close_22" data-copy="&#10;----------&#10;### MH9.2.1 CLOSE"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-close" onclick="copyPrompt('text_m_close_22', this)"
+          aria-label="Copy closing marker for block MH9.2.1">
+    <span aria-hidden="true">&#9646;&#9646;</span> Copy closing marker
+  </button>
+</div>
+
+<div class="plib-narration">
+  <p>Now write your reflection for case one, in your own words and without help from the AI.</p>
+  <p>Your reflection needs all four parts below. Give the validation R squared of the TOPIC fit and of the BT_topic fit, and say which is better AND name the term with the largest logworth in each fit by its topic's words, with its estimate AND give GF20282's actual credit and both predictions AND explain from GF20282's own words why its TOPIC_4 weight is weak and why BERTopic placed it with the bed bug complaints. Respond to all four parts.</p>
+  <p>Most of the difference between reflections is in the fourth part. GF20282's largest TOPIC weight and its BT_topic are both in your files, and you can trace the gap between them to the words GF20282 uses.</p>
+  <p>Write 100 to 200 words.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-25">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four boxes joined by AND. Two fits, the validation R squared of each, and which is better. The largest logworth, in each fit, by its topic's words, with its estimate. GF20282, its actual credit and both predictions. Why, from GF20282's own words, which input saw its problem clearly and which weakly."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 219" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="219" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">All four parts of the case one reflection</text><rect x="21" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Two fits</text><text x="37" y="122" font-size="14" fill="#6b6b6b">the validation R squared</text><text x="37" y="141" font-size="14" fill="#6b6b6b">of each, and which is</text><text x="37" y="160" font-size="14" fill="#6b6b6b">better</text><text x="248" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The largest</text><text x="318" y="103" font-size="17" font-weight="600" fill="#2b2b2b">logworth</text><text x="288" y="134" font-size="14" fill="#6b6b6b">in each fit, by its topic’s</text><text x="288" y="153" font-size="14" fill="#6b6b6b">words, with its estimate</text><text x="500" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">GF20282</text><text x="540" y="122" font-size="14" fill="#6b6b6b">its actual credit and both</text><text x="540" y="141" font-size="14" fill="#6b6b6b">predictions</text><text x="752" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Why</text><text x="792" y="122" font-size="14" fill="#6b6b6b">from GF20282’s own</text><text x="792" y="141" font-size="14" fill="#6b6b6b">words, which input saw</text><text x="792" y="160" font-size="14" fill="#6b6b6b">its problem clearly and</text><text x="792" y="179" font-size="14" fill="#6b6b6b">which weakly</text></svg></div>
+    <figcaption class="plib-tile-caption">All four parts of the case one reflection, inside 100 to 200 words.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution RH9.2.1">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">RH9.2.1</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Case one reflection</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 100 to 200 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_26" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for RH9.2.1"
+            data-maxwords="200" data-maxchars="2000"
+            oninput="updateCounter('prompt_26', 'textarea_26')"></textarea>
+  <div class="plib-counter" id="counter_prompt_26" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_26">0</span> / 200 words&nbsp;·&nbsp;
+    <span id="cc_prompt_26">0</span> / 2000 characters
+    <span class="plib-counter-min">minimum: 100 words</span>
+  </div>
+  <div class="plib-warn" id="warn_prompt_26" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_26"
+       data-prefix="### RH9.2.1&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_26"
+       data-maxwords="200"
+       data-maxchars="2000"
+       data-minwords="100"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_26', this)"
+          aria-label="Copy contribution RH9.2.1 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 3 of 4</div><div class="plib-section-t">CASE TWO</div></div>
+
+<div class="plib-narration">
+  <p>Case two is worth 50 points, 35 for the exchange in the M block and 15 for the reflection.</p>
+  <p>Case one predicted a number. Case two predicts a category, whether the guest booked again, from the same two inputs. In reg_explorer.py, keep guest_feedback_features.csv open and set Target column to booked_again, which the tool fits as a category by logistic regression. Set Positive class to Yes. It opens at No, the less frequent level, so change it.</p>
+  <p>In Input columns, nights, credit_dollars and TOPIC_1 to TOPIC_10 are selected for you. Click nights and credit_dollars to clear them, and press Fit the model.</p>
+</div>
+
+<div class="plib-narration">
+  <p>Check two things on the Fit tab. The validation row reads 120 rows, misclassification 0.358 and RSquare (U) 0.078. In the terms table, TOPIC_1 has the largest logworth, 2.45, with an estimate of about 17.3.</p>
+  <p>Then click the ten TOPIC names to clear them, click BT_topic, and fit again. Write down the validation misclassification and RSquare (U), and the term with the largest logworth with its estimate and its topic's words. On the reference run RSquare (U) is 0.036, misclassification 0.392, and the largest logworth, about 3.1, belongs to the bed bug topic with an estimate near minus 1.9, a lower chance of booking again than a comment in BT0. On other runs RSquare (U) lies between about 0.026 and 0.045, and the largest logworth may belong to the outlier row instead, with a positive estimate. Report your own figures.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-31">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Two checks before you read anything. Target booked_again, Positive class Yes, inputs TOPIC_1 to TOPIC_10 with nights and credit_dollars cleared. Validation misclassification 0.358 and RSquare (U) 0.078 on 120 rows. TOPIC_1 has the largest logworth, 2.45, with an estimate of about 17.3."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 194" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="194" rx="10" fill="#faf7f8"/><rect x="21" y="20" width="958" height="154" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><text x="46" y="58" font-size="18" font-weight="600" fill="#630031">Two checks before you read anything</text><text x="46" y="86" font-size="16" fill="#2b2b2b">Target booked_again, Positive class Yes, inputs TOPIC_1 to TOPIC_10 with nights and credit_dollars cleared. Validation</text><text x="46" y="108" font-size="16" fill="#2b2b2b">misclassification 0.358 and RSquare (U) 0.078 on 120 rows. TOPIC_1 has the largest logworth, 2.45, with an estimate of</text><text x="46" y="130" font-size="16" fill="#2b2b2b">about 17.3.</text><text x="46" y="156" font-size="14" fill="#6b6b6b">RSquare (U) is the share of the uncertainty about Yes and No that the model removes on the Validation rows.</text></svg></div>
+    <figcaption class="plib-tile-caption">RSquare (U) is the share of the uncertainty about Yes and No that the model removes on the Validation rows.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>The two fits reverse case one, and the topic tables on the text_explorer page show why. On the Topics tab, write down T1's top words and, in the table below with Column set to department, T1's row of counts. On the BERTopic tab, set Column to department and find where the 66 Guest relations comments went. Write down the topic or the outlier row that holds most of them, its top words, and its row of counts. If one topic holds mostly Guest relations comments, write down how many it holds and where the rest of the 66 went. To read the comments inside a topic, open the Map tab, set Color by to topic (NMF) or topic (BERTopic), double click that topic in the legend so it shows alone, and hover over its points. Guest relations is the praise, so these rows tell you where each method put the happiest guests.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-33">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Three boxes joined by AND, what to record in case two. The TOPIC fit, validation misclassification and RSquare (U), and TOPIC_1 with its estimate. The BT_topic fit, the same figures, and its largest logworth topic by its words. The happy guests, T1's top words and department row, and the BERTopic topic holding most Guest relations comments, with its words and row."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 219" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="219" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">What to record in case two</text><rect x="21" y="46" width="287" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The TOPIC fit</text><text x="37" y="122" font-size="14" fill="#6b6b6b">validation misclassification and</text><text x="37" y="141" font-size="14" fill="#6b6b6b">RSquare (U), and TOPIC_1 with its</text><text x="37" y="160" font-size="14" fill="#6b6b6b">estimate</text><text x="332" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="356" y="46" width="287" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="380" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="380" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="401" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The BT_topic fit</text><text x="372" y="122" font-size="14" fill="#6b6b6b">the same figures, and its largest</text><text x="372" y="141" font-size="14" fill="#6b6b6b">logworth topic by its words</text><text x="668" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="692" y="46" width="287" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="716" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="716" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="737" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The happy guests</text><text x="708" y="122" font-size="14" fill="#6b6b6b">T1’s top words and department row,</text><text x="708" y="141" font-size="14" fill="#6b6b6b">and the BERTopic topic holding most</text><text x="708" y="160" font-size="14" fill="#6b6b6b">Guest relations comments, with its</text><text x="708" y="179" font-size="14" fill="#6b6b6b">words and row</text></svg></div>
+    <figcaption class="plib-tile-caption">Column set to department on both tabs of the text_explorer page.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>Four moves, in order. The four moves are on the card below.</p>
+  <p>Move one predicts before you fit AND move two reads the TOPIC fit and T1 AND move three reads the BT_topic fit and where the praise went AND move four recommends an input for each target. All four moves.</p>
+  <p>Move one opens the block. Before any figure, say what in a comment you expect to make a guest book again, and which input you expect to predict booked_again better, and why. Ask Hokie AI to argue against your expectation.</p>
+  <p>Move two reports the TOPIC fit, misclassification and RSquare (U) on the Validation rows, and TOPIC_1 with its estimate and its sign. Report T1's top words and its department row, read its comments on the Map tab, and say what T1 is built from. On Tuesday you saw that not, no and never are stop words, and the comments in T1 say things like not a single bug in the bed.</p>
+  <p>Move three reports the BT_topic fit and its largest logworth topic by its words. Report where the Guest relations comments went in BERTopic, and what else sits in that topic or in the outlier row. Say which input fits booked_again better on the Validation rows and by how much, and why, from T1's department row and the BERTopic rows that hold the praise.</p>
+  <p>Move four recommends one text input for credit_dollars and one for booked_again, and says what each input cannot see that matters for the other target. Defend the recommendation against Hokie AI's strongest objection.</p>
+  <p>One move is not one message. Ten messages inside the block is the ceiling, and a ceiling is not a target.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-35">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four moves joined by AND. Predict, what makes a guest book again and which input should predict it, before any figure. The TOPIC fit, misclassification, RSquare (U), TOPIC_1's estimate, and what T1 is built from. The BT_topic fit, its largest logworth topic, and where the praise went in BERTopic. Recommend, one input for each target, and what each cannot see."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 219" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="219" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Four moves. The result reverses</text><rect x="21" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Predict</text><text x="37" y="122" font-size="14" fill="#6b6b6b">what makes a guest book</text><text x="37" y="141" font-size="14" fill="#6b6b6b">again and which input</text><text x="37" y="160" font-size="14" fill="#6b6b6b">should predict it, before</text><text x="37" y="179" font-size="14" fill="#6b6b6b">any figure</text><text x="248" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The TOPIC fit</text><text x="288" y="122" font-size="14" fill="#6b6b6b">misclassification, RSquare</text><text x="288" y="141" font-size="14" fill="#6b6b6b">(U), TOPIC_1’s estimate,</text><text x="288" y="160" font-size="14" fill="#6b6b6b">and what T1 is built from</text><text x="500" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The BT_topic fit</text><text x="540" y="122" font-size="14" fill="#6b6b6b">its largest logworth topic,</text><text x="540" y="141" font-size="14" fill="#6b6b6b">and where the praise</text><text x="540" y="160" font-size="14" fill="#6b6b6b">went in BERTopic</text><text x="752" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Recommend</text><text x="792" y="122" font-size="14" fill="#6b6b6b">one input for each target,</text><text x="792" y="141" font-size="14" fill="#6b6b6b">and what each cannot see</text></svg></div>
+    <figcaption class="plib-tile-caption">Four moves. The result reverses case one, and the department rows hold the reason.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-prompt-m" role="region" aria-label="Multi-turn Block MH9.2.2, Begin">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-m-id">MH9.2.2</span>
+    <span class="plib-prompt-type-label plib-m-label">Multi-turn · Consolidation</span>
+    <span class="plib-m-badge">Summative</span>
+    <span class="plib-ai-badge plib-ai-respond">AI: respond</span>
+  </div>
+  <div class="plib-m-instructions">
+    <div class="plib-m-instructions-label">&#128221; How this block works</div>
+    <ol class="plib-m-steps">
+      <li>Click <strong>Copy opening marker</strong> and paste it into Hokie AI to begin this block.</li>
+      <li>Interact with Hokie AI: ask questions, explore, respond. All of this exchange belongs to this block.</li>
+      <li>When finished, use the <strong>Copy closing marker</strong> button below to close the block in your thread.</li>
+    </ol>
+  </div>
+  <div class="plib-prompt-text" id="text_m_open_36" data-copy="### MH9.2.2 OPEN&#10;----------&#10;"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-open" onclick="copyPrompt('text_m_open_36', this)"
+          aria-label="Copy opening marker for block MH9.2.2">
+    <span aria-hidden="true">&#9654;</span> Copy opening marker
+  </button>
+</div>
+
+<div class="plib-prompt-m-close" role="region" aria-label="Multi-turn Block MH9.2.2, End">
+  <div class="plib-m-close-label">
+    <span class="plib-prompt-id plib-m-id">MH9.2.2</span>
+    <span class="plib-prompt-type-label plib-m-label">End of Multi-turn Block</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-m-close-instruction">When you have finished your exchange, copy this closing marker and paste it into Hokie AI to close the block.</p>
+  <div class="plib-prompt-text" id="text_m_close_37" data-copy="&#10;----------&#10;### MH9.2.2 CLOSE"></div>
+  <button class="plib-copy-btn plib-copy-btn-m-close" onclick="copyPrompt('text_m_close_37', this)"
+          aria-label="Copy closing marker for block MH9.2.2">
+    <span aria-hidden="true">&#9646;&#9646;</span> Copy closing marker
+  </button>
+</div>
+
+<div class="plib-narration">
+  <p>Now write your reflection for case two, in your own words and without help from the AI.</p>
+  <p>Your reflection needs all four parts below. Give the validation RSquare (U) of the TOPIC fit and of the BT_topic fit, and say which is better AND give TOPIC_1's estimate with its sign, T1's top words and its department row, and say what T1 is built from AND say where BERTopic put most of the Guest relations comments and what else sits there AND say which input you would use for credit_dollars and which for booked_again, and what each input cannot see. Respond to all four parts.</p>
+  <p>Most of the difference between reflections is in the fourth part. Case one and case two reverse each other, and the department rows of T1 and of the BERTopic rows that hold the praise show why.</p>
+  <p>Write 100 to 200 words.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-40">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four boxes joined by AND. Two fits, the validation RSquare (U) of each, and which is better. T1, TOPIC_1's estimate and sign, T1's words and department row, and what it is built from. The praise in BERTopic, where most Guest relations comments went, and what else is there. Your inputs, one for credit and one for booking again, and what each cannot see."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 219" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="219" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">All four parts of the case two reflection</text><rect x="21" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Two fits</text><text x="37" y="122" font-size="14" fill="#6b6b6b">the validation RSquare</text><text x="37" y="141" font-size="14" fill="#6b6b6b">(U) of each, and which is</text><text x="37" y="160" font-size="14" fill="#6b6b6b">better</text><text x="248" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">T1</text><text x="288" y="122" font-size="14" fill="#6b6b6b">TOPIC_1’s estimate and</text><text x="288" y="141" font-size="14" fill="#6b6b6b">sign, T1’s words and</text><text x="288" y="160" font-size="14" fill="#6b6b6b">department row, and</text><text x="288" y="179" font-size="14" fill="#6b6b6b">what it is built from</text><text x="500" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The praise in</text><text x="569" y="103" font-size="17" font-weight="600" fill="#2b2b2b">BERTopic</text><text x="540" y="134" font-size="14" fill="#6b6b6b">where most Guest</text><text x="540" y="153" font-size="14" fill="#6b6b6b">relations comments went,</text><text x="540" y="172" font-size="14" fill="#6b6b6b">and what else is there</text><text x="752" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Your inputs</text><text x="792" y="122" font-size="14" fill="#6b6b6b">one for credit and one for</text><text x="792" y="141" font-size="14" fill="#6b6b6b">booking again, and what</text><text x="792" y="160" font-size="14" fill="#6b6b6b">each cannot see</text></svg></div>
+    <figcaption class="plib-tile-caption">All four parts of the case two reflection, inside 100 to 200 words.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution RH9.2.2">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">RH9.2.2</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Case two reflection</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 100 to 200 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_41" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for RH9.2.2"
+            data-maxwords="200" data-maxchars="2000"
+            oninput="updateCounter('prompt_41', 'textarea_41')"></textarea>
+  <div class="plib-counter" id="counter_prompt_41" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_41">0</span> / 200 words&nbsp;·&nbsp;
+    <span id="cc_prompt_41">0</span> / 2000 characters
+    <span class="plib-counter-min">minimum: 100 words</span>
+  </div>
+  <div class="plib-warn" id="warn_prompt_41" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_41"
+       data-prefix="### RH9.2.2&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_41"
+       data-maxwords="200"
+       data-maxchars="2000"
+       data-minwords="100"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_41', this)"
+          aria-label="Copy contribution RH9.2.2 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 4 of 4</div><div class="plib-section-t">SUBMISSION</div></div>
+
+<div class="plib-narration">
+  <p>You are done with part 2. Both cases are in one thread, and that thread is what you submit.</p>
+  <p>Export the whole conversation from Hokie AI as a .zip and upload the .zip to the Canvas assignment for part 2.</p>
+  <p>Leave the turns where something went wrong. How you recovered is part of what is being read, and a tidied thread reads as a thinner one.</p>
+</div>
+
+<div class="plib-material" id="plib-material-45">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">Homework 9 part 2 on Canvas</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="https://canvas.vt.edu/courses/233475/assignments/2883145" target="_blank" rel="noopener noreferrer">Open the part 2 assignment</a>
+  </div>
+  <div class="plib-material-note">Upload the exported .zip of this thread here. Part 1 has its own assignment, so check the title on the page before you upload.</div>
+</div>
+
+<div class="plib-submit">
+  <div class="plib-submit-title">Turn it in</div>
+  <p class="plib-submit-p">Export this thread as a .zip file, then upload it to the Canvas assignment for this part. Leave the file as it came out. Your work is not submitted until Canvas shows your file.</p>
+</div>
+
+</div>
+</main>
+<script>
+function countWords(text) {
+  return text.trim() === '' ? 0 : text.trim().split(/[ \t\n\r]+/).length;
+}
+function announce(msg) {
+  var el = document.getElementById('plib-live');
+  if (!el) { el = document.createElement('div'); el.id = 'plib-live';
+    el.setAttribute('aria-live','polite'); el.setAttribute('aria-atomic','true');
+    el.style.cssText='position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;';
+    document.body.appendChild(el); }
+  el.textContent = ''; setTimeout(function(){ el.textContent = msg; }, 50);
+}
+function autoResize(ta) {
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(ta.scrollHeight + 2, 600) + 'px';
+}
+function updateCounter(bid, tid) {
+  var ta = document.getElementById(tid);
+  var textEl = document.getElementById('text_' + bid);
+  var wcEl = document.getElementById('wc_' + bid);
+  var ccEl = document.getElementById('cc_' + bid);
+  var ctrEl = document.getElementById('counter_' + bid);
+  if (!ta) return;
+  autoResize(ta);
+  var maxwords = textEl ? parseInt(textEl.getAttribute('data-maxwords') || '0') : 0;
+  var maxchars = textEl ? parseInt(textEl.getAttribute('data-maxchars') || '0') : 0;
+  var minwords = textEl ? parseInt(textEl.getAttribute('data-minwords') || '0') : 0;
+  var text = ta.value;
+  var words = countWords(text);
+  var chars = text.length;
+  if (maxchars && chars > maxchars) {
+    ta.value = text.substring(0, maxchars);
+    text = ta.value; words = countWords(text); chars = text.length;
+  }
+  if (wcEl) wcEl.textContent = words;
+  if (ccEl) ccEl.textContent = chars;
+  if (ctrEl && maxwords) {
+    var pct = words / maxwords;
+    var cls = pct >= 1.0 ? 'bad' : (pct >= 0.8 || (minwords && words < minwords)) ? 'warn' : 'ok';
+    if (pct >= 1.0) { ctrEl.className = 'plib-counter at-limit'; }
+    else { ctrEl.className = 'plib-counter'; }
+    if (wcEl) wcEl.className = 'plib-count-' + cls;
+    if (ccEl) ccEl.className = 'plib-count-' + cls;
+  }
+}
+function copyPrompt(id, btn) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var text = (el.getAttribute('data-copy') || el.textContent || '').replace(/&#10;/g, '\n');
+  var label = (btn.getAttribute('aria-label') || 'item').replace('Copy ','').replace(' to clipboard','');
+  doCopy(text, btn, label + ' copied.', '&#10003; Copied', 2000);
+}
+function copyWithInput(bid, btn) {
+  var el = document.getElementById('text_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!el) return;
+  var tid = el.getAttribute('data-tid');
+  var inputEl = document.getElementById(tid);
+  var prefix = (el.getAttribute('data-prefix') || '').replace(/&#10;/g, '\n');
+  var suffix = (el.getAttribute('data-suffix') || '').replace(/&#10;/g, '\n');
+  var userText = inputEl ? inputEl.value.trim() : '';
+  if (userText.replace(/[\t\n\r ]/g, '').length < 2) {
+    if (warnEl) warnEl.textContent = 'Please write your response before copying.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  var maxwords = parseInt(el.getAttribute('data-maxwords') || '0');
+  var maxchars = parseInt(el.getAttribute('data-maxchars') || '0');
+  var minwords = parseInt(el.getAttribute('data-minwords') || '0');
+  if (minwords && countWords(userText) < minwords) {
+    if (warnEl) warnEl.textContent = 'Response is below the minimum of ' + minwords + ' words.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  if (maxwords && countWords(userText) > maxwords) {
+    if (warnEl) warnEl.textContent = 'Response exceeds the ' + maxwords + ' word limit.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  if (warnEl) warnEl.textContent = '';
+  doCopy(prefix + userText + suffix, btn, 'Copied. Paste into Hokie AI.', '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+function doCopy(text, btn, announcement, label, duration) {
+  function ok() {
+    var orig = btn.innerHTML; btn.innerHTML = label; btn.classList.add('copied');
+    announce(announcement);
+    setTimeout(function() { btn.innerHTML = orig; btn.classList.remove('copied'); }, duration);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(ok).catch(function() { fallback(text, ok); });
+  } else { fallback(text, ok); }
+}
+function fallback(text, cb) {
+  var ta = document.createElement('textarea'); ta.value = text;
+  ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); cb(); } catch(e) {}
+  document.body.removeChild(ta);
+}
+function copyStructured(bid, blockId, btn) {
+  var container = document.getElementById('qitems_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!container) return;
+  var outerDiv = container.closest('.plib-prompt-q');
+  var aiDirective = outerDiv ? (outerDiv.getAttribute('data-ai-directive') || '') : '';
+  var items = container.querySelectorAll('.plib-q-item');
+  var lines = [];
+  var emptyItems = [];
+
+  items.forEach(function(itemEl) {
+    var n = itemEl.getAttribute('data-item-n');
+    var render = itemEl.getAttribute('data-render');
+    var selections = [];
+
+    if (render === 'dropdown') {
+      var sel = itemEl.querySelector('select');
+      if (sel && sel.value) selections.push(sel.value);
+    } else if (render === 'likert') {
+      var checkedRadio = itemEl.querySelector('input[type="radio"]:checked');
+      if (checkedRadio) selections.push(checkedRadio.value);
+    } else if (render === 'checkbox') {
+      var checks = itemEl.querySelectorAll('input[type="checkbox"]:checked');
+      checks.forEach(function(c) { selections.push(c.value); });
+    }
+
+    if (selections.length === 0) {
+      emptyItems.push(n);
+    } else {
+      lines.push('ITEM ' + n + ': ' + selections.join(', '));
+    }
+  });
+
+  if (emptyItems.length > 0) {
+    if (warnEl) {
+      warnEl.textContent = 'Please make a selection for ITEM '
+        + emptyItems.join(', ITEM ') + ' before copying.';
+    }
+    return;
+  }
+
+  if (warnEl) warnEl.textContent = '';
+
+  var directiveLine = aiDirective ? aiDirective + '\n' : '';
+  var envelope = '### ' + blockId + '\n----------\n' + directiveLine + 'RESPONSE:\n'
+    + lines.join('\n') + '\n----------\n###';
+  doCopy(envelope, btn,
+    'Structured response copied. Paste into Hokie AI.',
+    '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+function enforceCheckboxCap(itemEl) {
+  var max = parseInt(itemEl.getAttribute('data-max-select') || '0', 10);
+  if (!max || max < 2) return;
+  var checks = itemEl.querySelectorAll('input[type="checkbox"]');
+  var checked = itemEl.querySelectorAll('input[type="checkbox"]:checked');
+  var atCap = checked.length >= max;
+  checks.forEach(function(c) {
+    if (!c.checked) c.disabled = atCap;
+  });
+}
+function moveItem(btn, direction) {
+  var li = btn.closest('.plib-o-item');
+  if (!li) return;
+  var list = li.parentElement;
+  if (!list) return;
+  if (direction === 'up') {
+    var prev = li.previousElementSibling;
+    if (prev) list.insertBefore(li, prev);
+  } else if (direction === 'down') {
+    var next = li.nextElementSibling;
+    if (next) list.insertBefore(next, li);
+  }
+  updateArrowStates(list);
+}
+function updateArrowStates(list) {
+  var items = list.querySelectorAll('.plib-o-item');
+  items.forEach(function(li, idx) {
+    var rankEl = li.querySelector('.plib-o-rank');
+    if (rankEl) rankEl.textContent = (idx + 1) + '.';
+    var upBtn = li.querySelector('.plib-o-arrow-up');
+    var downBtn = li.querySelector('.plib-o-arrow-down');
+    if (upBtn) upBtn.disabled = (idx === 0);
+    if (downBtn) downBtn.disabled = (idx === items.length - 1);
+    var itemText = li.getAttribute('data-item-text') || '';
+    if (upBtn) upBtn.setAttribute('aria-label', 'Move ' + itemText + ' up');
+    if (downBtn) downBtn.setAttribute('aria-label', 'Move ' + itemText + ' down');
+  });
+}
+function copyOrdered(bid, blockId, btn) {
+  var list = document.getElementById('oitems_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!list) return;
+  var outerDiv = list.closest('.plib-prompt-o');
+  var aiDirective = outerDiv ? (outerDiv.getAttribute('data-ai-directive') || '') : '';
+  var question = list.getAttribute('data-question') || '';
+  var items = list.querySelectorAll('.plib-o-item');
+  var lines = [];
+  items.forEach(function(li, idx) {
+    var itemText = li.getAttribute('data-item-text') || '';
+    lines.push((idx + 1) + '. ' + itemText);
+  });
+  if (warnEl) warnEl.textContent = '';
+  var directiveLine = aiDirective ? aiDirective + '\n' : '';
+  var envelope = '### ' + blockId + '\n----------\n' + directiveLine + 'RESPONSE:\nQuestion: '
+    + question + '\n' + lines.join('\n') + '\n----------\n###';
+  doCopy(envelope, btn,
+    'Ordered response copied. Paste into Hokie AI.',
+    '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var checkboxItems = document.querySelectorAll('.plib-q-item[data-render="checkbox"]');
+  checkboxItems.forEach(function(itemEl) {
+    var checks = itemEl.querySelectorAll('input[type="checkbox"]');
+    checks.forEach(function(c) {
+      c.addEventListener('change', function() { enforceCheckboxCap(itemEl); });
+    });
+  });
+  var oLists = document.querySelectorAll('.plib-o-list');
+  oLists.forEach(function(list) {
+    updateArrowStates(list);
+  });
+});
+</script>
+</body>
+</html>
