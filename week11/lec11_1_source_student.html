@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Building an Analytics Agent with Instructions and Knowledge</title>
+<style>
+:root {
+  --c-text:#1a1a1a; --c-muted:#4a4a4a;
+  --c-meta-bg:#f4f6f9; --c-meta-border:#d0d7e2;
+  --c-obj-bg:#eef4fb; --c-obj-accent:#1a5da0;
+  --c-ctx-bg:#fffbf0; --c-ctx-border:#e8d8a0; --c-ctx-label:#5c4400;
+  --c-ctx-s-bg:#f0f7ff; --c-ctx-s-border:#a0c8f0; --c-ctx-s-label:#1a4a80;
+  --c-nar-bg:#f9f9f9; --c-nar-border:#bbb;
+  --c-dis-bg:#f0f4ff; --c-dis-border:#8090cc; --c-dis-label:#1e2e80;
+  --c-sys-bg:#f3f0ff; --c-sys-border:#9080d0; --c-sys-label:#3a2090;
+  --c-scr-bg:#fff8e8; --c-scr-border:#d0a030; --c-scr-label:#6b4a00;
+  --c-s-bg:#f0faf4; --c-s-border:#70c090; --c-s-id:#14552f;
+  --c-r-bg:#fff8f0; --c-r-border:#d0a040; --c-r-id:#6b3e00;
+  --c-mk-bg:#f0f0ff; --c-mk-border:#8080c8; --c-mk-id:#2a2a80;
+  --c-m-bg:#f0f8ff; --c-m-border:#70a8d0; --c-m-id:#0a4a70;
+  --c-mc-bg:#f8f8ff; --c-mc-border:#a0a0d0;
+  --c-btn:#14552f; --c-btn-r:#6b3e00; --c-btn-mk:#2a2a80;
+  --c-btn-mo:#0a4a70; --c-btn-mc:#3a3a6a;
+  --c-q-bg:#f0fafd; --c-q-border:#70b8d0; --c-q-id:#0a5070;
+  --c-btn-q:#0a5070;
+  --c-o-bg:#fef6f0; --c-o-border:#e89870; --c-o-id:#a04510;
+  --c-btn-o:#a04510;
+  --radius:8px; --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --page:1100px;
+}
+/* Two layers. The wrapper takes the width Canvas gives it, up to --page, so it
+   never overflows a narrow frame and never needs a per-machine number. Everything
+   inside fills the block it sits in. */
+.plib-wrap{font-family:var(--font);color:var(--c-text);max-width:min(var(--page),100% - 2rem);margin:0 auto;padding:1rem 0}
+/* Every block spans the page so their left and right edges line up down the
+   column, and the text inside fills the block.
+
+   There is no reading column. D-032 put prose in a 720px column inside a 1100px
+   wrapper, and on 2026-09-02 the instructor read the rendered result and rejected
+   it: every text block stopped two thirds of the way across its own card and
+   stranded the rest, and a bordered box that stops short of the card it sits in
+   reads as broken rather than as typography. The wrapper's own
+   min(1100px, 100% - 2rem) is now the only bound, so a line never exceeds about
+   1055px. The cost is real and is worth stating. A long paragraph at 1055px reads
+   worse than the same paragraph at 800, and what pays for it is the writing
+   standard's rule on paragraph length, which now carries the load the column used
+   to carry. Recorded as D-043, amending D-032. */
+.plib-wrap > *{max-width:100%}
+.plib-submit{margin:2rem 0 1rem;padding:1.4rem 1.6rem;border-radius:var(--radius);background:var(--c-obj-bg);border:2px solid var(--c-obj-accent)}
+.plib-submit-title{font-size:13px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--c-obj-accent)}
+.plib-submit-p{margin:.5rem 0 1rem;font-size:15px;line-height:1.65}
+.plib-submit-btn{display:inline-block;background:var(--c-obj-accent);color:#fff;text-decoration:none;font-size:16px;font-weight:600;padding:.7rem 1.4rem;border-radius:var(--radius)}
+.plib-submit-btn:hover{filter:brightness(1.12)}
+.plib-submit-btn:focus{outline:3px solid var(--c-obj-accent);outline-offset:3px}
+.plib-submit-note{margin-top:.55rem;font-size:13px;color:var(--c-muted)}
+.plib-material{margin:1.6rem 0;padding:1.2rem 1.4rem;border-radius:var(--radius);background:var(--c-s-bg);border:1px solid var(--c-s-border)}
+.plib-material-tag{font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--c-s-id)}
+.plib-material-title{margin-top:.3rem;font-size:17px;font-weight:600;color:var(--c-text)}
+.plib-material-box{margin:.9rem 0 1.1rem;padding:.9rem 1rem;max-height:22rem;overflow:auto;background:#fff;border:1px solid var(--c-s-border);border-radius:6px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;color:var(--c-text)}
+.plib-material-box:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+.plib-material-btns{display:flex;flex-wrap:wrap;gap:.6rem}
+.plib-material-copies{margin:.9rem 0 0;display:flex;flex-wrap:wrap;gap:.8rem}
+.plib-copyrow{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;padding:.55rem .7rem;background:#fff;border:1px solid var(--c-s-border);border-radius:6px}
+.plib-copyrow-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-s-id)}
+.plib-copyrow-code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;color:var(--c-text)}
+.plib-copy-btn-row{padding:.3rem .6rem;font-size:12px}
+.plib-material-btn{display:inline-block;background:var(--c-s-id);color:#fff;text-decoration:none;font-size:15px;font-weight:600;padding:.6rem 1.2rem;border-radius:var(--radius)}
+.plib-material-btn:hover{filter:brightness(1.25)}
+.plib-material-btn:focus{outline:3px solid var(--c-s-id);outline-offset:3px}
+.plib-material-note{margin-top:.55rem;font-size:13px;color:var(--c-muted)}
+.plib-section{margin:2.25rem 0 1.1rem;padding-top:.9rem;border-top:3px solid var(--c-obj-accent)}
+.plib-section-n{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--c-muted)}
+.plib-section-t{font-size:23px;font-weight:700;letter-spacing:.04em;color:var(--c-obj-accent);margin-top:2px}
+.plib-wrap > .plib-section:first-child{margin-top:.5rem}
+.plib-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;margin-bottom:1.25rem}
+.plib-tile{background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);padding:.9rem;display:flex;flex-direction:column}
+.plib-tile img{width:100%;height:auto;border-radius:4px;background:#faf7f8}
+.plib-tile figure,.plib-tile{margin:0}
+/* A drawing narrower than its grid cell is centred in it. render_tiles caps the
+   wrapper at the SVG's own viewBox width so a 400px card is not blown up to the
+   full row, and without this the drawing sat against the left edge with the slack
+   stranded on the right, which is the same fault D-043 removed from the prose. */
+.plib-tile-svg{width:100%;margin-left:auto;margin-right:auto}
+.plib-tile-svg svg{width:100%;height:auto;display:block}
+.plib-tile-caption{font-size:13px;line-height:1.55;color:var(--c-text);margin-top:auto;padding-top:.6rem}
+.plib-meta{background:var(--c-meta-bg);border:1px solid var(--c-meta-border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1.5rem}
+.plib-meta-course{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--c-muted);margin-bottom:4px}
+.plib-meta-title{font-size:20px;font-weight:600;margin:4px 0 8px}
+.plib-meta-week{font-size:13px;color:var(--c-muted);margin-bottom:2px}
+.plib-meta-details{font-size:12px;color:var(--c-muted);margin-top:8px}
+.plib-objectives{background:var(--c-obj-bg);border-left:4px solid var(--c-obj-accent);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.5rem}
+.plib-objectives-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-obj-accent);font-weight:700;margin-bottom:8px}
+.plib-objectives-intro{margin:0 0 8px;font-size:14px;line-height:1.6;font-style:italic;color:var(--c-muted)}
+.plib-objectives-list{margin:0;padding-left:1.25rem}
+.plib-objectives-list li{margin-bottom:6px;font-size:14px;line-height:1.6}
+.plib-context{background:var(--c-ctx-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-context-student{background:var(--c-ctx-s-bg);border-color:var(--c-ctx-s-border)}
+.plib-context-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-ctx-label);font-weight:700;margin-bottom:8px}
+.plib-context-student .plib-context-label{color:var(--c-ctx-s-label)}
+.plib-context-body p{margin:4px 0;font-size:13px;line-height:1.6;color:var(--c-muted)}
+.plib-formula{margin:1rem 0;padding:1rem 1.25rem;background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);text-align:center}
+.plib-formula-body{overflow-x:auto;color:var(--c-text);padding:2px 0}
+.plib-formula-svg{max-width:100%;height:auto}
+.plib-formula-caption{margin-top:.85rem;font-size:13px;line-height:1.6;color:var(--c-muted);text-align:left}
+.plib-formula-missing{font-size:13px;color:var(--c-muted);text-align:left}
+.plib-formula-note{font-size:12px;margin-top:6px}
+.plib-formula-source{margin-top:.85rem;text-align:left}
+.plib-formula-source summary{font-size:12px;color:var(--c-muted);cursor:pointer}
+.plib-formula-latex{margin:6px 0 0;padding:8px 10px;background:var(--c-ctx-bg);border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.5;white-space:pre-wrap;color:var(--c-muted)}
+.plib-context-pre{margin:8px 0;padding:10px 12px;background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.55;color:var(--c-text);white-space:pre;overflow-x:auto}
+.plib-context-bullet{font-size:13px;color:var(--c-muted);padding-left:1rem;position:relative;margin-bottom:3px}
+.plib-context-bullet::before{content:"\2022";position:absolute;left:0}
+.plib-script{background:var(--c-scr-bg);border:1px solid var(--c-scr-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-script-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-scr-label);font-weight:700;margin-bottom:10px}
+.plib-script-list{margin:0;padding-left:1.25rem}
+.plib-script-list li{font-size:14px;line-height:1.6;margin-bottom:8px}
+.plib-script-time{font-weight:700;color:var(--c-scr-label);font-family:monospace;background:rgba(208,160,48,.15);padding:1px 6px;border-radius:3px}
+.plib-narration{background:var(--c-nar-bg);border-left:3px solid var(--c-nar-border);padding:.9rem 1.25rem;margin-bottom:1rem;border-radius:0 var(--radius) var(--radius) 0}
+.plib-narration p{margin:0 0 8px;font-size:14px;line-height:1.7}
+.plib-narration p:last-child{margin-bottom:0}
+.plib-narration-list{margin:4px 0;padding-left:1.25rem}
+.plib-narration-list li{font-size:14px;line-height:1.6;margin-bottom:4px}
+.plib-discussion{background:var(--c-dis-bg);border:1px solid var(--c-dis-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-slide{margin:0 0 1.25rem;text-align:center}
+.plib-slide-img{max-width:100%;height:auto;border:1px solid var(--c-dis-border);border-radius:var(--radius);box-shadow:0 1px 4px rgba(0,0,0,.08);background:#faf7f8;min-height:60px}
+.plib-slide-caption{font-size:13px;color:var(--c-muted);margin-top:.4rem}
+.plib-slide-script{margin-top:.6rem;text-align:left;font-size:13px;color:var(--c-muted)}
+.plib-slide-script summary{cursor:pointer;font-weight:600}
+.plib-slide-script-body{white-space:pre-wrap;background:rgba(0,0,0,.04);border-radius:var(--radius);padding:.6rem .8rem;margin-top:.4rem}
+.plib-discussion-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-dis-label);font-weight:700;margin-bottom:8px}
+.plib-discussion-intro{margin:0 0 8px;font-size:14px;line-height:1.6;font-style:italic;color:var(--c-dis-label)}
+.plib-discussion-list{margin:0;padding-left:1.25rem}
+.plib-discussion-list li{font-size:14px;line-height:1.6;margin-bottom:6px;color:var(--c-dis-label)}
+.plib-scenarios{margin-bottom:1rem}
+.plib-scenarios-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:#630031;font-weight:700;margin-bottom:8px}
+.plib-scenario-card{background:var(--c-ctx-s-bg);border:1px solid var(--c-ctx-s-border);border-left:4px solid #630031;border-radius:var(--radius);padding:.7rem 1rem;margin-bottom:.6rem}
+.plib-scenario-title{font-weight:700;font-size:14px;color:#630031;margin-bottom:4px}
+.plib-scenario-body{margin:0 0 4px;font-size:14px;line-height:1.6}
+.plib-scenario-line{font-size:13px;line-height:1.55;margin:2px 0 0;padding-left:1rem;position:relative}
+.plib-scenario-line::before{content:"›";position:absolute;left:.2rem;color:#CF4420;font-weight:700}
+.plib-system{background:var(--c-sys-bg);border:1px solid var(--c-sys-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-system-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-sys-label);font-weight:700;margin-bottom:8px}
+.plib-system-note{font-weight:400;text-transform:none;letter-spacing:0;font-style:italic}
+.plib-prompt-s-ref{opacity:.92;border-style:dashed}
+.plib-ref-note{font-size:12px;color:var(--c-muted);font-style:italic;margin-top:6px}
+.plib-prompt-text{display:none}
+.plib-prompt-display{font-size:14px;line-height:1.7;white-space:pre-wrap;background:rgba(255,255,255,.6);border-radius:4px;padding:.6rem .8rem;margin-bottom:10px}
+.plib-prompt-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.plib-prompt-id{font-size:12px;font-weight:700;font-family:monospace;padding:2px 7px;border-radius:4px}
+.plib-prompt-type-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-muted);font-weight:600}
+.plib-prompt-s{background:var(--c-s-bg);border:1px solid var(--c-s-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-prompt-s .plib-prompt-id{color:var(--c-s-id);background:rgba(20,85,47,.1)}
+.plib-prompt-r{background:var(--c-r-bg);border:1px solid var(--c-r-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-r-id{color:var(--c-r-id)!important;background:rgba(107,62,0,.1)!important}
+.plib-reflect-label{color:var(--c-r-id)!important}
+.plib-reflect-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-prompt-marker{background:var(--c-mk-bg);border:2px solid var(--c-mk-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-marker-id{color:var(--c-mk-id)!important;background:rgba(42,42,128,.1)!important}
+.plib-marker-label{color:var(--c-mk-id)!important}
+.plib-marker-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-marker-display{border-left:3px solid var(--c-mk-border);max-height:18em;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;box-shadow:inset 0 -10px 10px -10px rgba(0,0,0,.18)}
+.plib-prompt-m{background:var(--c-m-bg);border:1.5px solid var(--c-m-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:.5rem}
+.plib-m-id{color:var(--c-m-id)!important;background:rgba(10,74,112,.1)!important}
+.plib-m-label{color:var(--c-m-id)!important}
+.plib-m-badge{font-size:11px;background:var(--c-m-id);color:#fff;padding:2px 8px;border-radius:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.plib-m-instructions{background:rgba(255,255,255,.7);border-radius:6px;padding:10px 14px;margin-bottom:12px}
+.plib-m-instructions-label{font-size:12px;font-weight:700;color:var(--c-m-id);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.plib-m-steps{margin:0;padding-left:1.25rem}
+.plib-m-steps li{font-size:13px;line-height:1.6;margin-bottom:4px}
+.plib-m-seed{background:rgba(255,255,255,.5);border-left:3px solid var(--c-m-border);padding:8px 12px;margin-bottom:12px;border-radius:0 4px 4px 0}
+.plib-m-seed-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-m-id);margin-bottom:4px}
+.plib-m-seed-text{font-size:13px;line-height:1.6;white-space:pre-wrap}
+.plib-prompt-m-close{background:var(--c-mc-bg);border:1px dashed var(--c-mc-border);border-radius:var(--radius);padding:.75rem 1.25rem;margin-bottom:1.25rem}
+.plib-m-close-label{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.plib-m-close-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-copy-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;font-size:13px;font-weight:500;border:1.5px solid var(--c-btn);background:transparent;color:var(--c-btn);border-radius:6px;cursor:pointer;transition:background .15s,color .15s}
+.plib-copy-btn:hover{background:var(--c-btn);color:#fff}
+.plib-copy-btn:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+.plib-copy-btn.copied{background:#333;color:#fff;border-color:#333}
+.plib-copy-btn-reflect{border-color:var(--c-btn-r);color:var(--c-btn-r)}
+.plib-copy-btn-reflect:hover{background:var(--c-btn-r);color:#fff}
+.plib-copy-btn-marker{border-color:var(--c-btn-mk);color:var(--c-btn-mk)}
+.plib-copy-btn-marker:hover{background:var(--c-btn-mk);color:#fff}
+.plib-copy-btn-m-open{border-color:var(--c-btn-mo);color:var(--c-btn-mo)}
+.plib-copy-btn-m-open:hover{background:var(--c-btn-mo);color:#fff}
+.plib-copy-btn-m-close{border-color:var(--c-btn-mc);color:var(--c-btn-mc)}
+.plib-copy-btn-m-close:hover{background:var(--c-btn-mc);color:#fff}
+.plib-textarea{display:block;width:100%;box-sizing:border-box;padding:10px 12px;font-size:14px;font-family:var(--font);line-height:1.6;border:1.5px solid var(--c-r-border);border-radius:6px;margin-bottom:10px;background:#fff;color:var(--c-text);resize:vertical;min-height:120px}
+.plib-prompt-input{min-height:0;margin:10px 0 6px}
+.plib-textarea:focus{outline:3px solid #005fcc;outline-offset:2px;border-color:#005fcc}
+.plib-counter{font-size:13px;color:var(--c-muted);margin-bottom:8px;font-variant-numeric:tabular-nums}
+.plib-counter.at-limit{color:#b00020;font-weight:600}
+.plib-counter .plib-count-ok{color:#14552f}
+.plib-counter .plib-count-warn{color:#8a4a00}
+.plib-counter .plib-count-bad{color:#b00020;font-weight:600}
+.plib-counter-min{font-size:12px;color:var(--c-muted);margin-left:8px}
+.plib-warn{font-size:13px;color:#b00020;font-weight:600;margin-bottom:8px;min-height:20px}
+.plib-prompt-q{background:var(--c-q-bg);border:1px solid var(--c-q-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-q-id{color:var(--c-q-id)!important;background:rgba(10,80,112,.1)!important}
+.plib-q-label{color:var(--c-q-id)!important}
+.plib-q-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-q-items{display:flex;flex-direction:column;gap:14px;margin-bottom:10px}
+.plib-q-item{background:rgba(255,255,255,.6);border-radius:6px;padding:10px 12px}
+.plib-q-question{font-size:14px;font-weight:500;display:block;margin-bottom:8px;line-height:1.5}
+.plib-q-item-num{font-family:monospace;font-weight:700;color:var(--c-q-id);margin-right:6px}
+.plib-q-cap-note{font-weight:400;font-style:italic;color:var(--c-muted);margin-left:6px;font-size:13px}
+.plib-q-select{width:100%;padding:6px 8px;font-size:14px;border:1px solid var(--c-q-border);border-radius:4px;background:#fff}
+.plib-q-likert{display:flex;flex-wrap:wrap;gap:10px}
+.plib-q-likert-opt{display:flex;align-items:center;gap:5px;font-size:14px;cursor:pointer}
+.plib-q-checkboxes{display:flex;flex-direction:column;gap:6px}
+.plib-q-check-opt{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.plib-q-check-opt input[disabled] + span{opacity:.5}
+.plib-copy-btn-q{border-color:var(--c-btn-q);color:var(--c-btn-q)}
+.plib-copy-btn-q:hover{background:var(--c-btn-q);color:#fff}
+.plib-prompt-o{background:var(--c-o-bg);border:1px solid var(--c-o-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-o-id{color:var(--c-o-id)!important;background:rgba(160,69,16,.1)!important}
+.plib-o-label{color:var(--c-o-id)!important}
+.plib-o-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-o-question{font-size:14px;font-weight:500;margin-bottom:10px;line-height:1.5}
+.plib-o-list{list-style:none;padding:0;margin:0 0 10px 0;display:flex;flex-direction:column;gap:6px}
+.plib-o-item{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.7);border-radius:6px;padding:8px 10px;font-size:14px}
+.plib-o-rank{font-family:monospace;font-weight:700;color:var(--c-o-id);min-width:1.5em;text-align:right}
+.plib-o-item-text{flex:1}
+.plib-o-controls{display:flex;flex-direction:column;gap:2px}
+.plib-o-arrow{background:transparent;border:1px solid var(--c-o-border);color:var(--c-o-id);width:28px;height:22px;font-size:14px;line-height:1;cursor:pointer;border-radius:3px;padding:0}
+.plib-o-arrow:hover:not([disabled]){background:var(--c-o-border);color:#fff}
+.plib-o-arrow[disabled]{opacity:.25;cursor:default}
+.plib-copy-btn-o{border-color:var(--c-btn-o);color:var(--c-btn-o)}
+.plib-copy-btn-o:hover{background:var(--c-btn-o);color:#fff}
+.plib-demo-badge{font-size:11px;color:var(--c-muted);background:rgba(0,0,0,.05);padding:2px 8px;border-radius:3px;font-style:italic;margin-left:8px}
+.plib-ai-badge{font-size:11px;padding:2px 8px;border-radius:3px;font-family:monospace;margin-left:8px}
+.plib-ai-respond{background:#e8f5e8;color:#2c5e2c}
+.plib-ai-acknowledge{background:#fef0e6;color:#8c4a1a}
+.plib-ai-archive{background:#f0e8f5;color:#5a2c8c}
+</style>
+</head>
+<body>
+<a href="#main-content" class="plib-skip-link">Skip to main content</a>
+<style>.plib-skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;}.plib-skip-link:focus{position:static;width:auto;height:auto;background:#005fcc;color:#fff;padding:8px 16px;font-size:14px;font-weight:600;border-radius:4px;text-decoration:none;display:inline-block;margin:8px;}</style>
+<main id="main-content">
+<div class="plib-wrap">
+<div class="plib-meta">
+  <div class="plib-meta-course">BIT 5534 Applied Business Intelligence and Analytics</div>
+  <div class="plib-meta-week">Week 11 · Lecture 1</div>
+  <div class="plib-meta-title">Building an Analytics Agent with Instructions and Knowledge</div>
+  <div class="plib-meta-details"><span><strong>Duration:</strong> 75 minutes</span>&ensp;·&ensp;<span><strong>Platform:</strong> Hokie AI</span>&ensp;·&ensp;<span><strong>Submission:</strong> The thread with your team's agent, exported as a .zip and uploaded to Canvas before leaving class</span>&ensp;·&ensp;<span><strong>Lecture Mode:</strong> exploration</span></div>
+</div>
+
+<div class="plib-objectives">
+  <div class="plib-objectives-label">Learning Objectives</div>
+  <p class="plib-objectives-intro">By the end of this lecture, students will be able to:</p>
+  <ol class="plib-objectives-list">
+    <li>Describe the team project, a browser dashboard of the course's models with an analytics agent beside it, and how the instructor assigns the twenty projects.</li>
+    <li>Write an agent's instructions in the five SCORE parts, stance, context, objective, rules and examples, for one business decision.</li>
+    <li>Add a knowledge file to a Hokie AI agent and share the agent by link.</li>
+    <li>Compare an agent's answers with the answers Hokie AI gives in a regular chat to the same questions, and trace each difference to a line of the instructions or to the knowledge file.</li>
+  </ol>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 1 of 5</div><div class="plib-section-t">INTRODUCTION</div></div>
+
+<div class="plib-context plib-context-student">
+  <div class="plib-context-label">&#128203; Note for Students</div>
+  <div class="plib-context-body">
+    <p>Homework 9 was the last homework. From today the team project is the main work of the course, and each week you add one capability to it.</p>
+  </div>
+</div>
+
+<div class="plib-narration">
+  <p>In earlier years students wrote a technical report. This year each team builds a browser dashboard of this course's models, on one made up business, with the team's Hokie AI agent open beside it. A manager reviews the results and asks the agent what they mean. The agent also retrieves one kind of live public data, such as a forecast, an exchange rate or an interest rate, and a manager's decision can depend on its current value.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-8">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four boxes joined by AND, what every team builds. A dataset, one made up business, a number target and a yes or no target, a text column. The models, the course tools rebuilt as pages in a browser. An agent, your Hokie AI agent beside the dashboard, which reads your results. A live value, one kind of public data that a decision depends on."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 200" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="200" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">What every team builds</text><rect x="21" y="46" width="204" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">A dataset</text><text x="37" y="122" font-size="14" fill="#6b6b6b">one made up business, a</text><text x="37" y="141" font-size="14" fill="#6b6b6b">number target and a yes or</text><text x="37" y="160" font-size="14" fill="#6b6b6b">no target, a text column</text><text x="248" y="117" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The models</text><text x="288" y="122" font-size="14" fill="#6b6b6b">the course tools rebuilt as</text><text x="288" y="141" font-size="14" fill="#6b6b6b">pages in a browser</text><text x="500" y="117" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">An agent</text><text x="540" y="122" font-size="14" fill="#6b6b6b">your Hokie AI agent beside</text><text x="540" y="141" font-size="14" fill="#6b6b6b">the dashboard, which reads</text><text x="540" y="160" font-size="14" fill="#6b6b6b">your results</text><text x="752" y="117" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">A live value</text><text x="792" y="122" font-size="14" fill="#6b6b6b">one kind of public data that</text><text x="792" y="141" font-size="14" fill="#6b6b6b">a decision depends on</text></svg></div>
+    <figcaption class="plib-tile-caption">Each week from today you add one of these, first on the class case and then on your own project.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-9">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Six boxes joined by THEN. Wed 11-04, your team's five choices, by 11:59 pm. Thu 11-05, your dataset. Fri 11-13, progress report 1. Fri 11-20, progress report 2. Mon 11-30, the dashboard. 12-01 and 12-03, presentations."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 212" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="212" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">The dates</text><rect x="21" y="46" width="120" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Wed</text><text x="66" y="103" font-size="17" font-weight="600" fill="#2b2b2b">11-04</text><text x="37" y="134" font-size="14" fill="#6b6b6b">your team's</text><text x="37" y="153" font-size="14" fill="#6b6b6b">five choices,</text><text x="37" y="172" font-size="14" fill="#6b6b6b">by 11:59 pm</text><text x="165" y="123" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">THEN</text><rect x="189" y="46" width="120" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="213" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="213" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="234" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Thu</text><text x="234" y="103" font-size="17" font-weight="600" fill="#2b2b2b">11-05</text><text x="205" y="134" font-size="14" fill="#6b6b6b">your dataset</text><text x="332" y="123" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">THEN</text><rect x="356" y="46" width="120" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="380" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="380" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="401" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Fri</text><text x="401" y="103" font-size="17" font-weight="600" fill="#2b2b2b">11-13</text><text x="372" y="134" font-size="14" fill="#6b6b6b">progress</text><text x="372" y="153" font-size="14" fill="#6b6b6b">report 1</text><text x="500" y="123" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">THEN</text><rect x="524" y="46" width="120" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Fri</text><text x="569" y="103" font-size="17" font-weight="600" fill="#2b2b2b">11-20</text><text x="540" y="134" font-size="14" fill="#6b6b6b">progress</text><text x="540" y="153" font-size="14" fill="#6b6b6b">report 2</text><text x="668" y="123" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">THEN</text><rect x="692" y="46" width="120" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="716" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="716" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">5</text><text x="737" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Mon</text><text x="737" y="103" font-size="17" font-weight="600" fill="#2b2b2b">11-30</text><text x="708" y="134" font-size="14" fill="#6b6b6b">the</text><text x="708" y="153" font-size="14" fill="#6b6b6b">dashboard</text><text x="835" y="123" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">THEN</text><rect x="859" y="46" width="120" height="144" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="883" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="883" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">6</text><text x="904" y="82" font-size="17" font-weight="600" fill="#2b2b2b">12-01,</text><text x="904" y="103" font-size="17" font-weight="600" fill="#2b2b2b">12-03</text><text x="875" y="134" font-size="14" fill="#6b6b6b">presentations</text></svg></div>
+    <figcaption class="plib-tile-caption">Each team submits a progress report in place of a homework. With each report, every student also submits a short evaluation of each teammate.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>Sixteen teams choose from twenty projects, and no two teams share a project. Each team lists five in order of preference, and your instructor assigns projects first come, first served. Open any project to read its description. Every dataset has several thousand rows, continuous and categorical inputs, a number target, a yes or no target whose yes class is the minority, a text column and a Validation column. The businesses are made up, and your instructor built each dataset to resemble real data from its industry.</p>
+</div>
+
+<style>.plib-expand{margin:1.6rem 0;padding:1.2rem 1.4rem;border-radius:var(--radius);background:var(--c-s-bg);border:1px solid var(--c-s-border)}.plib-expand-title{font-size:17px;font-weight:600;color:var(--c-text);margin-bottom:.5rem}.plib-expand-item{border-top:1px solid var(--c-s-border);padding:.55rem 0}.plib-expand-item summary{cursor:pointer;font-size:16px;font-weight:600;color:var(--c-text)}.plib-expand-item summary:focus-visible{outline:3px solid #005fcc;outline-offset:2px}.plib-expand-item p{margin:.55rem 0 .25rem 1.3rem;line-height:1.6}</style>
+<section class="plib-expand">
+  <div class="plib-expand-title">The twenty projects. Open one to read it.</div>
+  <details class="plib-expand-item">
+    <summary>1. Meal kit subscribers</summary>
+    <p>A regional meal kit company ships weekly boxes of recipes and ingredients. Each row is one subscriber, with tenure, how often they skip a week, average recipe rating, delivery delays, the share of orders bought with a discount, household size, plan type, region and how they first signed up. The number target is the subscriber's spending over the next quarter. The yes or no target is whether the subscriber cancels within 90 days, which about one subscriber in seven does. Each row includes the subscriber's most recent note to customer service. Grocery prices change every month, and the company has to decide how large a price increase its subscribers will accept, so the agent retrieves a current food price index and compares it with the models' estimates of price sensitivity.</p>
+  </details>
+  <details class="plib-expand-item">
+    <summary>2. International apparel orders</summary>
+    <p>An online clothing retailer sells to customers in the United States, Canada, the United Kingdom and the euro area, and offers free returns everywhere. Each row is one order, with item price, discount, number of items, whether the sizes in the order are consistent, the customer's past return rate, shipping days, country, product category and whether the customer used the size guide. The number target is the order's margin after any return. The yes or no target is whether the customer returns the order, which happens in close to one order in five. Each row includes the customer's product review. The retailer pays refunds in local currency, so the dollar cost of a return depends on the day's exchange rate, and the agent retrieves current rates so the team can judge whether free returns remain profitable in each market.</p>
+  </details>
+  <details class="plib-expand-item">
+    <summary>3. Fleet auto insurance claims</summary>
+    <p>An insurer covers delivery vans and service trucks owned by small businesses. Each row is one claim, with vehicle age and mileage, the repair estimate, days between the accident and the report, prior claims on the policy, driver experience, vehicle make and model, claim type and state. The number target is the final claim cost, which has a long tail of very expensive claims. The yes or no target is whether the insurer flagged the claim as likely fraud, about one claim in sixteen. Each row includes the adjuster's notes. Manufacturers issue safety recalls by model, and an adjuster reviews a claim on a vehicle with an open recall differently, so the agent looks up current recalls before the team routes a claim to the fraud unit or pays it.</p>
+  </details>
+  <details class="plib-expand-item">
+    <summary>4. Residential solar leads</summary>
+    <p>A residential solar installer collects leads from its website and from door to door canvassing. Each row is one lead, with roof area and pitch, the monthly electric bill, home value, credit band, a shading estimate, days since first contact, lead source, home type and county. The number target is the quoted contract value. The yes or no target is whether the homeowner signs, about one lead in eight. Each row includes the salesperson's call notes. A system's output depends on sunlight at the address and its cost depends on financing rates, so the agent retrieves sunlight data for the location and current interest rates, and the sales team uses both to choose which homeowners receive a site visit and which financing to offer.</p>
+  </details>
+  <details class="plib-expand-item">
+    <summary>5. Regional airline flights</summary>
+    <p>A regional airline flies small jets between hub airports and smaller cities. Each row is one flight, with scheduled departure hour, distance, aircraft age, the delay of the aircraft's previous flight, load factor, crew duty hours, origin, destination, day of week and season. The number target is the arrival delay in minutes, which grows as the day goes on. The yes or no target is whether the airline cancels the flight or lands it more than two hours late, about one flight in eleven. Each row includes the dispatcher's operations remarks. Much of the disruption comes from weather at the two airports, so the agent retrieves tomorrow's forecast at each airport, and the operations team uses it to decide where to hold a spare aircraft and crew.</p>
+  </details>
+  <details class="plib-expand-item">
+    <summary>6. Quick service restaurant sites</summary>
+    <p>A sandwich franchise is opening locations across the Southeast and wants to know which candidate sites are likely to be profitable. Each row is one existing location, with seating, drive through lanes, traffic count on the street, distance to the nearest competitor, years open, rent per square foot, local wage, site type and state. The number target is annual sales. The yes or no target is whether the franchise closed the location within two years of opening, about one in ten. Each row includes the franchise consultant's notes from the site visit. Income and population around an address are available from public census data, which the agent looks up for each new candidate site before the team recommends approving it.</p>
+  </details>
+  <details class="plib-expand-item">
+    <summary>7. Physical therapy appointments</summary>
+    <p>A chain of physical therapy clinics loses revenue every time a patient misses a visit. Each row is one course of treatment, with patient age, distance from the clinic, visits prescribed, days between referral and first visit, copay, prior missed visits, injury type, insurance type and clinic. The number target is the number of visits the patient completed. The yes or no target is whether the patient missed the next scheduled visit, about one in eight. Each row includes the front desk's scheduling notes. Patients miss more visits in bad weather, so the agent retrieves the forecast for each clinic, and the clinic staff use it to decide how many reminder calls to make and how much to double book.</p>
+  </details>
+  <details class="plib-expand-item">
+    <summary>8. Electric utility households</summary>
+    <p>A municipal electric utility serves homes in a region with cold winters and hot summers. Each row is one household in one month, with home size, home age, heating type, occupants, the month's average temperature, past late payments, budget billing enrollment, rate plan and neighborhood. The number target is the month's usage in kilowatt hours. The yes or no target is whether the household left the bill unpaid for more than 60 days, about one household in eleven. Each row includes notes from the household's last service call. Bills rise sharply in electrically heated homes during a cold snap, so the agent retrieves the coming week's forecast, and the utility uses it to choose which households receive a payment plan offer before it sends the bills.</p>
+  </details>
+  <details class="plib-expand-item">
+    <summary>9. Commercial building energy</summary>
+    <p>An energy services firm manages office buildings, laboratories and warehouses for corporate clients. Each row is one building on one day, with floor area, occupancy, the outdoor high temperature, humidity, the age of the cooling plant, whether staff used lab equipment, the thermostat setpoint, building type and day of week. The number target is the day's peak electrical demand in kilowatts. The yes or no target is whether that peak exceeded the building's contracted peak, which happens on about one day in twelve, and on such a day the client pays a large demand charge. Each row includes the facilities manager's log. Demand climbs steeply in hot weather, so the agent retrieves tomorrow's temperature forecast, and the facilities team uses it to decide whether to precool the building overnight or reduce load in the afternoon.</p>
+  </details>
+  <details class="plib-expand-item">
+    <summary>10. Home listings</summary>
+    <p>A real estate brokerage advises sellers on list prices in a metro area with distinct neighborhoods. Each row is one listing, with square footage, lot size, bedrooms, bathrooms, age, distance to downtown, school rating, years since the last renovation, neighborhood, property type and listing month. The number target is the sale price. The yes or no target is whether the home was still unsold 90 days after listing, about one in seven. Each row includes the listing description written by the seller's realtor. Buyers can afford less when mortgage rates rise, so the agent retrieves current interest rates, and the brokerage adjusts its list price advice when rates change.</p>
+  </details>
+  <details class="plib-expand-item">
+    <summary>11. Apartment units</summary>
+    <p>A property management company runs several apartment communities. Each row is one unit at the end of a lease, with square footage, floor, bedrooms, the previous rent, the gap to market rent for similar units, days of notice the tenant gave, an amenity score, community, unit type and season. The number target is the monthly rent for the new lease. The yes or no target is whether the unit was vacant for more than 45 days, about one unit in eight. Each row includes the unit's listing text. The federal government publishes a national rent price index, and the agent retrieves its latest value so the managers can decide how large a renewal increase to offer and when a concession costs less than a vacancy.</p>
+  </details>
+  <details class="plib-expand-item">
+    <summary>12. Concert venue shows</summary>
+    <p>A music venue with a 1,500 seat hall books touring acts four or five nights a week. Each row is one show, with ticket price, the act's streaming following, days on sale, marketing spending, competing shows in town that night, whether there was an opening act, genre, day of week and month. The number target is ticket revenue. The yes or no target is whether the venue sold less than 60 percent of the show's capacity, about one show in seven. Each row includes the promotional blurb. Attendance changes with rain on the night and with holiday weekends, so the agent retrieves the forecast and the holiday calendar, and the venue uses them to decide whether to add marketing or release discounted tickets.</p>
+  </details>
+  <details class="plib-expand-item">
+    <summary>13. Grocery store weeks</summary>
+    <p>A grocery chain tracks waste and empty shelves in its produce and dairy departments. Each row is one department in one store for one week, with units ordered, forecast demand, shelf life, the share of deliveries that were late, staff hours, promotion depth, department, store format and region. The number target is the week's shrink, the dollar value of product thrown away, which is small most weeks and large in a few. The yes or no target is whether the department ran out of a top item during the week, about one week in ten. Each row includes the store manager's notes. Shoppers buy differently around holidays and during heat waves, so the agent retrieves the holiday calendar and the forecast, and store managers use them to set next week's order quantities.</p>
+  </details>
+  <details class="plib-expand-item">
+    <summary>14. Garden center email campaign</summary>
+    <p>A garden center chain sends a weekly promotional email to its loyalty members. Each row is one member who received a spring campaign, with past purchases, days since the last visit, email opens in the last 90 days, distance to the nearest store, yard size, average basket, loyalty tier, preferred category and home store. The number target is what the member spent in the two weeks after the email, which is zero for most members. The yes or no target is whether the member responded, about one in sixteen, so lift is a natural measure for this project. Each row includes the member's last chat with customer service. Gardeners shop more on fair weekends, so the agent retrieves the weekend forecast, and the marketing team uses it to decide whether to send this week's campaign and to which members.</p>
+  </details>
+  <details class="plib-expand-item">
+    <summary>15. Freelance marketplace projects</summary>
+    <p>An online marketplace connects small businesses with freelance designers and developers around the world. Each row is one project, with budget, deadline in days, the freelancer's rating and past projects, the client's past disputes, revisions requested, project category, the freelancer's country and payment method. The number target is the final payout to the freelancer. The yes or no target is whether either side filed a dispute, about one project in fourteen. Each row includes the client's project brief. Clients pay in dollars and many freelancers receive their own currency, so the agent retrieves current exchange rates, and the marketplace uses them to set how much of a payment it holds in escrow when the client and the freelancer are in different countries.</p>
+  </details>
+  <details class="plib-expand-item">
+    <summary>16. Importer purchase orders</summary>
+    <p>A home goods importer buys furniture and kitchenware from suppliers in Asia and Europe. Each row is one purchase order, with order value, product lines, the supplier's on time history, the quoted lead time, port of departure, shipping mode, supplier country, product category and quarter. The number target is the landed cost per unit, freight and duty included. The yes or no target is whether the order was more than a week late, about one in nine. Each row includes the supplier's messages. The dollar cost of an order depends on exchange rates, and factories close for national holidays in the supplier's country, so the agent retrieves current rates and that country's holiday calendar, and the buyers use them to decide when to order and from which supplier.</p>
+  </details>
+  <details class="plib-expand-item">
+    <summary>17. Retail chain new hires</summary>
+    <p>A specialty retail chain hires sales associates year round and loses many in their first months. Each row is one new hire, with starting wage, prior retail experience, commute distance, scheduled hours per week, training score, the store manager's tenure, hiring channel, store type and region. The number target is sales per hour worked over the first 90 days. The yes or no target is whether the hire quit within six months, about one in six. Each row includes the hire's answer to an onboarding survey. New hires leave sooner when jobs are easy to find, so the agent retrieves the current unemployment rate, and the chain uses it to set starting wages and plan seasonal hiring.</p>
+  </details>
+  <details class="plib-expand-item">
+    <summary>18. Used car dealer inventory</summary>
+    <p>A used car dealer buys vehicles at auction and resells them from its lots. Each row is one vehicle, with model year, mileage, the auction price paid, reconditioning cost, prior owners, accident history, make, body style and lot. The number target is the retail sale price. The yes or no target is whether the car was still unsold after 60 days on the lot, about one in eight. Each row includes its listing description. A car with an open safety recall is harder to sell, and the vehicle identification number contains a code for exactly how the manufacturer built the car, so the agent looks up recalls and decodes the number before the dealer's buyer bids.</p>
+  </details>
+  <details class="plib-expand-item">
+    <summary>19. Manufacturing batches</summary>
+    <p>A plant makes composite panels for the building industry in batches. Each row is one batch, with resin ratio, fiber content, curing temperature, curing time, line speed, ambient humidity, operator experience, shift, resin supplier and production line. The number target is the tensile strength measured in testing. The yes or no target is whether inspectors rejected the batch, about one in twelve. Each row includes the operator's shift log. The resin cures differently in humid air, so the agent retrieves tomorrow's humidity forecast, and the plant engineers use it to set curing times for the next day's batches.</p>
+  </details>
+  <details class="plib-expand-item">
+    <summary>20. Farm co-op fields</summary>
+    <p>An agricultural cooperative advises member farms that grow corn and soybeans across several counties. Each row is one field in one season, with acres, a soil quality index, nitrogen applied, planting date, seeding rate, growing season rainfall, days above 90 degrees, irrigation, crop, tillage method and county. The number target is yield in bushels per acre, which levels off at the top and falls sharply in drought. The yes or no target is whether the farm filed a crop insurance loss claim for the field that season, about one in ten. Each row includes the field scout's notes. The agent retrieves historical and forecast weather for the county, and the cooperative's advisers use it to recommend insurance coverage and planting dates.</p>
+  </details>
+</section>
+
+<div class="plib-material" id="plib-material-12">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">Your team's five choices</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="https://canvas.vt.edu/courses/233475/assignments/2885516" target="_blank" rel="noopener noreferrer">Open the Project choices assignment</a>
+  </div>
+  <div class="plib-material-note">One person submits for the whole team by 11:59 pm on Wednesday, November 4. Paste the five titles in order of preference, one per line, each with its number, exactly as it appears in the list above.</div>
+</div>
+
+<div class="plib-narration">
+  <p>From today your instructor demonstrates every step on one more business, which no team can choose. Lumenvale is a made up streaming service with 38 million subscribers. Its content strategy team decides which titles to greenlight, how much to spend on marketing them and when to release them. Your instructor releases its title file on Thursday, and today you have only its brief.</p>
+</div>
+
+<div class="plib-discussion">
+  <div class="plib-discussion-label">&#128172; Discussion</div>
+  <p class="plib-discussion-intro">Before the build:</p>
+  <ul class="plib-discussion-list">
+    <li>You ask a regular Hokie AI chat a question about Lumenvale. What information about Lumenvale does Hokie AI have in that chat?</li>
+</ul>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 2 of 5</div><div class="plib-section-t">DEMONSTRATION</div></div>
+
+<div class="plib-narration">
+  <p>In a regular chat, Hokie AI works from what you type and from any web search it runs. An agent begins every conversation with two things its builder put in place. The instructions state the agent's purpose and its limits. The knowledge files are documents the agent can read and quote. Hokie AI stores both with the agent, so everyone who opens the agent's link uses the same agent. With every capability switched off, the agent does not search the web, so its answers about Lumenvale come only from the instructions and the brief.</p>
+</div>
+
+<div class="plib-narration">
+  <p>The builder writes the instructions in the five parts of SCORE. Stance is who the agent is and how it speaks. Context is what the agent knows and what it does not have yet. Objective is the decision the agent supports and what every answer must contain. Rules are the limits, especially on where the agent may take facts and numbers from. Under Examples, the builder writes one question and the answer the builder wants.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-18">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Six boxes joined by AND. One person per team builds, everyone writes. Name, a name and a one line description, and the model named on the screen. Specific tab, your team's SCORE instructions. Platform tab, delete the default and paste the class text. Files, add the Lumenvale brief file under knowledge. Switch off, every capability, and delete the welcome message. Share, create, press Share, and send the link to your team."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 257" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="257" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">One person per team builds, everyone writes</text><rect x="21" y="46" width="120" height="189" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Name</text><text x="37" y="122" font-size="14" fill="#6b6b6b">a name and a</text><text x="37" y="141" font-size="14" fill="#6b6b6b">one line</text><text x="37" y="160" font-size="14" fill="#6b6b6b">description,</text><text x="37" y="179" font-size="14" fill="#6b6b6b">and the</text><text x="37" y="198" font-size="14" fill="#6b6b6b">model named</text><text x="37" y="217" font-size="14" fill="#6b6b6b">on the screen</text><text x="165" y="146" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="189" y="46" width="120" height="189" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="213" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="213" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="234" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Specific</text><text x="234" y="103" font-size="17" font-weight="600" fill="#2b2b2b">tab</text><text x="205" y="134" font-size="14" fill="#6b6b6b">your team's</text><text x="205" y="153" font-size="14" fill="#6b6b6b">SCORE</text><text x="205" y="172" font-size="14" fill="#6b6b6b">instructions</text><text x="332" y="146" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="356" y="46" width="120" height="189" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="380" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="380" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="401" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Platform</text><text x="401" y="103" font-size="17" font-weight="600" fill="#2b2b2b">tab</text><text x="372" y="134" font-size="14" fill="#6b6b6b">delete the</text><text x="372" y="153" font-size="14" fill="#6b6b6b">default and</text><text x="372" y="172" font-size="14" fill="#6b6b6b">paste the</text><text x="372" y="191" font-size="14" fill="#6b6b6b">class text</text><text x="500" y="146" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="120" height="189" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Files</text><text x="540" y="122" font-size="14" fill="#6b6b6b">add the</text><text x="540" y="141" font-size="14" fill="#6b6b6b">Lumenvale</text><text x="540" y="160" font-size="14" fill="#6b6b6b">brief file</text><text x="540" y="179" font-size="14" fill="#6b6b6b">under</text><text x="540" y="198" font-size="14" fill="#6b6b6b">knowledge</text><text x="668" y="146" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="692" y="46" width="120" height="189" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="716" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="716" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">5</text><text x="737" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Switch</text><text x="737" y="103" font-size="17" font-weight="600" fill="#2b2b2b">off</text><text x="708" y="134" font-size="14" fill="#6b6b6b">every</text><text x="708" y="153" font-size="14" fill="#6b6b6b">capability,</text><text x="708" y="172" font-size="14" fill="#6b6b6b">and delete</text><text x="708" y="191" font-size="14" fill="#6b6b6b">the welcome</text><text x="708" y="210" font-size="14" fill="#6b6b6b">message</text><text x="835" y="146" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="859" y="46" width="120" height="189" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="883" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="883" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">6</text><text x="904" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Share</text><text x="875" y="122" font-size="14" fill="#6b6b6b">create, press</text><text x="875" y="141" font-size="14" fill="#6b6b6b">Share, and</text><text x="875" y="160" font-size="14" fill="#6b6b6b">send the link</text><text x="875" y="179" font-size="14" fill="#6b6b6b">to your team</text></svg></div>
+    <figcaption class="plib-tile-caption">Your instructor builds the Lumenvale greenlight analyst in this order now, and your team builds its own in section 3.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-material" id="plib-material-19">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The Lumenvale greenlight analyst, the Specific instructions built on the screen</div>
+  <pre class="plib-material-box" tabindex="0" id="plib-material-19-prompt" data-copy="STANCE&#10;You are a senior analyst on Lumenvale's content strategy team. You are careful with evidence and plain with managers. You state which conclusions you can draw from the data, which conclusions you cannot draw from them, and what you would need to know.&#10;&#10;CONTEXT&#10;Lumenvale is a streaming service. Your knowledge file, the Lumenvale brief, describes the company, its eight main markets, the decisions of the content strategy team, and the title file with its columns. You do not have the title file yet.&#10;&#10;OBJECTIVE&#10;Help the content strategy team decide which proposed titles to greenlight and at what budget. In every answer, name the decision the question concerns, the facts in the brief that are relevant to it, and the columns of the title file you would analyze to settle it.&#10;&#10;RULES&#10;Quote facts about Lumenvale only from the brief, and say that you took them from the brief.&#10;Give no number about Lumenvale's titles unless it appears in the brief or the person typed it. If you cannot answer without such a number, say that you do not have the title file yet and name the columns you would analyze.&#10;Do not recommend greenlighting or rejecting a title from general industry knowledge alone. Label general knowledge as general, and say what you would need to find in Lumenvale's own data.&#10;Keep answers under 150 words unless the person asks for more.&#10;&#10;EXAMPLES&#10;Question: Are our comedies successful?&#10;Answer: The brief contains no results by genre. When I have the title file, I will compare hours_28d and the share of breakout titles for Comedy against the other genres on the Training rows. As general industry knowledge, comedies tend to have smaller audiences outside their original language than thrillers, and with the language column I could check whether that is true for Lumenvale." aria-label="Specification text, scrollable">STANCE
+You are a senior analyst on Lumenvale's content strategy team. You are careful with evidence and plain with managers. You state which conclusions you can draw from the data, which conclusions you cannot draw from them, and what you would need to know.
+
+CONTEXT
+Lumenvale is a streaming service. Your knowledge file, the Lumenvale brief, describes the company, its eight main markets, the decisions of the content strategy team, and the title file with its columns. You do not have the title file yet.
+
+OBJECTIVE
+Help the content strategy team decide which proposed titles to greenlight and at what budget. In every answer, name the decision the question concerns, the facts in the brief that are relevant to it, and the columns of the title file you would analyze to settle it.
+
+RULES
+Quote facts about Lumenvale only from the brief, and say that you took them from the brief.
+Give no number about Lumenvale's titles unless it appears in the brief or the person typed it. If you cannot answer without such a number, say that you do not have the title file yet and name the columns you would analyze.
+Do not recommend greenlighting or rejecting a title from general industry knowledge alone. Label general knowledge as general, and say what you would need to find in Lumenvale's own data.
+Keep answers under 150 words unless the person asks for more.
+
+EXAMPLES
+Question: Are our comedies successful?
+Answer: The brief contains no results by genre. When I have the title file, I will compare hours_28d and the share of breakout titles for Comedy against the other genres on the Training rows. As general industry knowledge, comedies tend to have smaller audiences outside their original language than thrillers, and with the language column I could check whether that is true for Lumenvale.</pre>
+  <button class="plib-copy-btn" onclick="copyPrompt('plib-material-19-prompt', this)" aria-label="Copy the text above to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy the text above
+  </button>
+  <div class="plib-material-note">Read the five headings. In section 3 you use the comedy question to check the second rule, the one about numbers.</div>
+</div>
+
+<div class="plib-material" id="plib-material-20">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The class Platform text, for the Platform tab of every agent</div>
+  <pre class="plib-material-box" tabindex="0" id="plib-material-20-prompt" data-copy="You are a configured analytics agent for a graduate course in business intelligence and analytics at Virginia Tech. Follow the Specific instructions for your role. Where the Specific instructions and these platform instructions differ, follow the Specific instructions, with the one exception below.&#10;&#10;Hold the role for the entire conversation. Reply in clear, complete sentences and keep replies short unless the person asks for detail.&#10;&#10;Follow the next rule even where the Specific instructions say otherwise. The person may paste class records whose first line is three hashes and a code such as T or R11.1.1, with a line of dashes above and below the content. Acknowledge each one in a single sentence naming the code, say nothing about its content, and then continue in your role exactly where you left off." aria-label="Specification text, scrollable">You are a configured analytics agent for a graduate course in business intelligence and analytics at Virginia Tech. Follow the Specific instructions for your role. Where the Specific instructions and these platform instructions differ, follow the Specific instructions, with the one exception below.
+
+Hold the role for the entire conversation. Reply in clear, complete sentences and keep replies short unless the person asks for detail.
+
+Follow the next rule even where the Specific instructions say otherwise. The person may paste class records whose first line is three hashes and a code such as T or R11.1.1, with a line of dashes above and below the content. Acknowledge each one in a single sentence naming the code, say nothing about its content, and then continue in your role exactly where you left off.</pre>
+  <button class="plib-copy-btn" onclick="copyPrompt('plib-material-20-prompt', this)" aria-label="Copy the text above to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy the text above
+  </button>
+  <div class="plib-material-note">Delete the long default text in the Platform tab first, then paste this. With this text in place, the agent acknowledges a class record such as T in one sentence and then continues.</div>
+</div>
+
+<div class="plib-material" id="plib-material-21">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The knowledge file, the Lumenvale brief</div>
+  <pre class="plib-material-box" tabindex="0" id="plib-material-21-prompt" data-copy="LUMENVALE: CLASS CASE BRIEF FOR BIT 5534&#10;&#10;Lumenvale is a made up streaming service, the class case in BIT 5534 from week 11 on. Your instructor demonstrates on Lumenvale in every class session. No team builds its project on it.&#10;&#10;THE COMPANY&#10;&#10;Lumenvale streams films and series to 38 million subscribers. Its eight main markets are the United States, Canada, the United Kingdom, Germany, Brazil, Mexico, India and Japan. The United States accounts for 15 million of the 38 million subscribers. Lumenvale spends about 2.6 billion dollars a year on content, a little over half on originals it produces and the rest on licensed titles it rents from other studios.&#10;&#10;The content strategy team makes three recurring decisions. The team decides which proposed titles to greenlight, and at what budget. The team decides how much to spend on marketing each title. The team also decides when to release each title, since Lumenvale can lose viewers for a title released on a crowded holiday weekend, or on a sunny weekend in its largest markets. The team judges a title by its first 28 days, because Lumenvale makes renewal and sequel decisions at day 28.&#10;&#10;THE TITLE FILE&#10;&#10;Your instructor releases the file lumenvale_titles.csv in class on Thursday, November 5. Until then no numbers from it are available, and this brief contains the definitions only. One row is one title, film or series, released between January 2021 and June 2026.&#10;&#10;Columns:&#10;title_id: Lumenvale's catalog number for the title.&#10;title_type: Film or Series.&#10;genre: Drama, Comedy, Thriller, Documentary, Animation, Reality, or Science Fiction and Fantasy.&#10;origin: Original (Lumenvale produced it) or Licensed (Lumenvale rents it from another studio).&#10;language: the original language, English, Spanish, Portuguese, Hindi, Japanese, Korean or Other.&#10;franchise: Yes if the title belongs to an existing franchise or is an adaptation of a known book, game or film, otherwise No.&#10;budget_musd: the production budget in millions of dollars, or for a licensed title the license fee.&#10;episodes: the number of episodes, 1 for a film.&#10;runtime_min: the running time in minutes for a film, the average episode length for a series.&#10;cast_recognition: a score from 0 to 100 for how well audiences in the main markets know the lead cast, measured before release.&#10;marketing_musd: marketing spending in millions of dollars in the 28 days around release.&#10;release_weekday: the day of the week on which Lumenvale released the title.&#10;release_month: the month in which Lumenvale released the title.&#10;holiday_weekend: Yes if Lumenvale released the title on a public holiday weekend in the United States, otherwise No.&#10;critic_score: the average critic review score, from 0 to 100, published by critics in the days after release.&#10;synopsis: the description Lumenvale showed subscribers on the title's page.&#10;hours_28d: the number target, millions of hours subscribers watched worldwide in the first 28 days.&#10;breakout: the yes or no target. Yes if the title was in the top ten in at least five of the eight main markets during its first 28 days. About one title in ten is a breakout.&#10;Validation: Training or Validation, the split used in this course.&#10;&#10;LIVE DATA&#10;&#10;From week 13 the Lumenvale agent can retrieve two kinds of public data. With public holiday calendars for the eight main markets, the team can see which release weekends are crowded. Weekend weather forecasts for the largest cities in those markets matter because subscribers watch less on warm, clear weekends and more on cold or rainy ones. The team may move a release date on the basis of either kind of data.&#10;&#10;HOW AN AGENT SHOULD USE THIS BRIEF&#10;&#10;An agent may quote every fact about Lumenvale above. No other number about Lumenvale's titles is available yet. An agent gives no average, count, model result or comparison until the team supplies the title file and its own results." aria-label="Specification text, scrollable">LUMENVALE: CLASS CASE BRIEF FOR BIT 5534
+
+Lumenvale is a made up streaming service, the class case in BIT 5534 from week 11 on. Your instructor demonstrates on Lumenvale in every class session. No team builds its project on it.
+
+THE COMPANY
+
+Lumenvale streams films and series to 38 million subscribers. Its eight main markets are the United States, Canada, the United Kingdom, Germany, Brazil, Mexico, India and Japan. The United States accounts for 15 million of the 38 million subscribers. Lumenvale spends about 2.6 billion dollars a year on content, a little over half on originals it produces and the rest on licensed titles it rents from other studios.
+
+The content strategy team makes three recurring decisions. The team decides which proposed titles to greenlight, and at what budget. The team decides how much to spend on marketing each title. The team also decides when to release each title, since Lumenvale can lose viewers for a title released on a crowded holiday weekend, or on a sunny weekend in its largest markets. The team judges a title by its first 28 days, because Lumenvale makes renewal and sequel decisions at day 28.
+
+THE TITLE FILE
+
+Your instructor releases the file lumenvale_titles.csv in class on Thursday, November 5. Until then no numbers from it are available, and this brief contains the definitions only. One row is one title, film or series, released between January 2021 and June 2026.
+
+Columns:
+title_id: Lumenvale's catalog number for the title.
+title_type: Film or Series.
+genre: Drama, Comedy, Thriller, Documentary, Animation, Reality, or Science Fiction and Fantasy.
+origin: Original (Lumenvale produced it) or Licensed (Lumenvale rents it from another studio).
+language: the original language, English, Spanish, Portuguese, Hindi, Japanese, Korean or Other.
+franchise: Yes if the title belongs to an existing franchise or is an adaptation of a known book, game or film, otherwise No.
+budget_musd: the production budget in millions of dollars, or for a licensed title the license fee.
+episodes: the number of episodes, 1 for a film.
+runtime_min: the running time in minutes for a film, the average episode length for a series.
+cast_recognition: a score from 0 to 100 for how well audiences in the main markets know the lead cast, measured before release.
+marketing_musd: marketing spending in millions of dollars in the 28 days around release.
+release_weekday: the day of the week on which Lumenvale released the title.
+release_month: the month in which Lumenvale released the title.
+holiday_weekend: Yes if Lumenvale released the title on a public holiday weekend in the United States, otherwise No.
+critic_score: the average critic review score, from 0 to 100, published by critics in the days after release.
+synopsis: the description Lumenvale showed subscribers on the title's page.
+hours_28d: the number target, millions of hours subscribers watched worldwide in the first 28 days.
+breakout: the yes or no target. Yes if the title was in the top ten in at least five of the eight main markets during its first 28 days. About one title in ten is a breakout.
+Validation: Training or Validation, the split used in this course.
+
+LIVE DATA
+
+From week 13 the Lumenvale agent can retrieve two kinds of public data. With public holiday calendars for the eight main markets, the team can see which release weekends are crowded. Weekend weather forecasts for the largest cities in those markets matter because subscribers watch less on warm, clear weekends and more on cold or rainy ones. The team may move a release date on the basis of either kind of data.
+
+HOW AN AGENT SHOULD USE THIS BRIEF
+
+An agent may quote every fact about Lumenvale above. No other number about Lumenvale's titles is available yet. An agent gives no average, count, model result or comparison until the team supplies the title file and its own results.</pre>
+  <button class="plib-copy-btn" onclick="copyPrompt('plib-material-21-prompt', this)" aria-label="Copy the text above to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy the text above
+  </button>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="lec11_1_lumenvale_brief.txt" download="lec11_1_lumenvale_brief.txt" target="_blank" rel="noopener noreferrer">lec11_1_lumenvale_brief.txt</a>
+  </div>
+  <div class="plib-material-note">Download it and add it to the agent's knowledge. Your instructor releases the title file it describes on Thursday.</div>
+</div>
+
+<div class="plib-narration">
+  <p>Watch your instructor ask the fact question, which eight countries are Lumenvale's main markets, twice. Your instructor asks it once in a regular chat and once in the agent, after pasting the session opener T in each. Before your instructor comments, decide in which reply Hokie AI used the agent's instructions and brief, and name the line of the Specific or the part of the brief it used.</p>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 3 of 5</div><div class="plib-section-t">INTERACTION</div></div>
+
+<div class="plib-prompt-marker" role="region" aria-label="Session Opener">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-marker-id">T</span>
+    <span class="plib-prompt-type-label plib-marker-label">Session Opener</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-marker-instruction">Copy this block and paste it into Hokie AI to begin your session.</p>
+  <div class="plib-prompt-display plib-marker-display">You are an analysis partner for BIT 5534 Applied Business Intelligence and Analytics, a graduate course in business intelligence and analytics at Virginia Tech. The student holds graduate standing, has some statistics background, and is working on a team analytics project. Speak to them as a capable adult. Be direct, say when something is uncertain or contested, and do not pad your answers. When a student pushes back on something you said, take the challenge seriously. Do not concede immediately to be agreeable.
+
+---
+**AI Interaction Protocol**
+
+In this session, you will receive blocks of content with the
+following structural pattern:
+
+```
+### &lt;BlockID&gt;
+----------
+&lt;content&gt;
+----------
+###
+```
+
+Some blocks include an interaction-mode directive on a separate
+line inside the dashed envelope:
+
+```
+### &lt;BlockID&gt;
+----------
+[ai_interaction=&lt;mode&gt;]
+&lt;content&gt;
+----------
+###
+```
+
+Three modes determine your response:
+
+  - **respond**: Engage substantively with the block content.
+    Treat it as a prompt, question, or task that wants your
+    analytical response. Default for S blocks (prompts) and X
+    blocks (free exploration).
+
+  - **acknowledge**: Confirm receipt with one brief sentence
+    naming the block ID. Do not analyze, comment on, or expand on
+    the content. The student is filing the block for the record,
+    not asking for engagement. Default for T blocks (this opener),
+    R blocks (reflections), M CLOSE blocks (closing markers), Q
+    blocks (structured selections), and O blocks (ordering
+    selections).
+
+  - **archive**: Respond with only the block ID and nothing else.
+    Used for batched archival pastes where even brief
+    acknowledgment would clutter the thread.
+
+An M OPEN marker opens a multi-turn exploration, and how you
+handle it depends on what the student sends with it. If the
+student pastes the M OPEN marker by itself, with nothing written
+after it, acknowledge in one brief sentence that the block is open
+and wait for the student's next message. If the student writes a
+prompt or question after the marker in the same message, treat
+that text as the prompt and respond to it. Always acknowledge an
+M CLOSE marker.
+
+If a block has no explicit `[ai_interaction=...]` directive, apply
+the block-type default per the list above.
+
+This protocol applies for the remainder of this session.
+---</div>
+  <div class="plib-prompt-text" id="text_prompt_24" data-copy="### T&#10;----------&#10;You are an analysis partner for BIT 5534 Applied Business Intelligence and Analytics, a graduate course in business intelligence and analytics at Virginia Tech. The student holds graduate standing, has some statistics background, and is working on a team analytics project. Speak to them as a capable adult. Be direct, say when something is uncertain or contested, and do not pad your answers. When a student pushes back on something you said, take the challenge seriously. Do not concede immediately to be agreeable.&#10;&#10;---&#10;**AI Interaction Protocol**&#10;&#10;In this session, you will receive blocks of content with the&#10;following structural pattern:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Some blocks include an interaction-mode directive on a separate&#10;line inside the dashed envelope:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;[ai_interaction=&lt;mode&gt;]&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Three modes determine your response:&#10;&#10;  - **respond**: Engage substantively with the block content.&#10;    Treat it as a prompt, question, or task that wants your&#10;    analytical response. Default for S blocks (prompts) and X&#10;    blocks (free exploration).&#10;&#10;  - **acknowledge**: Confirm receipt with one brief sentence&#10;    naming the block ID. Do not analyze, comment on, or expand on&#10;    the content. The student is filing the block for the record,&#10;    not asking for engagement. Default for T blocks (this opener),&#10;    R blocks (reflections), M CLOSE blocks (closing markers), Q&#10;    blocks (structured selections), and O blocks (ordering&#10;    selections).&#10;&#10;  - **archive**: Respond with only the block ID and nothing else.&#10;    Used for batched archival pastes where even brief&#10;    acknowledgment would clutter the thread.&#10;&#10;An M OPEN marker opens a multi-turn exploration, and how you&#10;handle it depends on what the student sends with it. If the&#10;student pastes the M OPEN marker by itself, with nothing written&#10;after it, acknowledge in one brief sentence that the block is open&#10;and wait for the student's next message. If the student writes a&#10;prompt or question after the marker in the same message, treat&#10;that text as the prompt and respond to it. Always acknowledge an&#10;M CLOSE marker.&#10;&#10;If a block has no explicit `[ai_interaction=...]` directive, apply&#10;the block-type default per the list above.&#10;&#10;This protocol applies for the remainder of this session.&#10;---&#10;----------&#10;###"></div>
+  <button class="plib-copy-btn plib-copy-btn-marker" onclick="copyPrompt('text_prompt_24', this)"
+          aria-label="Copy session opener to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy session opener
+  </button>
+</div>
+
+<div class="plib-narration">
+  <p>Your turn, as a team. Choose one of the two starters below, release timing or the marketing budget, and fill in its three brackets together on the builder's laptop. The brackets are the end of the Objective, one rule of your team's own and the Example. For the rule, use one of the ideas on the card or write your own. One person builds the agent from the build card, with the filled starter in the Specific tab and the Platform text and the brief above, and sends the share link to the team. Replace every bracket, because the agent treats a bracket left in place as an instruction and tries to follow it.</p>
+</div>
+
+<div class="plib-material" id="plib-material-26">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">Starter 1, the release planner</div>
+  <textarea class="plib-textarea" id="plib-material-26-edit" rows="18" data-copy="STANCE&#10;You are the release planner on Lumenvale's content strategy team. You give managers short, direct answers and say how certain you are.&#10;&#10;CONTEXT&#10;Your knowledge file is the Lumenvale brief. It describes Lumenvale's eight main markets, its subscribers, and the columns of the title file, including release_weekday, release_month and holiday_weekend. You do not have the title file yet.&#10;&#10;OBJECTIVE&#10;Help the team choose a release weekend for a finished title. In every answer, [what every answer must contain, for example the markets that matter most for the title and the columns you would compare].&#10;&#10;RULES&#10;Take facts about Lumenvale only from the brief, and name the brief as your source.&#10;Give no number about Lumenvale's titles unless it appears in the brief or the person typed it. If you cannot answer without such a number, say so and name the columns you would analyze.&#10;[One rule of your team's own.]&#10;&#10;EXAMPLES&#10;Question: [a question a manager would ask about a release date]&#10;Answer: [the answer you want, written in the agent's voice]" oninput="this.setAttribute('data-copy', this.value)" aria-label="Template to complete">STANCE
+You are the release planner on Lumenvale's content strategy team. You give managers short, direct answers and say how certain you are.
+
+CONTEXT
+Your knowledge file is the Lumenvale brief. It describes Lumenvale's eight main markets, its subscribers, and the columns of the title file, including release_weekday, release_month and holiday_weekend. You do not have the title file yet.
+
+OBJECTIVE
+Help the team choose a release weekend for a finished title. In every answer, [what every answer must contain, for example the markets that matter most for the title and the columns you would compare].
+
+RULES
+Take facts about Lumenvale only from the brief, and name the brief as your source.
+Give no number about Lumenvale's titles unless it appears in the brief or the person typed it. If you cannot answer without such a number, say so and name the columns you would analyze.
+[One rule of your team's own.]
+
+EXAMPLES
+Question: [a question a manager would ask about a release date]
+Answer: [the answer you want, written in the agent's voice]</textarea>
+  <button class="plib-copy-btn" onclick="copyPrompt('plib-material-26-edit', this)" aria-label="Copy what you typed to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy what you typed
+  </button>
+  <div class="plib-material-note">Fill in the three brackets together on the builder's laptop. The builder copies the result into the Specific tab.</div>
+</div>
+
+<div class="plib-material" id="plib-material-27">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">Starter 2, the marketing budget analyst</div>
+  <textarea class="plib-textarea" id="plib-material-27-edit" rows="18" data-copy="STANCE&#10;You are the marketing budget analyst on Lumenvale's content strategy team. You give managers short, direct answers and say how certain you are.&#10;&#10;CONTEXT&#10;Your knowledge file is the Lumenvale brief. It describes Lumenvale's eight main markets, its subscribers, and the columns of the title file, including marketing_musd, cast_recognition and budget_musd. You do not have the title file yet.&#10;&#10;OBJECTIVE&#10;Help the team decide how much to spend on marketing a title in the 28 days around its release. In every answer, [what every answer must contain, for example the evidence you would use to justify more marketing spending and the columns you would compare].&#10;&#10;RULES&#10;Take facts about Lumenvale only from the brief, and name the brief as your source.&#10;Give no number about Lumenvale's titles unless it appears in the brief or the person typed it. If you cannot answer without such a number, say so and name the columns you would analyze.&#10;[One rule of your team's own.]&#10;&#10;EXAMPLES&#10;Question: [a question a manager would ask about a marketing budget]&#10;Answer: [the answer you want, written in the agent's voice]" oninput="this.setAttribute('data-copy', this.value)" aria-label="Template to complete">STANCE
+You are the marketing budget analyst on Lumenvale's content strategy team. You give managers short, direct answers and say how certain you are.
+
+CONTEXT
+Your knowledge file is the Lumenvale brief. It describes Lumenvale's eight main markets, its subscribers, and the columns of the title file, including marketing_musd, cast_recognition and budget_musd. You do not have the title file yet.
+
+OBJECTIVE
+Help the team decide how much to spend on marketing a title in the 28 days around its release. In every answer, [what every answer must contain, for example the evidence you would use to justify more marketing spending and the columns you would compare].
+
+RULES
+Take facts about Lumenvale only from the brief, and name the brief as your source.
+Give no number about Lumenvale's titles unless it appears in the brief or the person typed it. If you cannot answer without such a number, say so and name the columns you would analyze.
+[One rule of your team's own.]
+
+EXAMPLES
+Question: [a question a manager would ask about a marketing budget]
+Answer: [the answer you want, written in the agent's voice]</textarea>
+  <button class="plib-copy-btn" onclick="copyPrompt('plib-material-27-edit', this)" aria-label="Copy what you typed to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy what you typed
+  </button>
+  <div class="plib-material-note">Fill in the three brackets together on the builder's laptop. The builder copies the result into the Specific tab.</div>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-28">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four boxes joined by OR. Ideas for your own rule. Use one, or write your own. Ask first, one clarifying question when the manager leaves out the title's market or language. Timing, treat critic_score as unknown at decision time, since critics publish their reviews after release. Format, answer in three short parts, the decision, the evidence and the next step. Two options, never recommend a single option, and give two with the reason for each."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 219" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="219" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Ideas for your own rule. Use one, or write your own</text><rect x="21" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Ask first</text><text x="37" y="122" font-size="14" fill="#6b6b6b">one clarifying question</text><text x="37" y="141" font-size="14" fill="#6b6b6b">when the manager leaves</text><text x="37" y="160" font-size="14" fill="#6b6b6b">out the title's market or</text><text x="37" y="179" font-size="14" fill="#6b6b6b">language</text><text x="248" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">OR</text><rect x="272" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Timing</text><text x="288" y="122" font-size="14" fill="#6b6b6b">treat critic_score as</text><text x="288" y="141" font-size="14" fill="#6b6b6b">unknown at decision time,</text><text x="288" y="160" font-size="14" fill="#6b6b6b">since critics publish their</text><text x="288" y="179" font-size="14" fill="#6b6b6b">reviews after release</text><text x="500" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">OR</text><rect x="524" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Format</text><text x="540" y="122" font-size="14" fill="#6b6b6b">answer in three short parts,</text><text x="540" y="141" font-size="14" fill="#6b6b6b">the decision, the evidence</text><text x="540" y="160" font-size="14" fill="#6b6b6b">and the next step</text><text x="752" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">OR</text><rect x="776" y="46" width="204" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Two options</text><text x="792" y="122" font-size="14" fill="#6b6b6b">never recommend a single</text><text x="792" y="141" font-size="14" fill="#6b6b6b">option, and give two with</text><text x="792" y="160" font-size="14" fill="#6b6b6b">the reason for each</text></svg></div>
+    <figcaption class="plib-tile-caption">Your team writes one rule of its own in the starter. Your reflection asks you to rewrite one of your team's rules.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>When the builder sends the link, open it. You submit your conversation with your team's agent. Paste T first and wait for the one sentence acknowledgment. Then copy the three questions from the box below and paste each one as its own message. Next open a regular Hokie AI chat in another tab, paste T, and paste the same three questions there. Keep both tabs open, because you compare them in your reflection.</p>
+</div>
+
+<div class="plib-material" id="plib-material-31">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The same three questions, in your team's agent and in a regular chat</div>
+  <div class="plib-material-copies">
+    <div class="plib-copyrow">
+      <div class="plib-copyrow-label">1. A fact</div>
+      <code class="plib-copyrow-code" id="plib-material-31-copy-0" data-copy="Which eight countries are Lumenvale's main markets, and what share of its subscribers is in the United States?">Which eight countries are Lumenvale's main markets, and what share of its subscribers is in the United States?</code>
+      <button class="plib-copy-btn plib-copy-btn-row" onclick="copyPrompt('plib-material-31-copy-0', this)" aria-label="Copy 1. A fact to clipboard">
+        <span aria-hidden="true">&#128203;</span> Copy
+      </button>
+    </div>
+    <div class="plib-copyrow">
+      <div class="plib-copyrow-label">2. A judgment</div>
+      <code class="plib-copyrow-code" id="plib-material-31-copy-1" data-copy="Should Lumenvale greenlight a 40 million dollar Korean thriller series with a little known cast?">Should Lumenvale greenlight a 40 million dollar Korean thriller series with a little known cast?</code>
+      <button class="plib-copy-btn plib-copy-btn-row" onclick="copyPrompt('plib-material-31-copy-1', this)" aria-label="Copy 2. A judgment to clipboard">
+        <span aria-hidden="true">&#128203;</span> Copy
+      </button>
+    </div>
+    <div class="plib-copyrow">
+      <div class="plib-copyrow-label">3. A number</div>
+      <code class="plib-copyrow-code" id="plib-material-31-copy-2" data-copy="What is the average hours viewed in the first 28 days for Lumenvale's comedies?">What is the average hours viewed in the first 28 days for Lumenvale's comedies?</code>
+      <button class="plib-copy-btn plib-copy-btn-row" onclick="copyPrompt('plib-material-31-copy-2', this)" aria-label="Copy 3. A number to clipboard">
+        <span aria-hidden="true">&#128203;</span> Copy
+      </button>
+    </div>
+  </div>
+  <div class="plib-material-note">Paste T first in each chat. Then paste each question as its own message, in the same order in both chats.</div>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-32">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:400px" role="img" aria-label="If you cannot open the link. Ask for the link again. The builder copies it again from Share. Check that you are signed in to Hokie AI with your VT account."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 281" font-family="Segoe UI,-apple-system,sans-serif"><rect width="400" height="281" rx="10" fill="#faf7f8"/><text x="34" y="52" font-size="13" fill="#6b6b6b" letter-spacing="1.2">IF YOU CANNOT OPEN THE LINK</text><text x="34" y="104" font-size="25" font-weight="600" fill="#630031">Ask for the link again</text><rect x="34" y="144" width="332" height="2" fill="#630031" opacity="0.25"/><text x="34" y="178" font-size="15" fill="#6b6b6b">The builder copies it again from Share. Check that</text><text x="34" y="199" font-size="15" fill="#6b6b6b">you are signed in to Hokie AI with your VT</text><text x="34" y="220" font-size="15" fill="#6b6b6b">account.</text></svg></div>
+  </figure>
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:400px" role="img" aria-label="If the agent says it has no brief. The builder edits the agent. Check that the Lumenvale brief file is under knowledge, save, and start a new chat with the agent."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 281" font-family="Segoe UI,-apple-system,sans-serif"><rect width="400" height="281" rx="10" fill="#faf7f8"/><text x="34" y="52" font-size="13" fill="#6b6b6b" letter-spacing="1.2">IF THE AGENT SAYS IT HAS NO BRIEF</text><text x="34" y="104" font-size="25" font-weight="600" fill="#630031">The builder edits the agent</text><rect x="34" y="144" width="332" height="2" fill="#630031" opacity="0.25"/><text x="34" y="178" font-size="15" fill="#6b6b6b">Check that the Lumenvale brief file is under</text><text x="34" y="199" font-size="15" fill="#6b6b6b">knowledge, save, and start a new chat with the</text><text x="34" y="220" font-size="15" fill="#6b6b6b">agent.</text></svg></div>
+  </figure>
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:400px" role="img" aria-label="If the agent talks about what is inside T. The builder checks the Platform tab. Replace the default with the class text, save, and start a new chat."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 281" font-family="Segoe UI,-apple-system,sans-serif"><rect width="400" height="281" rx="10" fill="#faf7f8"/><text x="34" y="52" font-size="13" fill="#6b6b6b" letter-spacing="1.2">IF THE AGENT TALKS ABOUT WHAT IS INSIDE T</text><text x="34" y="104" font-size="25" font-weight="600" fill="#630031">The builder checks the</text><text x="34" y="138" font-size="25" font-weight="600" fill="#630031">Platform tab</text><rect x="34" y="178" width="332" height="2" fill="#630031" opacity="0.25"/><text x="34" y="212" font-size="15" fill="#6b6b6b">Replace the default with the class text, save, and</text><text x="34" y="233" font-size="15" fill="#6b6b6b">start a new chat.</text></svg></div>
+  </figure>
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:400px" role="img" aria-label="If your team has no link by 40:00. Use the class agent. Open the link on the screen, paste T, and paste the three questions there. In your reflection, rewrite one rule of the greenlight analyst."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 281" font-family="Segoe UI,-apple-system,sans-serif"><rect width="400" height="281" rx="10" fill="#faf7f8"/><text x="34" y="52" font-size="13" fill="#6b6b6b" letter-spacing="1.2">IF YOUR TEAM HAS NO LINK BY 40:00</text><text x="34" y="104" font-size="25" font-weight="600" fill="#630031">Use the class agent</text><rect x="34" y="144" width="332" height="2" fill="#630031" opacity="0.25"/><text x="34" y="178" font-size="15" fill="#6b6b6b">Open the link on the screen, paste T, and paste</text><text x="34" y="199" font-size="15" fill="#6b6b6b">the three questions there. In your reflection,</text><text x="34" y="220" font-size="15" fill="#6b6b6b">rewrite one rule of the greenlight analyst.</text></svg></div>
+  </figure>
+</div>
+<script>(function(){var g=document.getElementById("plib-tiles-32");if(!g)return;var k=[].slice.call(g.children);for(var i=k.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=k[i];k[i]=k[j];k[j]=t;}k.forEach(function(el){g.appendChild(el);});})();</script>
+
+<div class="plib-section"><div class="plib-section-n">Section 4 of 5</div><div class="plib-section-t">DISCUSSION</div></div>
+
+<div class="plib-tiles" id="plib-tiles-34">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four boxes, one show of hands per chat, for what Hokie AI did with the third question. Gave a number OR said it could not know OR asked what Lumenvale is OR did something else."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 190" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="190" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">What Hokie AI did with the third question, one hand per chat</text><rect x="21" y="46" width="204" height="122" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Gave a number</text><text x="37" y="122" font-size="14" fill="#6b6b6b"></text><text x="248" y="112" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">OR</text><rect x="272" y="46" width="204" height="122" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Said it could not</text><text x="318" y="103" font-size="17" font-weight="600" fill="#2b2b2b">know</text><text x="288" y="134" font-size="14" fill="#6b6b6b"></text><text x="500" y="112" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">OR</text><rect x="524" y="46" width="204" height="122" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Asked what</text><text x="569" y="103" font-size="17" font-weight="600" fill="#2b2b2b">Lumenvale is</text><text x="540" y="134" font-size="14" fill="#6b6b6b"></text><text x="752" y="112" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">OR</text><rect x="776" y="46" width="204" height="122" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Did something</text><text x="820" y="103" font-size="17" font-weight="600" fill="#2b2b2b">else</text><text x="792" y="134" font-size="14" fill="#6b6b6b"></text></svg></div>
+    <figcaption class="plib-tile-caption">One hand for your regular chat, then one hand for your team's agent.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-discussion">
+  <div class="plib-discussion-label">&#128172; Discussion</div>
+  <p class="plib-discussion-intro">Take these into the reflection:</p>
+  <ul class="plib-discussion-list">
+    <li>For the judgment question, what did Hokie AI base its answer on in the regular chat, and what did your agent base its answer on?</li>
+    <li>Your team built its agent for a different decision from the one the greenlight analyst supports. Which answer differed because of that, and which answer was the same?</li>
+    <li>Which reply from your agent today would you not give a manager as it stands, and what would you want it to say?</li>
+</ul>
+</div>
+
+<div class="plib-narration">
+  <p>Turn to a teammate for three minutes. Each of you names one reply from today that a manager could misread without knowing whether Hokie AI wrote it in a regular chat or as the agent AND the line you wrote in your instructions to prevent the misreading, or the line you would add. A manager sees only the reply, so the builder has to write the protection into the instructions.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-37">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Two boxes joined by AND, three minutes with a teammate. A misreadable answer, one reply a manager could misread without knowing its source. Your line, the line you wrote to prevent the misreading, or the line you would add."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 190" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="190" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Three minutes with a teammate</text><rect x="21" y="46" width="455" height="122" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">A misreadable answer</text><text x="37" y="122" font-size="14" fill="#6b6b6b">one reply a manager could misread without knowing its source</text><text x="500" y="112" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="455" height="122" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Your line</text><text x="540" y="122" font-size="14" fill="#6b6b6b">the line you wrote to prevent the misreading, or the line you would</text><text x="540" y="141" font-size="14" fill="#6b6b6b">add</text></svg></div>
+    <figcaption class="plib-tile-caption">Three minutes, both of you.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>Then choose your five projects as a team, in order of preference, from the list in section 1. One person submits the team's five choices with the button under the list by 11:59 pm on Wednesday, November 4. On Thursday your team adds the Lumenvale title file to this agent and starts a second agent for its own project.</p>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 5 of 5</div><div class="plib-section-t">REFLECTION</div></div>
+
+<div class="plib-tiles" id="plib-tiles-40">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four boxes joined by AND. Write all four in your reflection. A difference, for the first or the third question, what Hokie AI said in the regular chat and what your agent said. Its source, the line of the Specific instructions or the part of the brief behind the difference. The judgment, for the second question, which answer you would give a Lumenvale manager, and the evidence behind that answer. Your revision, one reply from your agent today that you would want different, and the rule you would add or rewrite, in its exact words, and why."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 238" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="238" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Write all four in your reflection</text><rect x="21" y="46" width="204" height="170" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">A difference</text><text x="37" y="122" font-size="14" fill="#6b6b6b">for the first or the third</text><text x="37" y="141" font-size="14" fill="#6b6b6b">question, what Hokie AI</text><text x="37" y="160" font-size="14" fill="#6b6b6b">said in the regular chat and</text><text x="37" y="179" font-size="14" fill="#6b6b6b">what your agent said</text><text x="248" y="136" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="170" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Its source</text><text x="288" y="122" font-size="14" fill="#6b6b6b">the line of the Specific</text><text x="288" y="141" font-size="14" fill="#6b6b6b">instructions or the part of</text><text x="288" y="160" font-size="14" fill="#6b6b6b">the brief behind the</text><text x="288" y="179" font-size="14" fill="#6b6b6b">difference</text><text x="500" y="136" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="170" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The judgment</text><text x="540" y="122" font-size="14" fill="#6b6b6b">for the second question,</text><text x="540" y="141" font-size="14" fill="#6b6b6b">which answer you would</text><text x="540" y="160" font-size="14" fill="#6b6b6b">give a Lumenvale manager,</text><text x="540" y="179" font-size="14" fill="#6b6b6b">and the evidence behind</text><text x="540" y="198" font-size="14" fill="#6b6b6b">that answer</text><text x="752" y="136" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="170" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Your revision</text><text x="792" y="122" font-size="14" fill="#6b6b6b">one reply from your agent</text><text x="792" y="141" font-size="14" fill="#6b6b6b">today that you would want</text><text x="792" y="160" font-size="14" fill="#6b6b6b">different, and the rule you</text><text x="792" y="179" font-size="14" fill="#6b6b6b">would add or rewrite, in its</text><text x="792" y="198" font-size="14" fill="#6b6b6b">exact words, and why</text></svg></div>
+    <figcaption class="plib-tile-caption">Answer all four parts.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>Now write your reflection in the thread with your team's agent, in your own words and without help from the AI. The agent acknowledges it in one sentence.</p>
+  <p>Write all four of these in your reflection. First, for the first or the third question, say what Hokie AI said in the regular chat and what your agent said. AND second, name the line of the Specific instructions or the part of the brief behind the difference. AND third, for the second question, say which answer you would give a Lumenvale manager and what evidence is behind that answer. AND fourth, choose one reply from your agent today that you would want different, write the rule you would add or rewrite in your team's instructions, in its exact words, and say how the reply would change.</p>
+  <p>Your instructor gives the fourth part the most weight. Write the new rule in full, in the words the agent will read.</p>
+  <p>Write 80 to 160 words.</p>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution R11.1.1">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">R11.1.1</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Your reflection</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 80 to 160 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_42" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for R11.1.1"
+            data-maxwords="160" data-maxchars="1600"
+            oninput="updateCounter('prompt_42', 'textarea_42')"></textarea>
+  <div class="plib-counter" id="counter_prompt_42" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_42">0</span> / 160 words&nbsp;·&nbsp;
+    <span id="cc_prompt_42">0</span> / 1600 characters
+    <span class="plib-counter-min">minimum: 80 words</span>
+  </div>
+  <div class="plib-warn" id="warn_prompt_42" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_42"
+       data-prefix="### R11.1.1&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_42"
+       data-maxwords="160"
+       data-maxchars="1600"
+       data-minwords="80"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_42', this)"
+          aria-label="Copy contribution R11.1.1 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-submit">
+  <div class="plib-submit-title">Before you leave</div>
+  <p class="plib-submit-p">Export this thread as a .zip file, then upload it to the Canvas assignment. Your work is not submitted until Canvas shows your file.</p>
+  <a class="plib-submit-btn" href="https://canvas.vt.edu/courses/233475/assignments/2844147" target="_blank" rel="noopener noreferrer">Open the Canvas assignment</a>
+  <div class="plib-submit-note">Opens in a new tab, so this page stays where it is.</div>
+</div>
+
+</div>
+</main>
+<script>
+function countWords(text) {
+  return text.trim() === '' ? 0 : text.trim().split(/[ \t\n\r]+/).length;
+}
+function announce(msg) {
+  var el = document.getElementById('plib-live');
+  if (!el) { el = document.createElement('div'); el.id = 'plib-live';
+    el.setAttribute('aria-live','polite'); el.setAttribute('aria-atomic','true');
+    el.style.cssText='position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;';
+    document.body.appendChild(el); }
+  el.textContent = ''; setTimeout(function(){ el.textContent = msg; }, 50);
+}
+function autoResize(ta) {
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(ta.scrollHeight + 2, 600) + 'px';
+}
+function updateCounter(bid, tid) {
+  var ta = document.getElementById(tid);
+  var textEl = document.getElementById('text_' + bid);
+  var wcEl = document.getElementById('wc_' + bid);
+  var ccEl = document.getElementById('cc_' + bid);
+  var ctrEl = document.getElementById('counter_' + bid);
+  if (!ta) return;
+  autoResize(ta);
+  var maxwords = textEl ? parseInt(textEl.getAttribute('data-maxwords') || '0') : 0;
+  var maxchars = textEl ? parseInt(textEl.getAttribute('data-maxchars') || '0') : 0;
+  var minwords = textEl ? parseInt(textEl.getAttribute('data-minwords') || '0') : 0;
+  var text = ta.value;
+  var words = countWords(text);
+  var chars = text.length;
+  if (maxchars && chars > maxchars) {
+    ta.value = text.substring(0, maxchars);
+    text = ta.value; words = countWords(text); chars = text.length;
+  }
+  if (wcEl) wcEl.textContent = words;
+  if (ccEl) ccEl.textContent = chars;
+  if (ctrEl && maxwords) {
+    var pct = words / maxwords;
+    var cls = pct >= 1.0 ? 'bad' : (pct >= 0.8 || (minwords && words < minwords)) ? 'warn' : 'ok';
+    if (pct >= 1.0) { ctrEl.className = 'plib-counter at-limit'; }
+    else { ctrEl.className = 'plib-counter'; }
+    if (wcEl) wcEl.className = 'plib-count-' + cls;
+    if (ccEl) ccEl.className = 'plib-count-' + cls;
+  }
+}
+function copyPrompt(id, btn) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var text = (el.getAttribute('data-copy') || el.textContent || '').replace(/&#10;/g, '\n');
+  var label = (btn.getAttribute('aria-label') || 'item').replace('Copy ','').replace(' to clipboard','');
+  doCopy(text, btn, label + ' copied.', '&#10003; Copied', 2000);
+}
+function copyWithInput(bid, btn) {
+  var el = document.getElementById('text_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!el) return;
+  var tid = el.getAttribute('data-tid');
+  var inputEl = document.getElementById(tid);
+  var prefix = (el.getAttribute('data-prefix') || '').replace(/&#10;/g, '\n');
+  var suffix = (el.getAttribute('data-suffix') || '').replace(/&#10;/g, '\n');
+  var userText = inputEl ? inputEl.value.trim() : '';
+  if (userText.replace(/[\t\n\r ]/g, '').length < 2) {
+    if (warnEl) warnEl.textContent = 'Please write your response before copying.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  var maxwords = parseInt(el.getAttribute('data-maxwords') || '0');
+  var maxchars = parseInt(el.getAttribute('data-maxchars') || '0');
+  var minwords = parseInt(el.getAttribute('data-minwords') || '0');
+  if (minwords && countWords(userText) < minwords) {
+    if (warnEl) warnEl.textContent = 'Response is below the minimum of ' + minwords + ' words.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  if (maxwords && countWords(userText) > maxwords) {
+    if (warnEl) warnEl.textContent = 'Response exceeds the ' + maxwords + ' word limit.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  if (warnEl) warnEl.textContent = '';
+  doCopy(prefix + userText + suffix, btn, 'Copied. Paste into Hokie AI.', '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+function doCopy(text, btn, announcement, label, duration) {
+  function ok() {
+    var orig = btn.innerHTML; btn.innerHTML = label; btn.classList.add('copied');
+    announce(announcement);
+    setTimeout(function() { btn.innerHTML = orig; btn.classList.remove('copied'); }, duration);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(ok).catch(function() { fallback(text, ok); });
+  } else { fallback(text, ok); }
+}
+function fallback(text, cb) {
+  var ta = document.createElement('textarea'); ta.value = text;
+  ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); cb(); } catch(e) {}
+  document.body.removeChild(ta);
+}
+function copyStructured(bid, blockId, btn) {
+  var container = document.getElementById('qitems_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!container) return;
+  var outerDiv = container.closest('.plib-prompt-q');
+  var aiDirective = outerDiv ? (outerDiv.getAttribute('data-ai-directive') || '') : '';
+  var items = container.querySelectorAll('.plib-q-item');
+  var lines = [];
+  var emptyItems = [];
+
+  items.forEach(function(itemEl) {
+    var n = itemEl.getAttribute('data-item-n');
+    var render = itemEl.getAttribute('data-render');
+    var selections = [];
+
+    if (render === 'dropdown') {
+      var sel = itemEl.querySelector('select');
+      if (sel && sel.value) selections.push(sel.value);
+    } else if (render === 'likert') {
+      var checkedRadio = itemEl.querySelector('input[type="radio"]:checked');
+      if (checkedRadio) selections.push(checkedRadio.value);
+    } else if (render === 'checkbox') {
+      var checks = itemEl.querySelectorAll('input[type="checkbox"]:checked');
+      checks.forEach(function(c) { selections.push(c.value); });
+    }
+
+    if (selections.length === 0) {
+      emptyItems.push(n);
+    } else {
+      lines.push('ITEM ' + n + ': ' + selections.join(', '));
+    }
+  });
+
+  if (emptyItems.length > 0) {
+    if (warnEl) {
+      warnEl.textContent = 'Please make a selection for ITEM '
+        + emptyItems.join(', ITEM ') + ' before copying.';
+    }
+    return;
+  }
+
+  if (warnEl) warnEl.textContent = '';
+
+  var directiveLine = aiDirective ? aiDirective + '\n' : '';
+  var envelope = '### ' + blockId + '\n----------\n' + directiveLine + 'RESPONSE:\n'
+    + lines.join('\n') + '\n----------\n###';
+  doCopy(envelope, btn,
+    'Structured response copied. Paste into Hokie AI.',
+    '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+function enforceCheckboxCap(itemEl) {
+  var max = parseInt(itemEl.getAttribute('data-max-select') || '0', 10);
+  if (!max || max < 2) return;
+  var checks = itemEl.querySelectorAll('input[type="checkbox"]');
+  var checked = itemEl.querySelectorAll('input[type="checkbox"]:checked');
+  var atCap = checked.length >= max;
+  checks.forEach(function(c) {
+    if (!c.checked) c.disabled = atCap;
+  });
+}
+function moveItem(btn, direction) {
+  var li = btn.closest('.plib-o-item');
+  if (!li) return;
+  var list = li.parentElement;
+  if (!list) return;
+  if (direction === 'up') {
+    var prev = li.previousElementSibling;
+    if (prev) list.insertBefore(li, prev);
+  } else if (direction === 'down') {
+    var next = li.nextElementSibling;
+    if (next) list.insertBefore(next, li);
+  }
+  updateArrowStates(list);
+}
+function updateArrowStates(list) {
+  var items = list.querySelectorAll('.plib-o-item');
+  items.forEach(function(li, idx) {
+    var rankEl = li.querySelector('.plib-o-rank');
+    if (rankEl) rankEl.textContent = (idx + 1) + '.';
+    var upBtn = li.querySelector('.plib-o-arrow-up');
+    var downBtn = li.querySelector('.plib-o-arrow-down');
+    if (upBtn) upBtn.disabled = (idx === 0);
+    if (downBtn) downBtn.disabled = (idx === items.length - 1);
+    var itemText = li.getAttribute('data-item-text') || '';
+    if (upBtn) upBtn.setAttribute('aria-label', 'Move ' + itemText + ' up');
+    if (downBtn) downBtn.setAttribute('aria-label', 'Move ' + itemText + ' down');
+  });
+}
+function copyOrdered(bid, blockId, btn) {
+  var list = document.getElementById('oitems_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!list) return;
+  var outerDiv = list.closest('.plib-prompt-o');
+  var aiDirective = outerDiv ? (outerDiv.getAttribute('data-ai-directive') || '') : '';
+  var question = list.getAttribute('data-question') || '';
+  var items = list.querySelectorAll('.plib-o-item');
+  var lines = [];
+  items.forEach(function(li, idx) {
+    var itemText = li.getAttribute('data-item-text') || '';
+    lines.push((idx + 1) + '. ' + itemText);
+  });
+  if (warnEl) warnEl.textContent = '';
+  var directiveLine = aiDirective ? aiDirective + '\n' : '';
+  var envelope = '### ' + blockId + '\n----------\n' + directiveLine + 'RESPONSE:\nQuestion: '
+    + question + '\n' + lines.join('\n') + '\n----------\n###';
+  doCopy(envelope, btn,
+    'Ordered response copied. Paste into Hokie AI.',
+    '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var checkboxItems = document.querySelectorAll('.plib-q-item[data-render="checkbox"]');
+  checkboxItems.forEach(function(itemEl) {
+    var checks = itemEl.querySelectorAll('input[type="checkbox"]');
+    checks.forEach(function(c) {
+      c.addEventListener('change', function() { enforceCheckboxCap(itemEl); });
+    });
+  });
+  var oLists = document.querySelectorAll('.plib-o-list');
+  oLists.forEach(function(list) {
+    updateArrowStates(list);
+  });
+});
+</script>
+</body>
+</html>

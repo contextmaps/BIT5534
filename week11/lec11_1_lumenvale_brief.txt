@@ -1,0 +1,42 @@
+LUMENVALE: CLASS CASE BRIEF FOR BIT 5534
+
+Lumenvale is a made up streaming service, the class case in BIT 5534 from week 11 on. Your instructor demonstrates on Lumenvale in every class session. No team builds its project on it.
+
+THE COMPANY
+
+Lumenvale streams films and series to 38 million subscribers. Its eight main markets are the United States, Canada, the United Kingdom, Germany, Brazil, Mexico, India and Japan. The United States accounts for 15 million of the 38 million subscribers. Lumenvale spends about 2.6 billion dollars a year on content, a little over half on originals it produces and the rest on licensed titles it rents from other studios.
+
+The content strategy team makes three recurring decisions. The team decides which proposed titles to greenlight, and at what budget. The team decides how much to spend on marketing each title. The team also decides when to release each title, since Lumenvale can lose viewers for a title released on a crowded holiday weekend, or on a sunny weekend in its largest markets. The team judges a title by its first 28 days, because Lumenvale makes renewal and sequel decisions at day 28.
+
+THE TITLE FILE
+
+Your instructor releases the file lumenvale_titles.csv in class on Thursday, November 5. Until then no numbers from it are available, and this brief contains the definitions only. One row is one title, film or series, released between January 2021 and June 2026.
+
+Columns:
+title_id: Lumenvale's catalog number for the title.
+title_type: Film or Series.
+genre: Drama, Comedy, Thriller, Documentary, Animation, Reality, or Science Fiction and Fantasy.
+origin: Original (Lumenvale produced it) or Licensed (Lumenvale rents it from another studio).
+language: the original language, English, Spanish, Portuguese, Hindi, Japanese, Korean or Other.
+franchise: Yes if the title belongs to an existing franchise or is an adaptation of a known book, game or film, otherwise No.
+budget_musd: the production budget in millions of dollars, or for a licensed title the license fee.
+episodes: the number of episodes, 1 for a film.
+runtime_min: the running time in minutes for a film, the average episode length for a series.
+cast_recognition: a score from 0 to 100 for how well audiences in the main markets know the lead cast, measured before release.
+marketing_musd: marketing spending in millions of dollars in the 28 days around release.
+release_weekday: the day of the week on which Lumenvale released the title.
+release_month: the month in which Lumenvale released the title.
+holiday_weekend: Yes if Lumenvale released the title on a public holiday weekend in the United States, otherwise No.
+critic_score: the average critic review score, from 0 to 100, published by critics in the days after release.
+synopsis: the description Lumenvale showed subscribers on the title's page.
+hours_28d: the number target, millions of hours subscribers watched worldwide in the first 28 days.
+breakout: the yes or no target. Yes if the title was in the top ten in at least five of the eight main markets during its first 28 days. About one title in ten is a breakout.
+Validation: Training or Validation, the split used in this course.
+
+LIVE DATA
+
+From week 13 the Lumenvale agent can retrieve two kinds of public data. With public holiday calendars for the eight main markets, the team can see which release weekends are crowded. Weekend weather forecasts for the largest cities in those markets matter because subscribers watch less on warm, clear weekends and more on cold or rainy ones. The team may move a release date on the basis of either kind of data.
+
+HOW AN AGENT SHOULD USE THIS BRIEF
+
+An agent may quote every fact about Lumenvale above. No other number about Lumenvale's titles is available yet. An agent gives no average, count, model result or comparison until the team supplies the title file and its own results.
