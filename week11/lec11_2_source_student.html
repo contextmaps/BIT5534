@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading Model Reports with an Analytics Agent</title>
+<style>
+:root {
+  --c-text:#1a1a1a; --c-muted:#4a4a4a;
+  --c-meta-bg:#f4f6f9; --c-meta-border:#d0d7e2;
+  --c-obj-bg:#eef4fb; --c-obj-accent:#1a5da0;
+  --c-ctx-bg:#fffbf0; --c-ctx-border:#e8d8a0; --c-ctx-label:#5c4400;
+  --c-ctx-s-bg:#f0f7ff; --c-ctx-s-border:#a0c8f0; --c-ctx-s-label:#1a4a80;
+  --c-nar-bg:#f9f9f9; --c-nar-border:#bbb;
+  --c-dis-bg:#f0f4ff; --c-dis-border:#8090cc; --c-dis-label:#1e2e80;
+  --c-sys-bg:#f3f0ff; --c-sys-border:#9080d0; --c-sys-label:#3a2090;
+  --c-scr-bg:#fff8e8; --c-scr-border:#d0a030; --c-scr-label:#6b4a00;
+  --c-s-bg:#f0faf4; --c-s-border:#70c090; --c-s-id:#14552f;
+  --c-r-bg:#fff8f0; --c-r-border:#d0a040; --c-r-id:#6b3e00;
+  --c-mk-bg:#f0f0ff; --c-mk-border:#8080c8; --c-mk-id:#2a2a80;
+  --c-m-bg:#f0f8ff; --c-m-border:#70a8d0; --c-m-id:#0a4a70;
+  --c-mc-bg:#f8f8ff; --c-mc-border:#a0a0d0;
+  --c-btn:#14552f; --c-btn-r:#6b3e00; --c-btn-mk:#2a2a80;
+  --c-btn-mo:#0a4a70; --c-btn-mc:#3a3a6a;
+  --c-q-bg:#f0fafd; --c-q-border:#70b8d0; --c-q-id:#0a5070;
+  --c-btn-q:#0a5070;
+  --c-o-bg:#fef6f0; --c-o-border:#e89870; --c-o-id:#a04510;
+  --c-btn-o:#a04510;
+  --radius:8px; --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --page:1100px;
+}
+/* Two layers. The wrapper takes the width Canvas gives it, up to --page, so it
+   never overflows a narrow frame and never needs a per-machine number. Everything
+   inside fills the block it sits in. */
+.plib-wrap{font-family:var(--font);color:var(--c-text);max-width:min(var(--page),100% - 2rem);margin:0 auto;padding:1rem 0}
+/* Every block spans the page so their left and right edges line up down the
+   column, and the text inside fills the block.
+
+   There is no reading column. D-032 put prose in a 720px column inside a 1100px
+   wrapper, and on 2026-09-02 the instructor read the rendered result and rejected
+   it: every text block stopped two thirds of the way across its own card and
+   stranded the rest, and a bordered box that stops short of the card it sits in
+   reads as broken rather than as typography. The wrapper's own
+   min(1100px, 100% - 2rem) is now the only bound, so a line never exceeds about
+   1055px. The cost is real and is worth stating. A long paragraph at 1055px reads
+   worse than the same paragraph at 800, and what pays for it is the writing
+   standard's rule on paragraph length, which now carries the load the column used
+   to carry. Recorded as D-043, amending D-032. */
+.plib-wrap > *{max-width:100%}
+.plib-submit{margin:2rem 0 1rem;padding:1.4rem 1.6rem;border-radius:var(--radius);background:var(--c-obj-bg);border:2px solid var(--c-obj-accent)}
+.plib-submit-title{font-size:13px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--c-obj-accent)}
+.plib-submit-p{margin:.5rem 0 1rem;font-size:15px;line-height:1.65}
+.plib-submit-btn{display:inline-block;background:var(--c-obj-accent);color:#fff;text-decoration:none;font-size:16px;font-weight:600;padding:.7rem 1.4rem;border-radius:var(--radius)}
+.plib-submit-btn:hover{filter:brightness(1.12)}
+.plib-submit-btn:focus{outline:3px solid var(--c-obj-accent);outline-offset:3px}
+.plib-submit-note{margin-top:.55rem;font-size:13px;color:var(--c-muted)}
+.plib-material{margin:1.6rem 0;padding:1.2rem 1.4rem;border-radius:var(--radius);background:var(--c-s-bg);border:1px solid var(--c-s-border)}
+.plib-material-tag{font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--c-s-id)}
+.plib-material-title{margin-top:.3rem;font-size:17px;font-weight:600;color:var(--c-text)}
+.plib-material-box{margin:.9rem 0 1.1rem;padding:.9rem 1rem;max-height:22rem;overflow:auto;background:#fff;border:1px solid var(--c-s-border);border-radius:6px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;color:var(--c-text)}
+.plib-material-box:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+.plib-material-btns{display:flex;flex-wrap:wrap;gap:.6rem}
+.plib-material-copies{margin:.9rem 0 0;display:flex;flex-wrap:wrap;gap:.8rem}
+.plib-copyrow{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;padding:.55rem .7rem;background:#fff;border:1px solid var(--c-s-border);border-radius:6px}
+.plib-copyrow-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-s-id)}
+.plib-copyrow-code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;color:var(--c-text)}
+.plib-copy-btn-row{padding:.3rem .6rem;font-size:12px}
+.plib-material-btn{display:inline-block;background:var(--c-s-id);color:#fff;text-decoration:none;font-size:15px;font-weight:600;padding:.6rem 1.2rem;border-radius:var(--radius)}
+.plib-material-btn:hover{filter:brightness(1.25)}
+.plib-material-btn:focus{outline:3px solid var(--c-s-id);outline-offset:3px}
+.plib-material-note{margin-top:.55rem;font-size:13px;color:var(--c-muted)}
+.plib-section{margin:2.25rem 0 1.1rem;padding-top:.9rem;border-top:3px solid var(--c-obj-accent)}
+.plib-section-n{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--c-muted)}
+.plib-section-t{font-size:23px;font-weight:700;letter-spacing:.04em;color:var(--c-obj-accent);margin-top:2px}
+.plib-wrap > .plib-section:first-child{margin-top:.5rem}
+.plib-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;margin-bottom:1.25rem}
+.plib-tile{background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);padding:.9rem;display:flex;flex-direction:column}
+.plib-tile img{width:100%;height:auto;border-radius:4px;background:#faf7f8}
+.plib-tile figure,.plib-tile{margin:0}
+/* A drawing narrower than its grid cell is centred in it. render_tiles caps the
+   wrapper at the SVG's own viewBox width so a 400px card is not blown up to the
+   full row, and without this the drawing sat against the left edge with the slack
+   stranded on the right, which is the same fault D-043 removed from the prose. */
+.plib-tile-svg{width:100%;margin-left:auto;margin-right:auto}
+.plib-tile-svg svg{width:100%;height:auto;display:block}
+.plib-tile-caption{font-size:13px;line-height:1.55;color:var(--c-text);margin-top:auto;padding-top:.6rem}
+.plib-meta{background:var(--c-meta-bg);border:1px solid var(--c-meta-border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1.5rem}
+.plib-meta-course{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--c-muted);margin-bottom:4px}
+.plib-meta-title{font-size:20px;font-weight:600;margin:4px 0 8px}
+.plib-meta-week{font-size:13px;color:var(--c-muted);margin-bottom:2px}
+.plib-meta-details{font-size:12px;color:var(--c-muted);margin-top:8px}
+.plib-objectives{background:var(--c-obj-bg);border-left:4px solid var(--c-obj-accent);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.5rem}
+.plib-objectives-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-obj-accent);font-weight:700;margin-bottom:8px}
+.plib-objectives-intro{margin:0 0 8px;font-size:14px;line-height:1.6;font-style:italic;color:var(--c-muted)}
+.plib-objectives-list{margin:0;padding-left:1.25rem}
+.plib-objectives-list li{margin-bottom:6px;font-size:14px;line-height:1.6}
+.plib-context{background:var(--c-ctx-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-context-student{background:var(--c-ctx-s-bg);border-color:var(--c-ctx-s-border)}
+.plib-context-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-ctx-label);font-weight:700;margin-bottom:8px}
+.plib-context-student .plib-context-label{color:var(--c-ctx-s-label)}
+.plib-context-body p{margin:4px 0;font-size:13px;line-height:1.6;color:var(--c-muted)}
+.plib-formula{margin:1rem 0;padding:1rem 1.25rem;background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);text-align:center}
+.plib-formula-body{overflow-x:auto;color:var(--c-text);padding:2px 0}
+.plib-formula-svg{max-width:100%;height:auto}
+.plib-formula-caption{margin-top:.85rem;font-size:13px;line-height:1.6;color:var(--c-muted);text-align:left}
+.plib-formula-missing{font-size:13px;color:var(--c-muted);text-align:left}
+.plib-formula-note{font-size:12px;margin-top:6px}
+.plib-formula-source{margin-top:.85rem;text-align:left}
+.plib-formula-source summary{font-size:12px;color:var(--c-muted);cursor:pointer}
+.plib-formula-latex{margin:6px 0 0;padding:8px 10px;background:var(--c-ctx-bg);border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.5;white-space:pre-wrap;color:var(--c-muted)}
+.plib-context-pre{margin:8px 0;padding:10px 12px;background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.55;color:var(--c-text);white-space:pre;overflow-x:auto}
+.plib-context-bullet{font-size:13px;color:var(--c-muted);padding-left:1rem;position:relative;margin-bottom:3px}
+.plib-context-bullet::before{content:"\2022";position:absolute;left:0}
+.plib-script{background:var(--c-scr-bg);border:1px solid var(--c-scr-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-script-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-scr-label);font-weight:700;margin-bottom:10px}
+.plib-script-list{margin:0;padding-left:1.25rem}
+.plib-script-list li{font-size:14px;line-height:1.6;margin-bottom:8px}
+.plib-script-time{font-weight:700;color:var(--c-scr-label);font-family:monospace;background:rgba(208,160,48,.15);padding:1px 6px;border-radius:3px}
+.plib-narration{background:var(--c-nar-bg);border-left:3px solid var(--c-nar-border);padding:.9rem 1.25rem;margin-bottom:1rem;border-radius:0 var(--radius) var(--radius) 0}
+.plib-narration p{margin:0 0 8px;font-size:14px;line-height:1.7}
+.plib-narration p:last-child{margin-bottom:0}
+.plib-narration-list{margin:4px 0;padding-left:1.25rem}
+.plib-narration-list li{font-size:14px;line-height:1.6;margin-bottom:4px}
+.plib-discussion{background:var(--c-dis-bg);border:1px solid var(--c-dis-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-slide{margin:0 0 1.25rem;text-align:center}
+.plib-slide-img{max-width:100%;height:auto;border:1px solid var(--c-dis-border);border-radius:var(--radius);box-shadow:0 1px 4px rgba(0,0,0,.08);background:#faf7f8;min-height:60px}
+.plib-slide-caption{font-size:13px;color:var(--c-muted);margin-top:.4rem}
+.plib-slide-script{margin-top:.6rem;text-align:left;font-size:13px;color:var(--c-muted)}
+.plib-slide-script summary{cursor:pointer;font-weight:600}
+.plib-slide-script-body{white-space:pre-wrap;background:rgba(0,0,0,.04);border-radius:var(--radius);padding:.6rem .8rem;margin-top:.4rem}
+.plib-discussion-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-dis-label);font-weight:700;margin-bottom:8px}
+.plib-discussion-intro{margin:0 0 8px;font-size:14px;line-height:1.6;font-style:italic;color:var(--c-dis-label)}
+.plib-discussion-list{margin:0;padding-left:1.25rem}
+.plib-discussion-list li{font-size:14px;line-height:1.6;margin-bottom:6px;color:var(--c-dis-label)}
+.plib-scenarios{margin-bottom:1rem}
+.plib-scenarios-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:#630031;font-weight:700;margin-bottom:8px}
+.plib-scenario-card{background:var(--c-ctx-s-bg);border:1px solid var(--c-ctx-s-border);border-left:4px solid #630031;border-radius:var(--radius);padding:.7rem 1rem;margin-bottom:.6rem}
+.plib-scenario-title{font-weight:700;font-size:14px;color:#630031;margin-bottom:4px}
+.plib-scenario-body{margin:0 0 4px;font-size:14px;line-height:1.6}
+.plib-scenario-line{font-size:13px;line-height:1.55;margin:2px 0 0;padding-left:1rem;position:relative}
+.plib-scenario-line::before{content:"›";position:absolute;left:.2rem;color:#CF4420;font-weight:700}
+.plib-system{background:var(--c-sys-bg);border:1px solid var(--c-sys-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-system-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-sys-label);font-weight:700;margin-bottom:8px}
+.plib-system-note{font-weight:400;text-transform:none;letter-spacing:0;font-style:italic}
+.plib-prompt-s-ref{opacity:.92;border-style:dashed}
+.plib-ref-note{font-size:12px;color:var(--c-muted);font-style:italic;margin-top:6px}
+.plib-prompt-text{display:none}
+.plib-prompt-display{font-size:14px;line-height:1.7;white-space:pre-wrap;background:rgba(255,255,255,.6);border-radius:4px;padding:.6rem .8rem;margin-bottom:10px}
+.plib-prompt-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.plib-prompt-id{font-size:12px;font-weight:700;font-family:monospace;padding:2px 7px;border-radius:4px}
+.plib-prompt-type-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-muted);font-weight:600}
+.plib-prompt-s{background:var(--c-s-bg);border:1px solid var(--c-s-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-prompt-s .plib-prompt-id{color:var(--c-s-id);background:rgba(20,85,47,.1)}
+.plib-prompt-r{background:var(--c-r-bg);border:1px solid var(--c-r-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-r-id{color:var(--c-r-id)!important;background:rgba(107,62,0,.1)!important}
+.plib-reflect-label{color:var(--c-r-id)!important}
+.plib-reflect-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-prompt-marker{background:var(--c-mk-bg);border:2px solid var(--c-mk-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-marker-id{color:var(--c-mk-id)!important;background:rgba(42,42,128,.1)!important}
+.plib-marker-label{color:var(--c-mk-id)!important}
+.plib-marker-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-marker-display{border-left:3px solid var(--c-mk-border);max-height:18em;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;box-shadow:inset 0 -10px 10px -10px rgba(0,0,0,.18)}
+.plib-prompt-m{background:var(--c-m-bg);border:1.5px solid var(--c-m-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:.5rem}
+.plib-m-id{color:var(--c-m-id)!important;background:rgba(10,74,112,.1)!important}
+.plib-m-label{color:var(--c-m-id)!important}
+.plib-m-badge{font-size:11px;background:var(--c-m-id);color:#fff;padding:2px 8px;border-radius:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.plib-m-instructions{background:rgba(255,255,255,.7);border-radius:6px;padding:10px 14px;margin-bottom:12px}
+.plib-m-instructions-label{font-size:12px;font-weight:700;color:var(--c-m-id);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.plib-m-steps{margin:0;padding-left:1.25rem}
+.plib-m-steps li{font-size:13px;line-height:1.6;margin-bottom:4px}
+.plib-m-seed{background:rgba(255,255,255,.5);border-left:3px solid var(--c-m-border);padding:8px 12px;margin-bottom:12px;border-radius:0 4px 4px 0}
+.plib-m-seed-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-m-id);margin-bottom:4px}
+.plib-m-seed-text{font-size:13px;line-height:1.6;white-space:pre-wrap}
+.plib-prompt-m-close{background:var(--c-mc-bg);border:1px dashed var(--c-mc-border);border-radius:var(--radius);padding:.75rem 1.25rem;margin-bottom:1.25rem}
+.plib-m-close-label{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.plib-m-close-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-copy-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;font-size:13px;font-weight:500;border:1.5px solid var(--c-btn);background:transparent;color:var(--c-btn);border-radius:6px;cursor:pointer;transition:background .15s,color .15s}
+.plib-copy-btn:hover{background:var(--c-btn);color:#fff}
+.plib-copy-btn:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+.plib-copy-btn.copied{background:#333;color:#fff;border-color:#333}
+.plib-copy-btn-reflect{border-color:var(--c-btn-r);color:var(--c-btn-r)}
+.plib-copy-btn-reflect:hover{background:var(--c-btn-r);color:#fff}
+.plib-copy-btn-marker{border-color:var(--c-btn-mk);color:var(--c-btn-mk)}
+.plib-copy-btn-marker:hover{background:var(--c-btn-mk);color:#fff}
+.plib-copy-btn-m-open{border-color:var(--c-btn-mo);color:var(--c-btn-mo)}
+.plib-copy-btn-m-open:hover{background:var(--c-btn-mo);color:#fff}
+.plib-copy-btn-m-close{border-color:var(--c-btn-mc);color:var(--c-btn-mc)}
+.plib-copy-btn-m-close:hover{background:var(--c-btn-mc);color:#fff}
+.plib-textarea{display:block;width:100%;box-sizing:border-box;padding:10px 12px;font-size:14px;font-family:var(--font);line-height:1.6;border:1.5px solid var(--c-r-border);border-radius:6px;margin-bottom:10px;background:#fff;color:var(--c-text);resize:vertical;min-height:120px}
+.plib-prompt-input{min-height:0;margin:10px 0 6px}
+.plib-textarea:focus{outline:3px solid #005fcc;outline-offset:2px;border-color:#005fcc}
+.plib-counter{font-size:13px;color:var(--c-muted);margin-bottom:8px;font-variant-numeric:tabular-nums}
+.plib-counter.at-limit{color:#b00020;font-weight:600}
+.plib-counter .plib-count-ok{color:#14552f}
+.plib-counter .plib-count-warn{color:#8a4a00}
+.plib-counter .plib-count-bad{color:#b00020;font-weight:600}
+.plib-counter-min{font-size:12px;color:var(--c-muted);margin-left:8px}
+.plib-warn{font-size:13px;color:#b00020;font-weight:600;margin-bottom:8px;min-height:20px}
+.plib-prompt-q{background:var(--c-q-bg);border:1px solid var(--c-q-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-q-id{color:var(--c-q-id)!important;background:rgba(10,80,112,.1)!important}
+.plib-q-label{color:var(--c-q-id)!important}
+.plib-q-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-q-items{display:flex;flex-direction:column;gap:14px;margin-bottom:10px}
+.plib-q-item{background:rgba(255,255,255,.6);border-radius:6px;padding:10px 12px}
+.plib-q-question{font-size:14px;font-weight:500;display:block;margin-bottom:8px;line-height:1.5}
+.plib-q-item-num{font-family:monospace;font-weight:700;color:var(--c-q-id);margin-right:6px}
+.plib-q-cap-note{font-weight:400;font-style:italic;color:var(--c-muted);margin-left:6px;font-size:13px}
+.plib-q-select{width:100%;padding:6px 8px;font-size:14px;border:1px solid var(--c-q-border);border-radius:4px;background:#fff}
+.plib-q-likert{display:flex;flex-wrap:wrap;gap:10px}
+.plib-q-likert-opt{display:flex;align-items:center;gap:5px;font-size:14px;cursor:pointer}
+.plib-q-checkboxes{display:flex;flex-direction:column;gap:6px}
+.plib-q-check-opt{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.plib-q-check-opt input[disabled] + span{opacity:.5}
+.plib-copy-btn-q{border-color:var(--c-btn-q);color:var(--c-btn-q)}
+.plib-copy-btn-q:hover{background:var(--c-btn-q);color:#fff}
+.plib-prompt-o{background:var(--c-o-bg);border:1px solid var(--c-o-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-o-id{color:var(--c-o-id)!important;background:rgba(160,69,16,.1)!important}
+.plib-o-label{color:var(--c-o-id)!important}
+.plib-o-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-o-question{font-size:14px;font-weight:500;margin-bottom:10px;line-height:1.5}
+.plib-o-list{list-style:none;padding:0;margin:0 0 10px 0;display:flex;flex-direction:column;gap:6px}
+.plib-o-item{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.7);border-radius:6px;padding:8px 10px;font-size:14px}
+.plib-o-rank{font-family:monospace;font-weight:700;color:var(--c-o-id);min-width:1.5em;text-align:right}
+.plib-o-item-text{flex:1}
+.plib-o-controls{display:flex;flex-direction:column;gap:2px}
+.plib-o-arrow{background:transparent;border:1px solid var(--c-o-border);color:var(--c-o-id);width:28px;height:22px;font-size:14px;line-height:1;cursor:pointer;border-radius:3px;padding:0}
+.plib-o-arrow:hover:not([disabled]){background:var(--c-o-border);color:#fff}
+.plib-o-arrow[disabled]{opacity:.25;cursor:default}
+.plib-copy-btn-o{border-color:var(--c-btn-o);color:var(--c-btn-o)}
+.plib-copy-btn-o:hover{background:var(--c-btn-o);color:#fff}
+.plib-demo-badge{font-size:11px;color:var(--c-muted);background:rgba(0,0,0,.05);padding:2px 8px;border-radius:3px;font-style:italic;margin-left:8px}
+.plib-ai-badge{font-size:11px;padding:2px 8px;border-radius:3px;font-family:monospace;margin-left:8px}
+.plib-ai-respond{background:#e8f5e8;color:#2c5e2c}
+.plib-ai-acknowledge{background:#fef0e6;color:#8c4a1a}
+.plib-ai-archive{background:#f0e8f5;color:#5a2c8c}
+</style>
+</head>
+<body>
+<a href="#main-content" class="plib-skip-link">Skip to main content</a>
+<style>.plib-skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;}.plib-skip-link:focus{position:static;width:auto;height:auto;background:#005fcc;color:#fff;padding:8px 16px;font-size:14px;font-weight:600;border-radius:4px;text-decoration:none;display:inline-block;margin:8px;}</style>
+<main id="main-content">
+<div class="plib-wrap">
+<div class="plib-meta">
+  <div class="plib-meta-course">BIT 5534 Applied Business Intelligence and Analytics</div>
+  <div class="plib-meta-week">Week 11 · Lecture 2</div>
+  <div class="plib-meta-title">Reading Model Reports with an Analytics Agent</div>
+  <div class="plib-meta-details"><span><strong>Duration:</strong> 75 minutes</span>&ensp;·&ensp;<span><strong>Platform:</strong> Hokie AI</span>&ensp;·&ensp;<span><strong>Submission:</strong> The thread with your team's agent, exported as a .zip and uploaded to Canvas before leaving class</span>&ensp;·&ensp;<span><strong>Lecture Mode:</strong> consolidation</span></div>
+</div>
+
+<div class="plib-objectives">
+  <div class="plib-objectives-label">Learning Objectives</div>
+  <p class="plib-objectives-intro">By the end of this lecture, students will be able to:</p>
+  <ol class="plib-objectives-list">
+    <li>Save a model report from any of the five course tools and attach it to a prompt to the team's agent.</li>
+    <li>Revise an agent's instructions and knowledge files so that the agent reads model reports and converts results into the units and dollars of the business.</li>
+    <li>Sort a model's inputs into levers the business sets before a decision and leaks measured after it.</li>
+    <li>Find in an agent's reply the four things that make a model result business intelligence, its meaning, its value in money, the confidence behind it and the next step.</li>
+  </ol>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 1 of 5</div><div class="plib-section-t">INTRODUCTION</div></div>
+
+<div class="plib-context plib-context-student">
+  <div class="plib-context-label">&#128203; Note for Students</div>
+  <div class="plib-context-body">
+    <p>On Tuesday your team built an agent with the Lumenvale brief as its only knowledge file. Today the title file is released, and your agent reads the results of the models you fit on it.</p>
+  </div>
+</div>
+
+<div class="plib-narration">
+  <p>On Tuesday your agent had only the brief as knowledge, and under its rules the agent gave no number about Lumenvale's titles. Today you fit models on the title file and attach the reports to your questions. A model result is a number, and a manager needs to know what the number means for a decision. Today your agent helps you build that meaning.</p>
+</div>
+
+<div class="plib-material" id="plib-material-8">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The title file</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="lumenvale_titles.csv" download="lumenvale_titles.csv" target="_blank" rel="noopener noreferrer">lumenvale_titles.csv</a>
+  </div>
+  <div class="plib-material-note">Four thousand titles released between January 2021 and June 2026, with the columns defined in the brief.</div>
+</div>
+
+<div class="plib-material" id="plib-material-9">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The new Lumenvale brief, which replaces Tuesday's brief in your agent</div>
+  <pre class="plib-material-box" tabindex="0" id="plib-material-9-prompt" data-copy="LUMENVALE: CLASS CASE BRIEF FOR BIT 5534&#10;&#10;Lumenvale is a made up streaming service, the class case in BIT 5534 from week 11 on. Your instructor demonstrates on Lumenvale in every class session. No team builds its project on it.&#10;&#10;THE COMPANY&#10;&#10;Lumenvale streams films and series to 38 million subscribers. Its eight main markets are the United States, Canada, the United Kingdom, Germany, Brazil, Mexico, India and Japan. The United States accounts for 15 million of the 38 million subscribers. Lumenvale spends about 2.6 billion dollars a year on content, a little over half on originals it produces and the rest on licensed titles it rents from other studios.&#10;&#10;The content strategy team makes three recurring decisions. The team decides which proposed titles to greenlight, and at what budget. The team decides how much to spend on marketing each title. The team also decides when to release each title, since Lumenvale can lose viewers for a title released on a crowded holiday weekend, or on a sunny weekend in its largest markets. The team judges a title by its first 28 days, because Lumenvale makes renewal and sequel decisions at day 28.&#10;&#10;THE TITLE FILE&#10;&#10;The file lumenvale_titles.csv holds 4,000 titles, films and series, released between January 2021 and June 2026. One row is one title. This brief contains the definitions of the columns; the numbers come from the models the team fits on the file.&#10;&#10;Columns:&#10;title_id: Lumenvale's catalog number for the title.&#10;title_type: Film or Series.&#10;genre: Drama, Comedy, Thriller, Documentary, Animation, Reality, or Science Fiction and Fantasy.&#10;origin: Original (Lumenvale produced it) or Licensed (Lumenvale rents it from another studio).&#10;language: the original language, English, Spanish, Portuguese, Hindi, Japanese, Korean or Other.&#10;franchise: Yes if the title belongs to an existing franchise or adapts a known book, game or film, otherwise No.&#10;budget_musd: the production budget in millions of dollars, or for a licensed title the license fee.&#10;episodes: the number of episodes, 1 for a film.&#10;runtime_min: the running time in minutes for a film, the average episode length for a series.&#10;cast_recognition: a score from 0 to 100 for how well audiences in the main markets know the lead cast, measured before release.&#10;marketing_musd: the marketing budget, in millions of dollars, that the content strategy team set for the title before release.&#10;release_weekday: the day of the week on which Lumenvale released the title.&#10;release_month: the month in which Lumenvale released the title.&#10;holiday_weekend: Yes if Lumenvale released the title on a public holiday weekend in the United States, otherwise No.&#10;critic_score: the average critic review score, from 0 to 100, published by critics in the days after release.&#10;synopsis: the description Lumenvale showed subscribers on the title's page.&#10;hours_28d: the number target, millions of hours subscribers watched worldwide in the first 28 days.&#10;breakout: the yes or no target. Yes if the title ranked in the top ten in at least five of the eight main markets during its first 28 days. About one title in ten is a breakout.&#10;Validation: Training or Validation, the split used in this course.&#10;&#10;THE ECONOMICS OF A TITLE&#10;&#10;Lumenvale's finance team plans with four figures. The finance team sets these planning figures, and model results on the title file are separate from them.&#10;&#10;Value of an hour watched: each hour subscribers watch in a title's first 28 days is worth about 2.50 dollars to Lumenvale, in subscribers kept and subscribers gained.&#10;Cost of a title: the budget (budget_musd) plus the marketing budget (marketing_musd).&#10;Promotion slots: Lumenvale features new titles on its home page. The home page has room for about one new title in ten.&#10;Value of a promotion: featuring a title costs 1 million dollars. Lumenvale earns about 6 million dollars from a featured title that becomes a breakout. Lumenvale earns nothing from a featured title that does not become a breakout, so it loses the 1 million dollars.&#10;&#10;For example, a title with a budget of 22 million dollars and a marketing budget of 5 million dollars costs 27 million dollars. Its viewing value equals that cost when subscribers watch it for 10.8 million hours in its first 28 days (27 divided by 2.50).&#10;&#10;LIVE DATA&#10;&#10;From week 13 the Lumenvale agent can retrieve two kinds of public data. With public holiday calendars for the eight main markets, the team can see which release weekends are crowded. Weekend weather forecasts for the largest cities in those markets matter because subscribers watch less on warm, clear weekends and more on cold or rainy ones. The team may move a release date on the basis of either kind of data.&#10;&#10;HOW AN AGENT SHOULD USE THIS BRIEF&#10;&#10;An agent may quote every fact and planning figure above, and may use the planning figures to convert model results into dollars, with the calculation shown. Numbers about Lumenvale's titles come only from the model reports the team attaches. An agent gives no average, count, model result or comparison that does not appear in an attached report or in this brief." aria-label="Specification text, scrollable">LUMENVALE: CLASS CASE BRIEF FOR BIT 5534
+
+Lumenvale is a made up streaming service, the class case in BIT 5534 from week 11 on. Your instructor demonstrates on Lumenvale in every class session. No team builds its project on it.
+
+THE COMPANY
+
+Lumenvale streams films and series to 38 million subscribers. Its eight main markets are the United States, Canada, the United Kingdom, Germany, Brazil, Mexico, India and Japan. The United States accounts for 15 million of the 38 million subscribers. Lumenvale spends about 2.6 billion dollars a year on content, a little over half on originals it produces and the rest on licensed titles it rents from other studios.
+
+The content strategy team makes three recurring decisions. The team decides which proposed titles to greenlight, and at what budget. The team decides how much to spend on marketing each title. The team also decides when to release each title, since Lumenvale can lose viewers for a title released on a crowded holiday weekend, or on a sunny weekend in its largest markets. The team judges a title by its first 28 days, because Lumenvale makes renewal and sequel decisions at day 28.
+
+THE TITLE FILE
+
+The file lumenvale_titles.csv holds 4,000 titles, films and series, released between January 2021 and June 2026. One row is one title. This brief contains the definitions of the columns; the numbers come from the models the team fits on the file.
+
+Columns:
+title_id: Lumenvale's catalog number for the title.
+title_type: Film or Series.
+genre: Drama, Comedy, Thriller, Documentary, Animation, Reality, or Science Fiction and Fantasy.
+origin: Original (Lumenvale produced it) or Licensed (Lumenvale rents it from another studio).
+language: the original language, English, Spanish, Portuguese, Hindi, Japanese, Korean or Other.
+franchise: Yes if the title belongs to an existing franchise or adapts a known book, game or film, otherwise No.
+budget_musd: the production budget in millions of dollars, or for a licensed title the license fee.
+episodes: the number of episodes, 1 for a film.
+runtime_min: the running time in minutes for a film, the average episode length for a series.
+cast_recognition: a score from 0 to 100 for how well audiences in the main markets know the lead cast, measured before release.
+marketing_musd: the marketing budget, in millions of dollars, that the content strategy team set for the title before release.
+release_weekday: the day of the week on which Lumenvale released the title.
+release_month: the month in which Lumenvale released the title.
+holiday_weekend: Yes if Lumenvale released the title on a public holiday weekend in the United States, otherwise No.
+critic_score: the average critic review score, from 0 to 100, published by critics in the days after release.
+synopsis: the description Lumenvale showed subscribers on the title's page.
+hours_28d: the number target, millions of hours subscribers watched worldwide in the first 28 days.
+breakout: the yes or no target. Yes if the title ranked in the top ten in at least five of the eight main markets during its first 28 days. About one title in ten is a breakout.
+Validation: Training or Validation, the split used in this course.
+
+THE ECONOMICS OF A TITLE
+
+Lumenvale's finance team plans with four figures. The finance team sets these planning figures, and model results on the title file are separate from them.
+
+Value of an hour watched: each hour subscribers watch in a title's first 28 days is worth about 2.50 dollars to Lumenvale, in subscribers kept and subscribers gained.
+Cost of a title: the budget (budget_musd) plus the marketing budget (marketing_musd).
+Promotion slots: Lumenvale features new titles on its home page. The home page has room for about one new title in ten.
+Value of a promotion: featuring a title costs 1 million dollars. Lumenvale earns about 6 million dollars from a featured title that becomes a breakout. Lumenvale earns nothing from a featured title that does not become a breakout, so it loses the 1 million dollars.
+
+For example, a title with a budget of 22 million dollars and a marketing budget of 5 million dollars costs 27 million dollars. Its viewing value equals that cost when subscribers watch it for 10.8 million hours in its first 28 days (27 divided by 2.50).
+
+LIVE DATA
+
+From week 13 the Lumenvale agent can retrieve two kinds of public data. With public holiday calendars for the eight main markets, the team can see which release weekends are crowded. Weekend weather forecasts for the largest cities in those markets matter because subscribers watch less on warm, clear weekends and more on cold or rainy ones. The team may move a release date on the basis of either kind of data.
+
+HOW AN AGENT SHOULD USE THIS BRIEF
+
+An agent may quote every fact and planning figure above, and may use the planning figures to convert model results into dollars, with the calculation shown. Numbers about Lumenvale's titles come only from the model reports the team attaches. An agent gives no average, count, model result or comparison that does not appear in an attached report or in this brief.</pre>
+  <button class="plib-copy-btn" onclick="copyPrompt('plib-material-9-prompt', this)" aria-label="Copy the text above to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy the text above
+  </button>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="lec11_2_lumenvale_brief.txt" download="lec11_2_lumenvale_brief.txt" target="_blank" rel="noopener noreferrer">lec11_2_lumenvale_brief.txt</a>
+  </div>
+  <div class="plib-material-note">Two things are new. In the section THE ECONOMICS OF A TITLE, Lumenvale's finance team sets four planning figures, and marketing_musd is now defined as the marketing budget the team sets before release.</div>
+</div>
+
+<div class="plib-narration">
+  <p>Every input in a model becomes known at some moment. A lever is a choice the content strategy team makes before release, such as the budget, the marketing budget or the release date, and the team uses a model to estimate what each lever is worth. A leak is a column measured after release. A leak contains information about the outcome, so the model looks better on the validation rows than it can be on the day the team decides.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-11">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Two boxes joined by OR. Known before release, the levers the team sets, budget_musd, marketing_musd, release_weekday, release_month and holiday_weekend, and the facts about the title, such as genre, language, franchise and cast_recognition. Known after release, critic_score, published by critics after release, and the two targets, hours_28d and breakout."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 219" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="219" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">When each column is known</text><rect x="21" y="46" width="455" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Known before release</text><text x="37" y="122" font-size="14" fill="#6b6b6b">the levers the team sets, budget_musd, marketing_musd,</text><text x="37" y="141" font-size="14" fill="#6b6b6b">release_weekday, release_month and holiday_weekend, and the</text><text x="37" y="160" font-size="14" fill="#6b6b6b">facts about the title, such as genre, language, franchise and</text><text x="37" y="179" font-size="14" fill="#6b6b6b">cast_recognition</text><text x="500" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">OR</text><rect x="524" y="46" width="455" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Known after release</text><text x="540" y="122" font-size="14" fill="#6b6b6b">critic_score, published by critics after release, and the two targets,</text><text x="540" y="141" font-size="14" fill="#6b6b6b">hours_28d and breakout</text></svg></div>
+    <figcaption class="plib-tile-caption">Only columns known before release belong among the inputs of a model the team uses to decide.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-discussion">
+  <div class="plib-discussion-label">&#128172; Discussion</div>
+  <p class="plib-discussion-intro">Before the demonstration:</p>
+  <ul class="plib-discussion-list">
+    <li>Read the column list in the brief. Which columns does the content strategy team know before release, and which does it learn only after release?</li>
+</ul>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 2 of 5</div><div class="plib-section-t">DEMONSTRATION</div></div>
+
+<div class="plib-narration">
+  <p>Each of the five course tools now has a Save report button. Pressing it saves two files with the same name, a PDF with every tab of the window and a .txt file with the same text and every number. Attach the .txt file to a question, because Hokie AI reads the numbers in a text file exactly. Replace your copies of the tools with these.</p>
+</div>
+
+<div class="plib-material" id="plib-material-15">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The five tools with Save report</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="reg_explorer.py" download="reg_explorer.py" target="_blank" rel="noopener noreferrer">reg_explorer.py</a>
+    <a class="plib-material-btn" href="tree_explorer.py" download="tree_explorer.py" target="_blank" rel="noopener noreferrer">tree_explorer.py</a>
+    <a class="plib-material-btn" href="nn_explorer.py" download="nn_explorer.py" target="_blank" rel="noopener noreferrer">nn_explorer.py</a>
+    <a class="plib-material-btn" href="svm_explorer.py" download="svm_explorer.py" target="_blank" rel="noopener noreferrer">svm_explorer.py</a>
+    <a class="plib-material-btn" href="threshold_explorer.py" download="threshold_explorer.py" target="_blank" rel="noopener noreferrer">threshold_explorer.py</a>
+  </div>
+  <div class="plib-material-note">The only change from weeks 8 and 9 is the Save report button. Use the same packages as before.</div>
+</div>
+
+<div class="plib-narration">
+  <p>To read a report, the agent needs a second knowledge file. In the report guide your instructor explains, for each tool, what every section of a report contains and which numbers to use, and instructs the agent to convert results into dollars with the planning figures in the brief. Your instructor adds the guide to the greenlight analyst and replaces its Specific instructions with the version below, in which the Context, the Objective and the Rules changed.</p>
+</div>
+
+<div class="plib-material" id="plib-material-17">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The report guide, a second knowledge file for every agent</div>
+  <pre class="plib-material-box" tabindex="0" id="plib-material-17-prompt" data-copy="READING A MODEL REPORT: GUIDE FOR THE TEAM'S AGENT, BIT 5534&#10;&#10;A team attaches a report to a prompt. The team saves these reports with the Save report button in five course tools: the regression explorer (REG), the tree explorer (TREE), the neural network explorer (NN), the support vector machine explorer (SVM) and the threshold explorer (THRESHOLD). Each report is a PDF and a .txt file with the same text, from one run of one tool on the team's data. The team usually attaches the .txt file. Below, the instructor explains how the agent reads a report and questions it against the team's business brief.&#10;&#10;1. IDENTIFY THE RUN&#10;&#10;The first section of every report begins with the line &quot;Suite:&quot; and the name of the tool. Below it is a list of every setting in the tool's window at the moment the team saved the report: the data file, the target column, the kind of target (number or category), the positive class for a category target, the input columns, the validation column and the model settings. The last item in the first section is the list of sections in the report.&#10;&#10;Before the agent answers a question about a report, the agent states in one sentence which tool produced it, the target, the number of input columns and the validation method. A category column becomes several terms in the model, one per level, so the agent counts input columns from the first section and terms from the Fit section, and does not confuse the two. If the team attaches two reports, the agent names both runs and checks whether the two use the same data file, target, inputs and validation column. Two runs with different validation rows cannot be compared on their validation numbers.&#10;&#10;2. RULES FOR EVERY REPORT&#10;&#10;The agent quotes only numbers printed in the report and names the section each number comes from, for example &quot;Fit section, validation row&quot;.&#10;&#10;Save report writes two files with the same name, a PDF and a .txt file. The .txt file contains every number in the report as text, and the team attaches it for questions about numbers. When the agent reads a table, the agent checks that the numbers it quotes agree with each other, for example that true positives plus false positives equal the rows predicted positive, and that the actual positives equal the count on the Tables section.&#10;&#10;The agent judges how well a model performs on the validation rows. The train rows were used to fit the model, so train numbers are optimistic. A large gap between train and validation numbers indicates overfitting, and the agent reports the gap.&#10;&#10;In a report, a section titled &quot;the numbers in the figure&quot; follows every figure. The agent reads the values from that section and does not estimate values from a picture.&#10;&#10;A setting listed in the first section that the team did not use in the fit, such as k or the validation share when the file already has a validation column, has no effect on the run. The agent ignores such settings.&#10;&#10;When the team asks for a number the report does not contain, the agent says so and names the tool, the setting and the button that would produce it, for example &quot;Fit the tree explorer with 8 splits and save a new report.&quot;&#10;&#10;3. QUESTION THE RUN AGAINST THE BRIEF&#10;&#10;After the agent reads a report, the agent checks the run against the team's business brief and raises each problem the agent finds:&#10;&#10;a. Timing. Inputs come in two kinds. A lever is a choice the business makes before the decision, such as a budget, a price, a marketing budget or a release date; levers belong in the model, because the team wants to know what each lever is worth. A leak is a measurement taken after the decision, such as a review score published after release; a leak carries the outcome into the model. If a leak appears among the inputs, the agent says the validation numbers overstate what the business can expect, and recommends a run without it. The agent decides which kind each input is from the column definitions in the brief.&#10;&#10;b. Units, size and money. The agent translates estimates and errors into the units of the brief, for example millions of hours, and, when the brief gives planning figures such as the value of an hour or the cost of an action, into dollars. The agent shows each calculation in one line, for example &quot;0.98 million hours per 1 million dollars times 2.50 dollars per hour = 2.45 million dollars&quot;. The agent then says whether a difference of that size matters for the decision. RMSE is the typical size of the model's error for one row, so RMSE in dollars is the typical error of a forecast for one title.&#10;&#10;c. Base rate. For a category target the agent compares accuracy with the share of the larger class. When 90 percent of rows are No, a model that predicts No for every row has accuracy 0.90.&#10;&#10;d. Cost of each error. The agent uses the planning figures in the brief to put a dollar value on a false positive and a false negative, and relates the values to the threshold. When the brief contains no figure, the agent asks the team for one.&#10;&#10;e. Next run. The agent ends with one concrete run the team could make next and the reason for it.&#10;&#10;4. REG: MULTIPLE AND LOGISTIC REGRESSION&#10;&#10;Fit section. For a number target: R squared, RMSE and MSE for train and validation rows. For a category target: misclassification, accuracy and a confusion table for train and validation rows. Then the term table, fitted on the train rows: estimate, standard error, t ratio (z for logistic), p value and logworth for every term.&#10;&#10;Reading the terms. A category input appears as one term per level, such as genre=Comedy, and each estimate is relative to the level that has no term (the reference level). For a number target an estimate is the change in the target for one unit more of the input, or for the level against the reference level, with the other inputs held at fixed values. For a logistic fit an estimate is a change in the log odds of the positive class; the agent may convert it to an odds ratio with exp(estimate) and says that it did so.&#10;&#10;Logworth is -log10(p value). It measures the strength of evidence that a term's estimate differs from zero, and the dashed line marks p = 0.05 (logworth 1.30). Logworth is not the size of an effect. A small effect on many rows can have a large logworth. To judge size, the agent uses the estimate and the units of the input.&#10;&#10;When a term's logworth is below 1.30, the evidence for that term is weak. The data are consistent with no effect at all. The agent reports the estimate and its dollar value, says the evidence is weak, and does not recommend a decision on that term alone. The agent may give the range estimate plus or minus two standard errors, which shows how large or small the effect could plausibly be.&#10;&#10;Actual vs predicted section. For a number target, the points of actual against predicted values for train and validation rows. Large spread at high values suggests a skewed target; the agent may suggest a log of the target as a new column.&#10;&#10;5. TREE: REGRESSION AND DECISION TREES&#10;&#10;Fit section. The same measures as REG for train and validation rows, plus the number of splits and leaves.&#10;&#10;Tree section. Each box contains its rule, the number of train rows that reach it and either the mean of the target (number target) or the counts of each class (category target, in the order given in the box). The first split is the single rule that best separates the target on the train rows. A path from the top to a leaf is a business rule the agent can state in plain words, with the leaf's rows and outcome.&#10;&#10;Split history section. Train and validation measures for every tree from 1 split up. Train measures always improve with more splits. The number of splits with the best validation value, marked in the figure, is the size the validation rows support. If the team's tree has fewer splits, a larger tree may perform better; if it has more, the extra splits fit noise.&#10;&#10;Column contributions section. How much each input's splits improved the fit on the train rows. An input with zero was not used in any split. This ranks inputs within this tree only.&#10;&#10;6. NN: NEURAL NETWORK&#10;&#10;Fit section. The network's layers, the activation and the number of parameters, then the same measures as REG for train and validation rows. A network has many parameters relative to the rows, so the agent checks the gap between train and validation measures first.&#10;&#10;Network section. The structure of the network: inputs, hidden neurons by activation, outputs. The drawing contains no weights, so the agent draws no conclusion about which input matters from this section.&#10;&#10;Starts section. Each start fits the network from different random weights. The kept start has the best validation value. Large differences between starts mean the result depends on the starting weights, and the agent says the result is unstable.&#10;&#10;A neural network has no estimate per input. To learn which inputs matter, the team compares runs with and without an input, or reads the REG or TREE report on the same data.&#10;&#10;7. SVM: SUPPORT VECTOR MACHINE&#10;&#10;Fit section. The kernel, C, gamma and, for a number target, epsilon, then the same measures as REG and the number of support vectors. A share of support vectors close to all train rows means the model relies on most rows and may generalize poorly.&#10;&#10;Two input plot section. Drawn only when the model has exactly two inputs.&#10;&#10;Grid section. Two tables, train and validation, of the measure for each pair of C (columns) and gamma (rows); in the validation table &quot;sv&quot; is the number of support vectors. The section is empty unless the team pressed Search the grid before saving the report. The agent chooses settings from the validation table, never the train table. A best cell on the edge of the grid means the team should extend the grid in that direction.&#10;&#10;An SVM has no estimate per input. The agent treats it as REG and NN: compare validation measures with the other models on the same validation rows.&#10;&#10;8. THRESHOLD: CHOOSING THE CUT FOR A PROBABILITY&#10;&#10;The first section contains the actual column, the probability column (whose name begins with the tool that saved it, such as REG prob Yes), the positive class, the rows used and the current threshold. The agent checks that the rows are validation rows; a threshold chosen on train rows is optimistic.&#10;&#10;Tables section. The confusion matrix at the current threshold, the rates divided by row sums (recall or TPR, FNR, FPR, TNR), the rates divided by column sums (precision, FDR, FOR, NPV), F1, accuracy, the AUC, the optimal threshold by the largest TPR minus FPR, the lift at the current threshold and the base rate.&#10;&#10;Threshold table section. The same measures at thresholds from 0.05 to 0.95. The agent uses this table to answer &quot;what happens if we raise or lower the threshold&quot; with numbers, for example how many positives the business would catch and how many rows it would act on (PP%).&#10;&#10;The optimal threshold by TPR minus FPR treats both errors as equally costly. When the brief contains the value of a true positive and the cost of acting on a row, the agent computes the net value at the thresholds in the table, for example net value = value per TP times TP minus cost per row times (TP + FP), names the threshold with the largest net value, and checks it against any capacity limit in the brief, such as the share of rows the business can act on (PP%). The agent always reports two thresholds from the table, the one with the largest net value within the capacity and the one with the largest net value without it, and says how much value the capacity limit costs.&#10;&#10;Curves, ROC and Lift sections. The same information as the tables across all thresholds. AUC is the chance that a random positive row receives a higher probability than a random negative row; 0.5 is no better than chance. Lift at a threshold is the precision divided by the base rate.&#10;&#10;9. WHAT THE AGENT DOES NOT DO&#10;&#10;The agent does not invent numbers, rows or runs. The agent does not claim that an input causes the target; these are observational data, and an estimate describes an association with the other inputs held fixed. The agent does not compare runs fitted on different validation rows as if they were equal. The agent does not judge a model by train numbers." aria-label="Specification text, scrollable">READING A MODEL REPORT: GUIDE FOR THE TEAM'S AGENT, BIT 5534
+
+A team attaches a report to a prompt. The team saves these reports with the Save report button in five course tools: the regression explorer (REG), the tree explorer (TREE), the neural network explorer (NN), the support vector machine explorer (SVM) and the threshold explorer (THRESHOLD). Each report is a PDF and a .txt file with the same text, from one run of one tool on the team's data. The team usually attaches the .txt file. Below, the instructor explains how the agent reads a report and questions it against the team's business brief.
+
+1. IDENTIFY THE RUN
+
+The first section of every report begins with the line &quot;Suite:&quot; and the name of the tool. Below it is a list of every setting in the tool's window at the moment the team saved the report: the data file, the target column, the kind of target (number or category), the positive class for a category target, the input columns, the validation column and the model settings. The last item in the first section is the list of sections in the report.
+
+Before the agent answers a question about a report, the agent states in one sentence which tool produced it, the target, the number of input columns and the validation method. A category column becomes several terms in the model, one per level, so the agent counts input columns from the first section and terms from the Fit section, and does not confuse the two. If the team attaches two reports, the agent names both runs and checks whether the two use the same data file, target, inputs and validation column. Two runs with different validation rows cannot be compared on their validation numbers.
+
+2. RULES FOR EVERY REPORT
+
+The agent quotes only numbers printed in the report and names the section each number comes from, for example &quot;Fit section, validation row&quot;.
+
+Save report writes two files with the same name, a PDF and a .txt file. The .txt file contains every number in the report as text, and the team attaches it for questions about numbers. When the agent reads a table, the agent checks that the numbers it quotes agree with each other, for example that true positives plus false positives equal the rows predicted positive, and that the actual positives equal the count on the Tables section.
+
+The agent judges how well a model performs on the validation rows. The train rows were used to fit the model, so train numbers are optimistic. A large gap between train and validation numbers indicates overfitting, and the agent reports the gap.
+
+In a report, a section titled &quot;the numbers in the figure&quot; follows every figure. The agent reads the values from that section and does not estimate values from a picture.
+
+A setting listed in the first section that the team did not use in the fit, such as k or the validation share when the file already has a validation column, has no effect on the run. The agent ignores such settings.
+
+When the team asks for a number the report does not contain, the agent says so and names the tool, the setting and the button that would produce it, for example &quot;Fit the tree explorer with 8 splits and save a new report.&quot;
+
+3. QUESTION THE RUN AGAINST THE BRIEF
+
+After the agent reads a report, the agent checks the run against the team's business brief and raises each problem the agent finds:
+
+a. Timing. Inputs come in two kinds. A lever is a choice the business makes before the decision, such as a budget, a price, a marketing budget or a release date; levers belong in the model, because the team wants to know what each lever is worth. A leak is a measurement taken after the decision, such as a review score published after release; a leak carries the outcome into the model. If a leak appears among the inputs, the agent says the validation numbers overstate what the business can expect, and recommends a run without it. The agent decides which kind each input is from the column definitions in the brief.
+
+b. Units, size and money. The agent translates estimates and errors into the units of the brief, for example millions of hours, and, when the brief gives planning figures such as the value of an hour or the cost of an action, into dollars. The agent shows each calculation in one line, for example &quot;0.98 million hours per 1 million dollars times 2.50 dollars per hour = 2.45 million dollars&quot;. The agent then says whether a difference of that size matters for the decision. RMSE is the typical size of the model's error for one row, so RMSE in dollars is the typical error of a forecast for one title.
+
+c. Base rate. For a category target the agent compares accuracy with the share of the larger class. When 90 percent of rows are No, a model that predicts No for every row has accuracy 0.90.
+
+d. Cost of each error. The agent uses the planning figures in the brief to put a dollar value on a false positive and a false negative, and relates the values to the threshold. When the brief contains no figure, the agent asks the team for one.
+
+e. Next run. The agent ends with one concrete run the team could make next and the reason for it.
+
+4. REG: MULTIPLE AND LOGISTIC REGRESSION
+
+Fit section. For a number target: R squared, RMSE and MSE for train and validation rows. For a category target: misclassification, accuracy and a confusion table for train and validation rows. Then the term table, fitted on the train rows: estimate, standard error, t ratio (z for logistic), p value and logworth for every term.
+
+Reading the terms. A category input appears as one term per level, such as genre=Comedy, and each estimate is relative to the level that has no term (the reference level). For a number target an estimate is the change in the target for one unit more of the input, or for the level against the reference level, with the other inputs held at fixed values. For a logistic fit an estimate is a change in the log odds of the positive class; the agent may convert it to an odds ratio with exp(estimate) and says that it did so.
+
+Logworth is -log10(p value). It measures the strength of evidence that a term's estimate differs from zero, and the dashed line marks p = 0.05 (logworth 1.30). Logworth is not the size of an effect. A small effect on many rows can have a large logworth. To judge size, the agent uses the estimate and the units of the input.
+
+When a term's logworth is below 1.30, the evidence for that term is weak. The data are consistent with no effect at all. The agent reports the estimate and its dollar value, says the evidence is weak, and does not recommend a decision on that term alone. The agent may give the range estimate plus or minus two standard errors, which shows how large or small the effect could plausibly be.
+
+Actual vs predicted section. For a number target, the points of actual against predicted values for train and validation rows. Large spread at high values suggests a skewed target; the agent may suggest a log of the target as a new column.
+
+5. TREE: REGRESSION AND DECISION TREES
+
+Fit section. The same measures as REG for train and validation rows, plus the number of splits and leaves.
+
+Tree section. Each box contains its rule, the number of train rows that reach it and either the mean of the target (number target) or the counts of each class (category target, in the order given in the box). The first split is the single rule that best separates the target on the train rows. A path from the top to a leaf is a business rule the agent can state in plain words, with the leaf's rows and outcome.
+
+Split history section. Train and validation measures for every tree from 1 split up. Train measures always improve with more splits. The number of splits with the best validation value, marked in the figure, is the size the validation rows support. If the team's tree has fewer splits, a larger tree may perform better; if it has more, the extra splits fit noise.
+
+Column contributions section. How much each input's splits improved the fit on the train rows. An input with zero was not used in any split. This ranks inputs within this tree only.
+
+6. NN: NEURAL NETWORK
+
+Fit section. The network's layers, the activation and the number of parameters, then the same measures as REG for train and validation rows. A network has many parameters relative to the rows, so the agent checks the gap between train and validation measures first.
+
+Network section. The structure of the network: inputs, hidden neurons by activation, outputs. The drawing contains no weights, so the agent draws no conclusion about which input matters from this section.
+
+Starts section. Each start fits the network from different random weights. The kept start has the best validation value. Large differences between starts mean the result depends on the starting weights, and the agent says the result is unstable.
+
+A neural network has no estimate per input. To learn which inputs matter, the team compares runs with and without an input, or reads the REG or TREE report on the same data.
+
+7. SVM: SUPPORT VECTOR MACHINE
+
+Fit section. The kernel, C, gamma and, for a number target, epsilon, then the same measures as REG and the number of support vectors. A share of support vectors close to all train rows means the model relies on most rows and may generalize poorly.
+
+Two input plot section. Drawn only when the model has exactly two inputs.
+
+Grid section. Two tables, train and validation, of the measure for each pair of C (columns) and gamma (rows); in the validation table &quot;sv&quot; is the number of support vectors. The section is empty unless the team pressed Search the grid before saving the report. The agent chooses settings from the validation table, never the train table. A best cell on the edge of the grid means the team should extend the grid in that direction.
+
+An SVM has no estimate per input. The agent treats it as REG and NN: compare validation measures with the other models on the same validation rows.
+
+8. THRESHOLD: CHOOSING THE CUT FOR A PROBABILITY
+
+The first section contains the actual column, the probability column (whose name begins with the tool that saved it, such as REG prob Yes), the positive class, the rows used and the current threshold. The agent checks that the rows are validation rows; a threshold chosen on train rows is optimistic.
+
+Tables section. The confusion matrix at the current threshold, the rates divided by row sums (recall or TPR, FNR, FPR, TNR), the rates divided by column sums (precision, FDR, FOR, NPV), F1, accuracy, the AUC, the optimal threshold by the largest TPR minus FPR, the lift at the current threshold and the base rate.
+
+Threshold table section. The same measures at thresholds from 0.05 to 0.95. The agent uses this table to answer &quot;what happens if we raise or lower the threshold&quot; with numbers, for example how many positives the business would catch and how many rows it would act on (PP%).
+
+The optimal threshold by TPR minus FPR treats both errors as equally costly. When the brief contains the value of a true positive and the cost of acting on a row, the agent computes the net value at the thresholds in the table, for example net value = value per TP times TP minus cost per row times (TP + FP), names the threshold with the largest net value, and checks it against any capacity limit in the brief, such as the share of rows the business can act on (PP%). The agent always reports two thresholds from the table, the one with the largest net value within the capacity and the one with the largest net value without it, and says how much value the capacity limit costs.
+
+Curves, ROC and Lift sections. The same information as the tables across all thresholds. AUC is the chance that a random positive row receives a higher probability than a random negative row; 0.5 is no better than chance. Lift at a threshold is the precision divided by the base rate.
+
+9. WHAT THE AGENT DOES NOT DO
+
+The agent does not invent numbers, rows or runs. The agent does not claim that an input causes the target; these are observational data, and an estimate describes an association with the other inputs held fixed. The agent does not compare runs fitted on different validation rows as if they were equal. The agent does not judge a model by train numbers.</pre>
+  <button class="plib-copy-btn" onclick="copyPrompt('plib-material-17-prompt', this)" aria-label="Copy the text above to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy the text above
+  </button>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="lec11_2_report_guide.txt" download="lec11_2_report_guide.txt" target="_blank" rel="noopener noreferrer">lec11_2_report_guide.txt</a>
+  </div>
+  <div class="plib-material-note">Add it under knowledge next to the new brief.</div>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-18">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Five boxes joined by AND, for the builder. Capabilities, switch on attach files and leave the others off. Knowledge, replace the brief with the new brief. Knowledge, add the report guide. Specific, replace the Context, add the Objective sentence, replace the rule about numbers with the first rule in the lines box, and add the second rule. Example, delete it, because your team wrote it for an agent without the title file."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 295" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="295" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">For the builder</text><rect x="21" y="46" width="153" height="227" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Capabilities</text><text x="37" y="122" font-size="14" fill="#6b6b6b">switch on attach</text><text x="37" y="141" font-size="14" fill="#6b6b6b">files and leave the</text><text x="37" y="160" font-size="14" fill="#6b6b6b">others off</text><text x="198" y="164" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="222" y="46" width="153" height="227" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="246" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="246" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="267" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Knowledge</text><text x="238" y="122" font-size="14" fill="#6b6b6b">replace the brief</text><text x="238" y="141" font-size="14" fill="#6b6b6b">with the new brief</text><text x="399" y="164" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="423" y="46" width="153" height="227" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="447" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="447" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="468" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Knowledge</text><text x="439" y="122" font-size="14" fill="#6b6b6b">add the report</text><text x="439" y="141" font-size="14" fill="#6b6b6b">guide</text><text x="601" y="164" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="625" y="46" width="153" height="227" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="649" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="649" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="670" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Specific</text><text x="641" y="122" font-size="14" fill="#6b6b6b">replace the</text><text x="641" y="141" font-size="14" fill="#6b6b6b">Context, add the</text><text x="641" y="160" font-size="14" fill="#6b6b6b">Objective sentence,</text><text x="641" y="179" font-size="14" fill="#6b6b6b">replace the rule</text><text x="641" y="198" font-size="14" fill="#6b6b6b">about numbers</text><text x="641" y="217" font-size="14" fill="#6b6b6b">with the first rule in</text><text x="641" y="236" font-size="14" fill="#6b6b6b">the lines box, and</text><text x="641" y="255" font-size="14" fill="#6b6b6b">add the second rule</text><text x="802" y="164" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="826" y="46" width="153" height="227" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="850" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="850" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">5</text><text x="871" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Example</text><text x="842" y="122" font-size="14" fill="#6b6b6b">delete it, because</text><text x="842" y="141" font-size="14" fill="#6b6b6b">your team wrote it</text><text x="842" y="160" font-size="14" fill="#6b6b6b">for an agent</text><text x="842" y="179" font-size="14" fill="#6b6b6b">without the title file</text></svg></div>
+    <figcaption class="plib-tile-caption">Your instructor updates the greenlight analyst in this order now, and your team's builder updates your agent in section 3.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-material" id="plib-material-19">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The greenlight analyst, Thursday's Specific instructions</div>
+  <pre class="plib-material-box" tabindex="0" id="plib-material-19-prompt" data-copy="STANCE&#10;You are a senior analyst on Lumenvale's content strategy team. You are careful with evidence and plain with managers. You state which conclusions you can draw from the data, which conclusions you cannot draw from them, and what you would need to know.&#10;&#10;CONTEXT&#10;Lumenvale is a streaming service. You have two knowledge files. The Lumenvale brief describes the company, its eight main markets, the decisions of the content strategy team, the title file with its columns, and the finance team's planning figures. The report guide explains how to read a model report saved by one of the five course tools (REG, TREE, NN, SVM, THRESHOLD). The team fits models on the title file and attaches the saved reports, usually the .txt file, to its prompts.&#10;&#10;OBJECTIVE&#10;Help the content strategy team make its decisions, which titles to greenlight, at what budget and marketing budget, when to release them and which titles to feature on the home page, using the attached reports. In every answer, name the decision behind the question, identify the run you are reading (tool, target, inputs, validation method), give the numbers that settle the question with the report section each number comes from, convert them into dollars with the planning figures where the decision is about money, and end with one run the team could make next.&#10;&#10;RULES&#10;Read every report as described in the report guide.&#10;Quote numbers only from the brief, from an attached report, or from what the person typed, and name the source of each number.&#10;Judge a model by its validation rows. Report any large gap between train and validation numbers.&#10;Treat budgets, marketing budgets and release dates as levers the team sets. Flag any input measured after release, such as critic_score, as a leak.&#10;If no report is attached, or you cannot answer the question from the attached reports, say so and name the tool and settings that would produce the answer.&#10;Show every dollar calculation in one line.&#10;Do not claim that an input causes an outcome.&#10;Keep answers under 200 words unless the person asks for more.&#10;&#10;EXAMPLES&#10;Question: (with a REG report on breakout attached) Should we pay more for a known cast?&#10;Answer: This is a greenlight budget decision. The attached report is a REG logistic fit of breakout on 13 inputs, judged on 1,199 validation rows. In the Fit section, cast_recognition has an estimate of 0.0241 per point with logworth 5.92. Ten more points multiply the odds of a breakout by about 1.27, other inputs held fixed. This is an association, and the data cannot show that paying for a cast causes a breakout. Validation accuracy is 0.921, against 0.907 for predicting No for every title. As a next run, fit a TREE report on breakout, to see whether cast_recognition matters only above some budget." aria-label="Specification text, scrollable">STANCE
+You are a senior analyst on Lumenvale's content strategy team. You are careful with evidence and plain with managers. You state which conclusions you can draw from the data, which conclusions you cannot draw from them, and what you would need to know.
+
+CONTEXT
+Lumenvale is a streaming service. You have two knowledge files. The Lumenvale brief describes the company, its eight main markets, the decisions of the content strategy team, the title file with its columns, and the finance team's planning figures. The report guide explains how to read a model report saved by one of the five course tools (REG, TREE, NN, SVM, THRESHOLD). The team fits models on the title file and attaches the saved reports, usually the .txt file, to its prompts.
+
+OBJECTIVE
+Help the content strategy team make its decisions, which titles to greenlight, at what budget and marketing budget, when to release them and which titles to feature on the home page, using the attached reports. In every answer, name the decision behind the question, identify the run you are reading (tool, target, inputs, validation method), give the numbers that settle the question with the report section each number comes from, convert them into dollars with the planning figures where the decision is about money, and end with one run the team could make next.
+
+RULES
+Read every report as described in the report guide.
+Quote numbers only from the brief, from an attached report, or from what the person typed, and name the source of each number.
+Judge a model by its validation rows. Report any large gap between train and validation numbers.
+Treat budgets, marketing budgets and release dates as levers the team sets. Flag any input measured after release, such as critic_score, as a leak.
+If no report is attached, or you cannot answer the question from the attached reports, say so and name the tool and settings that would produce the answer.
+Show every dollar calculation in one line.
+Do not claim that an input causes an outcome.
+Keep answers under 200 words unless the person asks for more.
+
+EXAMPLES
+Question: (with a REG report on breakout attached) Should we pay more for a known cast?
+Answer: This is a greenlight budget decision. The attached report is a REG logistic fit of breakout on 13 inputs, judged on 1,199 validation rows. In the Fit section, cast_recognition has an estimate of 0.0241 per point with logworth 5.92. Ten more points multiply the odds of a breakout by about 1.27, other inputs held fixed. This is an association, and the data cannot show that paying for a cast causes a breakout. Validation accuracy is 0.921, against 0.907 for predicting No for every title. As a next run, fit a TREE report on breakout, to see whether cast_recognition matters only above some budget.</pre>
+  <button class="plib-copy-btn" onclick="copyPrompt('plib-material-19-prompt', this)" aria-label="Copy the text above to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy the text above
+  </button>
+  <div class="plib-material-note">Compare the Context, the Objective and the Rules with Tuesday's version.</div>
+</div>
+
+<div class="plib-narration">
+  <p>Watch your instructor fit a logistic regression of breakout on the thirteen columns known before release, save the report, attach the .txt file and ask the greenlight analyst a question. Read the reply for four things. Meaning is what the number means for Lumenvale, in plain words. Money is the number converted into dollars. Confidence is how far the team can trust the number, from the validation rows and the strength of the evidence. Next step is what the team does or runs next. A model result with all four things is business intelligence.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-21">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four boxes joined by AND. Meaning, what the number means for Lumenvale, in plain words. Money, the number in dollars, from the planning figures in the brief. Confidence, how far to trust it, from the validation rows and the strength of the evidence. Next step, the decision to make or the next run."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 200" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="200" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Four things to look for in a reply</text><rect x="21" y="46" width="204" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Meaning</text><text x="37" y="122" font-size="14" fill="#6b6b6b">what the number means for</text><text x="37" y="141" font-size="14" fill="#6b6b6b">Lumenvale, in plain words</text><text x="248" y="117" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Money</text><text x="288" y="122" font-size="14" fill="#6b6b6b">the number in dollars, from</text><text x="288" y="141" font-size="14" fill="#6b6b6b">the planning figures in the</text><text x="288" y="160" font-size="14" fill="#6b6b6b">brief</text><text x="500" y="117" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Confidence</text><text x="540" y="122" font-size="14" fill="#6b6b6b">how far to trust it, from the</text><text x="540" y="141" font-size="14" fill="#6b6b6b">validation rows and the</text><text x="540" y="160" font-size="14" fill="#6b6b6b">strength of the evidence</text><text x="752" y="117" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Next step</text><text x="792" y="122" font-size="14" fill="#6b6b6b">the decision to make or the</text><text x="792" y="141" font-size="14" fill="#6b6b6b">next run</text></svg></div>
+    <figcaption class="plib-tile-caption">Look for all four in every reply today.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-material" id="plib-material-22">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The demonstration questions</div>
+  <div class="plib-material-copies">
+    <div class="plib-copyrow">
+      <div class="plib-copyrow-label">1. A greenlight question</div>
+      <code class="plib-copyrow-code" id="plib-material-22-copy-0" data-copy="Which pitch is more likely to break out, a franchise title or an original title with a well known lead cast?">Which pitch is more likely to break out, a franchise title or an original title with a well known lead cast?</code>
+      <button class="plib-copy-btn plib-copy-btn-row" onclick="copyPrompt('plib-material-22-copy-0', this)" aria-label="Copy 1. A greenlight question to clipboard">
+        <span aria-hidden="true">&#128203;</span> Copy
+      </button>
+    </div>
+    <div class="plib-copyrow">
+      <div class="plib-copyrow-label">2. A promotion question</div>
+      <code class="plib-copyrow-code" id="plib-material-22-copy-1" data-copy="Can we use this model to choose which titles to feature on the home page?">Can we use this model to choose which titles to feature on the home page?</code>
+      <button class="plib-copy-btn plib-copy-btn-row" onclick="copyPrompt('plib-material-22-copy-1', this)" aria-label="Copy 2. A promotion question to clipboard">
+        <span aria-hidden="true">&#128203;</span> Copy
+      </button>
+    </div>
+  </div>
+  <div class="plib-material-note">Your instructor attaches the .txt report in the same message as each question.</div>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 3 of 5</div><div class="plib-section-t">INTERACTION</div></div>
+
+<div class="plib-prompt-marker" role="region" aria-label="Session Opener">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-marker-id">T</span>
+    <span class="plib-prompt-type-label plib-marker-label">Session Opener</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-marker-instruction">Copy this block and paste it into Hokie AI to begin your session.</p>
+  <div class="plib-prompt-display plib-marker-display">You are an analysis partner for BIT 5534 Applied Business Intelligence and Analytics, a graduate course in business intelligence and analytics at Virginia Tech. The student holds graduate standing, has some statistics background, and is working on a team analytics project. Speak to them as a capable adult. Be direct, say when something is uncertain or contested, and do not pad your answers. When a student pushes back on something you said, take the challenge seriously. Do not concede immediately to be agreeable.
+
+---
+**AI Interaction Protocol**
+
+In this session, you will receive blocks of content with the
+following structural pattern:
+
+```
+### &lt;BlockID&gt;
+----------
+&lt;content&gt;
+----------
+###
+```
+
+Some blocks include an interaction-mode directive on a separate
+line inside the dashed envelope:
+
+```
+### &lt;BlockID&gt;
+----------
+[ai_interaction=&lt;mode&gt;]
+&lt;content&gt;
+----------
+###
+```
+
+Three modes determine your response:
+
+  - **respond**: Engage substantively with the block content.
+    Treat it as a prompt, question, or task that wants your
+    analytical response. Default for S blocks (prompts) and X
+    blocks (free exploration).
+
+  - **acknowledge**: Confirm receipt with one brief sentence
+    naming the block ID. Do not analyze, comment on, or expand on
+    the content. The student is filing the block for the record,
+    not asking for engagement. Default for T blocks (this opener),
+    R blocks (reflections), M CLOSE blocks (closing markers), Q
+    blocks (structured selections), and O blocks (ordering
+    selections).
+
+  - **archive**: Respond with only the block ID and nothing else.
+    Used for batched archival pastes where even brief
+    acknowledgment would clutter the thread.
+
+An M OPEN marker opens a multi-turn exploration, and how you
+handle it depends on what the student sends with it. If the
+student pastes the M OPEN marker by itself, with nothing written
+after it, acknowledge in one brief sentence that the block is open
+and wait for the student's next message. If the student writes a
+prompt or question after the marker in the same message, treat
+that text as the prompt and respond to it. Always acknowledge an
+M CLOSE marker.
+
+If a block has no explicit `[ai_interaction=...]` directive, apply
+the block-type default per the list above.
+
+This protocol applies for the remainder of this session.
+---</div>
+  <div class="plib-prompt-text" id="text_prompt_24" data-copy="### T&#10;----------&#10;You are an analysis partner for BIT 5534 Applied Business Intelligence and Analytics, a graduate course in business intelligence and analytics at Virginia Tech. The student holds graduate standing, has some statistics background, and is working on a team analytics project. Speak to them as a capable adult. Be direct, say when something is uncertain or contested, and do not pad your answers. When a student pushes back on something you said, take the challenge seriously. Do not concede immediately to be agreeable.&#10;&#10;---&#10;**AI Interaction Protocol**&#10;&#10;In this session, you will receive blocks of content with the&#10;following structural pattern:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Some blocks include an interaction-mode directive on a separate&#10;line inside the dashed envelope:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;[ai_interaction=&lt;mode&gt;]&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Three modes determine your response:&#10;&#10;  - **respond**: Engage substantively with the block content.&#10;    Treat it as a prompt, question, or task that wants your&#10;    analytical response. Default for S blocks (prompts) and X&#10;    blocks (free exploration).&#10;&#10;  - **acknowledge**: Confirm receipt with one brief sentence&#10;    naming the block ID. Do not analyze, comment on, or expand on&#10;    the content. The student is filing the block for the record,&#10;    not asking for engagement. Default for T blocks (this opener),&#10;    R blocks (reflections), M CLOSE blocks (closing markers), Q&#10;    blocks (structured selections), and O blocks (ordering&#10;    selections).&#10;&#10;  - **archive**: Respond with only the block ID and nothing else.&#10;    Used for batched archival pastes where even brief&#10;    acknowledgment would clutter the thread.&#10;&#10;An M OPEN marker opens a multi-turn exploration, and how you&#10;handle it depends on what the student sends with it. If the&#10;student pastes the M OPEN marker by itself, with nothing written&#10;after it, acknowledge in one brief sentence that the block is open&#10;and wait for the student's next message. If the student writes a&#10;prompt or question after the marker in the same message, treat&#10;that text as the prompt and respond to it. Always acknowledge an&#10;M CLOSE marker.&#10;&#10;If a block has no explicit `[ai_interaction=...]` directive, apply&#10;the block-type default per the list above.&#10;&#10;This protocol applies for the remainder of this session.&#10;---&#10;----------&#10;###"></div>
+  <button class="plib-copy-btn plib-copy-btn-marker" onclick="copyPrompt('text_prompt_24', this)"
+          aria-label="Copy session opener to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy session opener
+  </button>
+</div>
+
+<div class="plib-narration">
+  <p>Your turn, as a team, with two jobs at the same time. The builder updates your team's agent from the update card, with the lines in the box below, in about eight minutes. Everyone else fits the regression on the run card, saves the report and sends the .txt file to the team. Release teams and marketing teams fit the same model, a regression of hours_28d, and ask different questions of it.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-26">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Five boxes joined by AND, for the builder. Capabilities, switch on attach files and leave the others off. Knowledge, replace the brief with the new brief. Knowledge, add the report guide. Specific, replace the Context, add the Objective sentence, replace the rule about numbers with the first rule in the lines box, and add the second rule. Example, delete it, because your team wrote it for an agent without the title file."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 295" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="295" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">For the builder</text><rect x="21" y="46" width="153" height="227" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Capabilities</text><text x="37" y="122" font-size="14" fill="#6b6b6b">switch on attach</text><text x="37" y="141" font-size="14" fill="#6b6b6b">files and leave the</text><text x="37" y="160" font-size="14" fill="#6b6b6b">others off</text><text x="198" y="164" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="222" y="46" width="153" height="227" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="246" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="246" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="267" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Knowledge</text><text x="238" y="122" font-size="14" fill="#6b6b6b">replace the brief</text><text x="238" y="141" font-size="14" fill="#6b6b6b">with the new brief</text><text x="399" y="164" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="423" y="46" width="153" height="227" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="447" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="447" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="468" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Knowledge</text><text x="439" y="122" font-size="14" fill="#6b6b6b">add the report</text><text x="439" y="141" font-size="14" fill="#6b6b6b">guide</text><text x="601" y="164" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="625" y="46" width="153" height="227" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="649" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="649" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="670" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Specific</text><text x="641" y="122" font-size="14" fill="#6b6b6b">replace the</text><text x="641" y="141" font-size="14" fill="#6b6b6b">Context, add the</text><text x="641" y="160" font-size="14" fill="#6b6b6b">Objective sentence,</text><text x="641" y="179" font-size="14" fill="#6b6b6b">replace the rule</text><text x="641" y="198" font-size="14" fill="#6b6b6b">about numbers</text><text x="641" y="217" font-size="14" fill="#6b6b6b">with the first rule in</text><text x="641" y="236" font-size="14" fill="#6b6b6b">the lines box, and</text><text x="641" y="255" font-size="14" fill="#6b6b6b">add the second rule</text><text x="802" y="164" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="826" y="46" width="153" height="227" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="850" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="850" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">5</text><text x="871" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Example</text><text x="842" y="122" font-size="14" fill="#6b6b6b">delete it, because</text><text x="842" y="141" font-size="14" fill="#6b6b6b">your team wrote it</text><text x="842" y="160" font-size="14" fill="#6b6b6b">for an agent</text><text x="842" y="179" font-size="14" fill="#6b6b6b">without the title file</text></svg></div>
+    <figcaption class="plib-tile-caption">The builder saves the agent and tells the team. The share link stays the same.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-material" id="plib-material-27">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">Lines for your team's Specific instructions</div>
+  <div class="plib-material-copies">
+    <div class="plib-copyrow">
+      <div class="plib-copyrow-label">Context, replace your whole Context</div>
+      <code class="plib-copyrow-code" id="plib-material-27-copy-0" data-copy="Your knowledge files are the Lumenvale brief and the report guide. The brief describes Lumenvale, its markets, its decisions, the columns of the title file and the finance team's planning figures. The guide explains how to read a model report saved by one of the five course tools. The team attaches saved reports, usually the .txt file, to its questions.">Your knowledge files are the Lumenvale brief and the report guide. The brief describes Lumenvale, its markets, its decisions, the columns of the title file and the finance team's planning figures. The guide explains how to read a model report saved by one of the five course tools. The team attaches saved reports, usually the .txt file, to its questions.</code>
+      <button class="plib-copy-btn plib-copy-btn-row" onclick="copyPrompt('plib-material-27-copy-0', this)" aria-label="Copy Context, replace your whole Context to clipboard">
+        <span aria-hidden="true">&#128203;</span> Copy
+      </button>
+    </div>
+    <div class="plib-copyrow">
+      <div class="plib-copyrow-label">Objective, add at the end</div>
+      <code class="plib-copyrow-code" id="plib-material-27-copy-1" data-copy="In every answer, identify the run you are reading, give the numbers that settle the question with the report section each number comes from, and convert them into dollars with the planning figures where the decision is about money.">In every answer, identify the run you are reading, give the numbers that settle the question with the report section each number comes from, and convert them into dollars with the planning figures where the decision is about money.</code>
+      <button class="plib-copy-btn plib-copy-btn-row" onclick="copyPrompt('plib-material-27-copy-1', this)" aria-label="Copy Objective, add at the end to clipboard">
+        <span aria-hidden="true">&#128203;</span> Copy
+      </button>
+    </div>
+    <div class="plib-copyrow">
+      <div class="plib-copyrow-label">Rule, replaces your rule about numbers</div>
+      <code class="plib-copyrow-code" id="plib-material-27-copy-2" data-copy="Quote numbers only from the brief, from an attached report, or from what the person typed, and name the source of each number.">Quote numbers only from the brief, from an attached report, or from what the person typed, and name the source of each number.</code>
+      <button class="plib-copy-btn plib-copy-btn-row" onclick="copyPrompt('plib-material-27-copy-2', this)" aria-label="Copy Rule, replaces your rule about numbers to clipboard">
+        <span aria-hidden="true">&#128203;</span> Copy
+      </button>
+    </div>
+    <div class="plib-copyrow">
+      <div class="plib-copyrow-label">Rule, add</div>
+      <code class="plib-copyrow-code" id="plib-material-27-copy-3" data-copy="Treat budgets, marketing budgets and release dates as levers the team sets. Treat any column measured after release, such as critic_score, as a leak, and say so.">Treat budgets, marketing budgets and release dates as levers the team sets. Treat any column measured after release, such as critic_score, as a leak, and say so.</code>
+      <button class="plib-copy-btn plib-copy-btn-row" onclick="copyPrompt('plib-material-27-copy-3', this)" aria-label="Copy Rule, add to clipboard">
+        <span aria-hidden="true">&#128203;</span> Copy
+      </button>
+    </div>
+  </div>
+  <div class="plib-material-note">Keep your Stance, your team's own rule and the decision in your Objective. Delete your Example.</div>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-28">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Six boxes joined by THEN, for everyone except the builder. Open, reg_explorer.py and the title file. Target, hours_28d, number. Inputs, the thirteen columns known before release, everything except title_id, synopsis, critic_score, breakout and Validation. Split, use the column Validation. Fit, press Fit the model. Save, press Save report and send the .txt file to your team."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 352" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="352" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">For everyone except the builder</text><rect x="21" y="46" width="120" height="284" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Open</text><text x="37" y="122" font-size="14" fill="#6b6b6b">reg_explorer.py</text><text x="37" y="141" font-size="14" fill="#6b6b6b">and the title</text><text x="37" y="160" font-size="14" fill="#6b6b6b">file</text><text x="165" y="193" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">THEN</text><rect x="189" y="46" width="120" height="284" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="213" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="213" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="234" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Target</text><text x="205" y="122" font-size="14" fill="#6b6b6b">hours_28d,</text><text x="205" y="141" font-size="14" fill="#6b6b6b">number</text><text x="332" y="193" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">THEN</text><rect x="356" y="46" width="120" height="284" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="380" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="380" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="401" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Inputs</text><text x="372" y="122" font-size="14" fill="#6b6b6b">the thirteen</text><text x="372" y="141" font-size="14" fill="#6b6b6b">columns</text><text x="372" y="160" font-size="14" fill="#6b6b6b">known before</text><text x="372" y="179" font-size="14" fill="#6b6b6b">release,</text><text x="372" y="198" font-size="14" fill="#6b6b6b">everything</text><text x="372" y="217" font-size="14" fill="#6b6b6b">except</text><text x="372" y="236" font-size="14" fill="#6b6b6b">title_id,</text><text x="372" y="255" font-size="14" fill="#6b6b6b">synopsis,</text><text x="372" y="274" font-size="14" fill="#6b6b6b">critic_score,</text><text x="372" y="293" font-size="14" fill="#6b6b6b">breakout and</text><text x="372" y="312" font-size="14" fill="#6b6b6b">Validation</text><text x="500" y="193" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">THEN</text><rect x="524" y="46" width="120" height="284" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Split</text><text x="540" y="122" font-size="14" fill="#6b6b6b">use the</text><text x="540" y="141" font-size="14" fill="#6b6b6b">column</text><text x="540" y="160" font-size="14" fill="#6b6b6b">Validation</text><text x="668" y="193" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">THEN</text><rect x="692" y="46" width="120" height="284" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="716" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="716" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">5</text><text x="737" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Fit</text><text x="708" y="122" font-size="14" fill="#6b6b6b">press Fit the</text><text x="708" y="141" font-size="14" fill="#6b6b6b">model</text><text x="835" y="193" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">THEN</text><rect x="859" y="46" width="120" height="284" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="883" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="883" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">6</text><text x="904" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Save</text><text x="875" y="122" font-size="14" fill="#6b6b6b">press Save</text><text x="875" y="141" font-size="14" fill="#6b6b6b">report and</text><text x="875" y="160" font-size="14" fill="#6b6b6b">send the .txt</text><text x="875" y="179" font-size="14" fill="#6b6b6b">file to your</text><text x="875" y="198" font-size="14" fill="#6b6b6b">team</text></svg></div>
+    <figcaption class="plib-tile-caption">Five minutes. One report is enough for the team, and a second report from another tool is welcome.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>When the builder says the agent is saved, open its link and start a new chat. Paste T and wait for the one sentence acknowledgment. Then attach the .txt file and ask your team's question from the box below in the same message, typed or pasted. Next ask one more question of your choice from the box, with the report named under that question attached. Read each reply for the four things on the card.</p>
+</div>
+
+<div class="plib-material" id="plib-material-30">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">Questions for your team's agent</div>
+  <div class="plib-material-copies">
+    <div class="plib-copyrow">
+      <div class="plib-copyrow-label">Release teams ask this first, with the regression of hours_28d</div>
+      <code class="plib-copyrow-code" id="plib-material-30-copy-0" data-copy="Should we avoid releasing titles on holiday weekends?">Should we avoid releasing titles on holiday weekends?</code>
+      <button class="plib-copy-btn plib-copy-btn-row" onclick="copyPrompt('plib-material-30-copy-0', this)" aria-label="Copy Release teams ask this first, with the regression of hours_28d to clipboard">
+        <span aria-hidden="true">&#128203;</span> Copy
+      </button>
+    </div>
+    <div class="plib-copyrow">
+      <div class="plib-copyrow-label">Marketing teams ask this first, with the regression of hours_28d</div>
+      <code class="plib-copyrow-code" id="plib-material-30-copy-1" data-copy="Is another 5 million dollars of marketing worth it for a title?">Is another 5 million dollars of marketing worth it for a title?</code>
+      <button class="plib-copy-btn plib-copy-btn-row" onclick="copyPrompt('plib-material-30-copy-1', this)" aria-label="Copy Marketing teams ask this first, with the regression of hours_28d to clipboard">
+        <span aria-hidden="true">&#128203;</span> Copy
+      </button>
+    </div>
+    <div class="plib-copyrow">
+      <div class="plib-copyrow-label">Any team, with the regression of hours_28d</div>
+      <code class="plib-copyrow-code" id="plib-material-30-copy-2" data-copy="Which choice that we make before release is worth the most in hours watched, and what is it worth in dollars?">Which choice that we make before release is worth the most in hours watched, and what is it worth in dollars?</code>
+      <button class="plib-copy-btn plib-copy-btn-row" onclick="copyPrompt('plib-material-30-copy-2', this)" aria-label="Copy Any team, with the regression of hours_28d to clipboard">
+        <span aria-hidden="true">&#128203;</span> Copy
+      </button>
+    </div>
+    <div class="plib-copyrow">
+      <div class="plib-copyrow-label">Any team, with any report on hours_28d</div>
+      <code class="plib-copyrow-code" id="plib-material-30-copy-3" data-copy="How far off is our forecast for a single title likely to be, in dollars?">How far off is our forecast for a single title likely to be, in dollars?</code>
+      <button class="plib-copy-btn plib-copy-btn-row" onclick="copyPrompt('plib-material-30-copy-3', this)" aria-label="Copy Any team, with any report on hours_28d to clipboard">
+        <span aria-hidden="true">&#128203;</span> Copy
+      </button>
+    </div>
+    <div class="plib-copyrow">
+      <div class="plib-copyrow-label">Any team, with the regression of hours_28d</div>
+      <code class="plib-copyrow-code" id="plib-material-30-copy-4" data-copy="Is a franchise title worth paying more for?">Is a franchise title worth paying more for?</code>
+      <button class="plib-copy-btn plib-copy-btn-row" onclick="copyPrompt('plib-material-30-copy-4', this)" aria-label="Copy Any team, with the regression of hours_28d to clipboard">
+        <span aria-hidden="true">&#128203;</span> Copy
+      </button>
+    </div>
+  </div>
+  <div class="plib-material-note">Attach the report in the same message as the question. One question per message.</div>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-31">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:400px" role="img" aria-label="If you cannot attach the .txt file. Paste the report. Open the .txt file, copy all of it, and paste it into your message above the question."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 289" font-family="Segoe UI,-apple-system,sans-serif"><rect width="400" height="289" rx="10" fill="#faf7f8"/><text x="34" y="52" font-size="13" fill="#6b6b6b" letter-spacing="1.2">IF YOU CANNOT ATTACH THE .TXT FILE</text><text x="34" y="104" font-size="25" font-weight="600" fill="#630031">Paste the report</text><rect x="34" y="144" width="332" height="2" fill="#630031" opacity="0.25"/><text x="34" y="178" font-size="15" fill="#6b6b6b">Open the .txt file, copy all of it, and paste it into</text><text x="34" y="199" font-size="15" fill="#6b6b6b">your message above the question.</text></svg></div>
+  </figure>
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:400px" role="img" aria-label="If the agent says no report is attached. Attach it again. Attach the .txt file in the same message as the question, and wait until the file name appears before you send."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 289" font-family="Segoe UI,-apple-system,sans-serif"><rect width="400" height="289" rx="10" fill="#faf7f8"/><text x="34" y="52" font-size="13" fill="#6b6b6b" letter-spacing="1.2">IF THE AGENT SAYS NO REPORT IS ATTACHED</text><text x="34" y="104" font-size="25" font-weight="600" fill="#630031">Attach it again</text><rect x="34" y="144" width="332" height="2" fill="#630031" opacity="0.25"/><text x="34" y="178" font-size="15" fill="#6b6b6b">Attach the .txt file in the same message as the</text><text x="34" y="199" font-size="15" fill="#6b6b6b">question, and wait until the file name appears</text><text x="34" y="220" font-size="15" fill="#6b6b6b">before you send.</text></svg></div>
+  </figure>
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:400px" role="img" aria-label="If your tool has no Save report button. Download the tools again. Your copy is from week 8 or week 9. Use the five tools in section 2."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 289" font-family="Segoe UI,-apple-system,sans-serif"><rect width="400" height="289" rx="10" fill="#faf7f8"/><text x="34" y="52" font-size="13" fill="#6b6b6b" letter-spacing="1.2">IF YOUR TOOL HAS NO SAVE REPORT BUTTON</text><text x="34" y="104" font-size="25" font-weight="600" fill="#630031">Download the tools again</text><rect x="34" y="144" width="332" height="2" fill="#630031" opacity="0.25"/><text x="34" y="178" font-size="15" fill="#6b6b6b">Your copy is from week 8 or week 9. Use the five</text><text x="34" y="199" font-size="15" fill="#6b6b6b">tools in section 2.</text></svg></div>
+  </figure>
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:400px" role="img" aria-label="If your team's agent is not saved by 40:00. Use the class agent. Open the greenlight analyst from the screen, paste T, attach your report and ask your team's question there. Write your reflection in that thread and export it."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 289" font-family="Segoe UI,-apple-system,sans-serif"><rect width="400" height="289" rx="10" fill="#faf7f8"/><text x="34" y="52" font-size="13" fill="#6b6b6b" letter-spacing="1.2">IF YOUR TEAM'S AGENT IS NOT SAVED BY 40:00</text><text x="34" y="104" font-size="25" font-weight="600" fill="#630031">Use the class agent</text><rect x="34" y="144" width="332" height="2" fill="#630031" opacity="0.25"/><text x="34" y="178" font-size="15" fill="#6b6b6b">Open the greenlight analyst from the screen,</text><text x="34" y="199" font-size="15" fill="#6b6b6b">paste T, attach your report and ask your team's</text><text x="34" y="220" font-size="15" fill="#6b6b6b">question there. Write your reflection in that</text><text x="34" y="241" font-size="15" fill="#6b6b6b">thread and export it.</text></svg></div>
+  </figure>
+</div>
+<script>(function(){var g=document.getElementById("plib-tiles-31");if(!g)return;var k=[].slice.call(g.children);for(var i=k.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=k[i];k[i]=k[j];k[j]=t;}k.forEach(function(el){g.appendChild(el);});})();</script>
+
+<div class="plib-section"><div class="plib-section-n">Section 4 of 5</div><div class="plib-section-t">DISCUSSION</div></div>
+
+<div class="plib-narration">
+  <p>Look at the reply to your team's question and find each of the four things on the card. Your instructor asks for one show of hands per box.</p>
+</div>
+
+<div class="plib-discussion">
+  <div class="plib-discussion-label">&#128172; Discussion</div>
+  <p class="plib-discussion-intro">Take these into the reflection:</p>
+  <ul class="plib-discussion-list">
+    <li>In which reply did the agent turn a model number into something a Lumenvale manager could act on? Read the number from the report and the sentence the agent built on it.</li>
+    <li>Release teams and marketing teams attached the same model. Which number did your agent use for your decision, and which numbers in the report did it leave aside?</li>
+    <li>What would you ask the agent next, and which report would it need?</li>
+</ul>
+</div>
+
+<div class="plib-narration">
+  <p>Turn to a teammate for three minutes. Each of you reads out one sentence from your agent's replies that a Lumenvale manager could act on AND the number in the report that the sentence rests on. A manager acts on the sentence, so the team needs to know the number under it.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-36">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Two boxes joined by AND, three minutes with a teammate. A sentence, one sentence from your agent's replies that a Lumenvale manager could act on. Its number, the number in the report that the sentence rests on, and the section of the report it comes from."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 190" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="190" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Three minutes with a teammate</text><rect x="21" y="46" width="455" height="122" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">A sentence</text><text x="37" y="122" font-size="14" fill="#6b6b6b">one sentence from your agent's replies that a Lumenvale manager</text><text x="37" y="141" font-size="14" fill="#6b6b6b">could act on</text><text x="500" y="112" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="455" height="122" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Its number</text><text x="540" y="122" font-size="14" fill="#6b6b6b">the number in the report that the sentence rests on, and the section</text><text x="540" y="141" font-size="14" fill="#6b6b6b">of the report it comes from</text></svg></div>
+    <figcaption class="plib-tile-caption">Three minutes, both of you.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>Your instructor releases your team's own dataset and project brief by Friday, November 6. Next week your team works on its own project with the same tools and the same report guide, and progress report 1 is due Friday, November 13.</p>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 5 of 5</div><div class="plib-section-t">REFLECTION</div></div>
+
+<div class="plib-tiles" id="plib-tiles-39">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four boxes joined by AND. Write all four in your reflection. The number, one number from your team's report that the agent used, and the report section it comes from. Meaning and money, what the agent said the number means for Lumenvale, in plain words and in dollars. Confidence, what the agent said about how far to trust the number. Your intelligence, the one sentence you would tell a Lumenvale manager, the next question you would ask before acting on it, and why that question matters for the decision."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 276" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="276" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Write all four in your reflection</text><rect x="21" y="46" width="204" height="208" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The number</text><text x="37" y="122" font-size="14" fill="#6b6b6b">one number from your</text><text x="37" y="141" font-size="14" fill="#6b6b6b">team's report that the</text><text x="37" y="160" font-size="14" fill="#6b6b6b">agent used, and the report</text><text x="37" y="179" font-size="14" fill="#6b6b6b">section it comes from</text><text x="248" y="155" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="208" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Meaning and</text><text x="318" y="103" font-size="17" font-weight="600" fill="#2b2b2b">money</text><text x="288" y="134" font-size="14" fill="#6b6b6b">what the agent said the</text><text x="288" y="153" font-size="14" fill="#6b6b6b">number means for</text><text x="288" y="172" font-size="14" fill="#6b6b6b">Lumenvale, in plain words</text><text x="288" y="191" font-size="14" fill="#6b6b6b">and in dollars</text><text x="500" y="155" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="208" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Confidence</text><text x="540" y="122" font-size="14" fill="#6b6b6b">what the agent said about</text><text x="540" y="141" font-size="14" fill="#6b6b6b">how far to trust the number</text><text x="752" y="155" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="208" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Your intelligence</text><text x="792" y="122" font-size="14" fill="#6b6b6b">the one sentence you</text><text x="792" y="141" font-size="14" fill="#6b6b6b">would tell a Lumenvale</text><text x="792" y="160" font-size="14" fill="#6b6b6b">manager, the next question</text><text x="792" y="179" font-size="14" fill="#6b6b6b">you would ask before</text><text x="792" y="198" font-size="14" fill="#6b6b6b">acting on it, and why that</text><text x="792" y="217" font-size="14" fill="#6b6b6b">question matters for the</text><text x="792" y="236" font-size="14" fill="#6b6b6b">decision</text></svg></div>
+    <figcaption class="plib-tile-caption">Answer all four parts.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>Now write your reflection in the thread with your team's agent, in your own words and without help from the AI. The agent acknowledges it in one sentence. If you used the greenlight analyst from the screen, write and export that thread.</p>
+  <p>Write all four of these in your reflection. First, quote one number from your team's report that the agent used, and name the report section it comes from. AND second, say what the agent said the number means for Lumenvale, in plain words and in dollars. AND third, say what the agent said about how far to trust the number. AND fourth, write the one sentence you would tell a Lumenvale manager, the next question you would ask before acting on it, and why that question matters for the decision.</p>
+  <p>Your instructor gives the fourth part the most weight. Write the sentence for the manager in full, in the words you would use.</p>
+  <p>Write 80 to 160 words.</p>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution R11.2.1">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">R11.2.1</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Your reflection</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 80 to 160 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_41" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for R11.2.1"
+            data-maxwords="160" data-maxchars="1600"
+            oninput="updateCounter('prompt_41', 'textarea_41')"></textarea>
+  <div class="plib-counter" id="counter_prompt_41" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_41">0</span> / 160 words&nbsp;·&nbsp;
+    <span id="cc_prompt_41">0</span> / 1600 characters
+    <span class="plib-counter-min">minimum: 80 words</span>
+  </div>
+  <div class="plib-warn" id="warn_prompt_41" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_41"
+       data-prefix="### R11.2.1&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_41"
+       data-maxwords="160"
+       data-maxchars="1600"
+       data-minwords="80"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_41', this)"
+          aria-label="Copy contribution R11.2.1 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-submit">
+  <div class="plib-submit-title">Before you leave</div>
+  <p class="plib-submit-p">Export this thread as a .zip file, then upload it to the Canvas assignment. Your work is not submitted until Canvas shows your file.</p>
+  <a class="plib-submit-btn" href="https://canvas.vt.edu/courses/233475/assignments/2844148" target="_blank" rel="noopener noreferrer">Open the Canvas assignment</a>
+  <div class="plib-submit-note">Opens in a new tab, so this page stays where it is.</div>
+</div>
+
+</div>
+</main>
+<script>
+function countWords(text) {
+  return text.trim() === '' ? 0 : text.trim().split(/[ \t\n\r]+/).length;
+}
+function announce(msg) {
+  var el = document.getElementById('plib-live');
+  if (!el) { el = document.createElement('div'); el.id = 'plib-live';
+    el.setAttribute('aria-live','polite'); el.setAttribute('aria-atomic','true');
+    el.style.cssText='position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;';
+    document.body.appendChild(el); }
+  el.textContent = ''; setTimeout(function(){ el.textContent = msg; }, 50);
+}
+function autoResize(ta) {
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(ta.scrollHeight + 2, 600) + 'px';
+}
+function updateCounter(bid, tid) {
+  var ta = document.getElementById(tid);
+  var textEl = document.getElementById('text_' + bid);
+  var wcEl = document.getElementById('wc_' + bid);
+  var ccEl = document.getElementById('cc_' + bid);
+  var ctrEl = document.getElementById('counter_' + bid);
+  if (!ta) return;
+  autoResize(ta);
+  var maxwords = textEl ? parseInt(textEl.getAttribute('data-maxwords') || '0') : 0;
+  var maxchars = textEl ? parseInt(textEl.getAttribute('data-maxchars') || '0') : 0;
+  var minwords = textEl ? parseInt(textEl.getAttribute('data-minwords') || '0') : 0;
+  var text = ta.value;
+  var words = countWords(text);
+  var chars = text.length;
+  if (maxchars && chars > maxchars) {
+    ta.value = text.substring(0, maxchars);
+    text = ta.value; words = countWords(text); chars = text.length;
+  }
+  if (wcEl) wcEl.textContent = words;
+  if (ccEl) ccEl.textContent = chars;
+  if (ctrEl && maxwords) {
+    var pct = words / maxwords;
+    var cls = pct >= 1.0 ? 'bad' : (pct >= 0.8 || (minwords && words < minwords)) ? 'warn' : 'ok';
+    if (pct >= 1.0) { ctrEl.className = 'plib-counter at-limit'; }
+    else { ctrEl.className = 'plib-counter'; }
+    if (wcEl) wcEl.className = 'plib-count-' + cls;
+    if (ccEl) ccEl.className = 'plib-count-' + cls;
+  }
+}
+function copyPrompt(id, btn) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var text = (el.getAttribute('data-copy') || el.textContent || '').replace(/&#10;/g, '\n');
+  var label = (btn.getAttribute('aria-label') || 'item').replace('Copy ','').replace(' to clipboard','');
+  doCopy(text, btn, label + ' copied.', '&#10003; Copied', 2000);
+}
+function copyWithInput(bid, btn) {
+  var el = document.getElementById('text_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!el) return;
+  var tid = el.getAttribute('data-tid');
+  var inputEl = document.getElementById(tid);
+  var prefix = (el.getAttribute('data-prefix') || '').replace(/&#10;/g, '\n');
+  var suffix = (el.getAttribute('data-suffix') || '').replace(/&#10;/g, '\n');
+  var userText = inputEl ? inputEl.value.trim() : '';
+  if (userText.replace(/[\t\n\r ]/g, '').length < 2) {
+    if (warnEl) warnEl.textContent = 'Please write your response before copying.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  var maxwords = parseInt(el.getAttribute('data-maxwords') || '0');
+  var maxchars = parseInt(el.getAttribute('data-maxchars') || '0');
+  var minwords = parseInt(el.getAttribute('data-minwords') || '0');
+  if (minwords && countWords(userText) < minwords) {
+    if (warnEl) warnEl.textContent = 'Response is below the minimum of ' + minwords + ' words.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  if (maxwords && countWords(userText) > maxwords) {
+    if (warnEl) warnEl.textContent = 'Response exceeds the ' + maxwords + ' word limit.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  if (warnEl) warnEl.textContent = '';
+  doCopy(prefix + userText + suffix, btn, 'Copied. Paste into Hokie AI.', '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+function doCopy(text, btn, announcement, label, duration) {
+  function ok() {
+    var orig = btn.innerHTML; btn.innerHTML = label; btn.classList.add('copied');
+    announce(announcement);
+    setTimeout(function() { btn.innerHTML = orig; btn.classList.remove('copied'); }, duration);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(ok).catch(function() { fallback(text, ok); });
+  } else { fallback(text, ok); }
+}
+function fallback(text, cb) {
+  var ta = document.createElement('textarea'); ta.value = text;
+  ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); cb(); } catch(e) {}
+  document.body.removeChild(ta);
+}
+function copyStructured(bid, blockId, btn) {
+  var container = document.getElementById('qitems_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!container) return;
+  var outerDiv = container.closest('.plib-prompt-q');
+  var aiDirective = outerDiv ? (outerDiv.getAttribute('data-ai-directive') || '') : '';
+  var items = container.querySelectorAll('.plib-q-item');
+  var lines = [];
+  var emptyItems = [];
+
+  items.forEach(function(itemEl) {
+    var n = itemEl.getAttribute('data-item-n');
+    var render = itemEl.getAttribute('data-render');
+    var selections = [];
+
+    if (render === 'dropdown') {
+      var sel = itemEl.querySelector('select');
+      if (sel && sel.value) selections.push(sel.value);
+    } else if (render === 'likert') {
+      var checkedRadio = itemEl.querySelector('input[type="radio"]:checked');
+      if (checkedRadio) selections.push(checkedRadio.value);
+    } else if (render === 'checkbox') {
+      var checks = itemEl.querySelectorAll('input[type="checkbox"]:checked');
+      checks.forEach(function(c) { selections.push(c.value); });
+    }
+
+    if (selections.length === 0) {
+      emptyItems.push(n);
+    } else {
+      lines.push('ITEM ' + n + ': ' + selections.join(', '));
+    }
+  });
+
+  if (emptyItems.length > 0) {
+    if (warnEl) {
+      warnEl.textContent = 'Please make a selection for ITEM '
+        + emptyItems.join(', ITEM ') + ' before copying.';
+    }
+    return;
+  }
+
+  if (warnEl) warnEl.textContent = '';
+
+  var directiveLine = aiDirective ? aiDirective + '\n' : '';
+  var envelope = '### ' + blockId + '\n----------\n' + directiveLine + 'RESPONSE:\n'
+    + lines.join('\n') + '\n----------\n###';
+  doCopy(envelope, btn,
+    'Structured response copied. Paste into Hokie AI.',
+    '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+function enforceCheckboxCap(itemEl) {
+  var max = parseInt(itemEl.getAttribute('data-max-select') || '0', 10);
+  if (!max || max < 2) return;
+  var checks = itemEl.querySelectorAll('input[type="checkbox"]');
+  var checked = itemEl.querySelectorAll('input[type="checkbox"]:checked');
+  var atCap = checked.length >= max;
+  checks.forEach(function(c) {
+    if (!c.checked) c.disabled = atCap;
+  });
+}
+function moveItem(btn, direction) {
+  var li = btn.closest('.plib-o-item');
+  if (!li) return;
+  var list = li.parentElement;
+  if (!list) return;
+  if (direction === 'up') {
+    var prev = li.previousElementSibling;
+    if (prev) list.insertBefore(li, prev);
+  } else if (direction === 'down') {
+    var next = li.nextElementSibling;
+    if (next) list.insertBefore(next, li);
+  }
+  updateArrowStates(list);
+}
+function updateArrowStates(list) {
+  var items = list.querySelectorAll('.plib-o-item');
+  items.forEach(function(li, idx) {
+    var rankEl = li.querySelector('.plib-o-rank');
+    if (rankEl) rankEl.textContent = (idx + 1) + '.';
+    var upBtn = li.querySelector('.plib-o-arrow-up');
+    var downBtn = li.querySelector('.plib-o-arrow-down');
+    if (upBtn) upBtn.disabled = (idx === 0);
+    if (downBtn) downBtn.disabled = (idx === items.length - 1);
+    var itemText = li.getAttribute('data-item-text') || '';
+    if (upBtn) upBtn.setAttribute('aria-label', 'Move ' + itemText + ' up');
+    if (downBtn) downBtn.setAttribute('aria-label', 'Move ' + itemText + ' down');
+  });
+}
+function copyOrdered(bid, blockId, btn) {
+  var list = document.getElementById('oitems_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!list) return;
+  var outerDiv = list.closest('.plib-prompt-o');
+  var aiDirective = outerDiv ? (outerDiv.getAttribute('data-ai-directive') || '') : '';
+  var question = list.getAttribute('data-question') || '';
+  var items = list.querySelectorAll('.plib-o-item');
+  var lines = [];
+  items.forEach(function(li, idx) {
+    var itemText = li.getAttribute('data-item-text') || '';
+    lines.push((idx + 1) + '. ' + itemText);
+  });
+  if (warnEl) warnEl.textContent = '';
+  var directiveLine = aiDirective ? aiDirective + '\n' : '';
+  var envelope = '### ' + blockId + '\n----------\n' + directiveLine + 'RESPONSE:\nQuestion: '
+    + question + '\n' + lines.join('\n') + '\n----------\n###';
+  doCopy(envelope, btn,
+    'Ordered response copied. Paste into Hokie AI.',
+    '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var checkboxItems = document.querySelectorAll('.plib-q-item[data-render="checkbox"]');
+  checkboxItems.forEach(function(itemEl) {
+    var checks = itemEl.querySelectorAll('input[type="checkbox"]');
+    checks.forEach(function(c) {
+      c.addEventListener('change', function() { enforceCheckboxCap(itemEl); });
+    });
+  });
+  var oLists = document.querySelectorAll('.plib-o-list');
+  oLists.forEach(function(list) {
+    updateArrowStates(list);
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+LUMENVALE: CLASS CASE BRIEF FOR BIT 5534
+
+Lumenvale is a made up streaming service, the class case in BIT 5534 from week 11 on. Your instructor demonstrates on Lumenvale in every class session. No team builds its project on it.
+
+THE COMPANY
+
+Lumenvale streams films and series to 38 million subscribers. Its eight main markets are the United States, Canada, the United Kingdom, Germany, Brazil, Mexico, India and Japan. The United States accounts for 15 million of the 38 million subscribers. Lumenvale spends about 2.6 billion dollars a year on content, a little over half on originals it produces and the rest on licensed titles it rents from other studios.
+
+The content strategy team makes three recurring decisions. The team decides which proposed titles to greenlight, and at what budget. The team decides how much to spend on marketing each title. The team also decides when to release each title, since Lumenvale can lose viewers for a title released on a crowded holiday weekend, or on a sunny weekend in its largest markets. The team judges a title by its first 28 days, because Lumenvale makes renewal and sequel decisions at day 28.
+
+THE TITLE FILE
+
+The file lumenvale_titles.csv holds 4,000 titles, films and series, released between January 2021 and June 2026. One row is one title. This brief contains the definitions of the columns; the numbers come from the models the team fits on the file.
+
+Columns:
+title_id: Lumenvale's catalog number for the title.
+title_type: Film or Series.
+genre: Drama, Comedy, Thriller, Documentary, Animation, Reality, or Science Fiction and Fantasy.
+origin: Original (Lumenvale produced it) or Licensed (Lumenvale rents it from another studio).
+language: the original language, English, Spanish, Portuguese, Hindi, Japanese, Korean or Other.
+franchise: Yes if the title belongs to an existing franchise or adapts a known book, game or film, otherwise No.
+budget_musd: the production budget in millions of dollars, or for a licensed title the license fee.
+episodes: the number of episodes, 1 for a film.
+runtime_min: the running time in minutes for a film, the average episode length for a series.
+cast_recognition: a score from 0 to 100 for how well audiences in the main markets know the lead cast, measured before release.
+marketing_musd: the marketing budget, in millions of dollars, that the content strategy team set for the title before release.
+release_weekday: the day of the week on which Lumenvale released the title.
+release_month: the month in which Lumenvale released the title.
+holiday_weekend: Yes if Lumenvale released the title on a public holiday weekend in the United States, otherwise No.
+critic_score: the average critic review score, from 0 to 100, published by critics in the days after release.
+synopsis: the description Lumenvale showed subscribers on the title's page.
+hours_28d: the number target, millions of hours subscribers watched worldwide in the first 28 days.
+breakout: the yes or no target. Yes if the title ranked in the top ten in at least five of the eight main markets during its first 28 days. About one title in ten is a breakout.
+Validation: Training or Validation, the split used in this course.
+
+THE ECONOMICS OF A TITLE
+
+Lumenvale's finance team plans with four figures. The finance team sets these planning figures, and model results on the title file are separate from them.
+
+Value of an hour watched: each hour subscribers watch in a title's first 28 days is worth about 2.50 dollars to Lumenvale, in subscribers kept and subscribers gained.
+Cost of a title: the budget (budget_musd) plus the marketing budget (marketing_musd).
+Promotion slots: Lumenvale features new titles on its home page. The home page has room for about one new title in ten.
+Value of a promotion: featuring a title costs 1 million dollars. Lumenvale earns about 6 million dollars from a featured title that becomes a breakout. Lumenvale earns nothing from a featured title that does not become a breakout, so it loses the 1 million dollars.
+
+For example, a title with a budget of 22 million dollars and a marketing budget of 5 million dollars costs 27 million dollars. Its viewing value equals that cost when subscribers watch it for 10.8 million hours in its first 28 days (27 divided by 2.50).
+
+LIVE DATA
+
+From week 13 the Lumenvale agent can retrieve two kinds of public data. With public holiday calendars for the eight main markets, the team can see which release weekends are crowded. Weekend weather forecasts for the largest cities in those markets matter because subscribers watch less on warm, clear weekends and more on cold or rainy ones. The team may move a release date on the basis of either kind of data.
+
+HOW AN AGENT SHOULD USE THIS BRIEF
+
+An agent may quote every fact and planning figure above, and may use the planning figures to convert model results into dollars, with the calculation shown. Numbers about Lumenvale's titles come only from the model reports the team attaches. An agent gives no average, count, model result or comparison that does not appear in an attached report or in this brief.
