@@ -481,7 +481,7 @@
     <a class="macro-card" data-phase="3" href="#phase-3" style="text-decoration:none;">
       <p class="macro-eyebrow">Phase III</p>
       <p class="macro-title">Project &amp; Delivery</p>
-      <p class="macro-desc">Team-built business intelligence and analytics dashboards, developed in class and presented to peers.</p>
+      <p class="macro-desc">A browser dashboard of the course's models with an AI agent beside it, built in class and presented to peers.</p>
       <p class="macro-weeks">Weeks 11&ndash;15 &middot; 9 lectures</p>
     </a>
   </nav>
@@ -536,7 +536,7 @@ const PHASES = [
     n: 3,
     kicker: "Phase III \u00b7 Weeks 11\u201315",
     title: "Project and Delivery",
-    sub: "Team-built business intelligence and analytics dashboards. Six in-class development sessions, presentations to the other teams, and a closing session on what the semester established.",
+    sub: "Each team builds a browser dashboard of the course's models on one made up business, with a Hokie AI agent beside it that reads the results and retrieves one kind of live public data. Six sessions each add one capability, first on the class case Lumenvale and then on the team's own project, followed by presentations to the other teams and a closing session.",
     weeks: [11, 12, 13, 14, 15],
   },
 ];
@@ -595,26 +595,25 @@ const LECTURES = [
   { id: "lec10_2", week: 10, phase: 2, mode: "consolidation", title: "Text Analytics with Embeddings and BERTopic",
     business: "The same tickets read by a transformer, so one problem written in different words lands together, then grouped into BERTopic topics that predict hours to resolve and escalation better than Tuesday's topics." },
   // Week 11
-  { id: "lec11_1", week: 11, phase: 3, mode: "project_lab", title: "Project Development I",
-    business: "Dashboard build session. Topic to be confirmed." },
-  { id: "lec11_2", week: 11, phase: 3, mode: "project_lab", title: "Project Development II",
-    business: "Dashboard build session. Topic to be confirmed." },
-
+  { id: "lec11_1", week: 11, phase: 3, mode: "project_lab", title: "Building an Analytics Agent with Instructions and Knowledge",
+    business: "Twenty projects to choose from, then a team agent for Lumenvale, a made up streaming service, built from SCORE instructions and a knowledge file and compared with a regular chat on the same three questions." },
+  { id: "lec11_2", week: 11, phase: 3, mode: "project_lab", title: "Model Results as an Agent's Knowledge",
+    business: "Lumenvale's title file and a regression report become the agent's knowledge, the team rewrites its rules for real numbers, and each team receives its own dataset." },
   // Week 12
-  { id: "lec12_1", week: 12, phase: 3, mode: "project_lab", title: "Project Development III",
-    business: "Dashboard build session. Topic to be confirmed." },
-  { id: "lec12_2", week: 12, phase: 3, mode: "project_lab", title: "Project Development IV",
-    business: "Dashboard build session. Topic to be confirmed." },
+  { id: "lec12_1", week: 12, phase: 3, mode: "project_lab", title: "From a Desktop Tool to a Browser Dashboard",
+    business: "The regression tool rebuilt as a browser page on a local Python server by gradual prompting, with the team's agent beside it." },
+  { id: "lec12_2", week: 12, phase: 3, mode: "project_lab", title: "Skills, the Tree and the Comparison Tab",
+    business: "A Hokie AI skill that writes the same model summary every time, a tree page beside the regression, and a comparison tab with ROC and lift." },
   // Week 13
-  { id: "lec13_1", week: 13, phase: 3, mode: "project_lab", title: "Project Development V",
-    business: "Dashboard build session. Topic to be confirmed." },
-  { id: "lec13_2", week: 13, phase: 3, mode: "project_lab", title: "Project Development VI",
-    business: "Dashboard build session. Topic to be confirmed." },
+  { id: "lec13_1", week: 13, phase: 3, mode: "project_lab", title: "Live Data and Text in the Dashboard",
+    business: "The agent retrieves a live public value for a what if question, and the text column gets its own tab of topics." },
+  { id: "lec13_2", week: 13, phase: 3, mode: "project_lab", title: "Governing and Testing the Agent, and the Presentation Story",
+    business: "Known answer and adversarial questions against the agent, its governance section, and the outline of the team's presentation." },
   // Week 14
   { id: "lec14_1", week: 14, phase: 3, mode: "capstone_demonstration", title: "Dashboard Presentations: Session 1",
-    business: "Teams present the dashboard and the analysis behind it, evaluated by the other teams." },
+    business: "Teams present the dashboard and the analysis behind it, and every student evaluates the other teams' presentations." },
   { id: "lec14_2", week: 14, phase: 3, mode: "capstone_demonstration", title: "Dashboard Presentations: Session 2",
-    business: "Teams present the dashboard and the analysis behind it, evaluated by the other teams." },
+    business: "Teams present the dashboard and the analysis behind it, and every student evaluates the other teams' presentations." },
   // Week 15
   { id: "lec15_1", week: 15, phase: 3, mode: "consolidation", title: "Course Wrap-Up and Closing Reflections",
     business: "What the semester established about building analytics with an assistant, and where the habit goes after this course." },
@@ -650,16 +649,16 @@ const WEEKS = {
   2:  { title: "Regression and Analysis of Variance", dates: "09/01, 09/03", due: "HW 1" },
   3:  { title: "Logistic Regression and the Yes or No Decision", dates: "09/08, 09/10", due: "HW 2" },
   4:  { title: "Reducing Dimensions",                 dates: "09/15, 09/17", due: "HW 3" },
-  5:  { title: "Finding Segments",                    dates: "09/22, 09/24", due: "HW 4, teams form" },
-  6:  { title: "Decision and Regression Trees",       dates: "09/29, 10/01", due: "HW 5, teams finalized" },
+  5:  { title: "Finding Segments",                    dates: "09/22, 09/24", due: "HW 4" },
+  6:  { title: "Decision and Regression Trees",       dates: "09/29, 10/01", due: "HW 5" },
   7:  { title: "Neural Networks",                     dates: "10/06, 10/08", due: "HW 6" },
   8:  { title: "Margins and Ensembles",               dates: "10/13, 10/15", due: "HW 7" },
-  9:  { title: "Model Comparison",                    dates: "10/20, 10/22", due: "HW 8, Deliverable 1" },
-  10: { title: "Text Analytics",                      dates: "10/27, 10/29", due: "HW 9" },
-  11: { title: "Project Development I and II",        dates: "11/03, 11/05", due: "" },
-  12: { title: "Project Development III and IV",      dates: "11/10, 11/12", due: "Deliverable 2" },
-  13: { title: "Project Development V and VI",        dates: "11/17, 11/19", due: "Deliverable 3, Mon 11/30" },
-  14: { title: "Dashboard Presentations",             dates: "12/01, 12/03", due: "Presentations" },
+  9:  { title: "Model Comparison",                    dates: "10/20, 10/22", due: "HW 8" },
+  10: { title: "Text Analytics",                      dates: "10/27, 10/29", due: "HW 9, teams form" },
+  11: { title: "An Agent and Its Knowledge",          dates: "11/03, 11/05", due: "Project choices" },
+  12: { title: "The Browser Dashboard and Skills",    dates: "11/10, 11/12", due: "Deliverable 1, Fri 11/13" },
+  13: { title: "Live Data, Text and Governance",      dates: "11/17, 11/19", due: "Deliverable 2, Fri 11/20" },
+  14: { title: "Dashboard Presentations",             dates: "12/01, 12/03", due: "Deliverable 3, Mon 11/30, and presentations" },
   15: { title: "Course Wrap-Up",                      dates: "12/08",        due: "Not graded" },
 };
 
@@ -673,6 +672,10 @@ const WEEKS = {
    ============================================================ */
 
 const HOMEWORK_WEEKS = { 2:1, 3:2, 4:3, 5:4, 6:5, 7:6, 8:7, 9:8, 10:9 };
+/* Project weeks carry two tiles in place of homework: the team's submission,
+   one per team, and the peer evaluation, one per student. Ids are pr<n>_<part>. */
+const PROJECT_WEEKS = { 11: "pr1", 12: "pr2", 13: "pr3" };
+
 
 const HOMEWORK = [
   { id: "hw1_1", week: 2, part: 1, title: "Regression: Choosing Which Predictors to Keep",
@@ -711,15 +714,24 @@ const HOMEWORK = [
     business: "400 hotel guest comments searched and grouped on tf-idf and on embeddings, with a complaint written in unusual words and a praise written in negated complaints as the test of each." },
   { id: "hw9_2", week: 10, part: 2, title: "Predicting Guest Credits and Return Stays from Feedback Topics",
     business: "NMF weights and BERTopic topics used to predict the dollars a hotel credits a guest and whether the guest books again, with the second result reversing the first." },
+  { id: "pr1_1", week: 11, part: 1, title: "Deliverable 1, Progress Report, Team Submission",
+    business: "One submission per team, due Friday 11/13: a profile of the team's dataset, the regression page with the team's agent embedded, and at least one more model." },
+  { id: "pr1_2", week: 11, part: 2, title: "Deliverable 1, Progress Report, Peer Evaluation",
+    business: "Every student submits individually, due with the team's submission: how the team worked, your own contribution, anyone who went above and beyond the others, and anyone who contributed less." },
+  { id: "pr2_1", week: 12, part: 1, title: "Deliverable 2, Progress Report, Team Submission",
+    business: "One submission per team, due Friday 11/20: the tree page and the comparison tab, the model summary skill, the live data question and the text tab." },
+  { id: "pr2_2", week: 12, part: 2, title: "Deliverable 2, Progress Report, Peer Evaluation",
+    business: "Every student submits individually, due with the team's submission: how the team worked, your own contribution, anyone who went above and beyond the others, and anyone who contributed less." },
+  { id: "pr3_1", week: 13, part: 1, title: "Deliverable 3, the Dashboard, Team Submission",
+    business: "One submission per team, due Monday 11/30: the finished dashboard with the agent beside it, the agent's governance section and the outline of the presentation." },
+  { id: "pr3_2", week: 13, part: 2, title: "Deliverable 3, the Dashboard, Peer Evaluation",
+    business: "Every student submits individually, due with the team's submission: how the team worked, your own contribution, anyone who went above and beyond the others, and anyone who contributed less." },
 ];
 
 /* Weeks with no homework show what the outline says is due instead. */
 const NO_HOMEWORK_NOTE = {
   1:  "No homework this week. Week 1 is not graded.",
-  11: "No homework. The last of the nine was due in week 10.",
-  12: "No homework. Project deliverable 2 is due.",
-  13: "No homework. Deliverable 3 is due Monday 11/30, after the Thanksgiving break.",
-  14: "No homework. Team presentations run in both sessions.",
+  14: "No homework. Team presentations run in both sessions, and every student evaluates the other teams' presentations.",
   15: "No homework. The last meeting is not graded.",
 };
 
@@ -892,11 +904,12 @@ PHASES.forEach(phase => {
 
     /* ---- right column: two homework parts, or what the outline says is due ---- */
     const hwNum = HOMEWORK_WEEKS[weekNum];
-    if (hwNum) {
+    const prKey = PROJECT_WEEKS[weekNum];
+    if (hwNum || prKey) {
       const stack = document.createElement("div");
       stack.className = "hw-stack";
       [1, 2].forEach(partNum => {
-        const id = `hw${hwNum}_${partNum}`;
+        const id = hwNum ? `hw${hwNum}_${partNum}` : `${prKey}_${partNum}`;
         const rec = HOMEWORK.find(h => h.id === id);
         const url = HOMEWORK_LINKS[id] || "";
         stack.appendChild(tile({
@@ -904,7 +917,7 @@ PHASES.forEach(phase => {
           cls: rec ? "lec hw" : "lec hw hw-pending",
           attr: ["data-hw", id],
           label: id,
-          tags: `<span class="hw-part">part ${partNum}</span>`,
+          tags: `<span class="hw-part">${hwNum ? "part " + partNum : (partNum === 1 ? "team submission" : "peer evaluation")}</span>`,
           title: rec ? rec.title : "Not released yet",
           business: rec ? rec.business : "",
         }));
