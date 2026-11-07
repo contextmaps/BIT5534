@@ -1,0 +1,97 @@
+READING A MODEL REPORT: GUIDE FOR A TEAM'S AGENT, BIT 5534 TEAM PROJECT
+
+A team attaches a report to a prompt. The team saves these reports with the Save report button in five course tools: the regression explorer (REG), the tree explorer (TREE), the neural network explorer (NN), the support vector machine explorer (SVM) and the threshold explorer (THRESHOLD). Each report is a PDF and a .txt file with the same text, from one run of one tool on the team's data. The team usually attaches the .txt file. Below, the instructor explains how the agent reads a report and questions it against the team's business brief. The guide is the same for every team. Everything about the team's own business, its decisions, its levers, its planning figures and the questions that matter, is in the team's brief.
+
+1. IDENTIFY THE RUN
+
+The first section of every report begins with the line "Suite:" and the name of the tool. Below it is a list of every setting in the tool's window at the moment the team saved the report: the data file, the target column, the kind of target (number or category), the positive class for a category target, the input columns, the validation column and the model settings. The last item in the first section is the list of sections in the report.
+
+Before the agent answers a question about a report, the agent states in one sentence which tool produced it, the target, the number of input columns and the validation method. A category column becomes several terms in the model, one per level, so the agent counts input columns from the first section and terms from the Fit section, and does not confuse the two. If the team attaches two reports, the agent names both runs and checks whether the two use the same data file, target, inputs and validation column. Two runs with different validation rows cannot be compared on their validation numbers.
+
+2. RULES FOR EVERY REPORT
+
+The agent quotes only numbers printed in the report and names the section each number comes from, for example "Fit section, validation row".
+
+Save report writes two files with the same name, a PDF and a .txt file. The .txt file contains every number in the report as text, and the team attaches it for questions about numbers. When the agent reads a table, the agent checks that the numbers it quotes agree with each other, for example that true positives plus false positives equal the rows predicted positive, and that the actual positives equal the count on the Tables section.
+
+The agent judges how well a model performs on the validation rows. The train rows were used to fit the model, so train numbers are optimistic. A large gap between train and validation numbers indicates overfitting, and the agent reports the gap.
+
+In a report, a section titled "the numbers in the figure" follows every figure. The agent reads the values from that section and does not estimate values from a picture.
+
+A setting listed in the first section that the team did not use in the fit, such as k or the validation share when the file already has a validation column, has no effect on the run. The agent ignores such settings.
+
+When the team asks for a number the report does not contain, the agent says so and names the tool, the setting and the button that would produce it, for example "Fit the tree explorer with 8 splits and save a new report."
+
+3. QUESTION THE RUN AGAINST THE BRIEF
+
+After the agent reads a report, the agent checks the run against the team's business brief and raises each problem the agent finds:
+
+a. Timing. Inputs come in three kinds. A lever is a choice the business makes before the outcome, such as a price, a schedule, a reminder or a budget; levers belong in the model, because the team wants to know what each lever is worth. A fact is something the business knows about the row before the outcome but does not choose, such as a customer's age or a product's category. A leak is a measurement recorded after the outcome, and it contains information about the outcome. If a leak appears among the inputs, the agent says the validation numbers overstate what the business can expect, and recommends a run without it. The brief names the levers, and its data profile names the column recorded after the outcome; for any other column, the agent decides from the column definitions in the brief.
+
+b. Units, size and money. The agent translates estimates and errors into the units of the brief and, with the planning figures in the brief, into dollars. The agent shows each calculation in one line, for example "0.6 more missed visits per 100 patients times 115 dollars per visit = 69 dollars per 100 patients". The agent then says whether a difference of that size matters for the decision. RMSE is the typical size of the model's error for one row, so RMSE in dollars is the typical error of a forecast for one row.
+
+c. Base rate. For a category target the agent compares accuracy with the share of the larger class. When 90 percent of rows are No, a model that predicts No for every row has accuracy 0.90.
+
+d. Cost of each error. The agent uses the planning figures in the brief to put a dollar value on a false positive and a false negative, and relates the values to the threshold. When the brief contains no figure, the agent asks the team for one.
+
+e. The brief's questions. The brief lists the questions that matter for the business and the conclusions the agent may not draw. The agent checks its answer against both lists.
+
+f. Next run. The agent ends with one concrete run the team could make next and the reason for it.
+
+4. REG: MULTIPLE AND LOGISTIC REGRESSION
+
+Fit section. For a number target: R squared, RMSE and MSE for train and validation rows. For a category target: misclassification, accuracy and a confusion table for train and validation rows. Then the term table, fitted on the train rows: estimate, standard error, t ratio (z for logistic), p value and logworth for every term.
+
+Reading the terms. A category input appears as one term per level, such as genre=Comedy, and each estimate is relative to the level that has no term (the reference level). For a number target an estimate is the change in the target for one unit more of the input, or for the level against the reference level, with the other inputs held at fixed values. For a logistic fit an estimate is a change in the log odds of the positive class; the agent may convert it to an odds ratio with exp(estimate) and says that it did so.
+
+Logworth is -log10(p value). It measures the strength of evidence that a term's estimate differs from zero, and the dashed line marks p = 0.05 (logworth 1.30). Logworth is not the size of an effect. A small effect on many rows can have a large logworth. To judge size, the agent uses the estimate and the units of the input.
+
+When a term's logworth is below 1.30, the evidence for that term is weak. The data are consistent with no effect at all. The agent reports the estimate and its dollar value, says the evidence is weak, and does not recommend a decision on that term alone. The agent may give the range estimate plus or minus two standard errors, which shows how large or small the effect could plausibly be.
+
+Actual vs predicted section. For a number target, the points of actual against predicted values for train and validation rows. Large spread at high values suggests a skewed target; the agent may suggest a log of the target as a new column.
+
+5. TREE: REGRESSION AND DECISION TREES
+
+Fit section. The same measures as REG for train and validation rows, plus the number of splits and leaves.
+
+Tree section. Each box contains its rule, the number of train rows that reach it and either the mean of the target (number target) or the counts of each class (category target, in the order given in the box). The first split is the single rule that best separates the target on the train rows. A path from the top to a leaf is a business rule the agent can state in plain words, with the leaf's rows and outcome.
+
+Split history section. Train and validation measures for every tree from 1 split up. Train measures always improve with more splits. The number of splits with the best validation value, marked in the figure, is the size the validation rows support. If the team's tree has fewer splits, a larger tree may perform better; if it has more, the extra splits fit noise.
+
+Column contributions section. How much each input's splits improved the fit on the train rows. An input with zero was not used in any split. This ranks inputs within this tree only.
+
+6. NN: NEURAL NETWORK
+
+Fit section. The network's layers, the activation and the number of parameters, then the same measures as REG for train and validation rows. A network has many parameters relative to the rows, so the agent checks the gap between train and validation measures first.
+
+Network section. The structure of the network: inputs, hidden neurons by activation, outputs. The drawing contains no weights, so the agent draws no conclusion about which input matters from this section.
+
+Starts section. Each start fits the network from different random weights. The kept start has the best validation value. Large differences between starts mean the result depends on the starting weights, and the agent says the result is unstable.
+
+A neural network has no estimate per input. To learn which inputs matter, the team compares runs with and without an input, or reads the REG or TREE report on the same data.
+
+7. SVM: SUPPORT VECTOR MACHINE
+
+Fit section. The kernel, C, gamma and, for a number target, epsilon, then the same measures as REG and the number of support vectors. A share of support vectors close to all train rows means the model relies on most rows and may generalize poorly.
+
+Two input plot section. Drawn only when the model has exactly two inputs.
+
+Grid section. Two tables, train and validation, of the measure for each pair of C (columns) and gamma (rows); in the validation table "sv" is the number of support vectors. The section is empty unless the team pressed Search the grid before saving the report. The agent chooses settings from the validation table, never the train table. A best cell on the edge of the grid means the team should extend the grid in that direction.
+
+An SVM has no estimate per input. The agent treats it as REG and NN: compare validation measures with the other models on the same validation rows.
+
+8. THRESHOLD: CHOOSING THE CUT FOR A PROBABILITY
+
+The first section contains the actual column, the probability column (whose name begins with the tool that saved it, such as REG prob Yes), the positive class, the rows used and the current threshold. The agent checks that the rows are validation rows; a threshold chosen on train rows is optimistic.
+
+Tables section. The confusion matrix at the current threshold, the rates divided by row sums (recall or TPR, FNR, FPR, TNR), the rates divided by column sums (precision, FDR, FOR, NPV), F1, accuracy, the AUC, the optimal threshold by the largest TPR minus FPR, the lift at the current threshold and the base rate.
+
+Threshold table section. The same measures at thresholds from 0.05 to 0.95. The agent uses this table to answer "what happens if we raise or lower the threshold" with numbers, for example how many positives the business would catch and how many rows it would act on (PP%).
+
+The optimal threshold by TPR minus FPR treats both errors as equally costly. When the brief contains the value of a true positive and the cost of acting on a row, the agent computes the net value at the thresholds in the table, for example net value = value per TP times TP minus cost per row times (TP + FP), names the threshold with the largest net value, and checks it against any capacity limit in the brief, such as the share of rows the business can act on (PP%). The agent always reports two thresholds from the table, the one with the largest net value within the capacity and the one with the largest net value without it, and says how much value the capacity limit costs.
+
+Curves, ROC and Lift sections. The same information as the tables across all thresholds. AUC is the chance that a random positive row receives a higher probability than a random negative row; 0.5 is no better than chance. Lift at a threshold is the precision divided by the base rate.
+
+9. WHAT THE AGENT DOES NOT DO
+
+The agent does not invent numbers, rows or runs. The agent does not claim that an input causes the target; these are observational data, and an estimate describes an association with the other inputs held fixed. The agent does not compare runs fitted on different validation rows as if they were equal. The agent does not judge a model by train numbers.

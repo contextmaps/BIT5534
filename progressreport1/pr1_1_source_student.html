@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deliverable 1, Progress Report, Team Submission</title>
+<style>
+:root {
+  --c-text:#1a1a1a; --c-muted:#4a4a4a;
+  --c-meta-bg:#f4f6f9; --c-meta-border:#d0d7e2;
+  --c-obj-bg:#eef4fb; --c-obj-accent:#1a5da0;
+  --c-ctx-bg:#fffbf0; --c-ctx-border:#e8d8a0; --c-ctx-label:#5c4400;
+  --c-ctx-s-bg:#f0f7ff; --c-ctx-s-border:#a0c8f0; --c-ctx-s-label:#1a4a80;
+  --c-nar-bg:#f9f9f9; --c-nar-border:#bbb;
+  --c-dis-bg:#f0f4ff; --c-dis-border:#8090cc; --c-dis-label:#1e2e80;
+  --c-sys-bg:#f3f0ff; --c-sys-border:#9080d0; --c-sys-label:#3a2090;
+  --c-scr-bg:#fff8e8; --c-scr-border:#d0a030; --c-scr-label:#6b4a00;
+  --c-s-bg:#f0faf4; --c-s-border:#70c090; --c-s-id:#14552f;
+  --c-r-bg:#fff8f0; --c-r-border:#d0a040; --c-r-id:#6b3e00;
+  --c-mk-bg:#f0f0ff; --c-mk-border:#8080c8; --c-mk-id:#2a2a80;
+  --c-m-bg:#f0f8ff; --c-m-border:#70a8d0; --c-m-id:#0a4a70;
+  --c-mc-bg:#f8f8ff; --c-mc-border:#a0a0d0;
+  --c-btn:#14552f; --c-btn-r:#6b3e00; --c-btn-mk:#2a2a80;
+  --c-btn-mo:#0a4a70; --c-btn-mc:#3a3a6a;
+  --c-q-bg:#f0fafd; --c-q-border:#70b8d0; --c-q-id:#0a5070;
+  --c-btn-q:#0a5070;
+  --c-o-bg:#fef6f0; --c-o-border:#e89870; --c-o-id:#a04510;
+  --c-btn-o:#a04510;
+  --radius:8px; --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --page:1100px;
+}
+/* Two layers. The wrapper takes the width Canvas gives it, up to --page, so it
+   never overflows a narrow frame and never needs a per-machine number. Everything
+   inside fills the block it sits in. */
+.plib-wrap{font-family:var(--font);color:var(--c-text);max-width:min(var(--page),100% - 2rem);margin:0 auto;padding:1rem 0}
+/* Every block spans the page so their left and right edges line up down the
+   column, and the text inside fills the block.
+
+   There is no reading column. D-032 put prose in a 720px column inside a 1100px
+   wrapper, and on 2026-09-02 the instructor read the rendered result and rejected
+   it: every text block stopped two thirds of the way across its own card and
+   stranded the rest, and a bordered box that stops short of the card it sits in
+   reads as broken rather than as typography. The wrapper's own
+   min(1100px, 100% - 2rem) is now the only bound, so a line never exceeds about
+   1055px. The cost is real and is worth stating. A long paragraph at 1055px reads
+   worse than the same paragraph at 800, and what pays for it is the writing
+   standard's rule on paragraph length, which now carries the load the column used
+   to carry. Recorded as D-043, amending D-032. */
+.plib-wrap > *{max-width:100%}
+.plib-submit{margin:2rem 0 1rem;padding:1.4rem 1.6rem;border-radius:var(--radius);background:var(--c-obj-bg);border:2px solid var(--c-obj-accent)}
+.plib-submit-title{font-size:13px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--c-obj-accent)}
+.plib-submit-p{margin:.5rem 0 1rem;font-size:15px;line-height:1.65}
+.plib-submit-btn{display:inline-block;background:var(--c-obj-accent);color:#fff;text-decoration:none;font-size:16px;font-weight:600;padding:.7rem 1.4rem;border-radius:var(--radius)}
+.plib-submit-btn:hover{filter:brightness(1.12)}
+.plib-submit-btn:focus{outline:3px solid var(--c-obj-accent);outline-offset:3px}
+.plib-submit-note{margin-top:.55rem;font-size:13px;color:var(--c-muted)}
+.plib-material{margin:1.6rem 0;padding:1.2rem 1.4rem;border-radius:var(--radius);background:var(--c-s-bg);border:1px solid var(--c-s-border)}
+.plib-material-tag{font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--c-s-id)}
+.plib-material-title{margin-top:.3rem;font-size:17px;font-weight:600;color:var(--c-text)}
+.plib-material-box{margin:.9rem 0 1.1rem;padding:.9rem 1rem;max-height:22rem;overflow:auto;background:#fff;border:1px solid var(--c-s-border);border-radius:6px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;color:var(--c-text)}
+.plib-material-box:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+.plib-material-btns{display:flex;flex-wrap:wrap;gap:.6rem}
+.plib-material-copies{margin:.9rem 0 0;display:flex;flex-wrap:wrap;gap:.8rem}
+.plib-copyrow{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;padding:.55rem .7rem;background:#fff;border:1px solid var(--c-s-border);border-radius:6px}
+.plib-copyrow-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-s-id)}
+.plib-copyrow-code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;color:var(--c-text)}
+.plib-copy-btn-row{padding:.3rem .6rem;font-size:12px}
+.plib-material-btn{display:inline-block;background:var(--c-s-id);color:#fff;text-decoration:none;font-size:15px;font-weight:600;padding:.6rem 1.2rem;border-radius:var(--radius)}
+.plib-material-btn:hover{filter:brightness(1.25)}
+.plib-material-btn:focus{outline:3px solid var(--c-s-id);outline-offset:3px}
+.plib-material-note{margin-top:.55rem;font-size:13px;color:var(--c-muted)}
+.plib-section{margin:2.25rem 0 1.1rem;padding-top:.9rem;border-top:3px solid var(--c-obj-accent)}
+.plib-section-n{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--c-muted)}
+.plib-section-t{font-size:23px;font-weight:700;letter-spacing:.04em;color:var(--c-obj-accent);margin-top:2px}
+.plib-wrap > .plib-section:first-child{margin-top:.5rem}
+.plib-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;margin-bottom:1.25rem}
+.plib-tile{background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);padding:.9rem;display:flex;flex-direction:column}
+.plib-tile img{width:100%;height:auto;border-radius:4px;background:#faf7f8}
+.plib-tile figure,.plib-tile{margin:0}
+/* A drawing narrower than its grid cell is centred in it. render_tiles caps the
+   wrapper at the SVG's own viewBox width so a 400px card is not blown up to the
+   full row, and without this the drawing sat against the left edge with the slack
+   stranded on the right, which is the same fault D-043 removed from the prose. */
+.plib-tile-svg{width:100%;margin-left:auto;margin-right:auto}
+.plib-tile-svg svg{width:100%;height:auto;display:block}
+.plib-tile-caption{font-size:13px;line-height:1.55;color:var(--c-text);margin-top:auto;padding-top:.6rem}
+.plib-meta{background:var(--c-meta-bg);border:1px solid var(--c-meta-border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1.5rem}
+.plib-meta-course{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--c-muted);margin-bottom:4px}
+.plib-meta-title{font-size:20px;font-weight:600;margin:4px 0 8px}
+.plib-meta-week{font-size:13px;color:var(--c-muted);margin-bottom:2px}
+.plib-meta-details{font-size:12px;color:var(--c-muted);margin-top:8px}
+.plib-objectives{background:var(--c-obj-bg);border-left:4px solid var(--c-obj-accent);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.5rem}
+.plib-objectives-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-obj-accent);font-weight:700;margin-bottom:8px}
+.plib-objectives-intro{margin:0 0 8px;font-size:14px;line-height:1.6;font-style:italic;color:var(--c-muted)}
+.plib-objectives-list{margin:0;padding-left:1.25rem}
+.plib-objectives-list li{margin-bottom:6px;font-size:14px;line-height:1.6}
+.plib-context{background:var(--c-ctx-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-context-student{background:var(--c-ctx-s-bg);border-color:var(--c-ctx-s-border)}
+.plib-context-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-ctx-label);font-weight:700;margin-bottom:8px}
+.plib-context-student .plib-context-label{color:var(--c-ctx-s-label)}
+.plib-context-body p{margin:4px 0;font-size:13px;line-height:1.6;color:var(--c-muted)}
+.plib-formula{margin:1rem 0;padding:1rem 1.25rem;background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);text-align:center}
+.plib-formula-body{overflow-x:auto;color:var(--c-text);padding:2px 0}
+.plib-formula-svg{max-width:100%;height:auto}
+.plib-formula-caption{margin-top:.85rem;font-size:13px;line-height:1.6;color:var(--c-muted);text-align:left}
+.plib-formula-missing{font-size:13px;color:var(--c-muted);text-align:left}
+.plib-formula-note{font-size:12px;margin-top:6px}
+.plib-formula-source{margin-top:.85rem;text-align:left}
+.plib-formula-source summary{font-size:12px;color:var(--c-muted);cursor:pointer}
+.plib-formula-latex{margin:6px 0 0;padding:8px 10px;background:var(--c-ctx-bg);border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.5;white-space:pre-wrap;color:var(--c-muted)}
+.plib-context-pre{margin:8px 0;padding:10px 12px;background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.55;color:var(--c-text);white-space:pre;overflow-x:auto}
+.plib-context-bullet{font-size:13px;color:var(--c-muted);padding-left:1rem;position:relative;margin-bottom:3px}
+.plib-context-bullet::before{content:"\2022";position:absolute;left:0}
+.plib-script{background:var(--c-scr-bg);border:1px solid var(--c-scr-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-script-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-scr-label);font-weight:700;margin-bottom:10px}
+.plib-script-list{margin:0;padding-left:1.25rem}
+.plib-script-list li{font-size:14px;line-height:1.6;margin-bottom:8px}
+.plib-script-time{font-weight:700;color:var(--c-scr-label);font-family:monospace;background:rgba(208,160,48,.15);padding:1px 6px;border-radius:3px}
+.plib-narration{background:var(--c-nar-bg);border-left:3px solid var(--c-nar-border);padding:.9rem 1.25rem;margin-bottom:1rem;border-radius:0 var(--radius) var(--radius) 0}
+.plib-narration p{margin:0 0 8px;font-size:14px;line-height:1.7}
+.plib-narration p:last-child{margin-bottom:0}
+.plib-narration-list{margin:4px 0;padding-left:1.25rem}
+.plib-narration-list li{font-size:14px;line-height:1.6;margin-bottom:4px}
+.plib-discussion{background:var(--c-dis-bg);border:1px solid var(--c-dis-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-slide{margin:0 0 1.25rem;text-align:center}
+.plib-slide-img{max-width:100%;height:auto;border:1px solid var(--c-dis-border);border-radius:var(--radius);box-shadow:0 1px 4px rgba(0,0,0,.08);background:#faf7f8;min-height:60px}
+.plib-slide-caption{font-size:13px;color:var(--c-muted);margin-top:.4rem}
+.plib-slide-script{margin-top:.6rem;text-align:left;font-size:13px;color:var(--c-muted)}
+.plib-slide-script summary{cursor:pointer;font-weight:600}
+.plib-slide-script-body{white-space:pre-wrap;background:rgba(0,0,0,.04);border-radius:var(--radius);padding:.6rem .8rem;margin-top:.4rem}
+.plib-discussion-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-dis-label);font-weight:700;margin-bottom:8px}
+.plib-discussion-intro{margin:0 0 8px;font-size:14px;line-height:1.6;font-style:italic;color:var(--c-dis-label)}
+.plib-discussion-list{margin:0;padding-left:1.25rem}
+.plib-discussion-list li{font-size:14px;line-height:1.6;margin-bottom:6px;color:var(--c-dis-label)}
+.plib-scenarios{margin-bottom:1rem}
+.plib-scenarios-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:#630031;font-weight:700;margin-bottom:8px}
+.plib-scenario-card{background:var(--c-ctx-s-bg);border:1px solid var(--c-ctx-s-border);border-left:4px solid #630031;border-radius:var(--radius);padding:.7rem 1rem;margin-bottom:.6rem}
+.plib-scenario-title{font-weight:700;font-size:14px;color:#630031;margin-bottom:4px}
+.plib-scenario-body{margin:0 0 4px;font-size:14px;line-height:1.6}
+.plib-scenario-line{font-size:13px;line-height:1.55;margin:2px 0 0;padding-left:1rem;position:relative}
+.plib-scenario-line::before{content:"›";position:absolute;left:.2rem;color:#CF4420;font-weight:700}
+.plib-system{background:var(--c-sys-bg);border:1px solid var(--c-sys-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-system-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-sys-label);font-weight:700;margin-bottom:8px}
+.plib-system-note{font-weight:400;text-transform:none;letter-spacing:0;font-style:italic}
+.plib-prompt-s-ref{opacity:.92;border-style:dashed}
+.plib-ref-note{font-size:12px;color:var(--c-muted);font-style:italic;margin-top:6px}
+.plib-prompt-text{display:none}
+.plib-prompt-display{font-size:14px;line-height:1.7;white-space:pre-wrap;background:rgba(255,255,255,.6);border-radius:4px;padding:.6rem .8rem;margin-bottom:10px}
+.plib-prompt-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.plib-prompt-id{font-size:12px;font-weight:700;font-family:monospace;padding:2px 7px;border-radius:4px}
+.plib-prompt-type-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-muted);font-weight:600}
+.plib-prompt-s{background:var(--c-s-bg);border:1px solid var(--c-s-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-prompt-s .plib-prompt-id{color:var(--c-s-id);background:rgba(20,85,47,.1)}
+.plib-prompt-r{background:var(--c-r-bg);border:1px solid var(--c-r-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-r-id{color:var(--c-r-id)!important;background:rgba(107,62,0,.1)!important}
+.plib-reflect-label{color:var(--c-r-id)!important}
+.plib-reflect-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-prompt-marker{background:var(--c-mk-bg);border:2px solid var(--c-mk-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-marker-id{color:var(--c-mk-id)!important;background:rgba(42,42,128,.1)!important}
+.plib-marker-label{color:var(--c-mk-id)!important}
+.plib-marker-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-marker-display{border-left:3px solid var(--c-mk-border);max-height:18em;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;box-shadow:inset 0 -10px 10px -10px rgba(0,0,0,.18)}
+.plib-prompt-m{background:var(--c-m-bg);border:1.5px solid var(--c-m-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:.5rem}
+.plib-m-id{color:var(--c-m-id)!important;background:rgba(10,74,112,.1)!important}
+.plib-m-label{color:var(--c-m-id)!important}
+.plib-m-badge{font-size:11px;background:var(--c-m-id);color:#fff;padding:2px 8px;border-radius:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.plib-m-instructions{background:rgba(255,255,255,.7);border-radius:6px;padding:10px 14px;margin-bottom:12px}
+.plib-m-instructions-label{font-size:12px;font-weight:700;color:var(--c-m-id);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.plib-m-steps{margin:0;padding-left:1.25rem}
+.plib-m-steps li{font-size:13px;line-height:1.6;margin-bottom:4px}
+.plib-m-seed{background:rgba(255,255,255,.5);border-left:3px solid var(--c-m-border);padding:8px 12px;margin-bottom:12px;border-radius:0 4px 4px 0}
+.plib-m-seed-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-m-id);margin-bottom:4px}
+.plib-m-seed-text{font-size:13px;line-height:1.6;white-space:pre-wrap}
+.plib-prompt-m-close{background:var(--c-mc-bg);border:1px dashed var(--c-mc-border);border-radius:var(--radius);padding:.75rem 1.25rem;margin-bottom:1.25rem}
+.plib-m-close-label{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.plib-m-close-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-copy-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;font-size:13px;font-weight:500;border:1.5px solid var(--c-btn);background:transparent;color:var(--c-btn);border-radius:6px;cursor:pointer;transition:background .15s,color .15s}
+.plib-copy-btn:hover{background:var(--c-btn);color:#fff}
+.plib-copy-btn:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+.plib-copy-btn.copied{background:#333;color:#fff;border-color:#333}
+.plib-copy-btn-reflect{border-color:var(--c-btn-r);color:var(--c-btn-r)}
+.plib-copy-btn-reflect:hover{background:var(--c-btn-r);color:#fff}
+.plib-copy-btn-marker{border-color:var(--c-btn-mk);color:var(--c-btn-mk)}
+.plib-copy-btn-marker:hover{background:var(--c-btn-mk);color:#fff}
+.plib-copy-btn-m-open{border-color:var(--c-btn-mo);color:var(--c-btn-mo)}
+.plib-copy-btn-m-open:hover{background:var(--c-btn-mo);color:#fff}
+.plib-copy-btn-m-close{border-color:var(--c-btn-mc);color:var(--c-btn-mc)}
+.plib-copy-btn-m-close:hover{background:var(--c-btn-mc);color:#fff}
+.plib-textarea{display:block;width:100%;box-sizing:border-box;padding:10px 12px;font-size:14px;font-family:var(--font);line-height:1.6;border:1.5px solid var(--c-r-border);border-radius:6px;margin-bottom:10px;background:#fff;color:var(--c-text);resize:vertical;min-height:120px}
+.plib-prompt-input{min-height:0;margin:10px 0 6px}
+.plib-textarea:focus{outline:3px solid #005fcc;outline-offset:2px;border-color:#005fcc}
+.plib-counter{font-size:13px;color:var(--c-muted);margin-bottom:8px;font-variant-numeric:tabular-nums}
+.plib-counter.at-limit{color:#b00020;font-weight:600}
+.plib-counter .plib-count-ok{color:#14552f}
+.plib-counter .plib-count-warn{color:#8a4a00}
+.plib-counter .plib-count-bad{color:#b00020;font-weight:600}
+.plib-counter-min{font-size:12px;color:var(--c-muted);margin-left:8px}
+.plib-warn{font-size:13px;color:#b00020;font-weight:600;margin-bottom:8px;min-height:20px}
+.plib-prompt-q{background:var(--c-q-bg);border:1px solid var(--c-q-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-q-id{color:var(--c-q-id)!important;background:rgba(10,80,112,.1)!important}
+.plib-q-label{color:var(--c-q-id)!important}
+.plib-q-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-q-items{display:flex;flex-direction:column;gap:14px;margin-bottom:10px}
+.plib-q-item{background:rgba(255,255,255,.6);border-radius:6px;padding:10px 12px}
+.plib-q-question{font-size:14px;font-weight:500;display:block;margin-bottom:8px;line-height:1.5}
+.plib-q-item-num{font-family:monospace;font-weight:700;color:var(--c-q-id);margin-right:6px}
+.plib-q-cap-note{font-weight:400;font-style:italic;color:var(--c-muted);margin-left:6px;font-size:13px}
+.plib-q-select{width:100%;padding:6px 8px;font-size:14px;border:1px solid var(--c-q-border);border-radius:4px;background:#fff}
+.plib-q-likert{display:flex;flex-wrap:wrap;gap:10px}
+.plib-q-likert-opt{display:flex;align-items:center;gap:5px;font-size:14px;cursor:pointer}
+.plib-q-checkboxes{display:flex;flex-direction:column;gap:6px}
+.plib-q-check-opt{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.plib-q-check-opt input[disabled] + span{opacity:.5}
+.plib-copy-btn-q{border-color:var(--c-btn-q);color:var(--c-btn-q)}
+.plib-copy-btn-q:hover{background:var(--c-btn-q);color:#fff}
+.plib-prompt-o{background:var(--c-o-bg);border:1px solid var(--c-o-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-o-id{color:var(--c-o-id)!important;background:rgba(160,69,16,.1)!important}
+.plib-o-label{color:var(--c-o-id)!important}
+.plib-o-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-o-question{font-size:14px;font-weight:500;margin-bottom:10px;line-height:1.5}
+.plib-o-list{list-style:none;padding:0;margin:0 0 10px 0;display:flex;flex-direction:column;gap:6px}
+.plib-o-item{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.7);border-radius:6px;padding:8px 10px;font-size:14px}
+.plib-o-rank{font-family:monospace;font-weight:700;color:var(--c-o-id);min-width:1.5em;text-align:right}
+.plib-o-item-text{flex:1}
+.plib-o-controls{display:flex;flex-direction:column;gap:2px}
+.plib-o-arrow{background:transparent;border:1px solid var(--c-o-border);color:var(--c-o-id);width:28px;height:22px;font-size:14px;line-height:1;cursor:pointer;border-radius:3px;padding:0}
+.plib-o-arrow:hover:not([disabled]){background:var(--c-o-border);color:#fff}
+.plib-o-arrow[disabled]{opacity:.25;cursor:default}
+.plib-copy-btn-o{border-color:var(--c-btn-o);color:var(--c-btn-o)}
+.plib-copy-btn-o:hover{background:var(--c-btn-o);color:#fff}
+.plib-demo-badge{font-size:11px;color:var(--c-muted);background:rgba(0,0,0,.05);padding:2px 8px;border-radius:3px;font-style:italic;margin-left:8px}
+.plib-ai-badge{font-size:11px;padding:2px 8px;border-radius:3px;font-family:monospace;margin-left:8px}
+.plib-ai-respond{background:#e8f5e8;color:#2c5e2c}
+.plib-ai-acknowledge{background:#fef0e6;color:#8c4a1a}
+.plib-ai-archive{background:#f0e8f5;color:#5a2c8c}
+</style>
+</head>
+<body>
+<a href="#main-content" class="plib-skip-link">Skip to main content</a>
+<style>.plib-skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;}.plib-skip-link:focus{position:static;width:auto;height:auto;background:#005fcc;color:#fff;padding:8px 16px;font-size:14px;font-weight:600;border-radius:4px;text-decoration:none;display:inline-block;margin:8px;}</style>
+<main id="main-content">
+<div class="plib-wrap">
+<div class="plib-meta">
+  <div class="plib-meta-course">BIT 5534 Applied Business Intelligence and Analytics</div>
+  <div class="plib-meta-week">Week 11 · Progress Report 1 · Part 1 of 2</div>
+  <div class="plib-meta-title">Deliverable 1, Progress Report, Team Submission</div>
+  <div class="plib-meta-details"><span><strong>Platform:</strong> Hokie AI (your team's agent) + local Python (run)</span>&ensp;·&ensp;<span><strong>Submission:</strong> The thread with your team's agent, exported as a .zip and uploaded to Canvas by one team member</span></div>
+</div>
+
+<div class="plib-objectives">
+  <div class="plib-objectives-label">Learning Objectives</div>
+  <p class="plib-objectives-intro">By the end of this progress report, each team will be able to:</p>
+  <ol class="plib-objectives-list">
+    <li>Profile its data file and name the column its business records only after the outcome.</li>
+    <li>Write SCORE instructions for an analytics agent that supports the decisions in its brief.</li>
+    <li>Configure and share a Hokie AI agent with the team's brief and the report guide as knowledge files, and test whether it follows its rules on numbers.</li>
+    <li>Fit all four course models on the Training rows, judge each on the Validation rows, and save their reports.</li>
+    <li>Turn three of the agent's answers into business intelligence for a manager, with the meaning, the money, the confidence and the next step.</li>
+  </ol>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 1 of 5</div><div class="plib-section-t">ORIENTATION</div></div>
+
+<div class="plib-narration">
+  <p>Progress report 1 is your team's first deliverable for the course project. In lec11_1 and lec11_2 your instructor built the greenlight analyst for Lumenvale, attached model reports from the course tools, and read its replies for the meaning, the money, the confidence and the next step. Your team now does the same for its own business.</p>
+  <p>The report is worth 100 points in five parts. The whole submission goes into one thread with your team's agent. One team member starts the thread, pastes every part into it, and uploads it to Canvas for the team. Every member also submits a peer evaluation, a separate assignment with no points of its own, due with the team submission.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-5">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Five boxes joined by AND, the five parts of progress report 1. Part A, the data profile in your brief, 20 points. Part B, your agent's SCORE instructions, 20 points. Part C, your revised agent, its share link and a check of its rules, 10 points. Part D, four model reports, one from each course tool, 20 points. Part E, three questions to your agent and your team's interpretation of each answer, 30 points."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 250" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="250" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Progress report 1, five parts</text><rect x="21" y="46" width="153" height="182" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Part A, 20</text><text x="66" y="103" font-size="17" font-weight="600" fill="#2b2b2b">points</text><text x="37" y="134" font-size="14" fill="#6b6b6b">the data profile in</text><text x="37" y="153" font-size="14" fill="#6b6b6b">your brief</text><text x="198" y="142" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="222" y="46" width="153" height="182" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="246" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="246" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="267" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Part B, 20</text><text x="267" y="103" font-size="17" font-weight="600" fill="#2b2b2b">points</text><text x="238" y="134" font-size="14" fill="#6b6b6b">your agent's</text><text x="238" y="153" font-size="14" fill="#6b6b6b">SCORE instructions</text><text x="399" y="142" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="423" y="46" width="153" height="182" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="447" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="447" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="468" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Part C, 10</text><text x="468" y="103" font-size="17" font-weight="600" fill="#2b2b2b">points</text><text x="439" y="134" font-size="14" fill="#6b6b6b">your revised agent,</text><text x="439" y="153" font-size="14" fill="#6b6b6b">its share link and a</text><text x="439" y="172" font-size="14" fill="#6b6b6b">check of its rules</text><text x="601" y="142" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="625" y="46" width="153" height="182" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="649" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="649" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="670" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Part D, 20</text><text x="670" y="103" font-size="17" font-weight="600" fill="#2b2b2b">points</text><text x="641" y="134" font-size="14" fill="#6b6b6b">four model reports,</text><text x="641" y="153" font-size="14" fill="#6b6b6b">one from each</text><text x="641" y="172" font-size="14" fill="#6b6b6b">course tool</text><text x="802" y="142" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="826" y="46" width="153" height="182" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="850" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="850" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">5</text><text x="871" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Part E, 30</text><text x="871" y="103" font-size="17" font-weight="600" fill="#2b2b2b">points</text><text x="842" y="134" font-size="14" fill="#6b6b6b">three questions to</text><text x="842" y="153" font-size="14" fill="#6b6b6b">your agent and</text><text x="842" y="172" font-size="14" fill="#6b6b6b">your team's</text><text x="842" y="191" font-size="14" fill="#6b6b6b">interpretation of</text><text x="842" y="210" font-size="14" fill="#6b6b6b">each answer</text></svg></div>
+    <figcaption class="plib-tile-caption">100 points, one thread, one upload for the team.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>Download your team's package from the buttons below. It is a .zip file holding three files, your data file, your team's brief and your team's own instructions for this report. Your team's instructions add to this page, so read both. Make a folder for the project and unzip the package into it.</p>
+  <p>BIT5534/ Project/ pr1/</p>
+  <p>Put the report guide and the five course tools in the same folder. They are the copies from lec11_2, with Save report.</p>
+</div>
+
+<div class="plib-material" id="plib-material-7">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">Morning section, AM01 to AM06</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="pr1_AM01.zip" download="pr1_AM01.zip" target="_blank" rel="noopener noreferrer">AM01</a>
+    <a class="plib-material-btn" href="pr1_AM02.zip" download="pr1_AM02.zip" target="_blank" rel="noopener noreferrer">AM02</a>
+    <a class="plib-material-btn" href="pr1_AM03.zip" download="pr1_AM03.zip" target="_blank" rel="noopener noreferrer">AM03</a>
+    <a class="plib-material-btn" href="pr1_AM04.zip" download="pr1_AM04.zip" target="_blank" rel="noopener noreferrer">AM04</a>
+    <a class="plib-material-btn" href="pr1_AM05.zip" download="pr1_AM05.zip" target="_blank" rel="noopener noreferrer">AM05</a>
+    <a class="plib-material-btn" href="pr1_AM06.zip" download="pr1_AM06.zip" target="_blank" rel="noopener noreferrer">AM06</a>
+  </div>
+</div>
+
+<div class="plib-material" id="plib-material-8">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">Afternoon section, PM01 to PM10</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="pr1_PM01.zip" download="pr1_PM01.zip" target="_blank" rel="noopener noreferrer">PM01</a>
+    <a class="plib-material-btn" href="pr1_PM02.zip" download="pr1_PM02.zip" target="_blank" rel="noopener noreferrer">PM02</a>
+    <a class="plib-material-btn" href="pr1_PM03.zip" download="pr1_PM03.zip" target="_blank" rel="noopener noreferrer">PM03</a>
+    <a class="plib-material-btn" href="pr1_PM04.zip" download="pr1_PM04.zip" target="_blank" rel="noopener noreferrer">PM04</a>
+    <a class="plib-material-btn" href="pr1_PM05.zip" download="pr1_PM05.zip" target="_blank" rel="noopener noreferrer">PM05</a>
+    <a class="plib-material-btn" href="pr1_PM06.zip" download="pr1_PM06.zip" target="_blank" rel="noopener noreferrer">PM06</a>
+    <a class="plib-material-btn" href="pr1_PM07.zip" download="pr1_PM07.zip" target="_blank" rel="noopener noreferrer">PM07</a>
+    <a class="plib-material-btn" href="pr1_PM08.zip" download="pr1_PM08.zip" target="_blank" rel="noopener noreferrer">PM08</a>
+    <a class="plib-material-btn" href="pr1_PM09.zip" download="pr1_PM09.zip" target="_blank" rel="noopener noreferrer">PM09</a>
+    <a class="plib-material-btn" href="pr1_PM10.zip" download="pr1_PM10.zip" target="_blank" rel="noopener noreferrer">PM10</a>
+  </div>
+  <div class="plib-material-note">Download only your own team's package. If your browser adds (1) to a file name, rename the file.</div>
+</div>
+
+<div class="plib-material" id="plib-material-9">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The report guide and the five course tools</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="report_guide.txt" download="report_guide.txt" target="_blank" rel="noopener noreferrer">Download report_guide.txt</a>
+    <a class="plib-material-btn" href="reg_explorer.py" download="reg_explorer.py" target="_blank" rel="noopener noreferrer">Download reg_explorer.py</a>
+    <a class="plib-material-btn" href="tree_explorer.py" download="tree_explorer.py" target="_blank" rel="noopener noreferrer">Download tree_explorer.py</a>
+    <a class="plib-material-btn" href="nn_explorer.py" download="nn_explorer.py" target="_blank" rel="noopener noreferrer">Download nn_explorer.py</a>
+    <a class="plib-material-btn" href="svm_explorer.py" download="svm_explorer.py" target="_blank" rel="noopener noreferrer">Download svm_explorer.py</a>
+    <a class="plib-material-btn" href="threshold_explorer.py" download="threshold_explorer.py" target="_blank" rel="noopener noreferrer">Download threshold_explorer.py</a>
+  </div>
+  <div class="plib-material-note">The report guide is the same for every team and explains the reports of the five tools. If the browser opens a tool as a page of text, right click the link and use Save link as.</div>
+</div>
+
+<div class="plib-narration">
+  <p>Your team writes its SCORE instructions and its interpretations in Part E in its own words. You may use Hokie AI as a thinking partner, to discuss ideas or to check your understanding of the business. You may not use it to write these parts.</p>
+  <p>Do Parts A to D before anyone opens the thread. Complete the data profile, write the SCORE instructions, revise and share the agent, and fit and save the four models. Then one member opens your team's agent, starts a new chat, and pastes the parts in the order of this page. Part E happens in that same chat.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-11">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Five boxes joined by THEN, the order of the work. Profile, complete the DATA PROFILE section of your brief. Instructions, write your agent's SCORE instructions. Agent, revise the agent and share it. Reports, fit the four models and save each report. Thread, open the agent, start a new chat, paste the parts of this page in order with the rule check before Part C, then ask the three questions of Part E."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 295" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="295" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">The order of the work</text><rect x="21" y="46" width="153" height="227" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Profile</text><text x="37" y="122" font-size="14" fill="#6b6b6b">complete the DATA</text><text x="37" y="141" font-size="14" fill="#6b6b6b">PROFILE section of</text><text x="37" y="160" font-size="14" fill="#6b6b6b">your brief</text><text x="198" y="164" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">THEN</text><rect x="222" y="46" width="153" height="227" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="246" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="246" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="267" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Instructions</text><text x="238" y="122" font-size="14" fill="#6b6b6b">write your agent's</text><text x="238" y="141" font-size="14" fill="#6b6b6b">SCORE instructions</text><text x="399" y="164" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">THEN</text><rect x="423" y="46" width="153" height="227" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="447" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="447" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="468" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Agent</text><text x="439" y="122" font-size="14" fill="#6b6b6b">revise the agent</text><text x="439" y="141" font-size="14" fill="#6b6b6b">and share it</text><text x="601" y="164" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">THEN</text><rect x="625" y="46" width="153" height="227" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="649" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="649" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="670" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Reports</text><text x="641" y="122" font-size="14" fill="#6b6b6b">fit the four models</text><text x="641" y="141" font-size="14" fill="#6b6b6b">and save each</text><text x="641" y="160" font-size="14" fill="#6b6b6b">report</text><text x="802" y="164" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">THEN</text><rect x="826" y="46" width="153" height="227" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="850" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="850" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">5</text><text x="871" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Thread</text><text x="842" y="122" font-size="14" fill="#6b6b6b">open the agent,</text><text x="842" y="141" font-size="14" fill="#6b6b6b">start a new chat,</text><text x="842" y="160" font-size="14" fill="#6b6b6b">paste the parts of</text><text x="842" y="179" font-size="14" fill="#6b6b6b">this page in order</text><text x="842" y="198" font-size="14" fill="#6b6b6b">with the rule check</text><text x="842" y="217" font-size="14" fill="#6b6b6b">before Part C, then</text><text x="842" y="236" font-size="14" fill="#6b6b6b">ask the three</text><text x="842" y="255" font-size="14" fill="#6b6b6b">questions of Part E</text></svg></div>
+    <figcaption class="plib-tile-caption">Parts A to D come first. The thread comes last, and everything goes into one chat.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>When Parts A to D are ready, open your team's agent, start a new chat, and paste the block below as the first message. Wait for the one sentence acknowledgment. Do not write anything else in that message, and do not start a new chat after it.</p>
+</div>
+
+<div class="plib-prompt-marker" role="region" aria-label="Session Opener">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-marker-id">TP1.1</span>
+    <span class="plib-prompt-type-label plib-marker-label">Session Opener</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-marker-instruction">Copy this block and paste it into Hokie AI to begin your session.</p>
+  <div class="plib-prompt-display plib-marker-display">You are an analysis partner for BIT 5534 Applied Business Intelligence and Analytics, a graduate course in business intelligence and analytics at Virginia Tech. The student holds graduate standing, has some statistics background, and is working on a team analytics project. Speak to them as a capable adult. Be direct, say when something is uncertain or contested, and do not pad your answers. When a student pushes back on something you said, take the challenge seriously. Do not concede immediately to be agreeable.
+
+---
+**AI Interaction Protocol**
+
+In this session, you will receive blocks of content with the
+following structural pattern:
+
+```
+### &lt;BlockID&gt;
+----------
+&lt;content&gt;
+----------
+###
+```
+
+Some blocks include an interaction-mode directive on a separate
+line inside the dashed envelope:
+
+```
+### &lt;BlockID&gt;
+----------
+[ai_interaction=&lt;mode&gt;]
+&lt;content&gt;
+----------
+###
+```
+
+Three modes determine your response:
+
+  - **respond**: Engage substantively with the block content.
+    Treat it as a prompt, question, or task that wants your
+    analytical response. Default for S blocks (prompts) and X
+    blocks (free exploration).
+
+  - **acknowledge**: Confirm receipt with one brief sentence
+    naming the block ID. Do not analyze, comment on, or expand on
+    the content. The student is filing the block for the record,
+    not asking for engagement. Default for T blocks (this opener),
+    R blocks (reflections), M CLOSE blocks (closing markers), Q
+    blocks (structured selections), and O blocks (ordering
+    selections).
+
+  - **archive**: Respond with only the block ID and nothing else.
+    Used for batched archival pastes where even brief
+    acknowledgment would clutter the thread.
+
+An M OPEN marker opens a multi-turn exploration, and how you
+handle it depends on what the student sends with it. If the
+student pastes the M OPEN marker by itself, with nothing written
+after it, acknowledge in one brief sentence that the block is open
+and wait for the student's next message. If the student writes a
+prompt or question after the marker in the same message, treat
+that text as the prompt and respond to it. Always acknowledge an
+M CLOSE marker.
+
+If a block has no explicit `[ai_interaction=...]` directive, apply
+the block-type default per the list above.
+
+This protocol applies for the remainder of this session.
+---</div>
+  <div class="plib-prompt-text" id="text_prompt_13" data-copy="### TP1.1&#10;----------&#10;You are an analysis partner for BIT 5534 Applied Business Intelligence and Analytics, a graduate course in business intelligence and analytics at Virginia Tech. The student holds graduate standing, has some statistics background, and is working on a team analytics project. Speak to them as a capable adult. Be direct, say when something is uncertain or contested, and do not pad your answers. When a student pushes back on something you said, take the challenge seriously. Do not concede immediately to be agreeable.&#10;&#10;---&#10;**AI Interaction Protocol**&#10;&#10;In this session, you will receive blocks of content with the&#10;following structural pattern:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Some blocks include an interaction-mode directive on a separate&#10;line inside the dashed envelope:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;[ai_interaction=&lt;mode&gt;]&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Three modes determine your response:&#10;&#10;  - **respond**: Engage substantively with the block content.&#10;    Treat it as a prompt, question, or task that wants your&#10;    analytical response. Default for S blocks (prompts) and X&#10;    blocks (free exploration).&#10;&#10;  - **acknowledge**: Confirm receipt with one brief sentence&#10;    naming the block ID. Do not analyze, comment on, or expand on&#10;    the content. The student is filing the block for the record,&#10;    not asking for engagement. Default for T blocks (this opener),&#10;    R blocks (reflections), M CLOSE blocks (closing markers), Q&#10;    blocks (structured selections), and O blocks (ordering&#10;    selections).&#10;&#10;  - **archive**: Respond with only the block ID and nothing else.&#10;    Used for batched archival pastes where even brief&#10;    acknowledgment would clutter the thread.&#10;&#10;An M OPEN marker opens a multi-turn exploration, and how you&#10;handle it depends on what the student sends with it. If the&#10;student pastes the M OPEN marker by itself, with nothing written&#10;after it, acknowledge in one brief sentence that the block is open&#10;and wait for the student's next message. If the student writes a&#10;prompt or question after the marker in the same message, treat&#10;that text as the prompt and respond to it. Always acknowledge an&#10;M CLOSE marker.&#10;&#10;If a block has no explicit `[ai_interaction=...]` directive, apply&#10;the block-type default per the list above.&#10;&#10;This protocol applies for the remainder of this session.&#10;---&#10;----------&#10;###"></div>
+  <button class="plib-copy-btn plib-copy-btn-marker" onclick="copyPrompt('text_prompt_13', this)"
+          aria-label="Copy session opener to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy session opener
+  </button>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 2 of 5</div><div class="plib-section-t">THE AGENT</div></div>
+
+<div class="plib-narration">
+  <p>Part A is worth 20 points. Fill in the DATA PROFILE section of your brief from your data file. Replace every blank with the value from the file. Name the column your business records only after the outcome, and say why it does not belong among a model's inputs. Your team's instructions give a hint for this column. Change nothing else in the brief, because the completed brief is your agent's first knowledge file.</p>
+  <p>In the box below, paste the completed DATA PROFILE section, from its heading to its last line, and copy the box into the thread.</p>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution RP1.1.1">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">RP1.1.1</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Part A the data profile</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 250 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_17" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for RP1.1.1"
+            data-maxwords="250" data-maxchars="2500"
+            oninput="updateCounter('prompt_17', 'textarea_17')"></textarea>
+  <div class="plib-counter" id="counter_prompt_17" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_17">0</span> / 250 words&nbsp;·&nbsp;
+    <span id="cc_prompt_17">0</span> / 2500 characters
+  </div>
+  <div class="plib-warn" id="warn_prompt_17" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_17"
+       data-prefix="### RP1.1.1&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_17"
+       data-maxwords="250"
+       data-maxchars="2500"
+       data-minwords="0"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_17', this)"
+          aria-label="Copy contribution RP1.1.1 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-narration">
+  <p>Part B is worth 20 points. Write your agent's instructions in the five parts of SCORE from lec11_1, Stance, Context, Objective, Rules and Examples, for your own business. The greenlight analyst's instructions from lec11_2 are below as an example of the form. Write your own, in your team's own words, for your business and its decisions.</p>
+  <p>Your instructions need all five parts. In the Stance, say who the agent is and how it speaks AND in the Context, name the two knowledge files and the reports the team attaches AND in the Objective, name every decision in your brief and say what every answer must contain AND in the Rules, say where the agent may take numbers from, how it treats your levers and the column recorded after the outcome, and when it converts a result into dollars with your planning figures AND under Examples, write at least one question a manager in your business would ask, with the answer you want. Five parts.</p>
+</div>
+
+<div class="plib-material" id="plib-material-20">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The greenlight analyst's Specific instructions, from lec11_2</div>
+  <pre class="plib-material-box" tabindex="0" id="plib-material-20-prompt" data-copy="STANCE&#10;You are a senior analyst on Lumenvale's content strategy team. You are careful with evidence and plain with managers. You state which conclusions you can draw from the data, which conclusions you cannot draw from them, and what you would need to know.&#10;&#10;CONTEXT&#10;Lumenvale is a streaming service. You have two knowledge files. The Lumenvale brief describes the company, its eight main markets, the decisions of the content strategy team, the title file with its columns, and the finance team's planning figures. The report guide explains how to read a model report saved by one of the five course tools (REG, TREE, NN, SVM, THRESHOLD). The team fits models on the title file and attaches the saved reports, usually the .txt file, to its prompts.&#10;&#10;OBJECTIVE&#10;Help the content strategy team make its decisions, which titles to greenlight, at what budget and marketing budget, when to release them and which titles to feature on the home page, using the attached reports. In every answer, name the decision behind the question, identify the run you are reading (tool, target, inputs, validation method), give the numbers that settle the question with the report section each number comes from, convert them into dollars with the planning figures where the decision is about money, and end with one run the team could make next.&#10;&#10;RULES&#10;Read every report as described in the report guide.&#10;Quote numbers only from the brief, from an attached report, or from what the person typed, and name the source of each number.&#10;Judge a model by its validation rows. Report any large gap between train and validation numbers.&#10;Treat budgets, marketing budgets and release dates as levers the team sets. Flag any input measured after release, such as critic_score, as a leak.&#10;If no report is attached, or you cannot answer the question from the attached reports, say so and name the tool and settings that would produce the answer.&#10;Show every dollar calculation in one line.&#10;Do not claim that an input causes an outcome.&#10;Keep answers under 200 words unless the person asks for more.&#10;&#10;EXAMPLES&#10;Question: (with a REG report on breakout attached) Should we pay more for a known cast?&#10;Answer: This is a greenlight budget decision. The attached report is a REG logistic fit of breakout on 13 inputs, judged on 1,199 validation rows. In the Fit section, cast_recognition has an estimate of 0.0241 per point with logworth 5.92. Ten more points multiply the odds of a breakout by about 1.27, other inputs held fixed. This is an association, and the data cannot show that paying for a cast causes a breakout. Validation accuracy is 0.921, against 0.907 for predicting No for every title. As a next run, fit a TREE report on breakout, to see whether cast_recognition matters only above some budget." aria-label="Specification text, scrollable">STANCE
+You are a senior analyst on Lumenvale's content strategy team. You are careful with evidence and plain with managers. You state which conclusions you can draw from the data, which conclusions you cannot draw from them, and what you would need to know.
+
+CONTEXT
+Lumenvale is a streaming service. You have two knowledge files. The Lumenvale brief describes the company, its eight main markets, the decisions of the content strategy team, the title file with its columns, and the finance team's planning figures. The report guide explains how to read a model report saved by one of the five course tools (REG, TREE, NN, SVM, THRESHOLD). The team fits models on the title file and attaches the saved reports, usually the .txt file, to its prompts.
+
+OBJECTIVE
+Help the content strategy team make its decisions, which titles to greenlight, at what budget and marketing budget, when to release them and which titles to feature on the home page, using the attached reports. In every answer, name the decision behind the question, identify the run you are reading (tool, target, inputs, validation method), give the numbers that settle the question with the report section each number comes from, convert them into dollars with the planning figures where the decision is about money, and end with one run the team could make next.
+
+RULES
+Read every report as described in the report guide.
+Quote numbers only from the brief, from an attached report, or from what the person typed, and name the source of each number.
+Judge a model by its validation rows. Report any large gap between train and validation numbers.
+Treat budgets, marketing budgets and release dates as levers the team sets. Flag any input measured after release, such as critic_score, as a leak.
+If no report is attached, or you cannot answer the question from the attached reports, say so and name the tool and settings that would produce the answer.
+Show every dollar calculation in one line.
+Do not claim that an input causes an outcome.
+Keep answers under 200 words unless the person asks for more.
+
+EXAMPLES
+Question: (with a REG report on breakout attached) Should we pay more for a known cast?
+Answer: This is a greenlight budget decision. The attached report is a REG logistic fit of breakout on 13 inputs, judged on 1,199 validation rows. In the Fit section, cast_recognition has an estimate of 0.0241 per point with logworth 5.92. Ten more points multiply the odds of a breakout by about 1.27, other inputs held fixed. This is an association, and the data cannot show that paying for a cast causes a breakout. Validation accuracy is 0.921, against 0.907 for predicting No for every title. As a next run, fit a TREE report on breakout, to see whether cast_recognition matters only above some budget.</pre>
+  <button class="plib-copy-btn" onclick="copyPrompt('plib-material-20-prompt', this)" aria-label="Copy the text above to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy the text above
+  </button>
+  <div class="plib-material-note">An example of the form for Lumenvale. Your business, its decisions, its levers and its planning figures are different.</div>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-21">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Five boxes joined by AND, the SCORE instructions. Stance, who the agent is and how it speaks. Context, the two knowledge files and the reports the team attaches. Objective, every decision in your brief and what every answer must contain. Rules, where numbers may come from, your levers and the column recorded after the outcome, and when to convert into dollars with your planning figures. Examples, at least one question a manager in your business would ask, with the answer you want."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 314" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="314" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">The SCORE instructions</text><rect x="21" y="46" width="153" height="246" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Stance</text><text x="37" y="122" font-size="14" fill="#6b6b6b">who the agent is</text><text x="37" y="141" font-size="14" fill="#6b6b6b">and how it speaks</text><text x="198" y="174" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="222" y="46" width="153" height="246" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="246" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="246" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="267" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Context</text><text x="238" y="122" font-size="14" fill="#6b6b6b">the two knowledge</text><text x="238" y="141" font-size="14" fill="#6b6b6b">files and the</text><text x="238" y="160" font-size="14" fill="#6b6b6b">reports the team</text><text x="238" y="179" font-size="14" fill="#6b6b6b">attaches</text><text x="399" y="174" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="423" y="46" width="153" height="246" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="447" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="447" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="468" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Objective</text><text x="439" y="122" font-size="14" fill="#6b6b6b">every decision in</text><text x="439" y="141" font-size="14" fill="#6b6b6b">your brief and what</text><text x="439" y="160" font-size="14" fill="#6b6b6b">every answer must</text><text x="439" y="179" font-size="14" fill="#6b6b6b">contain</text><text x="601" y="174" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="625" y="46" width="153" height="246" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="649" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="649" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="670" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Rules</text><text x="641" y="122" font-size="14" fill="#6b6b6b">where numbers</text><text x="641" y="141" font-size="14" fill="#6b6b6b">may come from,</text><text x="641" y="160" font-size="14" fill="#6b6b6b">your levers and the</text><text x="641" y="179" font-size="14" fill="#6b6b6b">column recorded</text><text x="641" y="198" font-size="14" fill="#6b6b6b">after the outcome,</text><text x="641" y="217" font-size="14" fill="#6b6b6b">and when to</text><text x="641" y="236" font-size="14" fill="#6b6b6b">convert into dollars</text><text x="641" y="255" font-size="14" fill="#6b6b6b">with your planning</text><text x="641" y="274" font-size="14" fill="#6b6b6b">figures</text><text x="802" y="174" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="826" y="46" width="153" height="246" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="850" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="850" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">5</text><text x="871" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Examples</text><text x="842" y="122" font-size="14" fill="#6b6b6b">at least one</text><text x="842" y="141" font-size="14" fill="#6b6b6b">question a</text><text x="842" y="160" font-size="14" fill="#6b6b6b">manager in your</text><text x="842" y="179" font-size="14" fill="#6b6b6b">business would</text><text x="842" y="198" font-size="14" fill="#6b6b6b">ask, with the</text><text x="842" y="217" font-size="14" fill="#6b6b6b">answer you want</text></svg></div>
+    <figcaption class="plib-tile-caption">Most of the difference between teams is in the Rules and the Example.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>In the box below, paste your full SCORE text, the same text that is in your agent's Specific tab, and copy the box into the thread.</p>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution RP1.1.2">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">RP1.1.2</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Part B the SCORE instructions</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 1500 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_23" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for RP1.1.2"
+            data-maxwords="1500" data-maxchars="15000"
+            oninput="updateCounter('prompt_23', 'textarea_23')"></textarea>
+  <div class="plib-counter" id="counter_prompt_23" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_23">0</span> / 1500 words&nbsp;·&nbsp;
+    <span id="cc_prompt_23">0</span> / 15000 characters
+  </div>
+  <div class="plib-warn" id="warn_prompt_23" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_23"
+       data-prefix="### RP1.1.2&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_23"
+       data-maxwords="1500"
+       data-maxchars="15000"
+       data-minwords="0"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_23', this)"
+          aria-label="Copy contribution RP1.1.2 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-narration">
+  <p>Part C is worth 10 points. Revise your team's Hokie AI agent from lec11_1 for your business, from the card below. Your instructor opens the agent from its share link and asks it a question about your business, so check that the link opens the agent for someone outside the team. Test the link before you submit.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-26">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Six boxes joined by AND, the agent card. Specific, your SCORE text from Part B. Platform, delete the default and paste the class text. Knowledge, your completed brief and the report guide, the two knowledge files. Capabilities, switch on attach files and leave the others off. Welcome, delete the welcome message. Share, save the agent, press Share and copy the link."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 276" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="276" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">The agent card</text><rect x="21" y="46" width="120" height="208" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Specific</text><text x="37" y="122" font-size="14" fill="#6b6b6b">your SCORE</text><text x="37" y="141" font-size="14" fill="#6b6b6b">text from Part</text><text x="37" y="160" font-size="14" fill="#6b6b6b">B</text><text x="165" y="155" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="189" y="46" width="120" height="208" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="213" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="213" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="234" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Platform</text><text x="205" y="122" font-size="14" fill="#6b6b6b">delete the</text><text x="205" y="141" font-size="14" fill="#6b6b6b">default and</text><text x="205" y="160" font-size="14" fill="#6b6b6b">paste the</text><text x="205" y="179" font-size="14" fill="#6b6b6b">class text</text><text x="332" y="155" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="356" y="46" width="120" height="208" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="380" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="380" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="401" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Knowledge</text><text x="372" y="122" font-size="14" fill="#6b6b6b">your</text><text x="372" y="141" font-size="14" fill="#6b6b6b">completed</text><text x="372" y="160" font-size="14" fill="#6b6b6b">brief and the</text><text x="372" y="179" font-size="14" fill="#6b6b6b">report guide,</text><text x="372" y="198" font-size="14" fill="#6b6b6b">the two</text><text x="372" y="217" font-size="14" fill="#6b6b6b">knowledge</text><text x="372" y="236" font-size="14" fill="#6b6b6b">files</text><text x="500" y="155" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="120" height="208" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Capabilities</text><text x="540" y="122" font-size="14" fill="#6b6b6b">switch on</text><text x="540" y="141" font-size="14" fill="#6b6b6b">attach files</text><text x="540" y="160" font-size="14" fill="#6b6b6b">and leave the</text><text x="540" y="179" font-size="14" fill="#6b6b6b">others off</text><text x="668" y="155" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="692" y="46" width="120" height="208" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="716" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="716" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">5</text><text x="737" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Welcome</text><text x="708" y="122" font-size="14" fill="#6b6b6b">delete the</text><text x="708" y="141" font-size="14" fill="#6b6b6b">welcome</text><text x="708" y="160" font-size="14" fill="#6b6b6b">message</text><text x="835" y="155" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="859" y="46" width="120" height="208" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="883" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="883" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">6</text><text x="904" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Share</text><text x="875" y="122" font-size="14" fill="#6b6b6b">save the</text><text x="875" y="141" font-size="14" fill="#6b6b6b">agent, press</text><text x="875" y="160" font-size="14" fill="#6b6b6b">Share and</text><text x="875" y="179" font-size="14" fill="#6b6b6b">copy the link</text></svg></div>
+    <figcaption class="plib-tile-caption">The share link stays the same when the builder saves a change.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-material" id="plib-material-27">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The class Platform text, from lec11_1</div>
+  <pre class="plib-material-box" tabindex="0" id="plib-material-27-prompt" data-copy="You are a configured analytics agent for a graduate course in business intelligence and analytics at Virginia Tech. Follow the Specific instructions for your role. Where the Specific instructions and these platform instructions differ, follow the Specific instructions, with the one exception below.&#10;&#10;Hold the role for the entire conversation. Reply in clear, complete sentences and keep replies short unless the person asks for detail.&#10;&#10;Follow the next rule even where the Specific instructions say otherwise. The person may paste class records whose first line is three hashes and a code such as T or R11.1.1, with a line of dashes above and below the content. Acknowledge each one in a single sentence naming the code, say nothing about its content, and then continue in your role exactly where you left off." aria-label="Specification text, scrollable">You are a configured analytics agent for a graduate course in business intelligence and analytics at Virginia Tech. Follow the Specific instructions for your role. Where the Specific instructions and these platform instructions differ, follow the Specific instructions, with the one exception below.
+
+Hold the role for the entire conversation. Reply in clear, complete sentences and keep replies short unless the person asks for detail.
+
+Follow the next rule even where the Specific instructions say otherwise. The person may paste class records whose first line is three hashes and a code such as T or R11.1.1, with a line of dashes above and below the content. Acknowledge each one in a single sentence naming the code, say nothing about its content, and then continue in your role exactly where you left off.</pre>
+  <button class="plib-copy-btn" onclick="copyPrompt('plib-material-27-prompt', this)" aria-label="Copy the text above to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy the text above
+  </button>
+  <div class="plib-material-note">Delete the long default text in the Platform tab first, then paste this. With this text in place, the agent acknowledges each block you paste in one sentence and then continues.</div>
+</div>
+
+<div class="plib-narration">
+  <p>Then check the agent's rules in the thread, after the Part B box and before the Part C box. Type the question yourself. Ask the agent for the average of your number target in one group of rows, such as one region, one store or one plan. Your team has given the agent only the overall figures in the data profile, so under your Rules the agent should decline and say what it would need. Read the reply.</p>
+  <p>In the box below, paste your agent's share link on the first line. Below it, write one or two sentences with the question you asked and whether the agent declined or gave a number. If it gave a number, say which rule your team would change. Copy the box into the thread.</p>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution RP1.1.3">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">RP1.1.3</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Part C the share link and the rule check</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 80 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_29" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for RP1.1.3"
+            data-maxwords="80" data-maxchars="800"
+            oninput="updateCounter('prompt_29', 'textarea_29')"></textarea>
+  <div class="plib-counter" id="counter_prompt_29" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_29">0</span> / 80 words&nbsp;·&nbsp;
+    <span id="cc_prompt_29">0</span> / 800 characters
+  </div>
+  <div class="plib-warn" id="warn_prompt_29" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_29"
+       data-prefix="### RP1.1.3&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_29"
+       data-maxwords="80"
+       data-maxchars="800"
+       data-minwords="0"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_29', this)"
+          aria-label="Copy contribution RP1.1.3 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 3 of 5</div><div class="plib-section-t">THE MODELS</div></div>
+
+<div class="plib-narration">
+  <p>Part D is worth 20 points, 5 for each report. Fit all four course models, on the Training rows and judged on the Validation rows, with Validation column set to use the column Validation. The first is a regression of your number target in reg_explorer.py. The other three are a tree in tree_explorer.py, a neural network in nn_explorer.py and a support vector machine in svm_explorer.py, each on either target, your team's choice. Your team's instructions say what to think about in your data.</p>
+  <p>Leave out of every model the column recorded after the outcome, the id column, the text column and the Validation column. Press Save report after each fit and keep both the .txt and the PDF. Add a threshold report for your yes or no target if your team uses one in Part E.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-33">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four boxes joined by AND, the four reports. The regression, reg_explorer.py on your number target. The tree, tree_explorer.py on either target. The neural network, nn_explorer.py on either target. The support vector machine, svm_explorer.py on either target."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 193" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="193" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">The four reports</text><rect x="21" y="46" width="204" height="125" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The regression</text><text x="37" y="122" font-size="14" fill="#6b6b6b">reg_explorer.py on your</text><text x="37" y="141" font-size="14" fill="#6b6b6b">number target</text><text x="248" y="114" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="125" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The tree</text><text x="288" y="122" font-size="14" fill="#6b6b6b">tree_explorer.py on either</text><text x="288" y="141" font-size="14" fill="#6b6b6b">target</text><text x="500" y="114" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="125" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The neural</text><text x="569" y="103" font-size="17" font-weight="600" fill="#2b2b2b">network</text><text x="540" y="134" font-size="14" fill="#6b6b6b">nn_explorer.py on either</text><text x="540" y="153" font-size="14" fill="#6b6b6b">target</text><text x="752" y="114" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="125" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The support</text><text x="820" y="103" font-size="17" font-weight="600" fill="#2b2b2b">vector machine</text><text x="792" y="134" font-size="14" fill="#6b6b6b">svm_explorer.py on either</text><text x="792" y="153" font-size="14" fill="#6b6b6b">target</text></svg></div>
+    <figcaption class="plib-tile-caption">Fit each model on the Training rows, judge it on the Validation rows, and keep the .txt of every report.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>Open the regression report's .txt file, copy all of it, and paste it in the box below. Copy the box into the thread.</p>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution RP1.1.4">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">RP1.1.4</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Part D the regression report</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 3000 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_35" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for RP1.1.4"
+            data-maxwords="3000" data-maxchars="30000"
+            oninput="updateCounter('prompt_35', 'textarea_35')"></textarea>
+  <div class="plib-counter" id="counter_prompt_35" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_35">0</span> / 3000 words&nbsp;·&nbsp;
+    <span id="cc_prompt_35">0</span> / 30000 characters
+  </div>
+  <div class="plib-warn" id="warn_prompt_35" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_35"
+       data-prefix="### RP1.1.4&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_35"
+       data-maxwords="3000"
+       data-maxchars="30000"
+       data-minwords="0"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_35', this)"
+          aria-label="Copy contribution RP1.1.4 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-narration">
+  <p>Open the tree report's .txt file, copy all of it, and paste it in the box below. Copy the box into the thread.</p>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution RP1.1.5">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">RP1.1.5</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Part D the tree report</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 3000 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_38" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for RP1.1.5"
+            data-maxwords="3000" data-maxchars="30000"
+            oninput="updateCounter('prompt_38', 'textarea_38')"></textarea>
+  <div class="plib-counter" id="counter_prompt_38" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_38">0</span> / 3000 words&nbsp;·&nbsp;
+    <span id="cc_prompt_38">0</span> / 30000 characters
+  </div>
+  <div class="plib-warn" id="warn_prompt_38" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_38"
+       data-prefix="### RP1.1.5&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_38"
+       data-maxwords="3000"
+       data-maxchars="30000"
+       data-minwords="0"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_38', this)"
+          aria-label="Copy contribution RP1.1.5 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-narration">
+  <p>Open the neural network report's .txt file, copy all of it, and paste it in the box below. Copy the box into the thread.</p>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution RP1.1.6">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">RP1.1.6</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Part D the neural network report</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 3000 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_41" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for RP1.1.6"
+            data-maxwords="3000" data-maxchars="30000"
+            oninput="updateCounter('prompt_41', 'textarea_41')"></textarea>
+  <div class="plib-counter" id="counter_prompt_41" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_41">0</span> / 3000 words&nbsp;·&nbsp;
+    <span id="cc_prompt_41">0</span> / 30000 characters
+  </div>
+  <div class="plib-warn" id="warn_prompt_41" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_41"
+       data-prefix="### RP1.1.6&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_41"
+       data-maxwords="3000"
+       data-maxchars="30000"
+       data-minwords="0"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_41', this)"
+          aria-label="Copy contribution RP1.1.6 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-narration">
+  <p>Open the support vector machine report's .txt file, copy all of it, and paste it in the box below. Copy the box into the thread.</p>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution RP1.1.7">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">RP1.1.7</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Part D the support vector machine report</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 3000 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_44" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for RP1.1.7"
+            data-maxwords="3000" data-maxchars="30000"
+            oninput="updateCounter('prompt_44', 'textarea_44')"></textarea>
+  <div class="plib-counter" id="counter_prompt_44" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_44">0</span> / 3000 words&nbsp;·&nbsp;
+    <span id="cc_prompt_44">0</span> / 30000 characters
+  </div>
+  <div class="plib-warn" id="warn_prompt_44" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_44"
+       data-prefix="### RP1.1.7&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_44"
+       data-maxwords="3000"
+       data-maxchars="30000"
+       data-minwords="0"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_44', this)"
+          aria-label="Copy contribution RP1.1.7 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 4 of 5</div><div class="plib-section-t">BUSINESS INTELLIGENCE</div></div>
+
+<div class="plib-narration">
+  <p>Part E is worth 30 points, 10 for each question. Ask your agent three questions, each tied to a different decision in your brief. Type each question yourself in the chat, and attach the .txt report it needs in the same message. Wait until the file name appears before you send. Read each reply for the four things from lec11_2, the meaning, the money, the confidence and the next step.</p>
+  <p>After each reply, write your team's interpretation in the box below it, in your own words and without help from the AI, and copy it into the thread. The agent acknowledges it in one sentence. Then ask the next question.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-48">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Four boxes joined by AND, every interpretation. The number, the decision behind the question and one number from the report that the agent used, with the report section it comes from. Meaning and money, what the number means for your business, in plain words and in dollars from your planning figures. Confidence, how far your team trusts the number, from the validation rows and the strength of the evidence. Your intelligence, the one sentence your team would tell your business's manager, and the next step before acting on it."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 238" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="238" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Every interpretation, all four parts</text><rect x="21" y="46" width="204" height="170" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The number</text><text x="37" y="122" font-size="14" fill="#6b6b6b">the decision behind the</text><text x="37" y="141" font-size="14" fill="#6b6b6b">question and one number</text><text x="37" y="160" font-size="14" fill="#6b6b6b">from the report that the</text><text x="37" y="179" font-size="14" fill="#6b6b6b">agent used, with the report</text><text x="37" y="198" font-size="14" fill="#6b6b6b">section it comes from</text><text x="248" y="136" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="272" y="46" width="204" height="170" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="296" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="296" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="318" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Meaning and</text><text x="318" y="103" font-size="17" font-weight="600" fill="#2b2b2b">money</text><text x="288" y="134" font-size="14" fill="#6b6b6b">what the number means for</text><text x="288" y="153" font-size="14" fill="#6b6b6b">your business, in plain</text><text x="288" y="172" font-size="14" fill="#6b6b6b">words and in dollars from</text><text x="288" y="191" font-size="14" fill="#6b6b6b">your planning figures</text><text x="500" y="136" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="524" y="46" width="204" height="170" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="548" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="548" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="569" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Confidence</text><text x="540" y="122" font-size="14" fill="#6b6b6b">how far your team trusts</text><text x="540" y="141" font-size="14" fill="#6b6b6b">the number, from the</text><text x="540" y="160" font-size="14" fill="#6b6b6b">validation rows and the</text><text x="540" y="179" font-size="14" fill="#6b6b6b">strength of the evidence</text><text x="752" y="136" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="776" y="46" width="204" height="170" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="800" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="800" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="820" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Your intelligence</text><text x="792" y="122" font-size="14" fill="#6b6b6b">the one sentence your</text><text x="792" y="141" font-size="14" fill="#6b6b6b">team would tell your</text><text x="792" y="160" font-size="14" fill="#6b6b6b">business's manager, and</text><text x="792" y="179" font-size="14" fill="#6b6b6b">the next step before acting</text><text x="792" y="198" font-size="14" fill="#6b6b6b">on it</text></svg></div>
+    <figcaption class="plib-tile-caption">All four parts in each of the three interpretations. The fourth part counts most.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>Ask your first question now. Then write the first interpretation. It needs all four parts. First, name the decision behind the question and quote one number from the report that the agent used, with the report section it comes from AND second, say what the number means for your business, in plain words and in dollars from your planning figures AND third, say how far your team trusts the number, from the validation rows and the strength of the evidence AND fourth, write the one sentence your team would tell your business's manager, and the next step before acting on it. Four parts.</p>
+  <p>Your instructor gives the fourth part the most weight. Write the sentence for the manager in full, in the words you would use. Write 100 to 200 words.</p>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution RP1.1.8">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">RP1.1.8</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Part E interpretation 1</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 100 to 200 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_50" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for RP1.1.8"
+            data-maxwords="200" data-maxchars="2000"
+            oninput="updateCounter('prompt_50', 'textarea_50')"></textarea>
+  <div class="plib-counter" id="counter_prompt_50" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_50">0</span> / 200 words&nbsp;·&nbsp;
+    <span id="cc_prompt_50">0</span> / 2000 characters
+    <span class="plib-counter-min">minimum: 100 words</span>
+  </div>
+  <div class="plib-warn" id="warn_prompt_50" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_50"
+       data-prefix="### RP1.1.8&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_50"
+       data-maxwords="200"
+       data-maxchars="2000"
+       data-minwords="100"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_50', this)"
+          aria-label="Copy contribution RP1.1.8 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-narration">
+  <p>Ask your second question now, about a different decision in your brief, with the report it needs attached. Then write the second interpretation with the same four parts, the decision and the number with its report section AND the meaning in plain words and in dollars AND how far your team trusts the number AND the sentence for your business's manager with the next step. Write 100 to 200 words.</p>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution RP1.1.9">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">RP1.1.9</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Part E interpretation 2</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 100 to 200 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_53" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for RP1.1.9"
+            data-maxwords="200" data-maxchars="2000"
+            oninput="updateCounter('prompt_53', 'textarea_53')"></textarea>
+  <div class="plib-counter" id="counter_prompt_53" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_53">0</span> / 200 words&nbsp;·&nbsp;
+    <span id="cc_prompt_53">0</span> / 2000 characters
+    <span class="plib-counter-min">minimum: 100 words</span>
+  </div>
+  <div class="plib-warn" id="warn_prompt_53" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_53"
+       data-prefix="### RP1.1.9&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_53"
+       data-maxwords="200"
+       data-maxchars="2000"
+       data-minwords="100"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_53', this)"
+          aria-label="Copy contribution RP1.1.9 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-narration">
+  <p>Ask your third question now, about the decision your first two questions left out, with the report it needs attached. Then write the third interpretation with the same four parts, the decision and the number with its report section AND the meaning in plain words and in dollars AND how far your team trusts the number AND the sentence for your business's manager with the next step. Write 100 to 200 words.</p>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution RP1.1.10">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">RP1.1.10</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Part E interpretation 3</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 100 to 200 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_56" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for RP1.1.10"
+            data-maxwords="200" data-maxchars="2000"
+            oninput="updateCounter('prompt_56', 'textarea_56')"></textarea>
+  <div class="plib-counter" id="counter_prompt_56" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_56">0</span> / 200 words&nbsp;·&nbsp;
+    <span id="cc_prompt_56">0</span> / 2000 characters
+    <span class="plib-counter-min">minimum: 100 words</span>
+  </div>
+  <div class="plib-warn" id="warn_prompt_56" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_56"
+       data-prefix="### RP1.1.10&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_56"
+       data-maxwords="200"
+       data-maxchars="2000"
+       data-minwords="100"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_56', this)"
+          aria-label="Copy contribution RP1.1.10 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 5 of 5</div><div class="plib-section-t">SUBMISSION</div></div>
+
+<div class="plib-narration">
+  <p>You are done with progress report 1 when your thread has the opener, Parts A and B, the rule check, Parts C and D, and the three questions with their interpretations. Export the whole conversation from Hokie AI as a .zip. One team member uploads the .zip to the Progress Report 1 assignment in Canvas for the whole team.</p>
+  <p>Leave the turns where something went wrong. How your team recovered is part of what your instructor reads. Then every member submits the peer evaluation on its own assignment, due with the team submission.</p>
+</div>
+
+<div class="plib-material" id="plib-material-60">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">Progress Report 1 on Canvas</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="https://canvas.vt.edu/courses/233475/assignments/2887850" target="_blank" rel="noopener noreferrer">Open the Progress Report 1 assignment</a>
+  </div>
+  <div class="plib-material-note">One upload per team. The peer evaluation has its own assignment, so check the title on the page before you upload.</div>
+</div>
+
+<div class="plib-submit">
+  <div class="plib-submit-title">Turn it in</div>
+  <p class="plib-submit-p">Export this thread as a .zip file, then upload it to the Canvas assignment for this part. Leave the file as it came out. Your work is not submitted until Canvas shows your file.</p>
+</div>
+
+</div>
+</main>
+<script>
+function countWords(text) {
+  return text.trim() === '' ? 0 : text.trim().split(/[ \t\n\r]+/).length;
+}
+function announce(msg) {
+  var el = document.getElementById('plib-live');
+  if (!el) { el = document.createElement('div'); el.id = 'plib-live';
+    el.setAttribute('aria-live','polite'); el.setAttribute('aria-atomic','true');
+    el.style.cssText='position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;';
+    document.body.appendChild(el); }
+  el.textContent = ''; setTimeout(function(){ el.textContent = msg; }, 50);
+}
+function autoResize(ta) {
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(ta.scrollHeight + 2, 600) + 'px';
+}
+function updateCounter(bid, tid) {
+  var ta = document.getElementById(tid);
+  var textEl = document.getElementById('text_' + bid);
+  var wcEl = document.getElementById('wc_' + bid);
+  var ccEl = document.getElementById('cc_' + bid);
+  var ctrEl = document.getElementById('counter_' + bid);
+  if (!ta) return;
+  autoResize(ta);
+  var maxwords = textEl ? parseInt(textEl.getAttribute('data-maxwords') || '0') : 0;
+  var maxchars = textEl ? parseInt(textEl.getAttribute('data-maxchars') || '0') : 0;
+  var minwords = textEl ? parseInt(textEl.getAttribute('data-minwords') || '0') : 0;
+  var text = ta.value;
+  var words = countWords(text);
+  var chars = text.length;
+  if (maxchars && chars > maxchars) {
+    ta.value = text.substring(0, maxchars);
+    text = ta.value; words = countWords(text); chars = text.length;
+  }
+  if (wcEl) wcEl.textContent = words;
+  if (ccEl) ccEl.textContent = chars;
+  if (ctrEl && maxwords) {
+    var pct = words / maxwords;
+    var cls = pct >= 1.0 ? 'bad' : (pct >= 0.8 || (minwords && words < minwords)) ? 'warn' : 'ok';
+    if (pct >= 1.0) { ctrEl.className = 'plib-counter at-limit'; }
+    else { ctrEl.className = 'plib-counter'; }
+    if (wcEl) wcEl.className = 'plib-count-' + cls;
+    if (ccEl) ccEl.className = 'plib-count-' + cls;
+  }
+}
+function copyPrompt(id, btn) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var text = (el.getAttribute('data-copy') || el.textContent || '').replace(/&#10;/g, '\n');
+  var label = (btn.getAttribute('aria-label') || 'item').replace('Copy ','').replace(' to clipboard','');
+  doCopy(text, btn, label + ' copied.', '&#10003; Copied', 2000);
+}
+function copyWithInput(bid, btn) {
+  var el = document.getElementById('text_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!el) return;
+  var tid = el.getAttribute('data-tid');
+  var inputEl = document.getElementById(tid);
+  var prefix = (el.getAttribute('data-prefix') || '').replace(/&#10;/g, '\n');
+  var suffix = (el.getAttribute('data-suffix') || '').replace(/&#10;/g, '\n');
+  var userText = inputEl ? inputEl.value.trim() : '';
+  if (userText.replace(/[\t\n\r ]/g, '').length < 2) {
+    if (warnEl) warnEl.textContent = 'Please write your response before copying.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  var maxwords = parseInt(el.getAttribute('data-maxwords') || '0');
+  var maxchars = parseInt(el.getAttribute('data-maxchars') || '0');
+  var minwords = parseInt(el.getAttribute('data-minwords') || '0');
+  if (minwords && countWords(userText) < minwords) {
+    if (warnEl) warnEl.textContent = 'Response is below the minimum of ' + minwords + ' words.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  if (maxwords && countWords(userText) > maxwords) {
+    if (warnEl) warnEl.textContent = 'Response exceeds the ' + maxwords + ' word limit.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  if (warnEl) warnEl.textContent = '';
+  doCopy(prefix + userText + suffix, btn, 'Copied. Paste into Hokie AI.', '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+function doCopy(text, btn, announcement, label, duration) {
+  function ok() {
+    var orig = btn.innerHTML; btn.innerHTML = label; btn.classList.add('copied');
+    announce(announcement);
+    setTimeout(function() { btn.innerHTML = orig; btn.classList.remove('copied'); }, duration);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(ok).catch(function() { fallback(text, ok); });
+  } else { fallback(text, ok); }
+}
+function fallback(text, cb) {
+  var ta = document.createElement('textarea'); ta.value = text;
+  ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); cb(); } catch(e) {}
+  document.body.removeChild(ta);
+}
+function copyStructured(bid, blockId, btn) {
+  var container = document.getElementById('qitems_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!container) return;
+  var outerDiv = container.closest('.plib-prompt-q');
+  var aiDirective = outerDiv ? (outerDiv.getAttribute('data-ai-directive') || '') : '';
+  var items = container.querySelectorAll('.plib-q-item');
+  var lines = [];
+  var emptyItems = [];
+
+  items.forEach(function(itemEl) {
+    var n = itemEl.getAttribute('data-item-n');
+    var render = itemEl.getAttribute('data-render');
+    var selections = [];
+
+    if (render === 'dropdown') {
+      var sel = itemEl.querySelector('select');
+      if (sel && sel.value) selections.push(sel.value);
+    } else if (render === 'likert') {
+      var checkedRadio = itemEl.querySelector('input[type="radio"]:checked');
+      if (checkedRadio) selections.push(checkedRadio.value);
+    } else if (render === 'checkbox') {
+      var checks = itemEl.querySelectorAll('input[type="checkbox"]:checked');
+      checks.forEach(function(c) { selections.push(c.value); });
+    }
+
+    if (selections.length === 0) {
+      emptyItems.push(n);
+    } else {
+      lines.push('ITEM ' + n + ': ' + selections.join(', '));
+    }
+  });
+
+  if (emptyItems.length > 0) {
+    if (warnEl) {
+      warnEl.textContent = 'Please make a selection for ITEM '
+        + emptyItems.join(', ITEM ') + ' before copying.';
+    }
+    return;
+  }
+
+  if (warnEl) warnEl.textContent = '';
+
+  var directiveLine = aiDirective ? aiDirective + '\n' : '';
+  var envelope = '### ' + blockId + '\n----------\n' + directiveLine + 'RESPONSE:\n'
+    + lines.join('\n') + '\n----------\n###';
+  doCopy(envelope, btn,
+    'Structured response copied. Paste into Hokie AI.',
+    '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+function enforceCheckboxCap(itemEl) {
+  var max = parseInt(itemEl.getAttribute('data-max-select') || '0', 10);
+  if (!max || max < 2) return;
+  var checks = itemEl.querySelectorAll('input[type="checkbox"]');
+  var checked = itemEl.querySelectorAll('input[type="checkbox"]:checked');
+  var atCap = checked.length >= max;
+  checks.forEach(function(c) {
+    if (!c.checked) c.disabled = atCap;
+  });
+}
+function moveItem(btn, direction) {
+  var li = btn.closest('.plib-o-item');
+  if (!li) return;
+  var list = li.parentElement;
+  if (!list) return;
+  if (direction === 'up') {
+    var prev = li.previousElementSibling;
+    if (prev) list.insertBefore(li, prev);
+  } else if (direction === 'down') {
+    var next = li.nextElementSibling;
+    if (next) list.insertBefore(next, li);
+  }
+  updateArrowStates(list);
+}
+function updateArrowStates(list) {
+  var items = list.querySelectorAll('.plib-o-item');
+  items.forEach(function(li, idx) {
+    var rankEl = li.querySelector('.plib-o-rank');
+    if (rankEl) rankEl.textContent = (idx + 1) + '.';
+    var upBtn = li.querySelector('.plib-o-arrow-up');
+    var downBtn = li.querySelector('.plib-o-arrow-down');
+    if (upBtn) upBtn.disabled = (idx === 0);
+    if (downBtn) downBtn.disabled = (idx === items.length - 1);
+    var itemText = li.getAttribute('data-item-text') || '';
+    if (upBtn) upBtn.setAttribute('aria-label', 'Move ' + itemText + ' up');
+    if (downBtn) downBtn.setAttribute('aria-label', 'Move ' + itemText + ' down');
+  });
+}
+function copyOrdered(bid, blockId, btn) {
+  var list = document.getElementById('oitems_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!list) return;
+  var outerDiv = list.closest('.plib-prompt-o');
+  var aiDirective = outerDiv ? (outerDiv.getAttribute('data-ai-directive') || '') : '';
+  var question = list.getAttribute('data-question') || '';
+  var items = list.querySelectorAll('.plib-o-item');
+  var lines = [];
+  items.forEach(function(li, idx) {
+    var itemText = li.getAttribute('data-item-text') || '';
+    lines.push((idx + 1) + '. ' + itemText);
+  });
+  if (warnEl) warnEl.textContent = '';
+  var directiveLine = aiDirective ? aiDirective + '\n' : '';
+  var envelope = '### ' + blockId + '\n----------\n' + directiveLine + 'RESPONSE:\nQuestion: '
+    + question + '\n' + lines.join('\n') + '\n----------\n###';
+  doCopy(envelope, btn,
+    'Ordered response copied. Paste into Hokie AI.',
+    '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var checkboxItems = document.querySelectorAll('.plib-q-item[data-render="checkbox"]');
+  checkboxItems.forEach(function(itemEl) {
+    var checks = itemEl.querySelectorAll('input[type="checkbox"]');
+    checks.forEach(function(c) {
+      c.addEventListener('change', function() { enforceCheckboxCap(itemEl); });
+    });
+  });
+  var oLists = document.querySelectorAll('.plib-o-list');
+  oLists.forEach(function(list) {
+    updateArrowStates(list);
+  });
+});
+</script>
+</body>
+</html>
