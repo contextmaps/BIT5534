@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Regression explorer</title>
+<style>
+  :root { --ink:#1d2733; --muted:#5b6673; --line:#d6dbe1; --accent:#2c6fbb; --bg:#f6f7f9; --panel:#ffffff; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color:var(--ink); background:var(--bg); }
+  header { padding:10px 16px; background:#20364f; color:#fff; font-weight:600; }
+  .wrap { display:flex; height:calc(100vh - 42px); }
+  aside { width:300px; padding:12px; background:var(--panel); border-right:1px solid var(--line); overflow:auto; }
+  main { flex:1; display:flex; flex-direction:column; min-width:0; }
+  label.h { display:block; font-size:13px; font-weight:600; margin:12px 0 4px; }
+  select, input[type=text] { width:100%; padding:5px; font-size:13px; }
+  .inputs { max-height:220px; overflow:auto; border:1px solid var(--line); padding:4px; font-size:13px; }
+  .inputs label { display:block; }
+  button { padding:7px 10px; font-size:13px; border:1px solid var(--accent); background:var(--accent); color:#fff; border-radius:4px; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--accent); }
+  .row { display:flex; gap:6px; margin-top:8px; }
+  .row > * { flex:1; }
+  #status { margin-top:10px; font-size:12px; color:var(--muted); white-space:pre-wrap; }
+  nav { display:flex; gap:2px; padding:8px 8px 0; border-bottom:1px solid var(--line); background:var(--panel); }
+  nav button { background:#eef1f4; color:var(--ink); border:1px solid var(--line); border-bottom:none; border-radius:4px 4px 0 0; }
+  nav button.on { background:#fff; font-weight:600; }
+  section { display:none; flex:1; overflow:auto; padding:12px; background:#fff; }
+  section.on { display:block; }
+  pre { font-family: Consolas, Menlo, monospace; font-size:12.5px; margin:0; }
+  img { max-width:100%; }
+  #agentFrame { width:100%; height:calc(100vh - 170px); border:1px solid var(--line); }
+</style>
+</head>
+<body>
+<header>Regression explorer: multiple and logistic regression (browser version)</header>
+<div class="wrap">
+  <aside>
+    <label class="h">Data file (.csv)</label>
+    <input type="file" id="file" accept=".csv">
+    <label class="h">Target column</label>
+    <select id="target"></select>
+    <label class="h">Target kind</label>
+    <label><input type="radio" name="kind" value="number" checked> number</label>
+    <label><input type="radio" name="kind" value="category"> category</label>
+    <label class="h">Positive class</label>
+    <select id="positive"></select>
+    <label class="h">Input columns</label>
+    <div class="inputs" id="inputs"></div>
+    <label class="h">Validation column</label>
+    <select id="role"></select>
+    <div class="row"><button id="fit">Fit the model</button></div>
+    <div class="row">
+      <button class="ghost" id="copy">Copy results</button>
+      <button class="ghost" id="report">Save report (.txt)</button>
+    </div>
+    <div id="status">Open a .csv file to begin.</div>
+  </aside>
+  <main>
+    <nav>
+      <button data-tab="fitTab" class="on">Fit</button>
+      <button data-tab="lwTab">Logworth</button>
+      <button data-tab="predTab">Actual vs predicted</button>
+      <button data-tab="agentTab">Agent</button>
+    </nav>
+    <section id="fitTab" class="on"><pre id="fitText">No model yet.</pre></section>
+    <section id="lwTab"><img id="lwImg" alt="Logworth of every term"></section>
+    <section id="predTab"><img id="predImg" alt="Actual against predicted"></section>
+    <section id="agentTab">
+      <label class="h">Your agent's share link</label>
+      <div class="row" style="margin-top:0">
+        <input type="text" id="agentUrl" placeholder="paste the share link of your team's agent">
+        <button id="showAgent" style="flex:0 0 auto">Show the agent</button>
+      </div>
+      <p style="font-size:12px;color:var(--muted)">The agent sees only what you paste or attach in its thread. Copy results, or attach the saved report.</p>
+      <iframe id="agentFrame" title="The team's agent"></iframe>
+    </section>
+  </main>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+let columns = [];
+
+function status(msg) { $("status").textContent = msg; }
+
+async function post(path, body) {
+  const res = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const out = await res.json();
+  if (!res.ok) throw new Error(out.error || "The server returned an error.");
+  return out;
+}
+
+function fill(select, values, chosen) {
+  select.innerHTML = "";
+  for (const v of values) {
+    const o = document.createElement("option");
+    o.value = v; o.textContent = v;
+    if (v === chosen) o.selected = true;
+    select.appendChild(o);
+  }
+}
+
+function targetChanged() {
+  const c = columns.find(x => x.name === $("target").value);
+  if (!c) return;
+  document.querySelector(`input[name=kind][value=${c.kind}]`).checked = true;
+  showInputs();
+}
+
+function showInputs() {
+  const target = $("target").value, role = $("role").value;
+  const box = $("inputs");
+  const kept = new Set([...box.querySelectorAll("input:checked")].map(x => x.value));
+  box.innerHTML = "";
+  for (const c of columns) {
+    if (c.name === target || c.name === role || c.role_like) continue;
+    const l = document.createElement("label");
+    const cb = document.createElement("input");
+    cb.type = "checkbox"; cb.value = c.name; cb.checked = kept.has(c.name);
+    l.appendChild(cb);
+    l.append(` ${c.name}${c.numeric ? "" : " (" + c.levels + " levels)"}`);
+    box.appendChild(l);
+  }
+  const c = columns.find(x => x.name === target);
+  const kind = document.querySelector("input[name=kind]:checked").value;
+  fill($("positive"), kind === "category" && c ? [c.positive] : [], c ? c.positive : "");
+}
+
+$("file").addEventListener("change", async e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  status("Reading " + f.name + "...");
+  try {
+    const out = await post("/open", { name: f.name, text: await f.text() });
+    columns = out.columns;
+    fill($("target"), columns.map(c => c.name), columns[0].name);
+    const roles = columns.filter(c => c.role_like).map(c => c.name);
+    fill($("role"), roles, roles[0]);
+    targetChanged();
+    status(`${out.file}: ${out.rows} rows, ${columns.length} columns.` + (roles.length ? "" : "\nThis file has no validation column."));
+  } catch (err) { status(err.message); }
+});
+$("target").addEventListener("change", targetChanged);
+$("role").addEventListener("change", showInputs);
+document.querySelectorAll("input[name=kind]").forEach(r => r.addEventListener("change", showInputs));
+
+$("fit").addEventListener("click", async () => {
+  const inputs = [...$("inputs").querySelectorAll("input:checked")].map(x => x.value);
+  status("Fitting...");
+  try {
+    const out = await post("/fit", {
+      target: $("target").value,
+      kind: document.querySelector("input[name=kind]:checked").value,
+      positive: $("positive").value,
+      inputs, role: $("role").value });
+    $("fitText").textContent = out.fit;
+    $("lwImg").src = out.logworth;
+    $("predImg").src = out.predictions;
+    status("Fitted." + (out.dropped ? ` ${out.dropped} rows with a missing value were left out.` : ""));
+  } catch (err) { status(err.message); }
+});
+
+$("copy").addEventListener("click", async () => {
+  try { await navigator.clipboard.writeText($("fitText").textContent); status("The Fit tab is on the clipboard."); }
+  catch { status("The browser blocked the clipboard. Select the Fit tab text and copy it by hand."); }
+});
+$("report").addEventListener("click", () => {
+  const a = document.createElement("a");
+  a.href = "/report.txt"; a.download = "reg_report.txt"; a.click();
+});
+
+document.querySelectorAll("nav button").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll("nav button, section").forEach(x => x.classList.remove("on"));
+  b.classList.add("on"); $(b.dataset.tab).classList.add("on");
+}));
+
+function showAgent() {
+  const url = $("agentUrl").value.trim();
+  if (!url) return;
+  $("agentFrame").src = url;
+  try { localStorage.setItem("agentUrl", url); } catch {}
+}
+$("showAgent").addEventListener("click", showAgent);
+try { const u = localStorage.getItem("agentUrl"); if (u) { $("agentUrl").value = u; showAgent(); } } catch {}
+</script>
+</body>
+</html>
