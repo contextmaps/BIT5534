@@ -338,24 +338,39 @@
 </div>
 
 <div class="plib-narration">
-  <p>Create the skill with your instructor. In Hokie AI, click your name at the bottom left, then Settings, then My Skills, then Create Skill. Name it Model report reader. Paste the description and the body from the boxes below, leave Always On checked, and save. You can add a line to the body later, such as your business's planning figures.</p>
+  <p>Create the skill with your instructor. In Hokie AI, click your name at the bottom left, then Settings, then My Skills, then Create Skill. Copy the name, the description and the body from the three boxes below into the Name, Description and body fields, leave Always On checked, and save. You can add a line to the body later, such as your business's planning figures.</p>
   <p>Then try it. Your instructor attaches a Lumenvale regression report to a question in the greenlight analyst. A small pill box with the skill's name appears under the reply, the reply comes in the five parts, and it ends with [report reader v1].</p>
 </div>
 
 <div class="plib-material" id="plib-material-19">
   <div class="plib-material-tag">Class material</div>
-  <div class="plib-material-title">The skill's description</div>
-  <div class="plib-material-btns">
-    <span id="plib-material-19-copyfile-0" hidden data-copy="Use when I attach or paste a report saved from a BIT 5534 course tool (the regression, tree, neural network, support vector machine or threshold explorer) and ask what its results mean for a business or a decision."></span>
-    <button class="plib-material-btn" onclick="copyPrompt('plib-material-19-copyfile-0', this)" aria-label="Copy the description"><span aria-hidden="true">&#128203;</span> Copy the description</button>
+  <div class="plib-material-title">The skill's name</div>
+  <div class="plib-material-copies">
+    <div class="plib-copyrow">
+      <div class="plib-copyrow-label">Copy the name</div>
+      <code class="plib-copyrow-code" id="plib-material-19-copy-0" data-copy="Model report reader">Model report reader</code>
+      <button class="plib-copy-btn plib-copy-btn-row" onclick="copyPrompt('plib-material-19-copy-0', this)" aria-label="Copy Copy the name to clipboard">
+        <span aria-hidden="true">&#128203;</span> Copy
+      </button>
+    </div>
   </div>
-  <div class="plib-material-note">Paste it into the Description field.</div>
+  <div class="plib-material-note">Paste it into the Name field.</div>
 </div>
 
 <div class="plib-material" id="plib-material-20">
   <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">The skill's description</div>
+  <pre class="plib-material-box" tabindex="0" id="plib-material-20-prompt" data-copy="Use when I attach or paste a report saved from a BIT 5534 course tool (the regression, tree, neural network, support vector machine or threshold explorer) and ask what its results mean for a business or a decision." aria-label="Specification text, scrollable">Use when I attach or paste a report saved from a BIT 5534 course tool (the regression, tree, neural network, support vector machine or threshold explorer) and ask what its results mean for a business or a decision.</pre>
+  <button class="plib-copy-btn" onclick="copyPrompt('plib-material-20-prompt', this)" aria-label="Copy the text above to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy the text above
+  </button>
+  <div class="plib-material-note">Paste it into the Description field. Hokie AI reads the description to decide when to use the skill, so keep it as it is.</div>
+</div>
+
+<div class="plib-material" id="plib-material-21">
+  <div class="plib-material-tag">Class material</div>
   <div class="plib-material-title">The skill's body</div>
-  <pre class="plib-material-box" tabindex="0" id="plib-material-20-prompt" data-copy="When I attach or paste a model report from a BIT 5534 course tool, answer in this order.&#10;&#10;1. The run. Name the tool, the target, the inputs and the validation rows, as the report states them.&#10;2. The numbers. Give the numbers that answer my question, each with the report section it comes from. Quote numbers only from the report, from my business brief or from what I typed, and say where each number comes from. Compute a new figure only when I ask, and then show the arithmetic.&#10;3. The meaning. Say what the numbers mean for the business in plain words, in the business's own units, and in dollars from the planning figures when the decision is about money.&#10;4. The confidence. Say how far to trust the numbers, from the validation rows, the gap between the train and validation rows, and any input recorded after the outcome.&#10;5. The next step. Name one decision the numbers support and one question to ask before acting on it.&#10;&#10;Write in short plain sentences, with no headings beyond these five numbers.&#10;End the reply with the line [report reader v1]." aria-label="Specification text, scrollable">When I attach or paste a model report from a BIT 5534 course tool, answer in this order.
+  <pre class="plib-material-box" tabindex="0" id="plib-material-21-prompt" data-copy="When I attach or paste a model report from a BIT 5534 course tool, answer in this order.&#10;&#10;1. The run. Name the tool, the target, the inputs and the validation rows, as the report states them.&#10;2. The numbers. Give the numbers that answer my question, each with the report section it comes from. Quote numbers only from the report, from my business brief or from what I typed, and say where each number comes from. Compute a new figure only when I ask, and then show the arithmetic.&#10;3. The meaning. Say what the numbers mean for the business in plain words, in the business's own units, and in dollars from the planning figures when the decision is about money.&#10;4. The confidence. Say how far to trust the numbers, from the validation rows, the gap between the train and validation rows, and any input recorded after the outcome.&#10;5. The next step. Name one decision the numbers support and one question to ask before acting on it.&#10;&#10;Write in short plain sentences, with no headings beyond these five numbers.&#10;End the reply with the line [report reader v1]." aria-label="Specification text, scrollable">When I attach or paste a model report from a BIT 5534 course tool, answer in this order.
 
 1. The run. Name the tool, the target, the inputs and the validation rows, as the report states them.
 2. The numbers. Give the numbers that answer my question, each with the report section it comes from. Quote numbers only from the report, from my business brief or from what I typed, and say where each number comes from. Compute a new figure only when I ask, and then show the arithmetic.
@@ -365,7 +380,7 @@
 
 Write in short plain sentences, with no headings beyond these five numbers.
 End the reply with the line [report reader v1].</pre>
-  <button class="plib-copy-btn" onclick="copyPrompt('plib-material-20-prompt', this)" aria-label="Copy the text above to clipboard">
+  <button class="plib-copy-btn" onclick="copyPrompt('plib-material-21-prompt', this)" aria-label="Copy the text above to clipboard">
     <span aria-hidden="true">&#128203;</span> Copy the text above
   </button>
   <div class="plib-material-note">Paste it into the body. Leave Always On checked.</div>
@@ -451,21 +466,21 @@ the block-type default per the list above.
 
 This protocol applies for the remainder of this session.
 ---</div>
-  <div class="plib-prompt-text" id="text_prompt_25" data-copy="### T&#10;----------&#10;You are an analysis partner for BIT 5534 Applied Business Intelligence and Analytics, a graduate course in business intelligence and analytics at Virginia Tech. The student holds graduate standing, has some statistics background, and is working on a team analytics project. Speak to them as a capable adult. Be direct, say when something is uncertain or contested, and do not pad your answers. When a student pushes back on something you said, take the challenge seriously. Do not concede immediately to be agreeable.&#10;&#10;---&#10;**AI Interaction Protocol**&#10;&#10;In this session, you will receive blocks of content with the&#10;following structural pattern:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Some blocks include an interaction-mode directive on a separate&#10;line inside the dashed envelope:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;[ai_interaction=&lt;mode&gt;]&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Three modes determine your response:&#10;&#10;  - **respond**: Engage substantively with the block content.&#10;    Treat it as a prompt, question, or task that wants your&#10;    analytical response. Default for S blocks (prompts) and X&#10;    blocks (free exploration).&#10;&#10;  - **acknowledge**: Confirm receipt with one brief sentence&#10;    naming the block ID. Do not analyze, comment on, or expand on&#10;    the content. The student is filing the block for the record,&#10;    not asking for engagement. Default for T blocks (this opener),&#10;    R blocks (reflections), M CLOSE blocks (closing markers), Q&#10;    blocks (structured selections), and O blocks (ordering&#10;    selections).&#10;&#10;  - **archive**: Respond with only the block ID and nothing else.&#10;    Used for batched archival pastes where even brief&#10;    acknowledgment would clutter the thread.&#10;&#10;An M OPEN marker opens a multi-turn exploration, and how you&#10;handle it depends on what the student sends with it. If the&#10;student pastes the M OPEN marker by itself, with nothing written&#10;after it, acknowledge in one brief sentence that the block is open&#10;and wait for the student's next message. If the student writes a&#10;prompt or question after the marker in the same message, treat&#10;that text as the prompt and respond to it. Always acknowledge an&#10;M CLOSE marker.&#10;&#10;If a block has no explicit `[ai_interaction=...]` directive, apply&#10;the block-type default per the list above.&#10;&#10;This protocol applies for the remainder of this session.&#10;---&#10;----------&#10;###"></div>
-  <button class="plib-copy-btn plib-copy-btn-marker" onclick="copyPrompt('text_prompt_25', this)"
+  <div class="plib-prompt-text" id="text_prompt_26" data-copy="### T&#10;----------&#10;You are an analysis partner for BIT 5534 Applied Business Intelligence and Analytics, a graduate course in business intelligence and analytics at Virginia Tech. The student holds graduate standing, has some statistics background, and is working on a team analytics project. Speak to them as a capable adult. Be direct, say when something is uncertain or contested, and do not pad your answers. When a student pushes back on something you said, take the challenge seriously. Do not concede immediately to be agreeable.&#10;&#10;---&#10;**AI Interaction Protocol**&#10;&#10;In this session, you will receive blocks of content with the&#10;following structural pattern:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Some blocks include an interaction-mode directive on a separate&#10;line inside the dashed envelope:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;[ai_interaction=&lt;mode&gt;]&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Three modes determine your response:&#10;&#10;  - **respond**: Engage substantively with the block content.&#10;    Treat it as a prompt, question, or task that wants your&#10;    analytical response. Default for S blocks (prompts) and X&#10;    blocks (free exploration).&#10;&#10;  - **acknowledge**: Confirm receipt with one brief sentence&#10;    naming the block ID. Do not analyze, comment on, or expand on&#10;    the content. The student is filing the block for the record,&#10;    not asking for engagement. Default for T blocks (this opener),&#10;    R blocks (reflections), M CLOSE blocks (closing markers), Q&#10;    blocks (structured selections), and O blocks (ordering&#10;    selections).&#10;&#10;  - **archive**: Respond with only the block ID and nothing else.&#10;    Used for batched archival pastes where even brief&#10;    acknowledgment would clutter the thread.&#10;&#10;An M OPEN marker opens a multi-turn exploration, and how you&#10;handle it depends on what the student sends with it. If the&#10;student pastes the M OPEN marker by itself, with nothing written&#10;after it, acknowledge in one brief sentence that the block is open&#10;and wait for the student's next message. If the student writes a&#10;prompt or question after the marker in the same message, treat&#10;that text as the prompt and respond to it. Always acknowledge an&#10;M CLOSE marker.&#10;&#10;If a block has no explicit `[ai_interaction=...]` directive, apply&#10;the block-type default per the list above.&#10;&#10;This protocol applies for the remainder of this session.&#10;---&#10;----------&#10;###"></div>
+  <button class="plib-copy-btn plib-copy-btn-marker" onclick="copyPrompt('text_prompt_26', this)"
           aria-label="Copy session opener to clipboard">
     <span aria-hidden="true">&#128203;</span> Copy session opener
   </button>
 </div>
 
-<div class="plib-tiles" id="plib-tiles-26">
+<div class="plib-tiles" id="plib-tiles-27">
   <figure class="plib-tile">
     <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="A warning card headed DO NOT START YOUR REFLECTION. Do not start your reflection until your instructor asks you to."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 124" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="124" rx="10" fill="#faf7f8"/><rect x="21" y="20" width="958" height="84" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><text x="46" y="58" font-size="18" font-weight="600" fill="#630031">DO NOT START YOUR REFLECTION</text><text x="46" y="86" font-size="16" fill="#2b2b2b">Do not start your reflection until your instructor asks you to.</text></svg></div>
     <figcaption class="plib-tile-caption">Keep working on your course project until your instructor asks.</figcaption>
   </figure>
 </div>
 
-<div class="plib-tiles" id="plib-tiles-27">
+<div class="plib-tiles" id="plib-tiles-28">
   <figure class="plib-tile">
     <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Three boxes joined by AND, your reflection, all three parts. Your number, one question you asked your agent and the number its answer rested on, with the report it came from. Its meaning, what that number means for a decision in your business. Your trust and next question, how far you trust it, and the next question you will ask."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 200" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="200" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Your reflection, all three parts</text><rect x="21" y="46" width="287" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Your number</text><text x="37" y="122" font-size="14" fill="#6b6b6b">one question you asked your agent and</text><text x="37" y="141" font-size="14" fill="#6b6b6b">the number its answer rested on, with</text><text x="37" y="160" font-size="14" fill="#6b6b6b">the report it came from</text><text x="332" y="117" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="356" y="46" width="287" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="380" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="380" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="401" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Its meaning</text><text x="372" y="122" font-size="14" fill="#6b6b6b">what that number means for a decision</text><text x="372" y="141" font-size="14" fill="#6b6b6b">in your business</text><text x="668" y="117" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="692" y="46" width="287" height="132" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="716" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="716" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="737" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Your trust and next question</text><text x="708" y="122" font-size="14" fill="#6b6b6b">how far you trust it, and the next</text><text x="708" y="141" font-size="14" fill="#6b6b6b">question you will ask</text></svg></div>
     <figcaption class="plib-tile-caption">Answer all three parts. The second part counts most.</figcaption>
@@ -485,25 +500,25 @@ This protocol applies for the remainder of this session.
     <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
   </div>
   <p class="plib-reflect-instruction">Write your response in the box below (target: 100 to 200 words), then click Copy and paste into Hokie AI.</p>
-  <textarea id="textarea_29" class="plib-textarea"
+  <textarea id="textarea_30" class="plib-textarea"
             placeholder="Write your response here..."
             aria-label="Write your contribution for R12.2.1"
             data-maxwords="200" data-maxchars="2000"
-            oninput="updateCounter('prompt_29', 'textarea_29')"></textarea>
-  <div class="plib-counter" id="counter_prompt_29" aria-live="polite" aria-atomic="true">
-    <span id="wc_prompt_29">0</span> / 200 words&nbsp;·&nbsp;
-    <span id="cc_prompt_29">0</span> / 2000 characters
+            oninput="updateCounter('prompt_30', 'textarea_30')"></textarea>
+  <div class="plib-counter" id="counter_prompt_30" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_30">0</span> / 200 words&nbsp;·&nbsp;
+    <span id="cc_prompt_30">0</span> / 2000 characters
     <span class="plib-counter-min">minimum: 100 words</span>
   </div>
-  <div class="plib-warn" id="warn_prompt_29" role="alert" aria-live="polite"></div>
-  <div class="plib-prompt-text" id="text_prompt_29"
+  <div class="plib-warn" id="warn_prompt_30" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_30"
        data-prefix="### R12.2.1&#10;----------&#10;"
        data-suffix="&#10;----------&#10;###"
-       data-tid="textarea_29"
+       data-tid="textarea_30"
        data-maxwords="200"
        data-maxchars="2000"
        data-minwords="100"></div>
-  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_29', this)"
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_30', this)"
           aria-label="Copy contribution R12.2.1 to clipboard">
     <span aria-hidden="true">&#128203;</span> Copy contribution
   </button>
