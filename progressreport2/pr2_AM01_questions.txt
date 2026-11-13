@@ -1,0 +1,89 @@
+PROGRESS REPORT 2, AM01 FERNHOLLOW PHYSICAL THERAPY
+YOUR TEAM'S QUESTIONS
+
+These questions are for your team only. They add to the general questions on the Progress Report 2, Team Submission page. Your team divides both sets among its members as that page explains. Each member takes one share below, and a team of four splits share 5 among its members.
+
+In each item you will find what to fit and save, the question to ask your team's agent, and what to look for in the answer. Ask the question as written or in your own words, and attach the report listed in the same message. Then keep going. Ask follow up questions until you understand the answer and can say what it means for the decision. An item marked Explore holds a direction, and you write the questions.
+
+Some items ask you to add a column to your data file. Open the file in Excel, add the column with the formula described, and save the file as a new .csv under a new name. Keep your original file as it is.
+
+Items marked LIVE DATA use your agent's live data connection. Do these items after your instructor covers the live data connection in class.
+
+YOUR FILES
+fernhollow_courses.csv. Number target: visits_completed. Yes or no target: missed_next. Text column: front_desk_notes. Validation column: Validation.
+
+SHARE 1, THE REMINDER (decision 1 in your brief)
+
+1.1 A call or a text
+Fit and save: the logistic regression of missed_next in reg_explorer.py, with the inputs your team used in progress report 1.
+Ask: "How much lower is the chance of a miss after a phone call than after a text, with the other inputs held fixed? A call costs about 4 dollars and a text about 10 cents, and a missed visit loses 115 dollars. For a patient with what chance of a miss does a call pay for itself?"
+Look for: the estimate for Phone call against Text, turned from odds into a change in the chance of a miss; the break even chance, with the arithmetic shown; the limit in your brief that reminders were not assigned at random.
+
+1.2 No reminder at all
+Fit and save: the same report as 1.1.
+Ask: "How much higher is the chance of a miss when the front desk sends no reminder? How many texts does one prevented miss pay for, and is there any patient a 10 cent text is not worth sending to?"
+Look for: the estimate for No reminder; the arithmetic for one prevented miss against the cost of a text.
+
+1.3 Explore: the time of day
+next_visit_slot is a lever. Fit the tree of missed_next with next_visit_slot and patient_age among the inputs. Ask the agent which patients miss most in the early morning and evening slots, and whether the front desk should offer them a midday slot or call them instead.
+
+SHARE 2, THE CALL LIST (decision 2)
+
+2.1 Who gets the 15 calls
+Fit and save: the model your team trusts most on missed_next. Press Save probabilities, open the saved file in the threshold explorer with Rows set to your Validation column, and save a threshold report.
+Ask: "Each clinic can make about 15 calls a day. If the front desk calls the patients with the highest predicted chance of a miss, what share of the misses does it reach with the top tenth of patients? What does that list save at 4 dollars a call against 115 dollars a miss?"
+Look for: the lift in the top tenth; the true and false positives at the cutoff that gives that list; the savings, with the arithmetic shown.
+
+2.2 Distance on a wet day
+Add a column: wet_distance, equal to distance_miles times forecast_precip_pct divided by 100. Refit the logistic regression with it.
+Ask: "Compare the report with wet_distance and the report without it. Does distance raise the chance of a miss more when rain or snow is forecast? What does that mean for the call list at the Floyd clinic, which draws patients from a wide rural area?"
+Look for: the estimate for wet_distance and its logworth; whether the validation AUC rose; a concrete change to the call list on a wet day.
+
+2.3 LIVE DATA: tomorrow's call list
+After your instructor covers the live data connection in class, ask the agent to retrieve tomorrow's forecast for Floyd and for Blacksburg, and to say how your team's findings change tomorrow's call list at each clinic.
+Look for: the forecast values with their source and date; a recommendation built on your team's own report numbers.
+
+SHARE 3, DOUBLE BOOKING (decision 3)
+
+3.1 When double booking pays
+Fit and save: the threshold report from item 2.1, or your own.
+Ask: "When we double book a slot and both patients come, we pay about 45 dollars of overtime. When one of them misses, the slot is filled and we lose nothing instead of 115 dollars. At what chance of a miss does double booking pay? How many Validation patients are above that chance, and how many of them missed?"
+Look for: the break even chance, with the arithmetic shown; the threshold explorer set to that chance; the confusion matrix at that cutoff.
+
+3.2 A freezing morning
+Fit and save: the tree of missed_next with forecast_low_f among the inputs.
+Ask: "Is there a split on forecast_low_f in the tree, and at what temperature? Does the chance of a miss rise steadily as the forecast gets colder, or below some temperature?"
+Look for: the split value and the size of the groups on each side; whether the logistic regression's single slope for forecast_low_f misses the pattern.
+
+3.3 LIVE DATA: how many slots tomorrow
+After Tuesday's class, ask the agent for tomorrow's forecast low and chance of rain or snow at each clinic, and how many slots each clinic should double book, from your team's findings in 3.1 and 3.2.
+
+SHARE 4, WAITS, COPAYS AND COMPLETED VISITS (your levers and your number target)
+
+4.1 The cost of a long wait
+Fit and save: the regression and the tree of visits_completed.
+Ask: "What does each extra day between the referral and the first visit cost in completed visits, and in dollars at 115 dollars a visit? Is there a split on days_referral_to_first_visit in the tree, and does the cost start at that point?"
+Look for: the regression slope and the tree's split value; the cost per patient and per 100 patients.
+
+4.2 The copay
+Fit and save: the same reports as 4.1.
+Ask: "Do completed visits fall steadily as the copay rises, or only above some amount? Compare the estimate for copay_usd in the regression with the splits on copay_usd in the tree."
+Look for: a copay amount a manager can use; what the pattern means for the reminder or the call list.
+
+4.3 Explore: self pay patients
+Add a column: selfpay_prescribed, equal to visits_prescribed when insurance_type is Self pay and 0 otherwise. Refit the regression of visits_completed. Ask the agent whether self pay patients finish fewer of their prescribed visits, and what that is worth to the clinic in a year.
+
+SHARE 5, THE NOTES AND THE PATIENTS
+
+5.1 What the front desk writes
+Run text_explorer.py from lec10_1 on front_desk_notes and save the file with the topic columns. Fit the logistic regression of missed_next twice, with the TOPIC columns and without them.
+Ask: "Which topics from the front desk notes raise or lower the chance of a miss, judging by the top words of each topic? How much did the validation AUC change when we added the topics?"
+Look for: each topic named by its words; the change in validation AUC; the limit in your brief on conclusions about a patient's health.
+
+5.2 Age
+Fit and save: the tree of missed_next with patient_age among the inputs.
+Ask: "How does the chance of a miss change across ages, judging by the splits on patient_age? Does it follow a straight line?"
+Look for: the age groups and the share of misses in each; what the pattern means for the reminder policy.
+
+5.3 Explore: patients who stop early
+Pick a group from your reports or the notes, such as patients under 40 with back or neck pain. Ask the agent what your reports say about their completed visits and their misses, and what the clinic should do differently for them.

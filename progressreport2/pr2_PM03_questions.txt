@@ -1,0 +1,88 @@
+PROGRESS REPORT 2, PM03 TASKMEADOW
+YOUR TEAM'S QUESTIONS
+
+These questions are for your team only. They add to the general questions on the Progress Report 2, Team Submission page. Your team divides both sets among its members as that page explains. Each member takes one share below, and a team of four splits share 5 among its members.
+
+In each item you will find what to fit and save, the question to ask your team's agent, and what to look for in the answer. Ask the question as written or in your own words, and attach the report listed in the same message. Then keep going. Ask follow up questions until you understand the answer and can say what it means for the decision. An item marked Explore holds a direction, and you write the questions.
+
+Some items ask you to add a column to your data file. Open the file in Excel, add the column with the formula described, and save the file as a new .csv under a new name. Keep your original file as it is.
+
+Items marked LIVE DATA use your agent's live data connection. Do these items after your instructor covers the live data connection in class.
+
+YOUR FILES
+taskmeadow_projects.csv. Number target: payout_usd. Yes or no target: dispute. Text column: client_brief. Validation column: Validation.
+
+SHARE 1, THE ESCROW HOLD (decision 1 in your brief)
+
+1.1 Cross border payments
+Add a column: xborder_bank, equal to 1 when cross_border is Yes and payment_method is Bank transfer, and 0 otherwise. Fit the logistic regression of dispute in reg_explorer.py with it.
+Ask: "Do cross border projects paid by bank transfer dispute more than other projects, with the other inputs held fixed? How much higher is their chance of a dispute?"
+Look for: the estimate for xborder_bank turned into a chance of a dispute; whether the validation AUC rose over the model without it.
+
+1.2 Is a longer hold worth it
+Fit and save: the same report as 1.1.
+Ask: "Holding a cross border payment 7 more days costs about 1 percent of its value. A dispute costs about 140 dollars of staff time plus the 12 percent fee on the refunded share. For a 1,000 dollar project, at what chance of a dispute does the longer hold pay? Our brief gives no figure for how many disputes a hold prevents, so show the answer for a quarter and for a half."
+Look for: two break even chances with the arithmetic shown; the agent saying what it cannot know from the brief.
+
+1.3 LIVE DATA: today's rates
+After your instructor covers the live data connection in class, ask the agent to retrieve today's rates for INR, PHP, PLN and BRL, and to say how much of a cross border payment Taskmeadow should hold this week, from your findings in 1.1 and 1.2.
+
+SHARE 2, THE EARLY CHECK (decision 2)
+
+2.1 Which projects get a check
+Fit and save: the model your team trusts most on dispute. Press Save probabilities, open the file in the threshold explorer with Rows set to your Validation column, and save a threshold report.
+Ask: "An early check costs about 12 dollars and prevents about a third of the disputes it catches. At what predicted chance of a dispute does a check pay, for a project of a typical budget? How many Validation projects are above that chance, and how many of them disputed?"
+Look for: the break even chance, with the arithmetic shown; the confusion matrix at that cutoff.
+
+2.2 Clients with a history
+Fit and save: the tree of dispute with client_past_disputes among the inputs.
+Ask: "How much does each earlier dispute raise a client's chance of another? Does the risk keep rising with each one, or does it level off?"
+Look for: the splits on client_past_disputes and the share of disputes in each group.
+
+2.3 Explore: freelancer ratings
+Ask the agent whether a lower freelancer rating raises the chance of a dispute steadily or below some rating, using the splits on freelancer_rating, and whether the early check should look at the rating.
+
+SHARE 3, THE REVISION RULE (decision 3)
+
+3.1 Revisions and payout
+Fit and save: the regression and the tree of payout_usd.
+Ask: "How does payout change with the number of revisions, with the budget held fixed? Is there a split on revisions_requested past which the extra revisions are unpaid work?"
+Look for: the estimate and the split value; what the extra revisions cost a freelancer.
+
+3.2 Revisions and disputes
+Fit and save: the logistic regression of dispute.
+Ask: "How much does each revision raise the chance of a dispute? Would capping free revisions at three pay for itself, at 140 dollars a dispute?"
+Look for: the estimate; the arithmetic for the cap, with the agent stating what it assumes about clients who would have asked for more.
+
+3.3 Explore: rush projects with many revisions
+Add a column that multiplies revisions_requested by a flag for a deadline under 7 days. Refit the logistic regression of dispute and ask the agent whether rush projects with many revisions dispute more than either one alone.
+
+SHARE 4, DEADLINES AND BUDGETS
+
+4.1 Rush work
+Add a column: budget_per_day, equal to budget_usd divided by deadline_days. Refit the logistic regression of dispute with it.
+Ask: "Do projects with a large budget for a short deadline dispute more? When should Taskmeadow warn a client that a deadline is short for the budget?"
+Look for: the estimate for budget_per_day; a warning rule; the limit in your brief that a short deadline does not cause a dispute by itself.
+
+4.2 Categories
+Fit and save: the logistic regression of dispute with category among the inputs.
+Ask: "Do some categories of work dispute more, with the other inputs held fixed? If the estimates are small, say so."
+Look for: the category estimates and their logworth.
+
+4.3 Explore: the money in disputes
+With your dispute and payout reports attached, ask the agent what disputes cost Taskmeadow in a year of 5,000 projects, and which lever in your reports would cut that cost most.
+
+SHARE 5, THE CLIENT'S BRIEF
+
+5.1 What clients write
+Run text_explorer.py from lec10_1 on client_brief and save the file with the topic columns. Fit the logistic regression of dispute twice, with the TOPIC columns and without them.
+Ask: "Which topics in the client briefs go with a dispute, judging by the top words of each topic? How much did the validation AUC change when we added the topics?"
+Look for: each topic named by its words; the change in validation AUC.
+
+5.2 A vague brief
+Fit and save: the same report with the TOPIC columns.
+Ask: "How much does a vague brief raise the chance of a dispute? Should the early check read the brief, and what would it look for?"
+Look for: the topic that looks vague, by its words, with its estimate; a concrete check.
+
+5.3 Explore: countries
+Ask the agent what your reports hold about freelancers from different countries, and check that it keeps to the limit in your brief about skill and country.

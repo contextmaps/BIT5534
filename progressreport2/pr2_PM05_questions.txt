@@ -1,0 +1,88 @@
+PROGRESS REPORT 2, PM05 LADLEWICK SANDWICH CO.
+YOUR TEAM'S QUESTIONS
+
+These questions are for your team only. They add to the general questions on the Progress Report 2, Team Submission page. Your team divides both sets among its members as that page explains. Each member takes one share below, and a team of four splits share 5 among its members.
+
+In each item you will find what to fit and save, the question to ask your team's agent, and what to look for in the answer. Ask the question as written or in your own words, and attach the report listed in the same message. Then keep going. Ask follow up questions until you understand the answer and can say what it means for the decision. An item marked Explore holds a direction, and you write the questions.
+
+Some items ask you to add a column to your data file. Open the file in Excel, add the column with the formula described, and save the file as a new .csv under a new name. Keep your original file as it is.
+
+Items marked LIVE DATA use your agent's live data connection. Do these items after your instructor covers the live data connection in class.
+
+YOUR FILES
+ladlewick_sites.csv. Number target: annual_sales_usd. Yes or no target: closed_2yr. Text column: consultant_notes. Validation column: Validation.
+
+SHARE 1, THE SITE APPROVAL (decision 1 in your brief)
+
+1.1 Expected sales
+Fit and save: the regression of annual_sales_usd in reg_explorer.py, with the inputs your team used in progress report 1.
+Ask: "For a freestanding site on a road with 25,000 cars a day, one drive through lane, 40 seats and the nearest competitor a mile away, what sales does our regression expect? How far off could that estimate be, judging by the validation numbers?"
+Look for: the estimate built from the report with the arithmetic shown; a range or a caution from the validation R squared.
+
+1.2 The risk of closing
+Fit and save: the model your team trusts most on closed_2yr. Press Save probabilities, open the file in the threshold explorer with Rows set to your Validation column, and save a threshold report.
+Ask: "A location that closes within two years costs Ladlewick about 45,000 dollars, and Ladlewick earns 6 percent of a location's sales as royalties. At what chance of closing should the committee reject a site with expected sales of 800,000 dollars? How many Validation sites are above that chance?"
+Look for: the break even chance with the arithmetic shown, over the two years; the counts at that cutoff.
+
+1.3 LIVE DATA: the trade area
+After your instructor covers the live data connection in class, pick a real address for a candidate site in one of your states. Ask the agent to look up the income and population around it, and to say what your team's sales and closing reports mean for that site.
+
+SHARE 2, THE FORMAT (decision 2)
+
+2.1 When a lane pays
+Add a column: lanes_traffic, equal to drive_through_lanes times street_traffic_daily divided by 1,000. Refit the regression of annual_sales_usd with it.
+Ask: "Is a drive through lane worth more on a busy road? A lane adds about 90,000 dollars to the cost of building. On what traffic does a lane pay for itself in royalties for Ladlewick, and in profit for the franchisee at 12 percent of sales?"
+Look for: the estimate for lanes_traffic and whether the validation R squared rose; the break even traffic, with the arithmetic shown.
+
+2.2 Traffic
+Fit and save: the tree of annual_sales_usd.
+Ask: "Do sales keep rising with street traffic, or level off past some count?"
+Look for: the splits on street_traffic_daily and the sales in each group.
+
+2.3 Explore: seats
+Ask the agent what each extra seat is worth in sales, and whether your team has evidence for a larger or smaller dining room for a drive through site.
+
+SHARE 3, THE RENT CEILING (decision 3)
+
+3.1 Rent as a share of sales
+Add a column: rent_share, equal to rent_per_sqft_usd times square_feet divided by annual_sales_usd. Fit the tree of closed_2yr with it among the inputs.
+Ask: "Is there a split on rent_share, and at what share does the chance of closing climb? What rent per square foot can a site with expected sales of 800,000 dollars carry?"
+Look for: the split value; the rent ceiling, with the arithmetic shown.
+
+3.2 Rent and the franchisee
+Fit and save: the same tree.
+Ask: "A franchisee keeps about 12 percent of sales as profit before rent. At the rent share you found, how much is left for the franchisee?"
+Look for: the arithmetic; what that means for the committee.
+
+3.3 Explore: actual sales against expected sales
+rent_share uses each location's actual sales, which the committee does not have when it approves a new site. Ask the agent why the column is fine for understanding closings but not for approving a site, and how the committee could use the sales model's estimate in its place.
+
+SHARE 4, COMPETITION AND INCOME
+
+4.1 A competitor nearby
+Fit and save: the regression and the tree of annual_sales_usd.
+Ask: "How much does a competitor nearby cost in sales? Is there a split on nearest_competitor_miles, and at what distance?"
+Look for: the estimate and the split value; the loss in sales and in royalties.
+
+4.2 Income
+Fit and save: the same tree.
+Ask: "Do sales rise with the trade area's median income, or peak at some income and fall? What does that mean for where Ladlewick looks for sites?"
+Look for: the splits on trade_area_median_income_usd; the limit in your brief that income stands in for many things.
+
+4.3 Explore: site types
+Ask the agent how freestanding, strip center, travel plaza and downtown sites compare in sales and in closings, with the other inputs held fixed.
+
+SHARE 5, THE NOTES AND THE STATES
+
+5.1 What the consultants write
+Run text_explorer.py from lec10_1 on consultant_notes and save the file with the topic columns. Fit the regression of annual_sales_usd twice, with the TOPIC columns and without them.
+Ask: "Which topics in the consultant notes go with higher or lower sales, judging by the top words of each topic? How much did the validation R squared change when we added the topics?"
+Look for: each topic named by its words; the change in validation R squared; whether a topic describes visibility or access.
+
+5.2 The states
+Fit and save: the logistic regression of closed_2yr with state among the inputs.
+Ask: "Do sites in one state close more often, with the other inputs held fixed? If the estimates are small, say so."
+Look for: the state estimates and their logworth.
+
+5.3 Explore: sites to reject
+With your sales and closing reports attached, ask the agent to describe the kind of site the committee should reject, in terms a real estate committee would use.

@@ -1,0 +1,88 @@
+PROGRESS REPORT 2, PM04 BRIGHTRAFTER SOLAR
+YOUR TEAM'S QUESTIONS
+
+These questions are for your team only. They add to the general questions on the Progress Report 2, Team Submission page. Your team divides both sets among its members as that page explains. Each member takes one share below, and a team of four splits share 5 among its members.
+
+In each item you will find what to fit and save, the question to ask your team's agent, and what to look for in the answer. Ask the question as written or in your own words, and attach the report listed in the same message. Then keep going. Ask follow up questions until you understand the answer and can say what it means for the decision. An item marked Explore holds a direction, and you write the questions.
+
+Some items ask you to add a column to your data file. Open the file in Excel, add the column with the formula described, and save the file as a new .csv under a new name. Keep your original file as it is.
+
+Items marked LIVE DATA use your agent's live data connection. Do these items after your instructor covers the live data connection in class.
+
+YOUR FILES
+brightrafter_leads.csv. Number target: quoted_value_usd. Yes or no target: signed. Text column: call_notes. Validation column: Validation.
+
+SHARE 1, THE FOLLOW UP SPEED (decision 1 in your brief)
+
+1.1 What a day costs
+Fit and save: the logistic regression of signed in reg_explorer.py, with the inputs your team used in progress report 1.
+Ask: "How much does each day before the first call lower the chance of signing, with the other inputs held fixed? Brightrafter earns about 18 percent of a contract. For a lead with a typical quote, what does each day of delay cost in expected margin?"
+Look for: the estimate turned into chances of signing; the cost of a day with the arithmetic shown.
+
+1.2 The first days
+Fit and save: the tree of signed with days_to_first_call among the inputs.
+Ask: "Does the chance of signing fall steadily with each day, or fastest in the first days? Calling every lead within a day takes an extra salesperson at about 4,000 dollars a month. Is that worth it?"
+Look for: the splits on days_to_first_call; the monthly arithmetic, with the number of leads a month stated as an assumption.
+
+1.3 Explore: who gets called first
+Your brief warns that salespeople may call promising leads first. Ask the agent how that would bias the estimate for days_to_first_call, and what Brightrafter could do to learn what speed is really worth.
+
+SHARE 2, THE HOME VISIT (decision 2)
+
+2.1 Which leads get a visit
+Fit and save: the model your team trusts most on signed. Press Save probabilities, open the file in the threshold explorer with Rows set to your Validation column, and save a threshold report. Attach the regression of quoted_value_usd as well.
+Ask: "A home visit costs about 240 dollars. At 18 percent margin on a typical quote, at what chance of signing does a visit pay? Our brief gives no figure for how much a visit raises the chance of signing, so show the answer for a visit that adds 5 points and one that adds 10 points. How many Validation leads are above each?"
+Look for: two break even chances with the arithmetic shown; the counts at each cutoff.
+
+2.2 Credit bands
+Fit and save: the tree of signed with credit_band among the inputs.
+Ask: "Do leads with Fair or Poor credit sign far less often? Should they receive a visit?"
+Look for: the split on credit_band and the share of signed leads on each side.
+
+2.3 LIVE DATA: sunlight
+After your instructor covers the live data connection in class, ask the agent to retrieve the week's solar radiation for your five counties, and to say whether it should change which leads receive a visit.
+
+SHARE 3, THE FINANCING OFFER (decision 3)
+
+3.1 Credit and signing
+Fit and save: the logistic regression of signed.
+Ask: "How much does each credit band change the chance of signing, with the other inputs held fixed? What does that say about which homeowners need financing to sign?"
+Look for: the credit band estimates; the agent keeping to the limit in your brief on a homeowner's finances.
+
+3.2 Weak credit and a valuable home
+Add a column: weak_credit_value, equal to home_value_usd divided by 1,000 when credit_band is Fair or Poor and 0 otherwise. Refit the logistic regression of signed.
+Ask: "Do homeowners with weak credit and a valuable home sign more often than others with weak credit? What financing would you offer them?"
+Look for: the estimate for the new column; the agent saying that the brief gives no financing rates.
+
+3.3 Explore: the size of the system
+Ask the agent whether larger systems sign less often, using your quote and signing reports together, and whether financing should depend on the size of the system.
+
+SHARE 4, THE QUOTE (your number target)
+
+4.1 The bill and the roof
+Fit and save: the regression and the tree of quoted_value_usd.
+Ask: "How much does the monthly bill add to the quote, and how much does the roof area add? Which one limits the system for most homes, judging by the splits in the tree?"
+Look for: both estimates; splits that show the roof capping the system.
+
+4.2 Shade
+Fit and save: the same tree.
+Ask: "Does the quote fall steadily with shading_pct, or past some level of shade? How much smaller is the system on a shaded roof?"
+Look for: the split value; the drop in dollars.
+
+4.3 Explore: facing south
+Ask the agent what a south facing roof adds to the quote and to the chance of signing, and whether the sales team should favor those leads.
+
+SHARE 5, THE LEADS AND THE NOTES
+
+5.1 Lead sources
+Fit and save: the logistic regression of signed.
+Ask: "Which lead source signs most often, with the other inputs held fixed? A door to door lead costs about 60 dollars to find and a website lead about 35. Which source pays for itself?"
+Look for: the source estimates; cost per signed contract for each source, with the arithmetic shown.
+
+5.2 Door to door and the bill
+Add a column: door_bill, equal to monthly_bill_usd when lead_source is Door to door and 0 otherwise. Refit the logistic regression of signed.
+Ask: "Are door to door leads worth more when the bill is high? Where should the canvassers knock?"
+Look for: the estimate for door_bill and whether the validation AUC rose.
+
+5.3 Explore: the call notes
+Run text_explorer.py from lec10_1 on call_notes, save the file with the topic columns, and refit the model of signed with them. Ask the agent which topics go with signing, judging by their top words, and how much the validation AUC changed.

@@ -1,0 +1,88 @@
+PROGRESS REPORT 2, AM03 PLUMTABLE KITCHEN KITS
+YOUR TEAM'S QUESTIONS
+
+These questions are for your team only. They add to the general questions on the Progress Report 2, Team Submission page. Your team divides both sets among its members as that page explains. Each member takes one share below, and a team of four splits share 5 among its members.
+
+In each item you will find what to fit and save, the question to ask your team's agent, and what to look for in the answer. Ask the question as written or in your own words, and attach the report listed in the same message. Then keep going. Ask follow up questions until you understand the answer and can say what it means for the decision. An item marked Explore holds a direction, and you write the questions.
+
+Some items ask you to add a column to your data file. Open the file in Excel, add the column with the formula described, and save the file as a new .csv under a new name. Keep your original file as it is.
+
+Items marked LIVE DATA use your agent's live data connection. Do these items after your instructor covers the live data connection in class.
+
+YOUR FILES
+plumtable_subscribers.csv. Number target: spend_next_quarter_usd. Yes or no target: cancels_90d. Text column: last_service_note. Validation column: Validation.
+
+SHARE 1, THE PRICE INCREASE (decision 1 in your brief)
+
+1.1 Five percent or ten
+Fit and save: the logistic regression of cancels_90d in reg_explorer.py, with the inputs your team used in progress report 1.
+Ask: "How much does the chance of cancelling rise with each point of price_increase_pct, with the other inputs held fixed? Compare a 5 percent and a 10 percent increase for a subscriber who spends 400 dollars a quarter. Count the extra margin at 30 percent against the subscribers lost, at 95 dollars to win each one back."
+Look for: the estimate turned from odds into a change in the chance of cancelling; both increases worked through with the arithmetic shown; the limit in your brief that increases were not assigned at random.
+
+1.2 How far the increase can go
+Fit and save: the tree of cancels_90d.
+Ask: "Is there a split on price_increase_pct in the tree, and at what increase? What is the largest increase you would advise for next quarter, and should the team hold it back for some subscribers?"
+Look for: the split value and the share of cancellations on each side; a recommendation tied to a group of subscribers.
+
+1.3 LIVE DATA: grocery prices
+After your instructor covers the live data connection in class, ask the agent to retrieve the latest consumer price index for food at home, and to compare how much grocery prices have risen with the increase subscribers seem to accept, judging by your reports.
+
+SHARE 2, THE RETENTION OFFER (decision 2)
+
+2.1 Who gets a free box
+Fit and save: the model your team trusts most on cancels_90d. Press Save probabilities, open the file in the threshold explorer with Rows set to your Validation column, and save a threshold report.
+Ask: "A free box costs 40 dollars and keeps about one in four subscribers who were about to cancel. A subscriber we keep saves 95 dollars of replacement cost. At what predicted chance of cancelling does an offer pay? How many Validation subscribers are above that chance, and how many of them cancelled?"
+Look for: the break even chance, with the arithmetic shown; the confusion matrix at that cutoff; what the offers would cost and save in a quarter.
+
+2.2 Tenure
+Fit and save: the tree of cancels_90d with tenure_weeks among the inputs.
+Ask: "How does the chance of cancelling change with tenure? When in a subscriber's life is the risk highest, and does it fall steadily after that?"
+Look for: the splits on tenure_weeks and the groups they make; when an offer should be sent.
+
+2.3 Explore: skips
+Ask the agent whether a higher skip rate raises the chance of cancelling steadily or above some rate, using the splits on skip_rate in the tree. Then ask whether a subscriber who skips often should receive an offer or be left alone.
+
+SHARE 3, THE DELIVERY FIX (decision 3)
+
+3.1 What a late box costs
+Fit and save: the logistic regression of cancels_90d.
+Ask: "How much does each late delivery in the last 90 days raise the chance of cancelling? Better packaging costs about 2 dollars more per box. How many cancellations would it have to prevent in a quarter to pay for itself?"
+Look for: the estimate for delivery_delays_90d; a break even count with the arithmetic shown.
+
+3.2 Family plans
+Add a column: family_delays, equal to delivery_delays_90d when plan_type is Family for four and 0 otherwise. Refit the logistic regression.
+Ask: "Are family plans hurt more by late boxes than other plans? Where should Plumtable spend first on better packaging and delivery partners?"
+Look for: the estimate for family_delays and whether the validation AUC rose; a recommendation by plan.
+
+3.3 Explore: late boxes and spend
+Fit the regression of spend_next_quarter_usd and ask the agent what late boxes cost in next quarter's spend, beyond the cancellations they bring.
+
+SHARE 4, SPEND AND DISCOUNTS (your levers and your number target)
+
+4.1 What drives spend
+Fit and save: the regression and the tree of spend_next_quarter_usd.
+Ask: "What is the first split in the spend tree, and is it on something tied to cancelling? What does that mean for how we should read the regression's validation R squared?"
+Look for: the first split and the spend on each side; the agent connecting low spend to cancelled subscriptions.
+
+4.2 Discount history
+Fit and save: the tree and the logistic regression of cancels_90d.
+Ask: "Does a heavy discount history make a subscriber more likely to cancel? Is there a split on discount_share, and at what share? What should the marketing team change about how often it offers discounts?"
+Look for: the estimate and the split; the limit in your brief on what a discount causes.
+
+4.3 Explore: the households who spend most
+Ask the agent which subscribers spend most next quarter, from your spend reports, and whether Plumtable should treat them differently in the price increase.
+
+SHARE 5, THE NOTES AND THE RECIPES
+
+5.1 What the service notes say
+Run text_explorer.py from lec10_1 on last_service_note and save the file with the topic columns. Fit the logistic regression of cancels_90d twice, with the TOPIC columns and without them.
+Ask: "Which topics in the service notes go with cancelling, judging by the top words of each topic? How much did the validation AUC change when we added the topics?"
+Look for: each topic named by its words; the change in validation AUC.
+
+5.2 Recipe ratings
+Fit and save: the logistic regression of cancels_90d.
+Ask: "How much does a higher average recipe rating lower the chance of cancelling? How does that compare with a late delivery?"
+Look for: both estimates on the same scale, with the arithmetic shown.
+
+5.3 Explore: where subscribers come from
+Ask the agent whether subscribers who signed up through a friend referral cancel less than those from an ad, with the other inputs held fixed, and what that is worth at 95 dollars to win a subscriber.

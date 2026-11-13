@@ -1,0 +1,88 @@
+PROGRESS REPORT 2, PM07 KETTLE RIDGE MUNICIPAL ELECTRIC
+YOUR TEAM'S QUESTIONS
+
+These questions are for your team only. They add to the general questions on the Progress Report 2, Team Submission page. Your team divides both sets among its members as that page explains. Each member takes one share below, and a team of four splits share 5 among its members.
+
+In each item you will find what to fit and save, the question to ask your team's agent, and what to look for in the answer. Ask the question as written or in your own words, and attach the report listed in the same message. Then keep going. Ask follow up questions until you understand the answer and can say what it means for the decision. An item marked Explore holds a direction, and you write the questions.
+
+Some items ask you to add a column to your data file. Open the file in Excel, add the column with the formula described, and save the file as a new .csv under a new name. Keep your original file as it is.
+
+Items marked LIVE DATA use your agent's live data connection. Do these items after your instructor covers the live data connection in class.
+
+YOUR FILES
+kettleridge_accounts.csv. Number target: usage_kwh. Yes or no target: unpaid_60. Text column: service_call_notes. Validation column: Validation.
+
+SHARE 1, THE PAYMENT PLAN OFFER (decision 1 in your brief)
+
+1.1 The bill jump
+Add a column: bill_jump, equal to usage_kwh divided by usual_monthly_kwh. Fit the logistic regression of unpaid_60 in reg_explorer.py with it.
+Ask: "Does a month's usage far above the household's usual usage raise the chance of an unpaid bill, with the other inputs held fixed? How does that compare with the size of the bill itself?"
+Look for: the estimate for bill_jump against the estimate for usage_kwh; whether the validation AUC rose over the model without it.
+
+1.2 Who gets an offer
+Fit and save: the model your team trusts most on unpaid_60, with bill_jump among the inputs. Press Save probabilities, open the file in the threshold explorer with Rows set to your Validation column, and save a threshold report.
+Ask: "An offer costs about 8 dollars and prevents about a third of the nonpayment it targets. An unpaid bill costs about 40 percent of the bill plus 60 dollars of staff time. For a 250 dollar bill, at what chance of nonpayment does an offer pay? How many Validation households are above it?"
+Look for: the break even chance with the arithmetic shown; the counts at that cutoff.
+
+1.3 LIVE DATA: the coming week
+After your instructor covers the live data connection in class, ask the agent to retrieve the coming week's forecast, and to say which households should receive an offer before the bills go out, from your findings in 1.1 and 4.1.
+
+SHARE 2, THE BUDGET BILLING PUSH (decision 2)
+
+2.1 Budget billing and nonpayment
+Fit and save: the logistic regression of unpaid_60.
+Ask: "How much lower is the chance of an unpaid bill for households on budget billing, with the other inputs held fixed?"
+Look for: the estimate for budget_billing; the limit in your brief that households who choose it may already plan carefully.
+
+2.2 Does budget billing remove the jump
+Add a column: jump_budget, equal to bill_jump when budget_billing is Yes and 0 otherwise. Refit the logistic regression of unpaid_60.
+Ask: "Does a bill jump matter less for households on budget billing? Which households should be invited before winter?"
+Look for: the estimate for jump_budget; a rule for whom to invite.
+
+2.3 Explore: the value of an invitation
+Ask the agent what inviting the riskiest thousand households to budget billing would save in a winter, and which number in its answer it trusts least.
+
+SHARE 3, THE POWER PURCHASE (decision 3)
+
+3.1 Temperature and usage
+Fit and save: the regression and the tree of usage_kwh.
+Ask: "How does usage change with avg_temp_f? Does it fall steadily as the month gets warmer, or does it turn and rise again? Use the splits in the tree."
+Look for: the regression slope against the tree's splits; the temperature where usage is lowest.
+
+3.2 Heating and cooling
+Add two columns: cold_degrees, equal to the larger of 0 and 65 minus avg_temp_f, and warm_degrees, equal to the larger of 0 and avg_temp_f minus 65. Refit the regression of usage_kwh with them in place of avg_temp_f.
+Ask: "How much does each degree below 65 add to usage, and each degree above 65? How much did the validation R squared change?"
+Look for: both estimates and the change in validation R squared.
+
+3.3 Explore: January
+Ask the agent how much power the utility should buy for a January with an average temperature of 30 degrees, from your report in 3.2, at 7 cents a kilowatt hour. Ask it to state the number of households it assumes.
+
+SHARE 4, THE HOMES
+
+4.1 Electric heat in the cold
+Add a column: electric_cold, equal to cold_degrees from 3.2 when heating_type starts with Electric and 0 otherwise. Refit the regression of usage_kwh.
+Ask: "How much more power does an electrically heated home use in a cold month? What does that mean for its bill at 13.2 cents a kilowatt hour?"
+Look for: the estimate for electric_cold; the bill in dollars.
+
+4.2 Older homes
+Fit and save: the tree of usage_kwh with home_age_years among the inputs.
+Ask: "Do older homes use more power in cold months than newer ones of the same size?"
+Look for: splits that combine home age and temperature.
+
+4.3 Explore: home size
+Ask the agent whether usage rises steadily with home_sqft or levels off, using the splits in the tree.
+
+SHARE 5, THE NOTES AND THE HISTORY
+
+5.1 What the service calls say
+Run text_explorer.py from lec10_1 on service_call_notes and save the file with the topic columns. Fit the logistic regression of unpaid_60 twice, with the TOPIC columns and without them.
+Ask: "Which topics in the service call notes go with an unpaid bill, judging by the top words of each topic? How much did the validation AUC change when we added the topics?"
+Look for: each topic named by its words; the change in validation AUC; the limit in your brief on a household's character.
+
+5.2 Past late payments
+Fit and save: the tree of unpaid_60 with past_late_payments among the inputs.
+Ask: "Does each past late payment raise the risk by the same amount, or in steps?"
+Look for: the splits on past_late_payments and the share of unpaid bills in each group.
+
+5.3 Explore: neighborhoods
+Ask the agent whether some neighborhoods carry more risk with the other inputs held fixed, and check that it keeps to the limits in your brief.

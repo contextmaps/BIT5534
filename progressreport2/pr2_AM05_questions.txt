@@ -1,0 +1,87 @@
+PROGRESS REPORT 2, AM05 QUAYHOLM HOME GOODS
+YOUR TEAM'S QUESTIONS
+
+These questions are for your team only. They add to the general questions on the Progress Report 2, Team Submission page. Your team divides both sets among its members as that page explains. Each member takes one share below, and a team of four splits share 5 among its members.
+
+In each item you will find what to fit and save, the question to ask your team's agent, and what to look for in the answer. Ask the question as written or in your own words, and attach the report listed in the same message. Then keep going. Ask follow up questions until you understand the answer and can say what it means for the decision. An item marked Explore holds a direction, and you write the questions.
+
+Some items ask you to add a column to your data file. Open the file in Excel, add the column with the formula described, and save the file as a new .csv under a new name. Keep your original file as it is.
+
+Items marked LIVE DATA use your agent's live data connection. Do these items after your instructor covers the live data connection in class.
+
+YOUR FILES
+quayholm_orders.csv. Number target: landed_cost_per_unit_usd. Yes or no target: late_over_week. Text column: supplier_messages. Validation column: Validation.
+
+SHARE 1, THE SUPPLIER (decision 1 in your brief)
+
+1.1 A cheaper factory or a reliable one
+Fit and save: the logistic regression of late_over_week in reg_explorer.py, with the inputs your team used in progress report 1.
+Ask: "How much does a supplier's on time share lower the chance of a late order, with the other inputs held fixed? Compare two factories for the same product, one with an on time share of 0.95 and one of 0.75. At 2,500 dollars a late order, how much cheaper must the second factory be on an order to be worth the risk?"
+Look for: the estimate for supplier_on_time_share turned into two chances of a late order; the difference in expected cost, with the arithmetic shown.
+
+1.2 Countries
+Fit and save: the same report as 1.1.
+Ask: "Do orders from some countries run late more often, with the other inputs held fixed? Which country would you avoid for an order that must arrive on time?"
+Look for: the estimates for supplier_country and their logworth; an answer that says when a difference is small.
+
+1.3 Explore: the factory price
+Fit the regression of landed_cost_per_unit_usd and ask the agent how much of the landed cost comes from the factory price and how much from freight, for each shipping mode. Then ask which supplier gives the lowest landed cost once the risk of a late order is counted.
+
+SHARE 2, ORDER SIZE AND MODE (decision 2)
+
+2.1 Larger orders
+Fit and save: the regression and the tree of landed_cost_per_unit_usd.
+Ask: "How much does a larger order lower the landed cost per unit? Is there a split on units in the tree, and does the saving level off past some size?"
+Look for: the estimate for units and the split values; the saving per unit in dollars and in margin at 80 cents for each dollar saved.
+
+2.2 Air or ocean
+Fit and save: the tree of landed_cost_per_unit_usd with shipping_mode and product_category among the inputs.
+Ask: "How much more does air freight add to the landed cost per unit, and for which product categories most? When is air worth its cost against the 2,500 dollars of a late order?"
+Look for: the splits that combine mode and category; a rule for when to fly.
+
+2.3 Explore: truck from Mexico
+Ask the agent how truck orders from Mexico compare with ocean orders from Asia in landed cost and in the chance of a late order, from your reports, and when a buyer should move a product to Mexico.
+
+SHARE 3, THE TIMING (decision 3)
+
+3.1 Lead time
+Fit and save: the tree of late_over_week with quoted_lead_time_days among the inputs.
+Ask: "Is there a split on quoted_lead_time_days, and at how many days? How much higher is the chance of a late order below it?"
+Look for: the split value and the share of late orders on each side.
+
+3.2 Lunar New Year
+Add a column: china_before_lny, equal to 1 for orders from China placed in December or January and 0 otherwise. Refit the logistic regression of late_over_week.
+Ask: "Do orders placed with Chinese factories before the Lunar New Year run late more often? When should a buyer place those orders?"
+Look for: the estimate for china_before_lny and whether the validation AUC rose; a month a buyer can act on.
+
+3.3 Explore: the port season
+Add a column for orders placed in October, November or December, refit, and ask the agent whether the fourth quarter port season adds late orders, and how much lead time a buyer should add in those months.
+
+SHARE 4, THE MONEY AND THE CURRENCY
+
+4.1 A week of orders
+With the landed cost report and the late order report attached, ask: "A buyer places about 25 orders a week. What do late orders cost Quayholm in a week at 2,500 dollars each, and what would it be worth to cut them by half? Which lever in our reports would do the most toward that?"
+Look for: the arithmetic shown; a lever named with its estimate.
+
+4.2 One currency
+Save a copy of your data file with only orders from China. Fit the regression of landed_cost_per_unit_usd on it with exchange_rate_at_order among the inputs.
+Ask: "How much does the landed cost per unit change when the yuan moves by 5 percent? What does that mean for a factory's next price?"
+Look for: the estimate and the arithmetic; the limit in your brief on predicting exchange rates.
+
+4.3 LIVE DATA: today's rates
+After your instructor covers the live data connection in class, ask the agent to retrieve today's rates for CNY, INR, EUR and MXN, and to say which factories are likely to raise their prices, from your team's finding in 4.2.
+
+SHARE 5, THE SUPPLIER MESSAGES AND THE PRODUCTS
+
+5.1 What the suppliers write
+Run text_explorer.py from lec10_1 on supplier_messages and save the file with the topic columns. Fit the logistic regression of late_over_week twice, with the TOPIC columns and without them.
+Ask: "Which topics in the messages go with a late order, judging by the top words of each topic? How much did the validation AUC change when we added the topics?"
+Look for: each topic named by its words; the change in validation AUC; whether a buyer could act on a message before the order runs late.
+
+5.2 Product categories
+Fit and save: the regression of landed_cost_per_unit_usd.
+Ask: "Which product categories cost more to land per unit than their factory price alone would lead you to expect?"
+Look for: the estimates for product_category; the agent tying them to freight.
+
+5.3 Explore: one product, two suppliers
+Pick one product category and ask the agent to compare its two most used supplier countries on landed cost, late orders and expected cost per order.

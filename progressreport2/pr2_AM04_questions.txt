@@ -1,0 +1,88 @@
+PROGRESS REPORT 2, AM04 RIDGEWING AIR
+YOUR TEAM'S QUESTIONS
+
+These questions are for your team only. They add to the general questions on the Progress Report 2, Team Submission page. Your team divides both sets among its members as that page explains. Each member takes one share below, and a team of four splits share 5 among its members.
+
+In each item you will find what to fit and save, the question to ask your team's agent, and what to look for in the answer. Ask the question as written or in your own words, and attach the report listed in the same message. Then keep going. Ask follow up questions until you understand the answer and can say what it means for the decision. An item marked Explore holds a direction, and you write the questions.
+
+Some items ask you to add a column to your data file. Open the file in Excel, add the column with the formula described, and save the file as a new .csv under a new name. Keep your original file as it is.
+
+Items marked LIVE DATA use your agent's live data connection. Do these items after your instructor covers the live data connection in class.
+
+YOUR FILES
+ridgewing_flights.csv. Number target: arrival_delay_min. Yes or no target: disrupted. Text column: dispatcher_remarks. Validation column: Validation.
+
+SHARE 1, THE SPARE AIRCRAFT (decision 1 in your brief)
+
+1.1 Weather and disruption
+Fit and save: the logistic regression of disrupted in reg_explorer.py, with the inputs your team used in progress report 1.
+Ask: "How much do the snow forecast and the wind forecast raise the chance of a disruption, with the other inputs held fixed? A spare aircraft costs 6,500 dollars a day and prevents about half the cancellations at its airport, and a cancellation costs 9,000 dollars. How many expected cancellations at an airport make the spare pay?"
+Look for: the estimates for forecast_snow_pct and forecast_wind_mph; the break even count, with the arithmetic shown; the agent noting that disrupted also counts flights more than two hours late.
+
+1.2 Snow and wind together
+Add a column: snow_wind, equal to forecast_snow_pct times forecast_wind_mph divided by 100. Refit the logistic regression with it.
+Ask: "Compare the report with snow_wind and the report without it. Do snow and strong wind together raise disruption more than each one alone?"
+Look for: the estimate for snow_wind and its logworth; whether the validation AUC rose; what that means for choosing an airport.
+
+1.3 LIVE DATA: where to hold the spare tomorrow
+After your instructor covers the live data connection in class, ask the agent to retrieve tomorrow's forecast at your busiest airports, and to say where the spare aircraft should wait, from your team's findings in 1.1 and 1.2.
+
+SHARE 2, THE TURN TIME (decision 2)
+
+2.1 What passes from one flight to the next
+Fit and save: the regression of arrival_delay_min.
+Ask: "How many minutes of the previous flight's delay pass on to this flight's arrival, and how much does each extra minute of scheduled turn reduce the delay? Five more minutes on every turn cost about 1,200 dollars a day across the fleet, and a minute of delay costs about 70 dollars. How much turn is worth adding?"
+Look for: both estimates with their report section; the arithmetic for the turn decision, with the number of flights a day stated as an assumption.
+
+2.2 Delay beyond the turn
+Add a column: excess_delay, equal to the larger of 0 and previous_flight_delay_min minus scheduled_turn_min. Refit the regression of arrival_delay_min with it.
+Ask: "Does excess_delay explain the arrival delay better than previous_flight_delay_min alone? What does it say about how much delay a turn can absorb?"
+Look for: the change in validation R squared; the estimate for excess_delay against the estimate for previous_flight_delay_min.
+
+2.3 Explore: where planners set longer turns
+Your brief warns that planners set longer turns where they expected trouble. Ask the agent how that would bias the estimate for scheduled_turn_min, and what Ridgewing could do to learn what a longer turn is really worth.
+
+SHARE 3, THE LATE EVENING LEGS (decision 3)
+
+3.1 Crew duty time
+Fit and save: the tree of disrupted with crew_duty_hours among the inputs.
+Ask: "Is there a split on crew_duty_hours in the tree, and at how many hours? How much higher is the chance of a disruption above it?"
+Look for: the split value and the share of disrupted flights on each side.
+
+3.2 Delays through the day
+Fit and save: the regression and the tree of arrival_delay_min.
+Ask: "How much do delays grow from the first flight of the day to the last, with the other inputs held fixed? Do they grow steadily with scheduled_departure_hour?"
+Look for: the estimate for scheduled_departure_hour; any split on the hour in the tree.
+
+3.3 Explore: which evening flights to protect
+Save a copy of your data file with only flights at 18:00 or later. Fit a model of disrupted on it, save a threshold report, and ask the agent which evening flights most need a fresh crew. Your brief does not give the cost of a fresh crew, so ask the agent what it would need to know to decide.
+
+SHARE 4, SEASONS, STORMS AND AIRCRAFT
+
+4.1 Storms in winter
+Add a column winter, equal to 1 for flights in December, January or February, and a column winter_storm, equal to forecast_storm_pct times winter. Refit the logistic regression of disrupted.
+Ask: "Do storms disrupt more in winter than in summer? What does that mean for where the spare aircraft waits in each season?"
+Look for: the estimate for winter_storm and whether the validation AUC rose.
+
+4.2 Older aircraft
+Fit and save: the logistic regression of disrupted.
+Ask: "Do older aircraft or one aircraft type disrupt more, with the other inputs held fixed? If the estimates are small, say so."
+Look for: the estimates for aircraft_age_years and aircraft_type; an answer that says so when the differences are small.
+
+4.3 Explore: a bad weather day
+With your disruption and delay reports attached, ask the agent what a typical snowy, windy day costs Ridgewing at one airport, and how much of it a spare aircraft would save. Ask it to show the arithmetic and to say which number it trusts least.
+
+SHARE 5, THE DISPATCHER'S REMARKS AND THE AIRPORTS
+
+5.1 What the dispatchers write
+Run text_explorer.py from lec10_1 on dispatcher_remarks and save the file with the topic columns. Fit the logistic regression of disrupted twice, with the TOPIC columns and without them.
+Ask: "Which topics in the remarks go with a disruption, judging by the top words of each topic? How much did the validation AUC change when we added the topics?"
+Look for: each topic named by its words; the change in validation AUC; whether a topic points to a maintenance problem.
+
+5.2 Remarks and arrival delay
+Fit and save: the regression of arrival_delay_min with the TOPIC columns.
+Ask: "Which topics go with longer arrival delays, and how many minutes do they add?"
+Look for: topics named by their words, with minutes and dollars at 70 dollars a minute.
+
+5.3 Explore: the airports
+Ask the agent which origin airports disrupt most with the other inputs held fixed, and whether that changes where the spare aircraft should wait on a calm day.

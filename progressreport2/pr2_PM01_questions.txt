@@ -1,0 +1,86 @@
+PROGRESS REPORT 2, PM01 QUARRYSTEP RESIDENTIAL
+YOUR TEAM'S QUESTIONS
+
+These questions are for your team only. They add to the general questions on the Progress Report 2, Team Submission page. Your team divides both sets among its members as that page explains. Each member takes one share below, and a team of four splits share 5 among its members.
+
+In each item you will find what to fit and save, the question to ask your team's agent, and what to look for in the answer. Ask the question as written or in your own words, and attach the report listed in the same message. Then keep going. Ask follow up questions until you understand the answer and can say what it means for the decision. An item marked Explore holds a direction, and you write the questions.
+
+Some items ask you to add a column to your data file. Open the file in Excel, add the column with the formula described, and save the file as a new .csv under a new name. Keep your original file as it is.
+
+Items marked LIVE DATA use your agent's live data connection. Do these items after your instructor covers the live data connection in class.
+
+YOUR FILES
+quarrystep_units.csv. Number target: new_rent_usd. Yes or no target: vacant_45. Text column: listing_text. Validation column: Validation.
+
+SHARE 1, THE ASKING RENT (decision 1 in your brief)
+
+1.1 What an increase costs
+Fit and save: the logistic regression of vacant_45 in reg_explorer.py, with the inputs your team used in progress report 1.
+Ask: "How much does each point of asked_increase_pct raise the chance that a unit sits 45 days, with the other inputs held fixed? A day of vacancy costs one thirtieth of the monthly rent plus about 8 dollars. For a 1,200 dollar unit, what does each extra point of increase cost in expected vacancy, against the extra rent over a 12 month lease?"
+Look for: the estimate turned from odds into a change in the chance of a long vacancy; both sides of the trade with the arithmetic shown; the limit in your brief that managers asked larger increases in units they thought would fill.
+
+1.2 Above the market
+Add a column: ask_vs_market, equal to gap_to_market_pct plus asked_increase_pct. Fit the tree of vacant_45 with it among the inputs.
+Ask: "Is there a split on ask_vs_market, and how far above the market can a unit be asked before the chance of a long vacancy climbs?"
+Look for: the split value and the share of long vacancies on each side; a rule a manager can use.
+
+1.3 LIVE DATA: rents in general
+After your instructor covers the live data connection in class, ask the agent to retrieve the latest national rent index, and to say whether, given that index, Quarrystep should ask larger or smaller increases next year than your team would ask from your reports alone.
+
+SHARE 2, THE CONCESSION (decision 2)
+
+2.1 When a free month pays
+Fit and save: the model your team trusts most on vacant_45. Press Save probabilities, open the file in the threshold explorer with Rows set to your Validation column, and save a threshold report.
+Ask: "A free month costs one month's rent spread over the lease. Our brief gives no figure for how much a concession shortens a vacancy. For a 1,200 dollar unit, show the break even chance of a long vacancy for a concession that saves 15 days and for one that saves 30 days, and count the Validation units above each."
+Look for: two break even chances with the arithmetic shown; the counts at each cutoff; the agent saying what it cannot know from the brief.
+
+2.2 The hard months
+Fit and save: the logistic regression and the tree of vacant_45 with lease_end_month among the inputs.
+Ask: "Which months are the hardest to fill, with the other inputs held fixed? Should Quarrystep time leases to end in summer?"
+Look for: the month estimates; a recommendation with its cost.
+
+2.3 Explore: notice
+Ask the agent whether a short notice period raises the chance of a long vacancy steadily or below some number of days, using the splits on notice_days, and what that means for the notice Quarrystep asks of tenants.
+
+SHARE 3, THE RENEWAL OFFER (decision 3)
+
+3.1 What a renewal is worth
+With your vacancy report attached, ask: "A tenant who renews saves the 900 dollar preparation cost and the vacancy. For a typical unit, what is a renewal worth in dollars? How large an increase could Quarrystep offer a renewing tenant and still come out ahead of a turnover?"
+Look for: the expected vacancy cost built from your report, with the arithmetic shown; the agent saying that the data hold turnovers, not renewals, so it cannot say how many tenants accept each offer.
+
+3.2 Renewal by season
+Ask: "Using the month estimates from 2.2, should the renewal offer be larger for leases that end in the hard months?"
+Look for: a renewal policy that changes by month, built from your estimates.
+
+3.3 Explore: the communities
+Ask the agent whether some communities fill slowly with the other inputs held fixed, and whether the renewal offer should differ there.
+
+SHARE 4, WHAT A UNIT RENTS FOR (your number target)
+
+4.1 Size and rent
+Fit and save: the regression and the tree of new_rent_usd.
+Ask: "How much does each extra 100 square feet add to the rent? Does it add the same amount for a small unit as for a large one, judging by the splits on square_feet in the tree?"
+Look for: the slope and the splits; rent per square foot for a small and a large unit.
+
+4.2 Floors and elevators
+Add a column: floor_elevator, equal to floor when elevator_building is Yes and 0 otherwise. Refit the regression of new_rent_usd.
+Ask: "Does a higher floor rent for more only in elevator buildings? How much is each floor worth in each kind of building?"
+Look for: the estimates for floor and floor_elevator; whether the validation R squared rose.
+
+4.3 Explore: amenities
+Ask the agent what a point of amenity_score is worth in rent, and whether the rent it adds covers what Quarrystep would spend to raise it.
+
+SHARE 5, THE LISTINGS AND THE TOWNS
+
+5.1 What the listing says
+Run text_explorer.py from lec10_1 on listing_text and save the file with the topic columns. Fit the regression of new_rent_usd and the logistic regression of vacant_45 with the TOPIC columns.
+Ask: "Which topics in the listings go with a higher rent or a long vacancy, judging by the top words of each topic? How much did the validation numbers change when we added the topics?"
+Look for: topics named by their words; the change in validation R squared and AUC.
+
+5.2 The towns
+Fit and save: the logistic regression of vacant_45 with town among the inputs.
+Ask: "Do units in one town sit longer, with the other inputs held fixed? If the estimates are small, say so."
+Look for: the town estimates and their logworth.
+
+5.3 Explore: a question beyond your data
+Your brief asks what a new building nearby does to vacancy. Ask the agent that question with your reports attached, and check whether it says your data have no column for it and what Quarrystep would need to record.

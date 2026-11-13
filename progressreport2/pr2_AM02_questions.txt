@@ -1,0 +1,88 @@
+PROGRESS REPORT 2, AM02 BRINDLEWOOD MOTORS
+YOUR TEAM'S QUESTIONS
+
+These questions are for your team only. They add to the general questions on the Progress Report 2, Team Submission page. Your team divides both sets among its members as that page explains. Each member takes one share below, and a team of four splits share 5 among its members.
+
+In each item you will find what to fit and save, the question to ask your team's agent, and what to look for in the answer. Ask the question as written or in your own words, and attach the report listed in the same message. Then keep going. Ask follow up questions until you understand the answer and can say what it means for the decision. An item marked Explore holds a direction, and you write the questions.
+
+Some items ask you to add a column to your data file. Open the file in Excel, add the column with the formula described, and save the file as a new .csv under a new name. Keep your original file as it is.
+
+Items marked LIVE DATA use your agent's live data connection. Do these items after your instructor covers the live data connection in class.
+
+YOUR FILES
+brindlewood_vehicles.csv. Number target: sale_price_usd. Yes or no target: unsold_60. Text column: listing_description. Validation column: Validation.
+
+SHARE 1, THE BID (decision 1 in your brief)
+
+1.1 What a car is worth
+Fit and save: the regression of sale_price_usd in reg_explorer.py.
+Ask: "How much value does a car lose with each model year and with each 10,000 miles, with the other inputs held fixed? Using these estimates, what is the most our buyer should bid for a five year old Honda sedan with 60,000 miles and no accident, once its reconditioning cost and about 30 days on the lot at 32 dollars a day are counted?"
+Look for: the estimates and their report section; a bid built step by step with the arithmetic shown; how far off the estimate could be, from the validation numbers.
+
+1.2 Value over the years
+Fit and save: the tree of sale_price_usd, and the regression from 1.1.
+Ask: "Are there splits on model_year and mileage in the tree, and where? Does a car lose value faster in some years than others, or stop losing value for each mile past some mileage? Where would our regression over value or under value a car because of that?"
+Look for: split values from the tree; the kinds of cars the straight line prices worst; what that means for the bid.
+
+1.3 LIVE DATA: a recall before bidding
+After your instructor covers the live data connection in class, pick three cars of different makes from your data file. Ask the agent to look up open recalls for each make, model and model year, and to say how a recall should change the bid, using your report's estimate for open_recall.
+
+SHARE 2, THE LIST PRICE (decision 2)
+
+2.1 Markup and 60 days
+Fit and save: the logistic regression of unsold_60.
+Ask: "How does the chance of passing 60 days change with markup_pct, with the other inputs held fixed? Each day on the lot costs 32 dollars and a car sent back to auction loses about 1,800 dollars. What does each extra point of markup cost in expected losses, against the extra price it brings?"
+Look for: the estimate for markup_pct turned into a change in the chance of passing 60 days; expected losses with the arithmetic shown.
+
+2.2 Where markup starts to cost
+Fit and save: the tree of unsold_60.
+Ask: "Is there a split on markup_pct in the tree, and at what value? What markup would you advise the sales manager to stay under, and how sure can we be from the Validation rows?"
+Look for: the split value and the share of unsold cars on each side; a recommendation with its confidence.
+
+2.3 Explore: photos
+listing_photos is a lever. Ask the agent what one more photo is worth in the chance of selling within 60 days. Then ask whether the estimate could come from the sales team posting more photos of cars that are easier to sell, as your brief warns, and what the team would need to know to tell the two apart.
+
+SHARE 3, THE AGED CAR (decision 3)
+
+3.1 Which cars to cut
+Fit and save: the model your team trusts most on unsold_60. Press Save probabilities, open the file in the threshold explorer with Rows set to your Validation column, and save a threshold report.
+Ask: "A price cut is usually 500 dollars, and a car that passes 60 days loses about 1,800 dollars at auction. Our brief gives no figure for how many cars a cut saves. Show the break even chance of passing 60 days for a cut that saves one car in four, and for one that saves one car in two. How many Validation cars are above each?"
+Look for: two break even chances with the arithmetic shown; the counts at each cutoff in the threshold report; the agent saying what it cannot know from the brief.
+
+3.2 Mileage and time on the lot
+Fit and save: the tree of unsold_60 with mileage among the inputs.
+Ask: "Does the chance of passing 60 days rise steadily with mileage, or past some mileage? Use the splits on mileage."
+Look for: the split value; what it means for which cars to buy and which to cut.
+
+3.3 Explore: trucks and SUVs in winter
+Add a column winter, equal to 1 for cars listed in December, January or February and 0 otherwise, and a column truck_suv, equal to 1 for body_style Truck or SUV. Add a third column that multiplies the two. Refit the logistic regression of unsold_60 and ask the agent whether trucks and SUVs sell faster in winter, and how that should change which cars get a price cut in each season.
+
+SHARE 4, ACCIDENTS, MAKES AND THE MONEY IN THE MARKUP
+
+4.1 The cost of a major accident
+Fit and save: the regression and the tree of sale_price_usd.
+Ask: "How much less does a car with a major accident sell for, with the other inputs held fixed? Is the loss larger for some makes, judging by the splits in the tree?"
+Look for: the estimate for accident_history; any make that appears near an accident split; what that means for the bid.
+
+4.2 Accidents by make
+Add a column for a major accident on one of your two most expensive makes, equal to 1 when accident_history is Major and make is Lexus or BMW. Refit the regression of sale_price_usd.
+Ask: "Does a major accident cost a Lexus or a BMW more than other makes? How much should the buyer take off the bid for such a car?"
+Look for: the estimate for the new column and whether the validation R squared rose; a bid adjustment in dollars.
+
+4.3 Explore: the best markup
+With the regression of sale_price_usd and the logistic regression of unsold_60 both attached, ask the agent what markup gives the most expected profit for a typical car, counting the price the markup brings, 32 dollars a day on the lot and the 1,800 dollar auction loss. Ask it to show the arithmetic and to say which number it trusts least.
+
+SHARE 5, THE LISTINGS AND THE LOTS
+
+5.1 What the listing says
+Run text_explorer.py from lec10_1 on listing_description and save the file with the topic columns. Fit the regression of sale_price_usd and the logistic regression of unsold_60 with the TOPIC columns.
+Ask: "Which topics in the listings go with a higher or lower sale price, and with a car that sits, judging by each topic's top words? How much did the validation numbers change when we added the topics?"
+Look for: topics named by their words; the change in validation R squared and AUC; whether the words describe the car's condition.
+
+5.2 The three lots
+Fit and save: the logistic regression of unsold_60 with lot among the inputs.
+Ask: "Do cars sit longer at one of our lots, with the other inputs held fixed? If the estimates are small, say so."
+Look for: the estimates for lot and their logworth; an answer that says so when the differences are small.
+
+5.3 Explore: an open recall
+Ask the agent what an open recall costs in sale price and in the chance of passing 60 days, from your reports, and whether the buyer should avoid such cars or bid less for them.

@@ -1,0 +1,88 @@
+PROGRESS REPORT 2, PM08 THISTLECREST HOME STORES
+YOUR TEAM'S QUESTIONS
+
+These questions are for your team only. They add to the general questions on the Progress Report 2, Team Submission page. Your team divides both sets among its members as that page explains. Each member takes one share below, and a team of four splits share 5 among its members.
+
+In each item you will find what to fit and save, the question to ask your team's agent, and what to look for in the answer. Ask the question as written or in your own words, and attach the report listed in the same message. Then keep going. Ask follow up questions until you understand the answer and can say what it means for the decision. An item marked Explore holds a direction, and you write the questions.
+
+Some items ask you to add a column to your data file. Open the file in Excel, add the column with the formula described, and save the file as a new .csv under a new name. Keep your original file as it is.
+
+Items marked LIVE DATA use your agent's live data connection. Do these items after your instructor covers the live data connection in class.
+
+YOUR FILES
+thistlecrest_hires.csv. Number target: sales_per_hour_usd. Yes or no target: quit_6mo. Text column: onboarding_answer. Validation column: Validation.
+
+SHARE 1, THE STARTING WAGE (decision 1 in your brief)
+
+1.1 Pay against the market
+Add a column: wage_gap, equal to starting_wage_usd minus local_market_wage_usd. Fit the logistic regression of quit_6mo in reg_explorer.py with it.
+Ask: "How much does each dollar of starting wage above or below the local market change the chance of quitting within six months, with the other inputs held fixed? A dollar more costs about 1,100 dollars a year for an associate working 22 hours, and replacing an associate costs about 1,400 dollars. Is a dollar more worth it?"
+Look for: the estimate for wage_gap turned into chances of quitting; the trade with the arithmetic shown.
+
+1.2 Below the market
+Fit and save: the tree of quit_6mo with wage_gap among the inputs.
+Ask: "Is there a split on wage_gap, and how far below the market can the wage be before quits climb?"
+Look for: the split value and the share of quits on each side; a wage rule by region.
+
+1.3 LIVE DATA: the job market
+After your instructor covers the live data connection in class, ask the agent to retrieve the latest unemployment rate, and to say whether, given that rate, the HR director should raise the starting wage beyond your team's finding in 1.2. New hires leave sooner when jobs are easy to find.
+
+SHARE 2, THE SCHEDULE (decision 2)
+
+2.1 Hours short of the request
+Add a column: hours_short, equal to hours_requested minus hours_scheduled. Fit the tree of quit_6mo with it among the inputs.
+Ask: "Is there a split on hours_short, and how far short of the requested hours can a manager schedule before quits climb?"
+Look for: the split value and the share of quits on each side.
+
+2.2 What a short schedule costs
+Fit and save: the logistic regression of quit_6mo with hours_short.
+Ask: "At 1,400 dollars to replace an associate, what does scheduling a new hire 10 hours short of the request cost in expected quits?"
+Look for: the arithmetic with the estimate.
+
+2.3 Explore: experienced store managers
+Ask the agent whether new hires quit less under managers with longer tenure, using the splits on manager_tenure_years, and what that means for where new hires are placed.
+
+SHARE 3, THE SEASONAL PLAN (decision 3)
+
+3.1 How many to hire
+Fit and save: the model your team trusts most on quit_6mo. Press Save probabilities, open the file in the threshold explorer with Rows set to your Validation column, and save a threshold report.
+Ask: "A store needs 20 seasonal associates still working through the holidays. Using the share of hires who quit in our data, how many should it hire? Which hires does the model rank as most likely to stay?"
+Look for: the arithmetic for the number to hire; the lift in the threshold report; the agent saying it describes a chance for similar hires.
+
+3.2 The commute
+Fit and save: the tree of quit_6mo with commute_miles among the inputs.
+Ask: "Is there a split on commute_miles, and at how many miles do quits climb?"
+Look for: the split value; what it means for hiring for the busy season.
+
+3.3 Explore: a long commute and low pay
+Add a column that multiplies a flag for a commute over your split value by a flag for a wage more than a dollar below the market. Refit and ask the agent whether the two together raise quits more than either alone.
+
+SHARE 4, SALES PER HOUR (your number target)
+
+4.1 Experience
+Fit and save: the regression and the tree of sales_per_hour_usd.
+Ask: "How much more does an experienced associate sell per hour? Does each year of retail experience add the same amount, judging by the splits on prior_retail_years?"
+Look for: the slope and the splits; the extra margin at 38 percent per hour.
+
+4.2 Training for new associates
+Add a column: training_new, equal to training_score when prior_retail_years is below 1 and 0 otherwise. Refit the regression of sales_per_hour_usd.
+Ask: "Does the training score matter more for associates new to retail than for experienced ones?"
+Look for: the estimates for training_score and training_new; whether the validation R squared rose.
+
+4.3 Explore: store types
+Ask the agent how mall, outlet and street front stores compare in sales per hour, and whether that should change where experienced hires are placed.
+
+SHARE 5, THE HIRING CHANNELS AND THE ANSWERS
+
+5.1 Channels
+Fit and save: the logistic regression of quit_6mo and the regression of sales_per_hour_usd.
+Ask: "Which hiring channel brings associates who stay and sell, with the other inputs held fixed?"
+Look for: the channel estimates in both reports; the limit in your brief that a referral does not cause a hire to stay.
+
+5.2 What new hires write
+Run text_explorer.py from lec10_1 on onboarding_answer and save the file with the topic columns. Fit the logistic regression of quit_6mo twice, with the TOPIC columns and without them.
+Ask: "Which topics in the onboarding answers go with quitting, judging by the top words of each topic? How much did the validation AUC change?"
+Look for: each topic named by its words; the change in validation AUC.
+
+5.3 Explore: what a manager can act on
+Ask the agent which topic from 5.2 a store manager could act on in the first week, and what the manager would do.

@@ -1,0 +1,88 @@
+PROGRESS REPORT 2, PM06 CORBEL HALL
+YOUR TEAM'S QUESTIONS
+
+These questions are for your team only. They add to the general questions on the Progress Report 2, Team Submission page. Your team divides both sets among its members as that page explains. Each member takes one share below, and a team of four splits share 5 among its members.
+
+In each item you will find what to fit and save, the question to ask your team's agent, and what to look for in the answer. Ask the question as written or in your own words, and attach the report listed in the same message. Then keep going. Ask follow up questions until you understand the answer and can say what it means for the decision. An item marked Explore holds a direction, and you write the questions.
+
+Some items ask you to add a column to your data file. Open the file in Excel, add the column with the formula described, and save the file as a new .csv under a new name. Keep your original file as it is.
+
+Items marked LIVE DATA use your agent's live data connection. Do these items after your instructor covers the live data connection in class.
+
+YOUR FILES
+corbel_shows.csv. Number target: ticket_revenue_usd. Yes or no target: under_60. Text column: promo_blurb. Validation column: Validation.
+
+SHARE 1, THE TICKET PRICE (decision 1 in your brief)
+
+1.1 Price and the act
+Fit and save: the regression of ticket_revenue_usd in reg_explorer.py, with the inputs your team used in progress report 1.
+Ask: "How does ticket revenue change with the ticket price and with the act's monthly listeners, with the other inputs held fixed? Each person in the room also spends about 14 dollars at the bars. What does a 5 dollar higher price do to the night's total, tickets and bars together?"
+Look for: both estimates; the arithmetic for 5 dollars, with the agent stating how it estimates attendance from revenue.
+
+1.2 A small act
+Add a column: price_small_act, equal to ticket_price_usd when monthly_listeners_thousands is below 200 and 0 otherwise. Refit the regression of ticket_revenue_usd.
+Ask: "Does a higher price hurt small acts more than well known ones? Is our price too high for a small act?"
+Look for: the estimate for price_small_act and whether the validation R squared rose; a price rule by size of act.
+
+1.3 Explore: days on sale
+days_on_sale is a lever. Ask the agent whether shows that go on sale earlier sell more, and whether your team can tell that apart, from these reports, from the venue putting its biggest shows on sale first.
+
+SHARE 2, THE MARKETING BUDGET (decision 2)
+
+2.1 Another 1,000 dollars
+Fit and save: the regression of ticket_revenue_usd.
+Ask: "How much ticket revenue does another 1,000 dollars of marketing add, with the other inputs held fixed? Counting 14 dollars a person at the bars, does it pay?"
+Look for: the estimate; the arithmetic; the limit in your brief that the venue spent more on shows it expected to sell.
+
+2.2 Diminishing returns
+Fit and save: the tree of ticket_revenue_usd with marketing_usd among the inputs.
+Ask: "Does revenue keep rising with marketing, or level off past some amount? What marketing budget would you set for a typical show?"
+Look for: the splits on marketing_usd and the revenue in each group.
+
+2.3 Explore: marketing for small and large acts
+Ask the agent whether another 1,000 dollars of marketing is worth more for a small act or a well known one, from your reports, and where the marketing manager should spend first.
+
+SHARE 3, THE RESCUE (decision 3)
+
+3.1 Which shows to rescue
+Fit and save: the model your team trusts most on under_60. Press Save probabilities, open the file in the threshold explorer with Rows set to your Validation column, and save a threshold report.
+Ask: "Discounted tickets sell at 10 percent off and take some full price sales. An empty seat loses the ticket and 14 dollars at the bars. At what chance of selling under 60 percent should the box office release discounted tickets or add marketing? How many Validation shows are above that chance?"
+Look for: the break even reasoning with the arithmetic shown and the assumptions named; the counts at that cutoff.
+
+3.2 Competing shows on weeknights
+Add a column: weeknight_competition, equal to competing_shows when the show is on Monday to Thursday and 0 otherwise. Refit the logistic regression of under_60.
+Ask: "Does a competing show cost more on a weeknight than on a weekend? Which upcoming shows does that put at risk?"
+Look for: the estimate for weeknight_competition and whether the validation AUC rose.
+
+3.3 LIVE DATA: next week's rain
+After your instructor covers the live data connection in class, ask the agent to retrieve next week's evening forecast for Roanoke, and to say which kinds of shows need a rescue, from your findings in 3.1 and 4.1.
+
+SHARE 4, THE NIGHT ITSELF
+
+4.1 Rain
+Fit and save: the regression of ticket_revenue_usd.
+Ask: "How much does a higher chance of rain on the night lower ticket revenue, with the other inputs held fixed?"
+Look for: the estimate for forecast_rain_pct in dollars for a rainy night.
+
+4.2 Holiday weekends
+Fit and save: the same report.
+Ask: "How much does a holiday weekend add? Should the venue book its biggest acts on those weekends?"
+Look for: the estimate for holiday_weekend; a booking recommendation.
+
+4.3 Explore: genre
+Ask the agent which genres sell under 60 percent most often with the other inputs held fixed, and whether the venue should price or market them differently.
+
+SHARE 5, THE BLURBS AND THE ACTS
+
+5.1 What the blurb says
+Run text_explorer.py from lec10_1 on promo_blurb and save the file with the topic columns. Fit the logistic regression of under_60 twice, with the TOPIC columns and without them.
+Ask: "Which topics in the blurbs go with a show that sells under 60 percent, judging by the top words of each topic? How much did the validation AUC change when we added the topics?"
+Look for: each topic named by its words; the change in validation AUC; whether a topic describes buzz around the act.
+
+5.2 An opening act
+Fit and save: the regression of ticket_revenue_usd.
+Ask: "Does an opening act add ticket revenue, with the other inputs held fixed? If the estimate is small, say so."
+Look for: the estimate and its logworth.
+
+5.3 Explore: selling out
+The room holds 1,500. Ask the agent what happens in your reports for acts large enough to sell out, using the splits on monthly_listeners_thousands, and what that means for pricing those shows.

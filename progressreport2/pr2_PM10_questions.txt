@@ -1,0 +1,88 @@
+PROGRESS REPORT 2, PM10 IRONWEAVE COMPOSITES
+YOUR TEAM'S QUESTIONS
+
+These questions are for your team only. They add to the general questions on the Progress Report 2, Team Submission page. Your team divides both sets among its members as that page explains. Each member takes one share below, and a team of four splits share 5 among its members.
+
+In each item you will find what to fit and save, the question to ask your team's agent, and what to look for in the answer. Ask the question as written or in your own words, and attach the report listed in the same message. Then keep going. Ask follow up questions until you understand the answer and can say what it means for the decision. An item marked Explore holds a direction, and you write the questions.
+
+Some items ask you to add a column to your data file. Open the file in Excel, add the column with the formula described, and save the file as a new .csv under a new name. Keep your original file as it is.
+
+Items marked LIVE DATA use your agent's live data connection. Do these items after your instructor covers the live data connection in class.
+
+YOUR FILES
+ironweave_batches.csv. Number target: tensile_strength_mpa. Yes or no target: rejected. Text column: shift_log. Validation column: Validation.
+
+SHARE 1, THE CURE SETTINGS (decision 1 in your brief)
+
+1.1 Cure time and humidity
+Fit and save: the regression of tensile_strength_mpa in reg_explorer.py, with the inputs your team used in progress report 1.
+Ask: "How much does each extra 10 minutes of cure time add to tensile strength, and how much does each point of humidity take away, with the other inputs held fixed?"
+Look for: both estimates with their report section; what they mean in MPa for a typical batch.
+
+1.2 A longer cure on a humid day
+Add a column humid, equal to 1 when ambient_humidity_pct is above 60, and a column humid_time, equal to humid times cure_time_min. Refit the regression of tensile_strength_mpa and the logistic regression of rejected.
+Ask: "Does a longer cure protect a batch on a humid day? Ten more minutes cost about 120 dollars, and a rejected batch costs about 3,800. How much longer should the cure run when humidity is above 60, and is it worth it?"
+Look for: the estimates for humid and humid_time; the trade with the arithmetic shown.
+
+1.3 LIVE DATA: tomorrow's humidity
+After your instructor covers the live data connection in class, ask the agent to retrieve tomorrow's humidity forecast for the plant, and to recommend tomorrow's cure times from your finding in 1.2.
+
+SHARE 2, THE RESIN SUPPLIER (decision 2)
+
+2.1 The resin ratio
+Fit and save: the regression and the tree of tensile_strength_mpa.
+Ask: "Does strength rise steadily with resin_ratio_pct, or is there a best ratio? Use the splits in the tree."
+Look for: the regression slope against the splits; the ratio that gives the strongest panels.
+
+2.2 Suppliers
+Fit and save: the logistic regression of rejected.
+Ask: "Do batches from one supplier get rejected more often, with the other inputs held fixed? At 3,800 dollars a rejected batch, how much would that supplier have to discount its resin to be worth keeping?"
+Look for: the supplier estimates; the arithmetic, with the number of batches a year stated as an assumption.
+
+2.3 Explore: a bad lot
+Ask the agent whether your team can tell, from these reports, a supplier with a bad lot from a supplier with worse resin overall, and check that it keeps to the limit in your brief about fault.
+
+SHARE 3, THE EXTRA TEST (decision 3)
+
+3.1 Which batches get a test
+Fit and save: the model your team trusts most on rejected. Press Save probabilities, open the file in the threshold explorer with Rows set to your Validation column, and save a threshold report.
+Ask: "An extra lab test costs about 90 dollars and catches most weak batches. A weak batch that reaches a customer costs about 15,000 dollars. At what predicted chance of a rejection should a batch get the test? How many Validation batches are above it, and how many were rejected?"
+Look for: the break even chance with the arithmetic shown; the confusion matrix at that cutoff.
+
+3.2 Operator experience
+Fit and save: the tree of tensile_strength_mpa with operator_experience_years among the inputs.
+Ask: "Does strength rise with operator experience, and does each year add the same amount?"
+Look for: the splits; the limit in your brief that experience is a column and not a judgment of effort.
+
+3.3 Explore: lines and shifts
+Ask the agent whether some lines or shifts carry more rejections with the other inputs held fixed, and whether the extra test should target them.
+
+SHARE 4, WHAT MAKES A PANEL STRONG (your number target)
+
+4.1 Temperature and time together
+Add a column: cure_index, equal to cure_temp_c times cure_time_min divided by 100. Refit the regression of tensile_strength_mpa.
+Ask: "Does the combination of temperature and time explain strength better than each alone? Does more cure keep adding strength, judging by the splits on cure_index in the tree?"
+Look for: the change in validation R squared; splits that show where extra cure stops helping.
+
+4.2 Fiber content
+Fit and save: the tree of tensile_strength_mpa.
+Ask: "Does strength keep rising with fiber_content_pct, or level off past some content?"
+Look for: the splits on fiber_content_pct.
+
+4.3 Explore: line speed
+Ask the agent what a faster line costs in strength, and whether your team has evidence for running the line faster on dry days.
+
+SHARE 5, THE SHIFT LOGS
+
+5.1 What the operators write
+Run text_explorer.py from lec10_1 on shift_log and save the file with the topic columns. Fit the logistic regression of rejected twice, with the TOPIC columns and without them.
+Ask: "Which topics in the shift logs go with a rejected batch, judging by the top words of each topic? How much did the validation AUC change when we added the topics?"
+Look for: each topic named by its words; the change in validation AUC.
+
+5.2 Logs and strength
+Fit and save: the regression of tensile_strength_mpa with the TOPIC columns.
+Ask: "Which topics go with weaker panels, and by how many MPa?"
+Look for: topics named by their words, with MPa.
+
+5.3 Explore: catching a bad lot early
+Ask the agent whether a topic from 5.1 could flag a contaminated resin lot before the batch is tested, and what the shift supervisor would do when it appears.

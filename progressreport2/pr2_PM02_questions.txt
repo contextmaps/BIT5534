@@ -1,0 +1,88 @@
+PROGRESS REPORT 2, PM02 LOOMWISE APPAREL
+YOUR TEAM'S QUESTIONS
+
+These questions are for your team only. They add to the general questions on the Progress Report 2, Team Submission page. Your team divides both sets among its members as that page explains. Each member takes one share below, and a team of four splits share 5 among its members.
+
+In each item you will find what to fit and save, the question to ask your team's agent, and what to look for in the answer. Ask the question as written or in your own words, and attach the report listed in the same message. Then keep going. Ask follow up questions until you understand the answer and can say what it means for the decision. An item marked Explore holds a direction, and you write the questions.
+
+Some items ask you to add a column to your data file. Open the file in Excel, add the column with the formula described, and save the file as a new .csv under a new name. Keep your original file as it is.
+
+Items marked LIVE DATA use your agent's live data connection. Do these items after your instructor covers the live data connection in class.
+
+YOUR FILES
+loomwise_orders.csv. Number target: margin_usd. Yes or no target: returned. Text column: last_review_text. Validation column: Validation.
+
+SHARE 1, THE RETURN POLICY (decision 1 in your brief)
+
+1.1 Returns by market
+Fit and save: the logistic regression of returned in reg_explorer.py, with the inputs your team used in progress report 1.
+Ask: "Do orders from some markets return more often, with the other inputs held fixed? Return shipping and handling cost about 15 dollars in the United States and 30 dollars abroad, and about a quarter of returned garments can no longer be sold at full price. What does a return cost in each market?"
+Look for: the country estimates turned into chances of a return; the cost of a return in each market, with the arithmetic shown.
+
+1.2 Margin by market
+Fit and save: the regression and the tree of margin_usd.
+Ask: "How much lower is the margin of an order in the United Kingdom and the euro area than in the United States? Do free returns still pay in those markets?"
+Look for: the country estimates in dollars; the splits that combine market and return; a recommendation for each market.
+
+1.3 LIVE DATA: today's rates
+After your instructor covers the live data connection in class, ask the agent to retrieve today's rates for CAD, GBP and EUR, and to say how they change the dollar cost of a return in each market, from your findings in 1.1 and 1.2.
+
+SHARE 2, THE SIZE HELP (decision 2)
+
+2.1 The size guide
+Fit and save: the logistic regression of returned.
+Ask: "How much lower is the chance of a return when the customer used the size guide, with the other inputs held fixed? A fit question costs nothing but about 3 percent of prompted shoppers leave without buying. When is the prompt worth it?"
+Look for: the estimate for used_size_guide; the trade with the arithmetic shown; the limit in your brief that careful shoppers may use the guide anyway.
+
+2.2 Mixed sizes
+Add a column: mixed_no_guide, equal to 1 when sizes_consistent is No and used_size_guide is No, and 0 otherwise. Refit the logistic regression of returned.
+Ask: "Do orders with mixed sizes return more when the customer skipped the size guide? Where should Loomwise push shoppers to the guide?"
+Look for: the estimate for mixed_no_guide and whether the validation AUC rose; a rule for when to prompt.
+
+2.3 Explore: categories
+Ask the agent which categories return most with the other inputs held fixed, and whether the size help should start with those categories.
+
+SHARE 3, THE PROMOTION (decision 3)
+
+3.1 Discounts and returns
+Fit and save: the logistic regression of returned and the regression of margin_usd.
+Ask: "Does a deeper discount bring more returns, with the other inputs held fixed? What does each extra 5 points of discount cost in margin, counting both the price cut and the returns?"
+Look for: both estimates; the arithmetic for 5 points of discount.
+
+3.2 How deep to go
+Fit and save: the tree of returned with discount_pct among the inputs.
+Ask: "Is there a split on discount_pct, and does the chance of a return rise past some discount?"
+Look for: the split value and the share of returns on each side.
+
+3.3 Explore: the best discount
+With the margin report attached, ask the agent which discount gives the most margin per order once returns are counted, and which number in its answer it trusts least.
+
+SHARE 4, CUSTOMERS AND SHIPPING
+
+4.1 Customers who return often
+Fit and save: the tree of returned with past_return_rate among the inputs.
+Ask: "Is there a split on past_return_rate, and at what rate? Should customers above it keep free returns?"
+Look for: the split value; the cost of keeping free returns for that group.
+
+4.2 Slow shipping
+Fit and save: the same tree.
+Ask: "Do orders that take longer to ship return more often, and is there a number of days past which returns climb?"
+Look for: the splits on shipping_days; what a faster option would have to cost to pay.
+
+4.3 Explore: which customers keep free returns
+Save a threshold report on returned and ask the agent which customers should keep free returns and which should pay, from the cost of a return in each market.
+
+SHARE 5, THE REVIEWS
+
+5.1 What customers write
+Run text_explorer.py from lec10_1 on last_review_text and save the file with the topic columns. Fit the logistic regression of returned twice, with the TOPIC columns and without them.
+Ask: "Which topics in the last review go with a return, judging by the top words of each topic? How much did the validation AUC change when we added the topics?"
+Look for: each topic named by its words; the change in validation AUC; the limit in your brief on what sizes say about a customer.
+
+5.2 Reviews and margin
+Fit and save: the regression of margin_usd with the TOPIC columns.
+Ask: "Which topics go with a lower margin, and by how many dollars?"
+Look for: topics named by their words, with dollars.
+
+5.3 Explore: fit problems
+Ask the agent whether customers who wrote about fit should be prompted to use the size guide on their next order, and what that would save.

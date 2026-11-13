@@ -1,0 +1,88 @@
+PROGRESS REPORT 2, PM09 COBBLEVANE REALTY
+YOUR TEAM'S QUESTIONS
+
+These questions are for your team only. They add to the general questions on the Progress Report 2, Team Submission page. Your team divides both sets among its members as that page explains. Each member takes one share below, and a team of four splits share 5 among its members.
+
+In each item you will find what to fit and save, the question to ask your team's agent, and what to look for in the answer. Ask the question as written or in your own words, and attach the report listed in the same message. Then keep going. Ask follow up questions until you understand the answer and can say what it means for the decision. An item marked Explore holds a direction, and you write the questions.
+
+Some items ask you to add a column to your data file. Open the file in Excel, add the column with the formula described, and save the file as a new .csv under a new name. Keep your original file as it is.
+
+Items marked LIVE DATA use your agent's live data connection. Do these items after your instructor covers the live data connection in class.
+
+YOUR FILES
+cobblevane_listings.csv. Number target: sale_price_usd. Yes or no target: unsold_90. Text column: listing_description. Validation column: Validation.
+
+SHARE 1, THE LIST PRICE ADVICE (decision 1 in your brief)
+
+1.1 Listing above the estimate
+Fit and save: the logistic regression of unsold_90 in reg_explorer.py, with the inputs your team used in progress report 1.
+Ask: "How much does each point of list_over_estimate_pct raise the chance that a home sits 90 days, with the other inputs held fixed? Each month a home sits costs the seller about 0.6 percent of its price, and a listing past 90 days sells about 3 percent lower. For a 300,000 dollar home, what does listing 2 points higher cost the seller in expected terms?"
+Look for: the estimate turned into chances of sitting; the arithmetic for the seller; the limit in your brief that sellers of better homes may list higher.
+
+1.2 How far above
+Fit and save: the tree of unsold_90.
+Ask: "Is there a split on list_over_estimate_pct, and how far above the agent's estimate can a home be listed before the chance of sitting climbs?"
+Look for: the split value and the share of homes that sat on each side; advice an agent can give a seller.
+
+1.3 LIVE DATA: mortgage rates
+After your instructor covers the live data connection in class, ask the agent to retrieve current mortgage rates, and to say whether the list price advice from 1.2 should change this month.
+
+SHARE 2, THE LISTING MONTH (decision 2)
+
+2.1 The months
+Fit and save: the logistic regression of unsold_90 with list_month among the inputs.
+Ask: "Which months carry the highest chance of sitting 90 days, with the other inputs held fixed? Is a seller who is ready in November better off waiting for spring?"
+Look for: the month estimates; the cost of waiting at 0.6 percent a month against the cost of sitting.
+
+2.2 Winter and a high price together
+Add a column winter, equal to 1 for listings in November to February, and a column that multiplies winter by list_over_estimate_pct. Refit the logistic regression of unsold_90.
+Ask: "Does listing high hurt more in winter? What should an agent advise a seller who must list in January?"
+Look for: the estimate for the new column and whether the validation AUC rose.
+
+2.3 Explore: the sale price by month
+Ask the agent whether the month of listing changes the sale price as well as the time on the market, from the regression of sale_price_usd.
+
+SHARE 3, THE PRICE CUT (decision 3)
+
+3.1 Which listings need a review
+Fit and save: the model your team trusts most on unsold_90. Press Save probabilities, open the file in the threshold explorer with Rows set to your Validation column, and save a threshold report.
+Ask: "Which listings should the brokerage review for a price cut? At what predicted chance of sitting 90 days should an agent call the seller? How many Validation listings are above it, and how many of them sat?"
+Look for: a cutoff with a reason in dollars; the confusion matrix at that cutoff.
+
+3.2 Old homes in the historic district
+Add a column: historic_age, equal to home_age_years when neighborhood is Historic district and 0 otherwise. Refit the logistic regression of unsold_90 and the regression of sale_price_usd.
+Ask: "Do old homes in the historic district sell and sit differently from old homes elsewhere? What about old homes that were never renovated?"
+Look for: the estimates for historic_age; the role of years_since_renovation.
+
+3.3 Explore: large homes in weak school zones
+Ask the agent whether large homes in zones with low school ratings sit longer, using the splits in the tree of unsold_90, and what an agent should advise their sellers.
+
+SHARE 4, WHAT A HOME IS WORTH (your number target)
+
+4.1 Size
+Fit and save: the regression and the tree of sale_price_usd.
+Ask: "How much does each extra 100 square feet add to the sale price? Does it add the same for a small home as for a large one, judging by the splits on square_feet?"
+Look for: the slope and the splits; price per square foot for a small and a large home.
+
+4.2 Schools by neighborhood
+Add a column: school_not_downtown, equal to school_rating when neighborhood is not Downtown and 0 otherwise. Refit the regression of sale_price_usd.
+Ask: "Is a good school worth more in family neighborhoods than downtown? How much is a point of school rating worth in each?"
+Look for: the estimates for school_rating and the new column; whether the validation R squared rose.
+
+4.3 Explore: renovations
+Ask the agent what a renovation is worth after five years and after fifteen, using the splits on years_since_renovation, and whether a seller should renovate before listing.
+
+SHARE 5, THE DESCRIPTIONS AND THE NEIGHBORHOODS
+
+5.1 What the listing says
+Run text_explorer.py from lec10_1 on listing_description and save the file with the topic columns. Fit the regression of sale_price_usd and the logistic regression of unsold_90 with the TOPIC columns.
+Ask: "Which topics in the descriptions go with a higher price or a home that sits, judging by the top words of each topic? How much did the validation numbers change when we added the topics?"
+Look for: topics named by their words; the change in validation R squared and AUC; whether a topic describes condition or curb appeal.
+
+5.2 Neighborhoods
+Fit and save: the regression of sale_price_usd with neighborhood among the inputs.
+Ask: "How do the neighborhoods compare in price with the other inputs held fixed?"
+Look for: the neighborhood estimates; the agent keeping to the limit in your brief about the people in a neighborhood.
+
+5.3 Explore: the brokerage's share
+At 2.8 percent of the sale price and 900 dollars of marketing per listing, ask the agent what a listing that sits past 90 days costs the brokerage, and how that compares with what it costs the seller.

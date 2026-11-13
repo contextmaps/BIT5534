@@ -1,0 +1,88 @@
+PROGRESS REPORT 2, AM06 FURROWELL FARM COOPERATIVE
+YOUR TEAM'S QUESTIONS
+
+These questions are for your team only. They add to the general questions on the Progress Report 2, Team Submission page. Your team divides both sets among its members as that page explains. Each member takes one share below, and a team of four splits share 5 among its members.
+
+In each item you will find what to fit and save, the question to ask your team's agent, and what to look for in the answer. Ask the question as written or in your own words, and attach the report listed in the same message. Then keep going. Ask follow up questions until you understand the answer and can say what it means for the decision. An item marked Explore holds a direction, and you write the questions.
+
+Some items ask you to add a column to your data file. Open the file in Excel, add the column with the formula described, and save the file as a new .csv under a new name. Keep your original file as it is.
+
+Items marked LIVE DATA use your agent's live data connection. Do these items after your instructor covers the live data connection in class.
+
+YOUR FILES
+furrowell_fields.csv. Number target: yield_bu_per_acre. Yes or no target: loss_claim. Text column: scout_notes. Validation column: Validation.
+
+SHARE 1, THE NITROGEN RATE (decision 1 in your brief)
+
+1.1 Where nitrogen stops paying
+Save a copy of your data file with only corn fields. Fit the regression and the tree of yield_bu_per_acre on it.
+Ask: "How many bushels does each extra 20 pounds of nitrogen add to a corn field, with the other inputs held fixed? Nitrogen costs 0.55 dollars a pound and corn sells for 4.60 dollars a bushel. Is there a split on nitrogen_lb_per_acre in the tree, and does nitrogen stop paying past some rate?"
+Look for: the slope and the split values; the break even in bushels, with the arithmetic shown.
+
+1.2 A rate to recommend
+Fit and save: the same reports as 1.1.
+Ask: "What nitrogen rate would you recommend for a typical corn field, and how does it change with soil_quality_index? How sure can the advisers be from the Validation rows?"
+Look for: a rate with a reason; the agent saying where the reports cannot tell.
+
+1.3 Explore: soybeans and nitrogen
+Fit the same models on soybean fields only and ask the agent whether nitrogen adds yield to soybeans, and what a farmer who applies it to soybeans spends for nothing.
+
+SHARE 2, THE PLANTING DATE (decision 2)
+
+2.1 The cost of a late start
+Fit and save: the regression and the tree of yield_bu_per_acre on corn fields only.
+Ask: "What does each day after April 20 cost a corn field in bushels, with the other inputs held fixed? Is there a split on days_after_april_20, and does the cost start at that point? What does planting two weeks late cost in dollars per acre?"
+Look for: the slope and the split; dollars per acre with the arithmetic shown.
+
+2.2 Soybeans and the date
+Fit and save: the same models on soybean fields.
+Ask: "Does a late start cost soybeans as much as corn, in dollars per acre at 11.50 dollars a bushel?"
+Look for: both crops on the same dollar scale.
+
+2.3 Explore: seeding rate and tillage
+seeding_rate_thousand_per_acre and tillage are levers. Ask the agent what each one is worth in yield and dollars per acre, and whether your team has the evidence to recommend changing either.
+
+SHARE 3, THE INSURANCE COVERAGE (decision 3)
+
+3.1 Which farms should buy more coverage
+Fit and save: the model your team trusts most on loss_claim. Press Save probabilities, open the file in the threshold explorer with Rows set to your Validation column, and save a threshold report.
+Ask: "Raising coverage from 70 to 80 percent costs about 14 dollars an acre. In our brief, a claim pays the gap between the guaranteed yield and the harvest, and there is no figure for how large that gap usually is. Show the break even chance of a loss claim for a payout of 50 dollars an acre and of 150 dollars an acre, and count the Validation fields above each."
+Look for: two break even chances with the arithmetic shown; the counts at each cutoff; the agent saying what it cannot know from the brief.
+
+3.2 Rain at both ends
+Fit and save: the tree of loss_claim with growing_season_rain_in among the inputs.
+Ask: "How does the chance of a loss claim change with the season's rain? Are there splits at both a low and a high rainfall?"
+Look for: the split values and the share of claims in each group.
+
+3.3 LIVE DATA: the next two weeks
+After your instructor covers the live data connection in class, ask the agent to retrieve the 16 day forecast of rain for your six counties, and to say how an adviser could use a forecast like this, together with your findings in 3.2, when recommending coverage.
+
+SHARE 4, CROPS, HEAT AND IRRIGATION
+
+4.1 One model or two
+Fit and save: the regression of yield_bu_per_acre on all fields, and on corn fields only.
+Ask: "Should corn and soybeans be in one model of yield? Compare the validation R squared of the two regressions and say what the crop estimate in the first one hides."
+Look for: the two validation numbers; the agent explaining the difference in bushels between the crops.
+
+4.2 Heat
+Add a column: corn_heat, equal to days_above_90f for corn fields and 0 for soybeans. Refit the regression of yield_bu_per_acre on all fields.
+Ask: "Do hot days hurt corn more than soybeans? What is a hot day worth in dollars per acre for each crop?"
+Look for: the estimates for days_above_90f and corn_heat; both crops in dollars.
+
+4.3 Explore: irrigation in a dry season
+Add a column for a dry season, equal to 1 when growing_season_rain_in is below the low rain split you found in 3.2, and a column that multiplies it by an irrigated flag. Refit the logistic regression of loss_claim and ask the agent how much irrigation protects a field in a dry season.
+
+SHARE 5, THE SCOUT NOTES, THE SEASONS AND THE COUNTIES
+
+5.1 What the scouts write
+Run text_explorer.py from lec10_1 on scout_notes and save the file with the topic columns. Fit the logistic regression of loss_claim twice, with the TOPIC columns and without them.
+Ask: "Which topics in the scout notes go with a loss claim, judging by the top words of each topic? How much did the validation AUC change when we added the topics?"
+Look for: each topic named by its words; the change in validation AUC; the limit in your brief that the notes describe a field and not a farmer.
+
+5.2 One season
+Fit and save: the logistic regression of loss_claim with season among the inputs.
+Ask: "Did one season bring far more claims than the others, with rain and the other inputs held fixed? What does that mean for using these models next year?"
+Look for: the season estimates; the agent's caution about a single unusual year.
+
+5.3 Explore: the counties
+Ask the agent which counties have the highest yields and the most claims with the other inputs held fixed, and whether the advisers should give different advice by county.
