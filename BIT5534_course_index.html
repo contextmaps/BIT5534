@@ -600,10 +600,10 @@ const LECTURES = [
   { id: "lec11_2", week: 11, phase: 3, mode: "project_lab", title: "Model Results as an Agent's Knowledge",
     business: "Lumenvale's title file and a regression report become the agent's knowledge, the team rewrites its rules for real numbers, and each team receives its own dataset." },
   // Week 12
-  { id: "lec12_1", week: 12, phase: 3, mode: "project_lab", title: "From a Desktop Tool to a Browser Dashboard",
+  { id: "lec12_1", week: 12, phase: 3, mode: "project_lab", title: "From a Desktop Tool to a Browser Page",
     business: "The regression tool rebuilt as a browser page on a local Python server by gradual prompting, with the team's agent beside it." },
-  { id: "lec12_2", week: 12, phase: 3, mode: "project_lab", title: "Skills, the Tree and the Comparison Tab",
-    business: "A Hokie AI skill that writes the same model summary every time, a tree page beside the regression, and a comparison tab with ROC and lift." },
+  { id: "lec12_2", week: 12, phase: 3, mode: "project_lab", title: "Investigating a Business with Models and an Agent",
+    business: "The five course tools in a browser workbench, a skill that reads every model report the same way, and time for the course project with the workbench beside the team's agent." },
   // Week 13
   { id: "lec13_1", week: 13, phase: 3, mode: "project_lab", title: "Live Data and Text in the Dashboard",
     business: "The agent retrieves a live public value for a what if question, and the text column gets its own tab of topics." },
@@ -719,9 +719,11 @@ const HOMEWORK = [
   { id: "pr1_2", week: 11, part: 2, title: "Deliverable 1, Progress Report, Peer Evaluation",
     business: "Every student submits individually, due with the team's submission: your name and team, how the team worked, your own contribution, and any teammate who contributed beyond or below the others." },
   { id: "pr2_1", week: 12, part: 1, title: "Deliverable 2, Progress Report, Team Submission",
-    business: "One submission per team, due Friday 11/20: the tree page and the comparison tab, the model summary skill, the live data question and the text tab." },
-  { id: "pr2_2", week: 12, part: 2, title: "Deliverable 2, Progress Report, Peer Evaluation",
-    business: "Every student submits individually, due with the team's submission: how the team worked, your own contribution, anyone who went above and beyond the others, and anyone who contributed less." },
+    business: "One team thread with the agent, due Friday 11/20: the division of the questions, every member's insight lines, the team's conversation about all the findings, a recommendation for each decision, the big picture and the story in order." },
+  { id: "pr2_2", week: 12, part: 2, title: "Deliverable 2, Progress Report, Exploration Thread",
+    business: "Every student submits their own thread with the team's agent, due with the team's submission: a share of the team's questions worked through with the course models, every answer read and followed up, and the findings as insight lines." },
+  { id: "pr2_3", week: 12, part: 3, title: "Deliverable 2, Progress Report, Peer Evaluation",
+    business: "Every student submits individually, due with the team's submission: how the team worked, your own share and what you brought to the team thread, anyone who went above and beyond the others, and anyone who contributed less." },
   { id: "pr3_1", week: 13, part: 1, title: "Deliverable 3, the Dashboard, Team Submission",
     business: "One submission per team, due Monday 11/30: the finished dashboard with the agent beside it, the agent's governance section and the outline of the presentation." },
   { id: "pr3_2", week: 13, part: 2, title: "Deliverable 3, the Dashboard, Peer Evaluation",
@@ -790,6 +792,9 @@ const HOMEWORK_LINKS = {
   "hw9_2":    "https://canvas.vt.edu/courses/233475/assignments/2883145",
   "pr1_1":    "https://canvas.vt.edu/courses/233475/assignments/2887850",
   "pr1_2":    "https://canvas.vt.edu/courses/233475/assignments/2887851",
+  "pr2_1":    "https://canvas.vt.edu/courses/233475/assignments/2890186",
+  "pr2_2":    "https://canvas.vt.edu/courses/233475/assignments/2890187",
+  "pr2_3":    "https://canvas.vt.edu/courses/233475/assignments/2890188",
 };
 
 /* ============ Render ============ */
@@ -910,7 +915,15 @@ PHASES.forEach(phase => {
     if (hwNum || prKey) {
       const stack = document.createElement("div");
       stack.className = "hw-stack";
-      [1, 2].forEach(partNum => {
+      /* A progress report can have more than two parts (pr2 has three). */
+      const nParts = hwNum ? 2 : Math.max(2, HOMEWORK.filter(h => h.id.startsWith(prKey + "_")).length);
+      const prTag = (rec, n) => {
+        const t = rec ? rec.title : "";
+        if (/Team Submission$/.test(t) || (!rec && n === 1)) return "team submission";
+        if (/Peer Evaluation$/.test(t) || (!rec && n === nParts)) return "peer evaluation";
+        return "personal exploration";
+      };
+      Array.from({length: nParts}, (_, i) => i + 1).forEach(partNum => {
         const id = hwNum ? `hw${hwNum}_${partNum}` : `${prKey}_${partNum}`;
         const rec = HOMEWORK.find(h => h.id === id);
         const url = HOMEWORK_LINKS[id] || "";
@@ -919,7 +932,7 @@ PHASES.forEach(phase => {
           cls: rec ? "lec hw" : "lec hw hw-pending",
           attr: ["data-hw", id],
           label: id,
-          tags: `<span class="hw-part">${hwNum ? "part " + partNum : (partNum === 1 ? "team submission" : "peer evaluation")}</span>`,
+          tags: `<span class="hw-part">${hwNum ? "part " + partNum : prTag(rec, partNum)}</span>`,
           title: rec ? rec.title : "Not released yet",
           business: rec ? rec.business : "",
         }));
