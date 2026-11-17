@@ -1,0 +1,98 @@
+LADLEWICK SANDWICH CO., LIVE SOURCE SHEET
+PM05. Ladlewick Sandwich Co. is made up; the places and the public data services below are real. With this sheet your team gives its agent a live data connection for the items marked LIVE DATA in your progress report 2 questions: 1.3 (the trade area). Every box marked COPY is pasted exactly as it is.
+
+
+THE TOOL, get_state_income
+
+Open your team's agent, click Add Knowledge Source and choose API Call. Copy each field below into the field of the same name, choose the Method GET, and click Add. Then save the agent.
+
+Name, COPY:
+get_state_income
+Description, COPY:
+Use when the team asks about household income in a state. Returns the median household income in dollars of every state, from the Census Bureau's American Community Survey, 2019 to 2023, as published by Data USA.
+Parameter Schema, COPY:
+{"type":"object","properties":{}}
+Endpoint, COPY:
+https://api.datausa.io/tesseract/data.jsonrecords?cube=acs_ygr_median_household_income_race_5&drilldowns=State,Year&measures=Household%20Income%20by%20Race&include=Year:2023;Race:0
+
+WHAT COMES BACK
+
+The response is in JSON. Under data, each row is one state: State, Year and the value, Household Income by Race (with every race together, the median household income in dollars) or Population. The figures are the five year averages of the American Community Survey, 2019 to 2023.
+
+To see what the agent receives, open the Endpoint in a browser.
+
+TEST IT
+
+Start a new thread with your agent and send this question. Then open Execution Details and look at Tool Calls, and compare the answer with the response in your browser.
+COPY: What is the median household income in Virginia?
+
+THE TOOL, get_state_population
+
+Open your team's agent, click Add Knowledge Source and choose API Call. Copy each field below into the field of the same name, choose the Method GET, and click Add. Then save the agent.
+
+Name, COPY:
+get_state_population
+Description, COPY:
+Use when the team asks about the population of a state. Returns the population of every state, from the Census Bureau's American Community Survey, 2019 to 2023, as published by Data USA.
+Parameter Schema, COPY:
+{"type":"object","properties":{}}
+Endpoint, COPY:
+https://api.datausa.io/tesseract/data.jsonrecords?cube=acs_yg_total_population_5&drilldowns=State,Year&measures=Population&include=Year:2023
+
+WHAT COMES BACK
+
+The response is in JSON. Under data, each row is one state: State, Year and the value, Household Income by Race (with every race together, the median household income in dollars) or Population. The figures are the five year averages of the American Community Survey, 2019 to 2023.
+
+To see what the agent receives, open the Endpoint in a browser.
+
+TEST IT
+
+Start a new thread with your agent and send this question. Then open Execution Details and look at Tool Calls, and compare the answer with the response in your browser.
+COPY: What is the population of Virginia?
+
+THE OPTIONAL TOOL, get_county_income, WITH YOUR OWN CENSUS KEY
+
+Use this tool only if a member of your team has registered a Census key. Before you paste the Parameter Schema, replace PASTE_YOUR_CENSUS_KEY with your key, in both places it appears. Keep the quotation marks.
+
+THE TOOL, get_county_income
+
+Open your team's agent, click Add Knowledge Source and choose API Call. Copy each field below into the field of the same name, choose the Method GET, and click Add. Then save the agent.
+
+Name, COPY:
+get_county_income
+Description, COPY:
+Use when the team asks about income or population around a site. Send the state. Returns every county of that state from the Census Bureau's American Community Survey, 2019 to 2023: the county name, the median household income in dollars (B19013_001E) and the population (B01003_001E).
+Parameter Schema, COPY:
+{"type":"object","properties":{"get":{"type":"string","enum":["NAME,B19013_001E,B01003_001E"],"description":"Always NAME,B19013_001E,B01003_001E: the county name, the median household income in dollars and the population."},"for":{"type":"string","enum":["county:*"],"description":"Always county:*, every county of the state."},"in":{"type":"string","enum":["state:51","state:37","state:45","state:47","state:13"],"description":"The state: state:51 for Virginia, state:37 for North Carolina, state:45 for South Carolina, state:47 for Tennessee, state:13 for Georgia."},"key":{"type":"string","enum":["PASTE_YOUR_CENSUS_KEY"],"description":"The team's Census key. Always PASTE_YOUR_CENSUS_KEY."}},"required":["get","for","in","key"]}
+Endpoint, COPY:
+https://api.census.gov/data/2023/acs/acs5
+Nothing goes after this address. The agent sends the schema's fields as the query string.
+
+What the schema sends, field by field:
+get         Always NAME,B19013_001E,B01003_001E: the county name, the median household income in dollars and the population.
+for         Always county:*, every county of the state.
+in          The state: state:51 for Virginia, state:37 for North Carolina, state:45 for South Carolina, state:47 for Tennessee, state:13 for Georgia.
+key         The team's Census key. Always PASTE_YOUR_CENSUS_KEY.
+required    The agent must send every field.
+
+WHAT COMES BACK
+
+The response is a list of rows in JSON. The first row holds the column names: NAME, B19013_001E (median household income in dollars), B01003_001E (population), state and county (the codes). Every other row is one county. Find the county of your site by its name.
+
+To see what the agent receives, open this address in a browser, with sample values in place of what the agent sends:
+https://api.census.gov/data/2023/acs/acs5?get=NAME,B19013_001E,B01003_001E&for=county:*&in=state:51&key=YOURKEY
+
+TEST IT
+
+Start a new thread with your agent and send this question. Then open Execution Details and look at Tool Calls, and compare the answer with the response in your browser.
+COPY: What are the median household income and the population of Montgomery County, Virginia?
+
+
+NOTE
+
+Your team has two choices. The first two tools above need no key and give each state's median household income and population, so your agent compares the five states. The third tool, get_county_income, gives every county of a state, the level your item asks about, and needs a free Census key, which a member of your team registers at api.census.gov/data/key_signup.html; the key arrives by email within minutes. Your team decides which to use, and may use both.
+
+
+THEN YOUR LIVE DATA ITEMS
+
+Your agent now answers the LIVE DATA items of your questions file with today's data. Ask each item as it is written, check the values against the response, and record the answer in your team thread with the date you asked.
