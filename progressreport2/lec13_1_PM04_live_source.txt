@@ -1,0 +1,39 @@
+BRIGHTRAFTER SOLAR, LIVE SOURCE SHEET
+PM04. Brightrafter Solar is made up; the places and the public data services below are real. With this sheet your team gives its agent a live data connection for the items marked LIVE DATA in your progress report 2 questions: 2.3 (sunlight). Every box marked COPY is pasted exactly as it is.
+
+
+THE TOOL, get_sunlight
+
+Open your team's agent, click Add Knowledge Source and choose API Call. Copy each field below into the field of the same name, choose the Method GET, and click Add. Then save the agent.
+
+Name, COPY:
+get_sunlight
+Description, COPY:
+Use when the team asks about sunlight in the coming week. Returns the daily forecast for the next 7 days in Montgomery, Roanoke, Botetourt, Pulaski and Franklin counties, in that order, each at its county seat: total solar radiation in megajoules per square meter and mean cloud cover in percent.
+Parameter Schema, COPY:
+{"type":"object","properties":{}}
+Endpoint, COPY:
+https://api.open-meteo.com/v1/forecast?latitude=37.13,37.29,37.50,37.05,36.99&longitude=-80.41,-80.05,-79.88,-80.78,-79.89&daily=shortwave_radiation_sum,cloud_cover_mean&temperature_unit=fahrenheit&timezone=America%2FNew_York&forecast_days=7
+
+The places, in the order of the response: Montgomery County, at Christiansburg; Roanoke County, at Salem; Botetourt County, at Fincastle; Pulaski County, at Pulaski; Franklin County, at Rocky Mount.
+
+WHAT COMES BACK
+
+The response is in JSON. For several places it is a list, one entry per place in the order above; for one place it is a single entry. In each entry, daily.time lists the dates, and each other field under daily lists one value per date, in the same order. daily_units gives the unit of each field. Weather codes: 0 clear, 1 to 3 partly cloudy to overcast, 45 and 48 fog, 51 to 67 drizzle and rain, 71 to 77 snow, 80 to 82 rain showers, 95 to 99 thunderstorms.
+
+To see what the agent receives, open the Endpoint in a browser.
+
+TEST IT
+
+Start a new thread with your agent and send this question. Then open Execution Details and look at Tool Calls, and compare the answer with the response in your browser.
+COPY: What is the total solar radiation in Botetourt County on the first day of the forecast?
+
+
+NOTE
+
+The forecast gives the solar radiation of each day, which is what panels turn into power. A day with heavy cloud cover has low radiation.
+
+
+THEN YOUR LIVE DATA ITEMS
+
+Your agent now answers the LIVE DATA items of your questions file with today's data. Ask each item as it is written, check the values against the response, and record the answer in your team thread with the date you asked.

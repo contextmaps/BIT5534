@@ -1,0 +1,39 @@
+RIDGEWING AIR, LIVE SOURCE SHEET
+AM04. Ridgewing Air is made up; the places and the public data services below are real. With this sheet your team gives its agent a live data connection for the items marked LIVE DATA in your progress report 2 questions: 1.3 (where to hold the spare tomorrow). Every box marked COPY is pasted exactly as it is.
+
+
+THE TOOL, get_forecast
+
+Open your team's agent, click Add Knowledge Source and choose API Call. Copy each field below into the field of the same name, choose the Method GET, and click Add. Then save the agent.
+
+Name, COPY:
+get_forecast
+Description, COPY:
+Use when the team asks about tomorrow's weather at the airports. Returns the daily forecast for the next 3 days at Charlotte, Washington Dulles, Roanoke, Charlottesville, Asheville, Charleston WV, Tri-Cities TN, Lynchburg, Greenville SC and Morgantown, in that order: weather code, chance of rain or snow, snowfall in inches and strongest wind gust in miles per hour.
+Parameter Schema, COPY:
+{"type":"object","properties":{}}
+Endpoint, COPY:
+https://api.open-meteo.com/v1/forecast?latitude=35.21,38.95,37.33,38.14,35.44,38.37,36.48,37.33,34.90,39.64&longitude=-80.94,-77.46,-79.98,-78.45,-82.54,-81.59,-82.41,-79.20,-82.22,-79.92&daily=weather_code,precipitation_probability_max,snowfall_sum,wind_gusts_10m_max&temperature_unit=fahrenheit&precipitation_unit=inch&wind_speed_unit=mph&timezone=America%2FNew_York&forecast_days=3
+
+The places, in the order of the response: Charlotte; Washington Dulles; Roanoke; Charlottesville; Asheville; Charleston WV; Tri-Cities TN; Lynchburg; Greenville SC; Morgantown.
+
+WHAT COMES BACK
+
+The response is in JSON. For several places it is a list, one entry per place in the order above; for one place it is a single entry. In each entry, daily.time lists the dates, and each other field under daily lists one value per date, in the same order. daily_units gives the unit of each field. Weather codes: 0 clear, 1 to 3 partly cloudy to overcast, 45 and 48 fog, 51 to 67 drizzle and rain, 71 to 77 snow, 80 to 82 rain showers, 95 to 99 thunderstorms.
+
+To see what the agent receives, open the Endpoint in a browser.
+
+TEST IT
+
+Start a new thread with your agent and send this question. Then open Execution Details and look at Tool Calls, and compare the answer with the response in your browser.
+COPY: What is the strongest wind gust forecast at Roanoke tomorrow?
+
+
+NOTE
+
+A strong gust, snow or a thunderstorm code at an airport tomorrow are the signals your team weighs with its findings in 1.1 and 1.2.
+
+
+THEN YOUR LIVE DATA ITEMS
+
+Your agent now answers the LIVE DATA items of your questions file with today's data. Ask each item as it is written, check the values against the response, and record the answer in your team thread with the date you asked.

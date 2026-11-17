@@ -1,0 +1,32 @@
+LOOMWISE APPAREL, LIVE SOURCE SHEET
+PM02. Loomwise Apparel is made up; the places and the public data services below are real. With this sheet your team gives its agent a live data connection for the items marked LIVE DATA in your progress report 2 questions: 1.3 (today's rates). Every box marked COPY is pasted exactly as it is.
+
+
+THE TOOL, get_rates
+
+Open your team's agent, click Add Knowledge Source and choose API Call. Copy each field below into the field of the same name, choose the Method GET, and click Add. Then save the agent.
+
+Name, COPY:
+get_rates
+Description, COPY:
+Use when the team asks about exchange rates. Returns today's exchange rates from one US dollar to the Canadian dollar, the British pound and the euro, published by the European Central Bank on working days.
+Parameter Schema, COPY:
+{"type":"object","properties":{}}
+Endpoint, COPY:
+https://api.frankfurter.dev/v1/latest?base=USD&symbols=CAD,GBP,EUR
+
+WHAT COMES BACK
+
+The response is in JSON: date is the day the rates were published, and rates gives how many units of each currency one US dollar buys. To turn an amount in another currency into dollars, divide it by the rate.
+
+To see what the agent receives, open the Endpoint in a browser.
+
+TEST IT
+
+Start a new thread with your agent and send this question. Then open Execution Details and look at Tool Calls, and compare the answer with the response in your browser.
+COPY: How many British pounds does one dollar buy today?
+
+
+THEN YOUR LIVE DATA ITEMS
+
+Your agent now answers the LIVE DATA items of your questions file with today's data. Ask each item as it is written, check the values against the response, and record the answer in your team thread with the date you asked.

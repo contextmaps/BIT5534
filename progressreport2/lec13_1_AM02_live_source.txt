@@ -1,0 +1,45 @@
+BRINDLEWOOD MOTORS, LIVE SOURCE SHEET
+AM02. Brindlewood Motors is made up; the places and the public data services below are real. With this sheet your team gives its agent a live data connection for the items marked LIVE DATA in your progress report 2 questions: 1.3 (a recall before bidding). Every box marked COPY is pasted exactly as it is.
+
+
+THE TOOL, get_recalls
+
+Open your team's agent, click Add Knowledge Source and choose API Call. Copy each field below into the field of the same name, choose the Method GET, and click Add. Then save the agent.
+
+Name, COPY:
+get_recalls
+Description, COPY:
+Use when the team asks about safety recalls for a car. Send the make, the model and the model year. Returns the recalls the National Highway Traffic Safety Administration lists for that vehicle, with the number of recalls in Count.
+Parameter Schema, COPY:
+{"type":"object","properties":{"make":{"type":"string","description":"The make, such as Toyota."},"model":{"type":"string","description":"The model, such as Camry."},"modelYear":{"type":"string","description":"The model year, four digits, such as 2019."}},"required":["make","model","modelYear"]}
+Endpoint, COPY:
+https://api.nhtsa.gov/recalls/recallsByVehicle
+Nothing goes after this address. The agent sends the schema's fields as the query string.
+
+What the schema sends, field by field:
+make        The make, such as Toyota.
+model       The model, such as Camry.
+modelYear   The model year, four digits, such as 2019.
+required    The agent must send every field.
+
+WHAT COMES BACK
+
+The response is in JSON. Count is the number of recalls, and each entry under results is one recall: NHTSACampaignNumber, Component, Summary, Consequence, Remedy and ReportReceivedDate. A Count of 0 means the agency lists no recall for that make, model and year.
+
+To see what the agent receives, open this address in a browser, with sample values in place of what the agent sends:
+https://api.nhtsa.gov/recalls/recallsByVehicle?make=Toyota&model=Camry&modelYear=2019
+
+TEST IT
+
+Start a new thread with your agent and send this question. Then open Execution Details and look at Tool Calls, and compare the answer with the response in your browser.
+COPY: How many recalls does the response list for a 2019 Toyota Camry?
+
+
+NOTE
+
+The make, the model and the model year come from your data file, such as Toyota, Camry and 2019. The agent fills them in the schema's fields, so the Endpoint holds nothing after recallsByVehicle. Spell the make and the model as the agency does, such as RAV4 and CR-V.
+
+
+THEN YOUR LIVE DATA ITEMS
+
+Your agent now answers the LIVE DATA items of your questions file with today's data. Ask each item as it is written, check the values against the response, and record the answer in your team thread with the date you asked.

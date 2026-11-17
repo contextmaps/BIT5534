@@ -1,0 +1,37 @@
+PLUMTABLE KITCHEN KITS, LIVE SOURCE SHEET
+AM03. Plumtable Kitchen Kits is made up; the places and the public data services below are real. With this sheet your team gives its agent a live data connection for the items marked LIVE DATA in your progress report 2 questions: 1.3 (grocery prices). Every box marked COPY is pasted exactly as it is.
+
+
+THE TOOL, get_food_prices
+
+Open your team's agent, click Add Knowledge Source and choose API Call. Copy each field below into the field of the same name, choose the Method GET, and click Add. Then save the agent.
+
+Name, COPY:
+get_food_prices
+Description, COPY:
+Use when the team asks about grocery prices. Returns the consumer price index for food at home in United States cities, from the Bureau of Labor Statistics, month by month for recent years, the latest month first.
+Parameter Schema, COPY:
+{"type":"object","properties":{}}
+Endpoint, COPY:
+https://api.bls.gov/publicAPI/v2/timeseries/data/CUUR0000SAF11
+
+WHAT COMES BACK
+
+The response is in JSON. Under Results, series, data, each entry is one month, the latest first: year, periodName (the month) and value. The index is 100 in 1982 to 1984, so the change in percent between two months is the newer value divided by the older one, minus 1. The national unemployment rate is a percent, not an index.
+
+To see what the agent receives, open the Endpoint in a browser.
+
+TEST IT
+
+Start a new thread with your agent and send this question. Then open Execution Details and look at Tool Calls, and compare the answer with the response in your browser.
+COPY: What is the latest value of the food at home index, and for which month?
+
+
+NOTE
+
+The Bureau of Labor Statistics allows 25 calls a day without a key, and every Hokie AI agent calls from the same server, so ask the agent for the index once and reuse the answer within a session. If your team wants more, a member can register a free key at data.bls.gov/registrationEngine and add ?registrationkey= followed by the key right after the Endpoint, with nothing else changed.
+
+
+THEN YOUR LIVE DATA ITEMS
+
+Your agent now answers the LIVE DATA items of your questions file with today's data. Ask each item as it is written, check the values against the response, and record the answer in your team thread with the date you asked.
