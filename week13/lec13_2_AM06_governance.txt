@@ -1,0 +1,69 @@
+FURROWELL FARM COOPERATIVE, GOVERNANCE SHEET
+AM06. Furrowell Farm Cooperative is made up. With this sheet your team takes its recommendation with the most at stake through the five governance gates your instructor showed on Lumenvale, with one question at each gate. Your team uses the answers as material for the governance box of its progress report 2 team thread, which your team writes in its own words. About twenty five minutes, with the model run.
+
+
+YOUR BUSINESS AT THE GATES
+
+Who decides: The member farmers, who make the final choices for their fields on the crop advisers' recommendation.
+Who is affected: The member farmers and their fields.
+Your live tool: get_forecast, from Open-Meteo, the rain forecast at each county seat for the next 16 days. The forecast covers 16 days of rain at one point in each county, a poor guide to a whole season or to a field far from the county seat.
+
+
+THE RECOMMENDATION
+
+Your team's recommendation for the gates is to recommend more crop insurance coverage to the farms with the highest chance of a loss claim. It belongs to the decision on the insurance coverage in your brief. If your team's synthesis has a recommendation with more at stake, your team may use it instead, with the report behind it, and change the first message below to match.
+
+
+RUN THE MODEL
+
+Open the REG tool from the analytics workbench, load furrowell_fields.csv, and fit this run. Then press Save report and keep the .txt file.
+
+Target: loss_claim
+Validation: the Validation column
+Inputs: county, crop, acres, soil_quality_index, nitrogen_lb_per_acre, days_after_april_20, seeding_rate_thousand_per_acre, growing_season_rain_in, days_above_90f, irrigated and tillage
+Leave out: adjuster_visit, because it is recorded after the outcome; scout_notes, a text column; yield_bu_per_acre, the other target; and every other column of the file, such as the id and date columns.
+
+
+THE FIRST MESSAGE
+
+Start a new thread with your team's agent, attach the .txt report, and send the message below.
+
+COPY:
+Our recommendation is to recommend more crop insurance coverage to the farms with the highest chance of a loss claim. It belongs to the decision on the insurance coverage. The attached report is a REG fit of loss_claim, the report the recommendation rests on. I will ask you one question about it at each of five governance gates.
+
+
+GATE 1, LIVE DATA
+
+COPY:
+Call get_forecast and say which of its values bear on this recommendation, each with its date. What should the member farmers do if the tool fails?
+
+Then open Execution Details and look at Tool Calls. Check that the agent called get_forecast and that each value in its answer matches the tool's response.
+
+
+GATE 2, EVIDENCE
+
+COPY:
+Which numbers in the attached report support this recommendation, and how far can the member farmers trust them? Name the validation rows behind them and any input recorded after the outcome.
+
+
+GATE 3, FAIRNESS AND PRIVACY
+
+COPY:
+Under this recommendation, some member farmers get different advice from others. Could county or irrigated stand in for the size or wealth of a farm, and does acting on it use what scout_notes say about a field in a way the farmer would not expect?
+
+
+GATE 4, AUTHORITY
+
+COPY:
+Which part of this recommendation is yours, and which part does the member farmers decide? Does any part go beyond the conclusions our brief lists under CONCLUSIONS THE AGENT MAY NOT DRAW?
+
+
+GATE 5, MONITORING
+
+COPY:
+If the member farmers acts on this recommendation, which number would show that it worked, which number would show that it went wrong, and when should we look again? How would we notice if get_forecast stopped working?
+
+
+THEN READ THE ANSWERS
+
+Read the five answers with the box "Reading the answers, gate by gate" on the lecture page, and decide which gate needs the most work. That gate is the main risk of your recommendation, and what would make it pass is your safeguard. Write your team's governance box in your own words.

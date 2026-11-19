@@ -1,0 +1,69 @@
+QUAYHOLM HOME GOODS, GOVERNANCE SHEET
+AM05. Quayholm Home Goods is made up. With this sheet your team takes its recommendation with the most at stake through the five governance gates your instructor showed on Lumenvale, with one question at each gate. Your team uses the answers as material for the governance box of its progress report 2 team thread, which your team writes in its own words. About twenty five minutes, with the model run.
+
+
+YOUR BUSINESS AT THE GATES
+
+Who decides: The buyers, who choose the supplier, the order size, the shipping mode and the lead time, with the finance manager watching exchange rates.
+Who is affected: The factories that supply Quayholm, and the home store customers who plan around delivery dates.
+Your live tool: get_rates, from Frankfurter, the exchange rates published by the European Central Bank. The European Central Bank publishes rates on working days only, so on a weekend or a holiday the latest rates are the last working day's.
+
+
+THE RECOMMENDATION
+
+Your team's recommendation for the gates is to move orders away from the factories whose orders have the highest chance of arriving more than a week late. It belongs to the decision on the supplier in your brief. If your team's synthesis has a recommendation with more at stake, your team may use it instead, with the report behind it, and change the first message below to match.
+
+
+RUN THE MODEL
+
+Open the REG tool from the analytics workbench, load quayholm_orders.csv, and fit this run. Then press Save report and keep the .txt file.
+
+Target: late_over_week
+Validation: the Validation column
+Inputs: order_month, supplier_country, product_category, units, factory_price_usd, shipping_mode, quoted_lead_time_days and supplier_on_time_share
+Leave out: expedite_fee_usd, because it is recorded after the outcome; supplier_messages, a text column; landed_cost_per_unit_usd, the other target; and every other column of the file, such as the id and date columns.
+
+
+THE FIRST MESSAGE
+
+Start a new thread with your team's agent, attach the .txt report, and send the message below.
+
+COPY:
+Our recommendation is to move orders away from the factories whose orders have the highest chance of arriving more than a week late. It belongs to the decision on the supplier. The attached report is a REG fit of late_over_week, the report the recommendation rests on. I will ask you one question about it at each of five governance gates.
+
+
+GATE 1, LIVE DATA
+
+COPY:
+Call get_rates and say which of its values bear on this recommendation, each with its date. What should the buyers do if the tool fails?
+
+Then open Execution Details and look at Tool Calls. Check that the agent called get_rates and that each value in its answer matches the tool's response.
+
+
+GATE 2, EVIDENCE
+
+COPY:
+Which numbers in the attached report support this recommendation, and how far can the buyers trust them? Name the validation rows behind them and any input recorded after the outcome.
+
+
+GATE 3, FAIRNESS AND PRIVACY
+
+COPY:
+Under this recommendation, orders move between factories. Could supplier_country stand in for something the data do not measure, so that a factory is judged by its country, and does acting on it use what supplier_messages say in a way the supplier would not expect?
+
+
+GATE 4, AUTHORITY
+
+COPY:
+Which part of this recommendation is yours, and which part does the buyers decide? Does any part go beyond the conclusions our brief lists under CONCLUSIONS THE AGENT MAY NOT DRAW?
+
+
+GATE 5, MONITORING
+
+COPY:
+If the buyers acts on this recommendation, which number would show that it worked, which number would show that it went wrong, and when should we look again? How would we notice if get_rates stopped working?
+
+
+THEN READ THE ANSWERS
+
+Read the five answers with the box "Reading the answers, gate by gate" on the lecture page, and decide which gate needs the most work. That gate is the main risk of your recommendation, and what would make it pass is your safeguard. Write your team's governance box in your own words.

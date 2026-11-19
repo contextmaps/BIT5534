@@ -1,0 +1,69 @@
+IRONWEAVE COMPOSITES, GOVERNANCE SHEET
+PM10. Ironweave Composites is made up. With this sheet your team takes its recommendation with the most at stake through the five governance gates your instructor showed on Lumenvale, with one question at each gate. Your team uses the answers as material for the governance box of its progress report 2 team thread, which your team writes in its own words. About twenty five minutes, with the model run.
+
+
+YOUR BUSINESS AT THE GATES
+
+Who decides: The process engineers, who set the cure settings, and the plant manager, who chooses resin suppliers.
+Who is affected: The operators, and the customers who build with the panels.
+Your live tool: get_humidity, from Open-Meteo, the humidity forecast near Roanoke for the next 3 days. The forecast covers outdoor humidity near Roanoke for 3 days, and the humidity inside the plant can differ.
+
+
+THE RECOMMENDATION
+
+Your team's recommendation for the gates is to give an extra test to the batches with the highest chance of being rejected. It belongs to the decision on the extra test in your brief. If your team's synthesis has a recommendation with more at stake, your team may use it instead, with the report behind it, and change the first message below to match.
+
+
+RUN THE MODEL
+
+Open the REG tool from the analytics workbench, load ironweave_batches.csv, and fit this run. Then press Save report and keep the .txt file.
+
+Target: rejected
+Validation: the Validation column
+Inputs: line, shift, resin_supplier, resin_ratio_pct, fiber_content_pct, cure_temp_c, cure_time_min, line_speed_m_per_min, ambient_humidity_pct and operator_experience_years
+Leave out: rework_hours, because it is recorded after the outcome; shift_log, a text column; tensile_strength_mpa, the other target; and every other column of the file, such as the id and date columns.
+
+
+THE FIRST MESSAGE
+
+Start a new thread with your team's agent, attach the .txt report, and send the message below.
+
+COPY:
+Our recommendation is to give an extra test to the batches with the highest chance of being rejected. It belongs to the decision on the extra test. The attached report is a REG fit of rejected, the report the recommendation rests on. I will ask you one question about it at each of five governance gates.
+
+
+GATE 1, LIVE DATA
+
+COPY:
+Call get_humidity and say which of its values bear on this recommendation, each with its date. What should the process engineers or the plant manager do if the tool fails?
+
+Then open Execution Details and look at Tool Calls. Check that the agent called get_humidity and that each value in its answer matches the tool's response.
+
+
+GATE 2, EVIDENCE
+
+COPY:
+Which numbers in the attached report support this recommendation, and how far can the process engineers or the plant manager trust them? Name the validation rows behind them and any input recorded after the outcome.
+
+
+GATE 3, FAIRNESS AND PRIVACY
+
+COPY:
+Under this recommendation, some batches ship and others do not, and one supplier gets more orders than another. Could operator_experience_years or shift be read as a judgment of the operators on that shift, and does acting on it use what shift_log says about a person in a way the person would not expect?
+
+
+GATE 4, AUTHORITY
+
+COPY:
+Which part of this recommendation is yours, and which part does the process engineers or the plant manager decide? Does any part go beyond the conclusions our brief lists under CONCLUSIONS THE AGENT MAY NOT DRAW?
+
+
+GATE 5, MONITORING
+
+COPY:
+If the process engineers or the plant manager acts on this recommendation, which number would show that it worked, which number would show that it went wrong, and when should we look again? How would we notice if get_humidity stopped working?
+
+
+THEN READ THE ANSWERS
+
+Read the five answers with the box "Reading the answers, gate by gate" on the lecture page, and decide which gate needs the most work. That gate is the main risk of your recommendation, and what would make it pass is your safeguard. Write your team's governance box in your own words.

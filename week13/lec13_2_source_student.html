@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Governing a Recommendation, from the Data to Monitoring</title>
+<style>
+:root {
+  --c-text:#1a1a1a; --c-muted:#4a4a4a;
+  --c-meta-bg:#f4f6f9; --c-meta-border:#d0d7e2;
+  --c-obj-bg:#eef4fb; --c-obj-accent:#1a5da0;
+  --c-ctx-bg:#fffbf0; --c-ctx-border:#e8d8a0; --c-ctx-label:#5c4400;
+  --c-ctx-s-bg:#f0f7ff; --c-ctx-s-border:#a0c8f0; --c-ctx-s-label:#1a4a80;
+  --c-nar-bg:#f9f9f9; --c-nar-border:#bbb;
+  --c-dis-bg:#f0f4ff; --c-dis-border:#8090cc; --c-dis-label:#1e2e80;
+  --c-sys-bg:#f3f0ff; --c-sys-border:#9080d0; --c-sys-label:#3a2090;
+  --c-scr-bg:#fff8e8; --c-scr-border:#d0a030; --c-scr-label:#6b4a00;
+  --c-s-bg:#f0faf4; --c-s-border:#70c090; --c-s-id:#14552f;
+  --c-r-bg:#fff8f0; --c-r-border:#d0a040; --c-r-id:#6b3e00;
+  --c-mk-bg:#f0f0ff; --c-mk-border:#8080c8; --c-mk-id:#2a2a80;
+  --c-m-bg:#f0f8ff; --c-m-border:#70a8d0; --c-m-id:#0a4a70;
+  --c-mc-bg:#f8f8ff; --c-mc-border:#a0a0d0;
+  --c-btn:#14552f; --c-btn-r:#6b3e00; --c-btn-mk:#2a2a80;
+  --c-btn-mo:#0a4a70; --c-btn-mc:#3a3a6a;
+  --c-q-bg:#f0fafd; --c-q-border:#70b8d0; --c-q-id:#0a5070;
+  --c-btn-q:#0a5070;
+  --c-o-bg:#fef6f0; --c-o-border:#e89870; --c-o-id:#a04510;
+  --c-btn-o:#a04510;
+  --radius:8px; --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --page:1100px;
+}
+/* Two layers. The wrapper takes the width Canvas gives it, up to --page, so it
+   never overflows a narrow frame and never needs a per-machine number. Everything
+   inside fills the block it sits in. */
+.plib-wrap{font-family:var(--font);color:var(--c-text);max-width:min(var(--page),100% - 2rem);margin:0 auto;padding:1rem 0}
+/* Every block spans the page so their left and right edges line up down the
+   column, and the text inside fills the block.
+
+   There is no reading column. D-032 put prose in a 720px column inside a 1100px
+   wrapper, and on 2026-09-02 the instructor read the rendered result and rejected
+   it: every text block stopped two thirds of the way across its own card and
+   stranded the rest, and a bordered box that stops short of the card it sits in
+   reads as broken rather than as typography. The wrapper's own
+   min(1100px, 100% - 2rem) is now the only bound, so a line never exceeds about
+   1055px. The cost is real and is worth stating. A long paragraph at 1055px reads
+   worse than the same paragraph at 800, and what pays for it is the writing
+   standard's rule on paragraph length, which now carries the load the column used
+   to carry. Recorded as D-043, amending D-032. */
+.plib-wrap > *{max-width:100%}
+.plib-submit{margin:2rem 0 1rem;padding:1.4rem 1.6rem;border-radius:var(--radius);background:var(--c-obj-bg);border:2px solid var(--c-obj-accent)}
+.plib-submit-title{font-size:13px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--c-obj-accent)}
+.plib-submit-p{margin:.5rem 0 1rem;font-size:15px;line-height:1.65}
+.plib-submit-btn{display:inline-block;background:var(--c-obj-accent);color:#fff;text-decoration:none;font-size:16px;font-weight:600;padding:.7rem 1.4rem;border-radius:var(--radius)}
+.plib-submit-btn:hover{filter:brightness(1.12)}
+.plib-submit-btn:focus{outline:3px solid var(--c-obj-accent);outline-offset:3px}
+.plib-submit-note{margin-top:.55rem;font-size:13px;color:var(--c-muted)}
+.plib-material{margin:1.6rem 0;padding:1.2rem 1.4rem;border-radius:var(--radius);background:var(--c-s-bg);border:1px solid var(--c-s-border)}
+.plib-info{background:#f3f4f8;border:1px solid #c9cde0;border-left:5px solid #5a6aa8}
+.plib-info-tag{color:#4a5a98 !important}
+.plib-info-box{background:#fff;border-color:#c9cde0;max-height:none}
+.plib-material-tag{font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--c-s-id)}
+.plib-material-title{margin-top:.3rem;font-size:17px;font-weight:600;color:var(--c-text)}
+.plib-material-box{margin:.9rem 0 1.1rem;padding:.9rem 1rem;max-height:22rem;overflow:auto;background:#fff;border:1px solid var(--c-s-border);border-radius:6px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;color:var(--c-text)}
+.plib-material-box:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+.plib-material-btns{display:flex;flex-wrap:wrap;gap:.6rem}
+.plib-material-copies{margin:.9rem 0 0;display:flex;flex-wrap:wrap;gap:.8rem}
+.plib-copyrow{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;padding:.55rem .7rem;background:#fff;border:1px solid var(--c-s-border);border-radius:6px}
+.plib-copyrow-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-s-id)}
+.plib-copyrow-code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;color:var(--c-text)}
+.plib-copy-btn-row{padding:.3rem .6rem;font-size:12px}
+.plib-material-btn{display:inline-block;background:var(--c-s-id);color:#fff;text-decoration:none;font-size:15px;font-weight:600;padding:.6rem 1.2rem;border-radius:var(--radius)}
+.plib-material-btn:hover{filter:brightness(1.25)}
+.plib-material-btn:focus{outline:3px solid var(--c-s-id);outline-offset:3px}
+.plib-material-note{margin-top:.55rem;font-size:13px;color:var(--c-muted)}
+.plib-section{margin:2.25rem 0 1.1rem;padding-top:.9rem;border-top:3px solid var(--c-obj-accent)}
+.plib-section-n{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--c-muted)}
+.plib-section-t{font-size:23px;font-weight:700;letter-spacing:.04em;color:var(--c-obj-accent);margin-top:2px}
+.plib-wrap > .plib-section:first-child{margin-top:.5rem}
+.plib-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;margin-bottom:1.25rem}
+.plib-tile{background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);padding:.9rem;display:flex;flex-direction:column}
+.plib-tile img{width:100%;height:auto;border-radius:4px;background:#faf7f8}
+.plib-tile figure,.plib-tile{margin:0}
+/* A drawing narrower than its grid cell is centred in it. render_tiles caps the
+   wrapper at the SVG's own viewBox width so a 400px card is not blown up to the
+   full row, and without this the drawing sat against the left edge with the slack
+   stranded on the right, which is the same fault D-043 removed from the prose. */
+.plib-tile-svg{width:100%;margin-left:auto;margin-right:auto}
+.plib-tile-svg svg{width:100%;height:auto;display:block}
+.plib-tile-caption{font-size:13px;line-height:1.55;color:var(--c-text);margin-top:auto;padding-top:.6rem}
+.plib-meta{background:var(--c-meta-bg);border:1px solid var(--c-meta-border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1.5rem}
+.plib-meta-course{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--c-muted);margin-bottom:4px}
+.plib-meta-title{font-size:20px;font-weight:600;margin:4px 0 8px}
+.plib-meta-week{font-size:13px;color:var(--c-muted);margin-bottom:2px}
+.plib-meta-details{font-size:12px;color:var(--c-muted);margin-top:8px}
+.plib-objectives{background:var(--c-obj-bg);border-left:4px solid var(--c-obj-accent);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.5rem}
+.plib-objectives-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-obj-accent);font-weight:700;margin-bottom:8px}
+.plib-objectives-intro{margin:0 0 8px;font-size:14px;line-height:1.6;font-style:italic;color:var(--c-muted)}
+.plib-objectives-list{margin:0;padding-left:1.25rem}
+.plib-objectives-list li{margin-bottom:6px;font-size:14px;line-height:1.6}
+.plib-context{background:var(--c-ctx-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-context-student{background:var(--c-ctx-s-bg);border-color:var(--c-ctx-s-border)}
+.plib-context-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-ctx-label);font-weight:700;margin-bottom:8px}
+.plib-context-student .plib-context-label{color:var(--c-ctx-s-label)}
+.plib-context-body p{margin:4px 0;font-size:13px;line-height:1.6;color:var(--c-muted)}
+.plib-formula{margin:1rem 0;padding:1rem 1.25rem;background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);text-align:center}
+.plib-formula-body{overflow-x:auto;color:var(--c-text);padding:2px 0}
+.plib-formula-svg{max-width:100%;height:auto}
+.plib-formula-caption{margin-top:.85rem;font-size:13px;line-height:1.6;color:var(--c-muted);text-align:left}
+.plib-formula-missing{font-size:13px;color:var(--c-muted);text-align:left}
+.plib-formula-note{font-size:12px;margin-top:6px}
+.plib-formula-source{margin-top:.85rem;text-align:left}
+.plib-formula-source summary{font-size:12px;color:var(--c-muted);cursor:pointer}
+.plib-formula-latex{margin:6px 0 0;padding:8px 10px;background:var(--c-ctx-bg);border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.5;white-space:pre-wrap;color:var(--c-muted)}
+.plib-context-pre{margin:8px 0;padding:10px 12px;background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.55;color:var(--c-text);white-space:pre;overflow-x:auto}
+.plib-context-bullet{font-size:13px;color:var(--c-muted);padding-left:1rem;position:relative;margin-bottom:3px}
+.plib-context-bullet::before{content:"\2022";position:absolute;left:0}
+.plib-script{background:var(--c-scr-bg);border:1px solid var(--c-scr-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-script-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-scr-label);font-weight:700;margin-bottom:10px}
+.plib-script-list{margin:0;padding-left:1.25rem}
+.plib-script-list li{font-size:14px;line-height:1.6;margin-bottom:8px}
+.plib-script-time{font-weight:700;color:var(--c-scr-label);font-family:monospace;background:rgba(208,160,48,.15);padding:1px 6px;border-radius:3px}
+.plib-narration{background:var(--c-nar-bg);border-left:3px solid var(--c-nar-border);padding:.9rem 1.25rem;margin-bottom:1rem;border-radius:0 var(--radius) var(--radius) 0}
+.plib-narration p{margin:0 0 8px;font-size:14px;line-height:1.7}
+.plib-narration p:last-child{margin-bottom:0}
+.plib-narration-list{margin:4px 0;padding-left:1.25rem}
+.plib-narration-list li{font-size:14px;line-height:1.6;margin-bottom:4px}
+.plib-discussion{background:var(--c-dis-bg);border:1px solid var(--c-dis-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-slide{margin:0 0 1.25rem;text-align:center}
+.plib-slide-img{max-width:100%;height:auto;border:1px solid var(--c-dis-border);border-radius:var(--radius);box-shadow:0 1px 4px rgba(0,0,0,.08);background:#faf7f8;min-height:60px}
+.plib-slide-caption{font-size:13px;color:var(--c-muted);margin-top:.4rem}
+.plib-slide-script{margin-top:.6rem;text-align:left;font-size:13px;color:var(--c-muted)}
+.plib-slide-script summary{cursor:pointer;font-weight:600}
+.plib-slide-script-body{white-space:pre-wrap;background:rgba(0,0,0,.04);border-radius:var(--radius);padding:.6rem .8rem;margin-top:.4rem}
+.plib-discussion-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-dis-label);font-weight:700;margin-bottom:8px}
+.plib-discussion-intro{margin:0 0 8px;font-size:14px;line-height:1.6;font-style:italic;color:var(--c-dis-label)}
+.plib-discussion-list{margin:0;padding-left:1.25rem}
+.plib-discussion-list li{font-size:14px;line-height:1.6;margin-bottom:6px;color:var(--c-dis-label)}
+.plib-scenarios{margin-bottom:1rem}
+.plib-scenarios-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:#630031;font-weight:700;margin-bottom:8px}
+.plib-scenario-card{background:var(--c-ctx-s-bg);border:1px solid var(--c-ctx-s-border);border-left:4px solid #630031;border-radius:var(--radius);padding:.7rem 1rem;margin-bottom:.6rem}
+.plib-scenario-title{font-weight:700;font-size:14px;color:#630031;margin-bottom:4px}
+.plib-scenario-body{margin:0 0 4px;font-size:14px;line-height:1.6}
+.plib-scenario-line{font-size:13px;line-height:1.55;margin:2px 0 0;padding-left:1rem;position:relative}
+.plib-scenario-line::before{content:"›";position:absolute;left:.2rem;color:#CF4420;font-weight:700}
+.plib-system{background:var(--c-sys-bg);border:1px solid var(--c-sys-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-system-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-sys-label);font-weight:700;margin-bottom:8px}
+.plib-system-note{font-weight:400;text-transform:none;letter-spacing:0;font-style:italic}
+.plib-prompt-s-ref{opacity:.92;border-style:dashed}
+.plib-ref-note{font-size:12px;color:var(--c-muted);font-style:italic;margin-top:6px}
+.plib-prompt-text{display:none}
+.plib-prompt-display{font-size:14px;line-height:1.7;white-space:pre-wrap;background:rgba(255,255,255,.6);border-radius:4px;padding:.6rem .8rem;margin-bottom:10px}
+.plib-prompt-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.plib-prompt-id{font-size:12px;font-weight:700;font-family:monospace;padding:2px 7px;border-radius:4px}
+.plib-prompt-type-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-muted);font-weight:600}
+.plib-prompt-s{background:var(--c-s-bg);border:1px solid var(--c-s-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-prompt-s .plib-prompt-id{color:var(--c-s-id);background:rgba(20,85,47,.1)}
+.plib-prompt-r{background:var(--c-r-bg);border:1px solid var(--c-r-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-r-id{color:var(--c-r-id)!important;background:rgba(107,62,0,.1)!important}
+.plib-reflect-label{color:var(--c-r-id)!important}
+.plib-reflect-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-prompt-marker{background:var(--c-mk-bg);border:2px solid var(--c-mk-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-marker-id{color:var(--c-mk-id)!important;background:rgba(42,42,128,.1)!important}
+.plib-marker-label{color:var(--c-mk-id)!important}
+.plib-marker-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-marker-display{border-left:3px solid var(--c-mk-border);max-height:18em;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;box-shadow:inset 0 -10px 10px -10px rgba(0,0,0,.18)}
+.plib-prompt-m{background:var(--c-m-bg);border:1.5px solid var(--c-m-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:.5rem}
+.plib-m-id{color:var(--c-m-id)!important;background:rgba(10,74,112,.1)!important}
+.plib-m-label{color:var(--c-m-id)!important}
+.plib-m-badge{font-size:11px;background:var(--c-m-id);color:#fff;padding:2px 8px;border-radius:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.plib-m-instructions{background:rgba(255,255,255,.7);border-radius:6px;padding:10px 14px;margin-bottom:12px}
+.plib-m-instructions-label{font-size:12px;font-weight:700;color:var(--c-m-id);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.plib-m-steps{margin:0;padding-left:1.25rem}
+.plib-m-steps li{font-size:13px;line-height:1.6;margin-bottom:4px}
+.plib-m-seed{background:rgba(255,255,255,.5);border-left:3px solid var(--c-m-border);padding:8px 12px;margin-bottom:12px;border-radius:0 4px 4px 0}
+.plib-m-seed-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-m-id);margin-bottom:4px}
+.plib-m-seed-text{font-size:13px;line-height:1.6;white-space:pre-wrap}
+.plib-prompt-m-close{background:var(--c-mc-bg);border:1px dashed var(--c-mc-border);border-radius:var(--radius);padding:.75rem 1.25rem;margin-bottom:1.25rem}
+.plib-m-close-label{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.plib-m-close-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-copy-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;font-size:13px;font-weight:500;border:1.5px solid var(--c-btn);background:transparent;color:var(--c-btn);border-radius:6px;cursor:pointer;transition:background .15s,color .15s}
+.plib-copy-btn:hover{background:var(--c-btn);color:#fff}
+.plib-copy-btn:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+.plib-copy-btn.copied{background:#333;color:#fff;border-color:#333}
+.plib-copy-btn-reflect{border-color:var(--c-btn-r);color:var(--c-btn-r)}
+.plib-copy-btn-reflect:hover{background:var(--c-btn-r);color:#fff}
+.plib-copy-btn-marker{border-color:var(--c-btn-mk);color:var(--c-btn-mk)}
+.plib-copy-btn-marker:hover{background:var(--c-btn-mk);color:#fff}
+.plib-copy-btn-m-open{border-color:var(--c-btn-mo);color:var(--c-btn-mo)}
+.plib-copy-btn-m-open:hover{background:var(--c-btn-mo);color:#fff}
+.plib-copy-btn-m-close{border-color:var(--c-btn-mc);color:var(--c-btn-mc)}
+.plib-copy-btn-m-close:hover{background:var(--c-btn-mc);color:#fff}
+.plib-textarea{display:block;width:100%;box-sizing:border-box;padding:10px 12px;font-size:14px;font-family:var(--font);line-height:1.6;border:1.5px solid var(--c-r-border);border-radius:6px;margin-bottom:10px;background:#fff;color:var(--c-text);resize:vertical;min-height:120px}
+.plib-prompt-input{min-height:0;margin:10px 0 6px}
+.plib-textarea:focus{outline:3px solid #005fcc;outline-offset:2px;border-color:#005fcc}
+.plib-counter{font-size:13px;color:var(--c-muted);margin-bottom:8px;font-variant-numeric:tabular-nums}
+.plib-counter.at-limit{color:#b00020;font-weight:600}
+.plib-counter .plib-count-ok{color:#14552f}
+.plib-counter .plib-count-warn{color:#8a4a00}
+.plib-counter .plib-count-bad{color:#b00020;font-weight:600}
+.plib-counter-min{font-size:12px;color:var(--c-muted);margin-left:8px}
+.plib-warn{font-size:13px;color:#b00020;font-weight:600;margin-bottom:8px;min-height:20px}
+.plib-prompt-q{background:var(--c-q-bg);border:1px solid var(--c-q-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-q-id{color:var(--c-q-id)!important;background:rgba(10,80,112,.1)!important}
+.plib-q-label{color:var(--c-q-id)!important}
+.plib-q-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-q-items{display:flex;flex-direction:column;gap:14px;margin-bottom:10px}
+.plib-q-item{background:rgba(255,255,255,.6);border-radius:6px;padding:10px 12px}
+.plib-q-question{font-size:14px;font-weight:500;display:block;margin-bottom:8px;line-height:1.5}
+.plib-q-item-num{font-family:monospace;font-weight:700;color:var(--c-q-id);margin-right:6px}
+.plib-q-cap-note{font-weight:400;font-style:italic;color:var(--c-muted);margin-left:6px;font-size:13px}
+.plib-q-select{width:100%;padding:6px 8px;font-size:14px;border:1px solid var(--c-q-border);border-radius:4px;background:#fff}
+.plib-q-likert{display:flex;flex-wrap:wrap;gap:10px}
+.plib-q-likert-opt{display:flex;align-items:center;gap:5px;font-size:14px;cursor:pointer}
+.plib-q-checkboxes{display:flex;flex-direction:column;gap:6px}
+.plib-q-check-opt{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.plib-q-check-opt input[disabled] + span{opacity:.5}
+.plib-copy-btn-q{border-color:var(--c-btn-q);color:var(--c-btn-q)}
+.plib-copy-btn-q:hover{background:var(--c-btn-q);color:#fff}
+.plib-prompt-o{background:var(--c-o-bg);border:1px solid var(--c-o-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-o-id{color:var(--c-o-id)!important;background:rgba(160,69,16,.1)!important}
+.plib-o-label{color:var(--c-o-id)!important}
+.plib-o-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-o-question{font-size:14px;font-weight:500;margin-bottom:10px;line-height:1.5}
+.plib-o-list{list-style:none;padding:0;margin:0 0 10px 0;display:flex;flex-direction:column;gap:6px}
+.plib-o-item{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.7);border-radius:6px;padding:8px 10px;font-size:14px}
+.plib-o-rank{font-family:monospace;font-weight:700;color:var(--c-o-id);min-width:1.5em;text-align:right}
+.plib-o-item-text{flex:1}
+.plib-o-controls{display:flex;flex-direction:column;gap:2px}
+.plib-o-arrow{background:transparent;border:1px solid var(--c-o-border);color:var(--c-o-id);width:28px;height:22px;font-size:14px;line-height:1;cursor:pointer;border-radius:3px;padding:0}
+.plib-o-arrow:hover:not([disabled]){background:var(--c-o-border);color:#fff}
+.plib-o-arrow[disabled]{opacity:.25;cursor:default}
+.plib-copy-btn-o{border-color:var(--c-btn-o);color:var(--c-btn-o)}
+.plib-copy-btn-o:hover{background:var(--c-btn-o);color:#fff}
+.plib-demo-badge{font-size:11px;color:var(--c-muted);background:rgba(0,0,0,.05);padding:2px 8px;border-radius:3px;font-style:italic;margin-left:8px}
+.plib-ai-badge{font-size:11px;padding:2px 8px;border-radius:3px;font-family:monospace;margin-left:8px}
+.plib-ai-respond{background:#e8f5e8;color:#2c5e2c}
+.plib-ai-acknowledge{background:#fef0e6;color:#8c4a1a}
+.plib-ai-archive{background:#f0e8f5;color:#5a2c8c}
+</style>
+</head>
+<body>
+<a href="#main-content" class="plib-skip-link">Skip to main content</a>
+<style>.plib-skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;}.plib-skip-link:focus{position:static;width:auto;height:auto;background:#005fcc;color:#fff;padding:8px 16px;font-size:14px;font-weight:600;border-radius:4px;text-decoration:none;display:inline-block;margin:8px;}</style>
+<main id="main-content">
+<div class="plib-wrap">
+<div class="plib-meta">
+  <div class="plib-meta-course">BIT 5534 Applied Business Intelligence and Analytics</div>
+  <div class="plib-meta-week">Week 13 · Lecture 2</div>
+  <div class="plib-meta-title">Governing a Recommendation, from the Data to Monitoring</div>
+  <div class="plib-meta-details"><span><strong>Duration:</strong> 75 minutes</span>&ensp;·&ensp;<span><strong>Platform:</strong> Hokie AI and your team's agent</span>&ensp;·&ensp;<span><strong>Submission:</strong> Your reflection thread, exported as a .zip and uploaded to Canvas</span>&ensp;·&ensp;<span><strong>Lecture Mode:</strong> project_lab</span></div>
+</div>
+
+<div class="plib-objectives">
+  <div class="plib-objectives-label">Learning Objectives</div>
+  <p class="plib-objectives-intro">By the end of this lecture, students will be able to:</p>
+  <ol class="plib-objectives-list">
+    <li>Name the five governance gates a business recommendation passes on its way from the data to monitoring.</li>
+    <li>Ask an agent one question at each gate, and check the agent's live tool call in Execution Details.</li>
+    <li>Say what a manager should know or check before acting on a recommendation from a model and an agent.</li>
+  </ol>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 1 of 4</div><div class="plib-section-t">INTRODUCTION</div></div>
+
+<div class="plib-context plib-context-student">
+  <div class="plib-context-label">&#128203; Note for Students</div>
+  <div class="plib-context-body">
+    <p>Today is about governance. Your instructor takes one Lumenvale recommendation through five gates, with one question for the agent at each gate. Then your team takes its own recommendation with the most at stake through the same gates, with a governance sheet written for your business. Your team uses the answers as material for the governance box of its progress report 2 team thread.</p>
+  </div>
+</div>
+
+<div class="plib-narration">
+  <p>People at your business act on a recommendation from a model and an agent. Before anyone acts on it, and after, the recommendation passes five gates on its way from the data to the model report, the agent, the manager, the action and monitoring. The animation below follows one Lumenvale recommendation around that loop.</p>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-8">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:980px" role="img" aria-label="An animated figure of one Lumenvale recommendation, moving Copperline off the Christmas weekend, as it travels a loop of six stations: data, the title file and live tools; model report, REG on hours_28d; agent, which reads reports and calls tools; manager, the content strategy team; action, the release date moves; and monitoring, day 28 and the tools, with an arrow back to data. Five stations carry a gate that lights as the recommendation reaches it. 1, live data, the release desk calls get_holidays, Christmas Day falls on Copperline's release Friday, and the team checks the tool call in Execution Details. 2, evidence, in the REG report on hours_28d the team reads holiday_weekend on the validation rows, with the other inputs held fixed. 3, fairness and privacy, the holiday check uses United States holidays, and 23 of Lumenvale's 38 million subscribers live in its other markets. 4, authority, the agent recommends the move, the content strategy team decides, and marketing hears before the date changes. 5, action, the team moves Copperline to another weekend. 6, monitoring, the team watches hours_28d at day 28 and checks the holiday tool again before the next release. 7, what the team learns goes back into the data for the next decision. The team asks one question at each gate, and a recommendation that fails a gate goes back for more work."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 600" width="980" role="img"><style>.g3-c1{opacity:0;animation:g3c1 30s infinite}@keyframes g3c1{1%,13%{opacity:1}14%,100%{opacity:0}}.g3-c2{opacity:0;animation:g3c2 30s infinite}@keyframes g3c2{0%,14%{opacity:0}15%,27%{opacity:1}28%,100%{opacity:0}}.g3-c3{opacity:0;animation:g3c3 30s infinite}@keyframes g3c3{0%,28%{opacity:0}29%,41%{opacity:1}42%,100%{opacity:0}}.g3-c4{opacity:0;animation:g3c4 30s infinite}@keyframes g3c4{0%,42%{opacity:0}43%,55%{opacity:1}56%,100%{opacity:0}}.g3-c5{opacity:0;animation:g3c5 30s infinite}@keyframes g3c5{0%,56%{opacity:0}57%,69%{opacity:1}70%,100%{opacity:0}}.g3-c6{opacity:0;animation:g3c6 30s infinite}@keyframes g3c6{0%,70%{opacity:0}71%,83%{opacity:1}84%,100%{opacity:0}}.g3-c7{opacity:0;animation:g3c7 30s infinite}@keyframes g3c7{0%,84%{opacity:0}85%,98%{opacity:1}99%,100%{opacity:0}}.g3-lit-data{opacity:0;animation:g3c1 30s infinite}.g3-lit-report{opacity:0;animation:g3c2 30s infinite}.g3-lit-agent{opacity:0;animation:g3c3 30s infinite}.g3-lit-manager{opacity:0;animation:g3c4 30s infinite}.g3-lit-monitor{opacity:0;animation:g3c6 30s infinite}.g3-card{animation:g3card 30s infinite}@keyframes g3card{0%,13%{transform:translate(129px,224px)}15%,27%{transform:translate(369px,224px)}29%,41%{transform:translate(609px,224px)}43%,55%{transform:translate(849px,224px)}57%,69%{transform:translate(849px,464px)}71%,83%{transform:translate(489px,464px)}85%,99%{transform:translate(129px,224px)}100%{transform:translate(129px,224px)}}@media (prefers-reduced-motion:reduce){.g3-c1,.g3-c2,.g3-c3,.g3-c4,.g3-c5,.g3-c6{animation:none;opacity:0}.g3-c7,.g3-lit-data,.g3-lit-report,.g3-lit-agent,.g3-lit-manager,.g3-lit-monitor{animation:none;opacity:1}.g3-card{animation:none;transform:translate(129px,224px)}}</style><rect x="1" y="1" width="978" height="598" rx="14" fill="#fff" stroke="#ece7e2" stroke-width="2"/><rect x="26" y="110" width="206" height="104" rx="12" fill="#faf6f8" stroke="#630031" stroke-width="2"/><text x="129.0" y="140" font-size="19" fill="#630031" font-weight="700" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">Data</text><text x="129.0" y="162" font-size="13" fill="#8a8a8a" font-weight="400" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">the title file and live tools</text><rect x="38" y="176" width="182" height="26" rx="13" fill="#fff" stroke="#8a8a8a" stroke-width="2"/><text x="129.0" y="194" font-size="13" fill="#8a8a8a" font-weight="600" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">Gate 1, Live data</text><g class="g3-lit-data"><rect x="38" y="176" width="182" height="26" rx="13" fill="#CF4420" stroke="#CF4420" stroke-width="2"/><text x="129.0" y="194" font-size="13" fill="#fff" font-weight="700" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">Gate 1, Live data</text></g><rect x="266" y="110" width="206" height="104" rx="12" fill="#faf6f8" stroke="#630031" stroke-width="2"/><text x="369.0" y="140" font-size="19" fill="#630031" font-weight="700" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">Model report</text><text x="369.0" y="162" font-size="13" fill="#8a8a8a" font-weight="400" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">REG on hours_28d</text><rect x="278" y="176" width="182" height="26" rx="13" fill="#fff" stroke="#8a8a8a" stroke-width="2"/><text x="369.0" y="194" font-size="13" fill="#8a8a8a" font-weight="600" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">Gate 2, Evidence</text><g class="g3-lit-report"><rect x="278" y="176" width="182" height="26" rx="13" fill="#CF4420" stroke="#CF4420" stroke-width="2"/><text x="369.0" y="194" font-size="13" fill="#fff" font-weight="700" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">Gate 2, Evidence</text></g><rect x="506" y="110" width="206" height="104" rx="12" fill="#faf6f8" stroke="#630031" stroke-width="2"/><text x="609.0" y="140" font-size="19" fill="#630031" font-weight="700" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">Agent</text><text x="609.0" y="162" font-size="13" fill="#8a8a8a" font-weight="400" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">reads reports, calls tools</text><rect x="518" y="176" width="182" height="26" rx="13" fill="#fff" stroke="#8a8a8a" stroke-width="2"/><text x="609.0" y="194" font-size="13" fill="#8a8a8a" font-weight="600" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">Gate 3, Fairness and privacy</text><g class="g3-lit-agent"><rect x="518" y="176" width="182" height="26" rx="13" fill="#CF4420" stroke="#CF4420" stroke-width="2"/><text x="609.0" y="194" font-size="13" fill="#fff" font-weight="700" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">Gate 3, Fairness and privacy</text></g><rect x="746" y="110" width="206" height="104" rx="12" fill="#faf6f8" stroke="#630031" stroke-width="2"/><text x="849.0" y="140" font-size="19" fill="#630031" font-weight="700" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">Manager</text><text x="849.0" y="162" font-size="13" fill="#8a8a8a" font-weight="400" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">content strategy team</text><rect x="758" y="176" width="182" height="26" rx="13" fill="#fff" stroke="#8a8a8a" stroke-width="2"/><text x="849.0" y="194" font-size="13" fill="#8a8a8a" font-weight="600" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">Gate 4, Authority</text><g class="g3-lit-manager"><rect x="758" y="176" width="182" height="26" rx="13" fill="#CF4420" stroke="#CF4420" stroke-width="2"/><text x="849.0" y="194" font-size="13" fill="#fff" font-weight="700" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">Gate 4, Authority</text></g><rect x="746" y="350" width="206" height="104" rx="12" fill="#fff" stroke="#8a8a8a" stroke-width="2"/><text x="849.0" y="380" font-size="19" fill="#222" font-weight="700" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">Action</text><text x="849.0" y="402" font-size="13" fill="#8a8a8a" font-weight="400" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">the release date moves</text><rect x="386" y="350" width="206" height="104" rx="12" fill="#faf6f8" stroke="#630031" stroke-width="2"/><text x="489.0" y="380" font-size="19" fill="#630031" font-weight="700" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">Monitoring</text><text x="489.0" y="402" font-size="13" fill="#8a8a8a" font-weight="400" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">day 28 and the tools</text><rect x="398" y="416" width="182" height="26" rx="13" fill="#fff" stroke="#8a8a8a" stroke-width="2"/><text x="489.0" y="434" font-size="13" fill="#8a8a8a" font-weight="600" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">Gate 5, Monitoring</text><g class="g3-lit-monitor"><rect x="398" y="416" width="182" height="26" rx="13" fill="#CF4420" stroke="#CF4420" stroke-width="2"/><text x="489.0" y="434" font-size="13" fill="#fff" font-weight="700" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">Gate 5, Monitoring</text></g><line x1="234" y1="162" x2="262" y2="162" stroke="#ece7e2" stroke-width="5"/><circle cx="262" cy="162" r="6" fill="#ece7e2"/><line x1="474" y1="162" x2="502" y2="162" stroke="#ece7e2" stroke-width="5"/><circle cx="502" cy="162" r="6" fill="#ece7e2"/><line x1="714" y1="162" x2="742" y2="162" stroke="#ece7e2" stroke-width="5"/><circle cx="742" cy="162" r="6" fill="#ece7e2"/><line x1="849" y1="216" x2="849" y2="346" stroke="#ece7e2" stroke-width="5"/><circle cx="849" cy="346" r="6" fill="#ece7e2"/><line x1="744" y1="402" x2="596" y2="402" stroke="#ece7e2" stroke-width="5"/><circle cx="596" cy="402" r="6" fill="#ece7e2"/><path d="M 384 402 L 129 402 L 129 220" fill="none" stroke="#ece7e2" stroke-width="5"/><circle cx="129" cy="220" r="6" fill="#ece7e2"/><g class="g3-card"><rect x="-95" y="0" width="190" height="44" rx="8" fill="#fff7f2" stroke="#CF4420" stroke-width="2"/><text x="0" y="18" font-size="13" fill="#222" font-weight="700" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">Move Copperline off</text><text x="0" y="35" font-size="13" fill="#222" font-weight="700" text-anchor="middle" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">the Christmas weekend</text></g><g class="g3-c1"><text x="30" y="50" font-size="18" fill="#222" font-weight="600" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">1. Live data. The release desk calls get_holidays, and Christmas Day falls on</text><text x="30" y="76" font-size="18" fill="#222" font-weight="600" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">Copperline's release Friday. The team checks the tool call in Execution Details.</text></g><g class="g3-c2"><text x="30" y="50" font-size="18" fill="#222" font-weight="600" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">2. Evidence. In the REG report on hours_28d, the team reads holiday_weekend on the</text><text x="30" y="76" font-size="18" fill="#222" font-weight="600" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">validation rows, with the other inputs held fixed.</text></g><g class="g3-c3"><text x="30" y="50" font-size="18" fill="#222" font-weight="600" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">3. Fairness and privacy. The holiday check uses United States holidays, and 23 of</text><text x="30" y="76" font-size="18" fill="#222" font-weight="600" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">Lumenvale's 38 million subscribers live in its other markets.</text></g><g class="g3-c4"><text x="30" y="50" font-size="18" fill="#222" font-weight="600" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">4. Authority. The agent recommends the move. The content strategy team decides,</text><text x="30" y="76" font-size="18" fill="#222" font-weight="600" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">and marketing hears before the date changes.</text></g><g class="g3-c5"><text x="30" y="50" font-size="18" fill="#222" font-weight="600" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">5. Action. The team moves Copperline to another weekend.</text></g><g class="g3-c6"><text x="30" y="50" font-size="18" fill="#222" font-weight="600" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">6. Monitoring. The team watches hours_28d at day 28, and checks the holiday tool</text><text x="30" y="76" font-size="18" fill="#222" font-weight="600" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">again before the next release.</text></g><g class="g3-c7"><text x="30" y="50" font-size="18" fill="#222" font-weight="600" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">7. What the team learns goes back into the data for the next decision.</text></g><text x="30" y="556" font-size="15" fill="#8a8a8a" font-weight="500" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">The team asks one question at each gate. A recommendation that fails a gate goes back for more work.</text><text x="30" y="580" font-size="13" fill="#8a8a8a" font-weight="400" text-anchor="start" style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif">Lumenvale is a made up business.</text></svg></div>
+    <figcaption class="plib-tile-caption">Five gates on one loop, from the data to monitoring and back.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>The five gates are the five questions of the governance box in your progress report 2 team thread, in the order a recommendation meets them.</p>
+  <p>First, live data. The value comes from a tool call with its date, and the team has a plan for the day the tool fails.</p>
+  <p>THEN evidence. Every number comes from the report's validation rows, and an estimate stays an association, with the other inputs held fixed.</p>
+  <p>THEN fairness and privacy. The team knows who the recommendation affects or leaves out, and checks that no input stands in for a protected group.</p>
+  <p>THEN authority. The agent advises, and the person the brief names decides.</p>
+  <p>THEN monitoring. After the manager acts, the team watches a number for success and a number for trouble, and checks that the live tool still works.</p>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 2 of 4</div><div class="plib-section-t">DEMONSTRATION</div></div>
+
+<div class="plib-narration">
+  <p>Your instructor takes one recommendation through the five gates: move Copperline off the Christmas weekend. The box below lists the agents and the report.</p>
+</div>
+
+<div class="plib-material plib-info" id="plib-material-12">
+  <div class="plib-material-tag plib-info-tag">For reading</div>
+  <div class="plib-material-title">How your instructor set up the demonstration</div>
+  <pre class="plib-material-box plib-info-box">How your instructor set up the demonstration
+
+The recommendation   Move Copperline (LV-204, a film planned for Friday, December 25, with 3.1 million
+                     dollars of marketing) off the Christmas weekend.
+
+Gate 1               The release desk from lec13_1, which calls get_holidays, in its own thread.
+
+Gates 2 to 5         The Lumenvale analyst from lec12_1, in one thread, with a REG report attached.
+                     The REG run: target hours_28d; inputs title_type, genre, origin, language,
+                     franchise, budget_musd, episodes, runtime_min, cast_recognition, marketing_musd,
+                     release_weekday, release_month and holiday_weekend. critic_score is left out,
+                     because critics publish it after release.
+
+Your team's agent reads reports and calls a live tool, so your team asks all five questions in one
+thread.</pre>
+  <div class="plib-material-note">For reading. Nothing in this box is pasted anywhere.</div>
+</div>
+
+<div class="plib-narration">
+  <p>Your instructor asks the first question in the release desk, which holds the holiday tool, then opens Execution Details to compare the tool's response with the desk's answer.</p>
+</div>
+
+<div class="plib-material" id="plib-material-14">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">Gate 1, Live data, to the release desk</div>
+  <div class="plib-material-copies">
+    <div class="plib-copyrow">
+      <div class="plib-copyrow-label">Copy the question</div>
+      <code class="plib-copyrow-code" id="plib-material-14-copy-0" data-copy="Is the Copperline release weekend a holiday weekend? Say which tool you called and what it returned.">Is the Copperline release weekend a holiday weekend? Say which tool you called and what it returned.</code>
+      <button class="plib-copy-btn plib-copy-btn-row" onclick="copyPrompt('plib-material-14-copy-0', this)" aria-label="Copy Copy the question to clipboard">
+        <span aria-hidden="true">&#128203;</span> Copy
+      </button>
+    </div>
+  </div>
+  <div class="plib-material-note">Then open Execution Details and compare the tool's response with the answer.</div>
+</div>
+
+<div class="plib-narration">
+  <p>Your instructor asks the next four questions in one thread with the Lumenvale analyst. At the evidence gate, your instructor asks for the number behind the move and how far the validation rows support it.</p>
+</div>
+
+<div class="plib-material" id="plib-material-16">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">Gate 2, Evidence, to the analyst</div>
+  <div class="plib-material-copies">
+    <div class="plib-copyrow">
+      <div class="plib-copyrow-label">Copy the question</div>
+      <code class="plib-copyrow-code" id="plib-material-16-copy-0" data-copy="We are thinking of moving Copperline off the Christmas weekend. What is the estimate for holiday_weekend in the attached report, and how far can we trust it for this decision?">We are thinking of moving Copperline off the Christmas weekend. What is the estimate for holiday_weekend in the attached report, and how far can we trust it for this decision?</code>
+      <button class="plib-copy-btn plib-copy-btn-row" onclick="copyPrompt('plib-material-16-copy-0', this)" aria-label="Copy Copy the question to clipboard">
+        <span aria-hidden="true">&#128203;</span> Copy
+      </button>
+    </div>
+  </div>
+  <div class="plib-material-note">Ask with the REG report on hours_28d attached.</div>
+</div>
+
+<div class="plib-narration">
+  <p>At the fairness and privacy gate, your instructor asks who the decision leaves out. Lumenvale has eight main markets, and the holiday tool covers one of them.</p>
+</div>
+
+<div class="plib-material" id="plib-material-18">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">Gate 3, Fairness and privacy, to the analyst</div>
+  <div class="plib-material-copies">
+    <div class="plib-copyrow">
+      <div class="plib-copyrow-label">Copy the question</div>
+      <code class="plib-copyrow-code" id="plib-material-18-copy-0" data-copy="Our holiday check uses United States holidays only. Which of Lumenvale's subscribers does that leave out of this decision?">Our holiday check uses United States holidays only. Which of Lumenvale's subscribers does that leave out of this decision?</code>
+      <button class="plib-copy-btn plib-copy-btn-row" onclick="copyPrompt('plib-material-18-copy-0', this)" aria-label="Copy Copy the question to clipboard">
+        <span aria-hidden="true">&#128203;</span> Copy
+      </button>
+    </div>
+  </div>
+  <div class="plib-material-note">Ask in the same thread.</div>
+</div>
+
+<div class="plib-narration">
+  <p>At the authority gate, your instructor asks the analyst to separate its advice from the decision, which belongs to the content strategy team.</p>
+</div>
+
+<div class="plib-material" id="plib-material-20">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">Gate 4, Authority, to the analyst</div>
+  <div class="plib-material-copies">
+    <div class="plib-copyrow">
+      <div class="plib-copyrow-label">Copy the question</div>
+      <code class="plib-copyrow-code" id="plib-material-20-copy-0" data-copy="Which part of moving Copperline is your recommendation, and which part does the content strategy team decide?">Which part of moving Copperline is your recommendation, and which part does the content strategy team decide?</code>
+      <button class="plib-copy-btn plib-copy-btn-row" onclick="copyPrompt('plib-material-20-copy-0', this)" aria-label="Copy Copy the question to clipboard">
+        <span aria-hidden="true">&#128203;</span> Copy
+      </button>
+    </div>
+  </div>
+  <div class="plib-material-note">Ask in the same thread.</div>
+</div>
+
+<div class="plib-narration">
+  <p>At the monitoring gate, your instructor asks what the team watches after it acts, and when it looks again.</p>
+</div>
+
+<div class="plib-material" id="plib-material-22">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">Gate 5, Monitoring, to the analyst</div>
+  <div class="plib-material-copies">
+    <div class="plib-copyrow">
+      <div class="plib-copyrow-label">Copy the question</div>
+      <code class="plib-copyrow-code" id="plib-material-22-copy-0" data-copy="If we move Copperline, which number should we watch to know whether the move worked, and when should we look?">If we move Copperline, which number should we watch to know whether the move worked, and when should we look?</code>
+      <button class="plib-copy-btn plib-copy-btn-row" onclick="copyPrompt('plib-material-22-copy-0', this)" aria-label="Copy Copy the question to clipboard">
+        <span aria-hidden="true">&#128203;</span> Copy
+      </button>
+    </div>
+  </div>
+  <div class="plib-material-note">Ask in the same thread.</div>
+</div>
+
+<div class="plib-narration">
+  <p>After each answer, your instructor says whether the gate passes or needs work. The box below lists what to look for at each gate, and your team uses it with its own answers.</p>
+</div>
+
+<div class="plib-material plib-info" id="plib-material-24">
+  <div class="plib-material-tag plib-info-tag">For reading</div>
+  <div class="plib-material-title">Reading the answers, gate by gate</div>
+  <pre class="plib-material-box plib-info-box">Reading the answers, gate by gate
+
+Live data             The gate passes when each value the agent gives matches the tool's response in
+                      Execution Details and carries its date. It needs work when the agent gives a value
+                      it did not call for, or when the team has not planned for the day the tool fails.
+
+Evidence              The gate passes when the agent names the report section of every number and
+                      uses the validation rows. It needs work when train and validation are far apart,
+                      when an input was recorded after the outcome, or when the agent reads a cause
+                      into an estimate.
+
+Fairness and privacy  The gate passes when the agent names the people affected and the team cannot
+                      find an input standing in for a protected group. It needs work when an input
+                      could stand in for one, or when the action uses personal data people would not
+                      expect the business to use.
+
+Authority             The gate passes when the agent leaves the decision with the person your brief
+                      names. It needs work when the agent decides for the manager, or draws a conclusion
+                      your brief lists under CONCLUSIONS THE AGENT MAY NOT DRAW.
+
+Monitoring            The gate passes when the agent names a number for success, a number for trouble,
+                      a time to look and a person who looks. It needs work when any of the four is
+                      missing.
+
+The gate that needs the most work is the main risk of the recommendation. What would make that gate
+pass is the safeguard.</pre>
+  <div class="plib-material-note">For reading. Nothing in this box is pasted anywhere.</div>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 3 of 4</div><div class="plib-section-t">PROJECT WORK</div></div>
+
+<div class="plib-narration">
+  <p>Now your team takes its own recommendation through the gates. Download your team's governance sheet below. It names a recommendation from your brief and the REG run behind it, the way the demonstration named Copperline's. Fit and save the report, start one thread with your team's agent, attach the .txt report, and ask the five questions from the sheet. Check Execution Details once, at the live data gate. Then read the answers with the box above and decide which gate needs the most work. About twenty five minutes. Then go on with your progress report 2 team thread, where your team writes its governance box in its own words.</p>
+</div>
+
+<div class="plib-material" id="plib-material-27">
+  <div class="plib-material-tag">Class material</div>
+  <div class="plib-material-title">Governance sheets, AM01 to PM10</div>
+  <div class="plib-material-btns">
+    <a class="plib-material-btn" href="lec13_2_AM01_governance.txt" download="lec13_2_AM01_governance.txt" target="_blank" rel="noopener noreferrer">AM01</a>
+    <a class="plib-material-btn" href="lec13_2_AM02_governance.txt" download="lec13_2_AM02_governance.txt" target="_blank" rel="noopener noreferrer">AM02</a>
+    <a class="plib-material-btn" href="lec13_2_AM03_governance.txt" download="lec13_2_AM03_governance.txt" target="_blank" rel="noopener noreferrer">AM03</a>
+    <a class="plib-material-btn" href="lec13_2_AM04_governance.txt" download="lec13_2_AM04_governance.txt" target="_blank" rel="noopener noreferrer">AM04</a>
+    <a class="plib-material-btn" href="lec13_2_AM05_governance.txt" download="lec13_2_AM05_governance.txt" target="_blank" rel="noopener noreferrer">AM05</a>
+    <a class="plib-material-btn" href="lec13_2_AM06_governance.txt" download="lec13_2_AM06_governance.txt" target="_blank" rel="noopener noreferrer">AM06</a>
+    <a class="plib-material-btn" href="lec13_2_PM01_governance.txt" download="lec13_2_PM01_governance.txt" target="_blank" rel="noopener noreferrer">PM01</a>
+    <a class="plib-material-btn" href="lec13_2_PM02_governance.txt" download="lec13_2_PM02_governance.txt" target="_blank" rel="noopener noreferrer">PM02</a>
+    <a class="plib-material-btn" href="lec13_2_PM03_governance.txt" download="lec13_2_PM03_governance.txt" target="_blank" rel="noopener noreferrer">PM03</a>
+    <a class="plib-material-btn" href="lec13_2_PM04_governance.txt" download="lec13_2_PM04_governance.txt" target="_blank" rel="noopener noreferrer">PM04</a>
+    <a class="plib-material-btn" href="lec13_2_PM05_governance.txt" download="lec13_2_PM05_governance.txt" target="_blank" rel="noopener noreferrer">PM05</a>
+    <a class="plib-material-btn" href="lec13_2_PM06_governance.txt" download="lec13_2_PM06_governance.txt" target="_blank" rel="noopener noreferrer">PM06</a>
+    <a class="plib-material-btn" href="lec13_2_PM07_governance.txt" download="lec13_2_PM07_governance.txt" target="_blank" rel="noopener noreferrer">PM07</a>
+    <a class="plib-material-btn" href="lec13_2_PM08_governance.txt" download="lec13_2_PM08_governance.txt" target="_blank" rel="noopener noreferrer">PM08</a>
+    <a class="plib-material-btn" href="lec13_2_PM09_governance.txt" download="lec13_2_PM09_governance.txt" target="_blank" rel="noopener noreferrer">PM09</a>
+    <a class="plib-material-btn" href="lec13_2_PM10_governance.txt" download="lec13_2_PM10_governance.txt" target="_blank" rel="noopener noreferrer">PM10</a>
+  </div>
+  <div class="plib-material-note">Download only your own team's sheet.</div>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-28">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:400px" role="img" aria-label="If the REG tool will not take a column. Check the name. Compare the column name with the RUN THE MODEL part of your sheet, letter by letter, and fit again."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 268" font-family="Segoe UI,-apple-system,sans-serif"><rect width="400" height="268" rx="10" fill="#faf7f8"/><text x="34" y="52" font-size="13" fill="#6b6b6b" letter-spacing="1.2">IF THE REG TOOL WILL NOT TAKE A COLUMN</text><text x="34" y="104" font-size="25" font-weight="600" fill="#630031">Check the name</text><rect x="34" y="144" width="332" height="2" fill="#630031" opacity="0.25"/><text x="34" y="178" font-size="15" fill="#6b6b6b">Compare the column name with the RUN THE</text><text x="34" y="199" font-size="15" fill="#6b6b6b">MODEL part of your sheet, letter by letter, and fit</text><text x="34" y="220" font-size="15" fill="#6b6b6b">again.</text></svg></div>
+  </figure>
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:400px" role="img" aria-label="If your agent gives a number you cannot find. Ask where it came from. Tell the agent you cannot find the number in your report or brief, and ask for the section."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 268" font-family="Segoe UI,-apple-system,sans-serif"><rect width="400" height="268" rx="10" fill="#faf7f8"/><text x="34" y="52" font-size="13" fill="#6b6b6b" letter-spacing="1.2">IF YOUR AGENT GIVES A NUMBER YOU CANNOT FIND</text><text x="34" y="104" font-size="25" font-weight="600" fill="#630031">Ask where it came from</text><rect x="34" y="144" width="332" height="2" fill="#630031" opacity="0.25"/><text x="34" y="178" font-size="15" fill="#6b6b6b">Tell the agent you cannot find the number in your</text><text x="34" y="199" font-size="15" fill="#6b6b6b">report or brief, and ask for the section.</text></svg></div>
+  </figure>
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:400px" role="img" aria-label="If your live tool fails. Write it down. Compare the tool with your team's live source sheet from lec13_1. A tool that fails is a finding at the monitoring gate."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 268" font-family="Segoe UI,-apple-system,sans-serif"><rect width="400" height="268" rx="10" fill="#faf7f8"/><text x="34" y="52" font-size="13" fill="#6b6b6b" letter-spacing="1.2">IF YOUR LIVE TOOL FAILS</text><text x="34" y="104" font-size="25" font-weight="600" fill="#630031">Write it down</text><rect x="34" y="144" width="332" height="2" fill="#630031" opacity="0.25"/><text x="34" y="178" font-size="15" fill="#6b6b6b">Compare the tool with your team's live source</text><text x="34" y="199" font-size="15" fill="#6b6b6b">sheet from lec13_1. A tool that fails is a finding at</text><text x="34" y="220" font-size="15" fill="#6b6b6b">the monitoring gate.</text></svg></div>
+  </figure>
+</div>
+<script>(function(){var g=document.getElementById("plib-tiles-28");if(!g)return;var k=[].slice.call(g.children);for(var i=k.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=k[i];k[i]=k[j];k[j]=t;}k.forEach(function(el){g.appendChild(el);});})();</script>
+
+<div class="plib-section"><div class="plib-section-n">Section 4 of 4</div><div class="plib-section-t">REFLECTION</div></div>
+
+<div class="plib-narration">
+  <p>When your instructor asks, open a new regular Hokie AI thread for your reflection. Paste the block below as its first message and wait for the one sentence acknowledgment. You submit this thread.</p>
+</div>
+
+<div class="plib-prompt-marker" role="region" aria-label="Session Opener">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-marker-id">T</span>
+    <span class="plib-prompt-type-label plib-marker-label">Session Opener</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-marker-instruction">Copy this block and paste it into Hokie AI to begin your session.</p>
+  <div class="plib-prompt-display plib-marker-display">You are an analysis partner for BIT 5534 Applied Business Intelligence and Analytics, a graduate course in business intelligence and analytics at Virginia Tech. The student holds graduate standing, has some statistics background, and is working on a team analytics project. Speak to them as a capable adult. Be direct, say when something is uncertain or contested, and do not pad your answers. When a student pushes back on something you said, take the challenge seriously. Do not concede immediately to be agreeable.
+
+---
+**AI Interaction Protocol**
+
+In this session, you will receive blocks of content with the
+following structural pattern:
+
+```
+### &lt;BlockID&gt;
+----------
+&lt;content&gt;
+----------
+###
+```
+
+Some blocks include an interaction-mode directive on a separate
+line inside the dashed envelope:
+
+```
+### &lt;BlockID&gt;
+----------
+[ai_interaction=&lt;mode&gt;]
+&lt;content&gt;
+----------
+###
+```
+
+Three modes determine your response:
+
+  - **respond**: Engage substantively with the block content.
+    Treat it as a prompt, question, or task that wants your
+    analytical response. Default for S blocks (prompts) and X
+    blocks (free exploration).
+
+  - **acknowledge**: Confirm receipt with one brief sentence
+    naming the block ID. Do not analyze, comment on, or expand on
+    the content. The student is filing the block for the record,
+    not asking for engagement. Default for T blocks (this opener),
+    R blocks (reflections), M CLOSE blocks (closing markers), Q
+    blocks (structured selections), and O blocks (ordering
+    selections).
+
+  - **archive**: Respond with only the block ID and nothing else.
+    Used for batched archival pastes where even brief
+    acknowledgment would clutter the thread.
+
+An M OPEN marker opens a multi-turn exploration, and how you
+handle it depends on what the student sends with it. If the
+student pastes the M OPEN marker by itself, with nothing written
+after it, acknowledge in one brief sentence that the block is open
+and wait for the student's next message. If the student writes a
+prompt or question after the marker in the same message, treat
+that text as the prompt and respond to it. Always acknowledge an
+M CLOSE marker.
+
+If a block has no explicit `[ai_interaction=...]` directive, apply
+the block-type default per the list above.
+
+This protocol applies for the remainder of this session.
+---</div>
+  <div class="plib-prompt-text" id="text_prompt_31" data-copy="### T&#10;----------&#10;You are an analysis partner for BIT 5534 Applied Business Intelligence and Analytics, a graduate course in business intelligence and analytics at Virginia Tech. The student holds graduate standing, has some statistics background, and is working on a team analytics project. Speak to them as a capable adult. Be direct, say when something is uncertain or contested, and do not pad your answers. When a student pushes back on something you said, take the challenge seriously. Do not concede immediately to be agreeable.&#10;&#10;---&#10;**AI Interaction Protocol**&#10;&#10;In this session, you will receive blocks of content with the&#10;following structural pattern:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Some blocks include an interaction-mode directive on a separate&#10;line inside the dashed envelope:&#10;&#10;```&#10;### &lt;BlockID&gt;&#10;----------&#10;[ai_interaction=&lt;mode&gt;]&#10;&lt;content&gt;&#10;----------&#10;###&#10;```&#10;&#10;Three modes determine your response:&#10;&#10;  - **respond**: Engage substantively with the block content.&#10;    Treat it as a prompt, question, or task that wants your&#10;    analytical response. Default for S blocks (prompts) and X&#10;    blocks (free exploration).&#10;&#10;  - **acknowledge**: Confirm receipt with one brief sentence&#10;    naming the block ID. Do not analyze, comment on, or expand on&#10;    the content. The student is filing the block for the record,&#10;    not asking for engagement. Default for T blocks (this opener),&#10;    R blocks (reflections), M CLOSE blocks (closing markers), Q&#10;    blocks (structured selections), and O blocks (ordering&#10;    selections).&#10;&#10;  - **archive**: Respond with only the block ID and nothing else.&#10;    Used for batched archival pastes where even brief&#10;    acknowledgment would clutter the thread.&#10;&#10;An M OPEN marker opens a multi-turn exploration, and how you&#10;handle it depends on what the student sends with it. If the&#10;student pastes the M OPEN marker by itself, with nothing written&#10;after it, acknowledge in one brief sentence that the block is open&#10;and wait for the student's next message. If the student writes a&#10;prompt or question after the marker in the same message, treat&#10;that text as the prompt and respond to it. Always acknowledge an&#10;M CLOSE marker.&#10;&#10;If a block has no explicit `[ai_interaction=...]` directive, apply&#10;the block-type default per the list above.&#10;&#10;This protocol applies for the remainder of this session.&#10;---&#10;----------&#10;###"></div>
+  <button class="plib-copy-btn plib-copy-btn-marker" onclick="copyPrompt('text_prompt_31', this)"
+          aria-label="Copy session opener to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy session opener
+  </button>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-32">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="A warning card headed DO NOT START YOUR REFLECTION. Do not start your reflection until your instructor asks you to."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 124" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="124" rx="10" fill="#faf7f8"/><rect x="21" y="20" width="958" height="84" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><text x="46" y="58" font-size="18" font-weight="600" fill="#630031">DO NOT START YOUR REFLECTION</text><text x="46" y="86" font-size="16" fill="#2b2b2b">Do not start your reflection until your instructor asks you to.</text></svg></div>
+    <figcaption class="plib-tile-caption">Keep working with your team until your instructor asks.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-tiles" id="plib-tiles-33">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Three boxes joined by AND, your reflection, all three parts. The gate, the gate where your team's recommendation needed the most work, and what the agent's answer showed there. The tool call, what Execution Details showed when you checked your live tool. The manager, what the manager should know or check before acting on the recommendation, and why."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 219" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="219" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">Your reflection, all three parts</text><rect x="21" y="46" width="287" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The gate</text><text x="37" y="122" font-size="14" fill="#6b6b6b">the gate where your team's</text><text x="37" y="141" font-size="14" fill="#6b6b6b">recommendation needed the most work,</text><text x="37" y="160" font-size="14" fill="#6b6b6b">and what the agent's answer showed</text><text x="37" y="179" font-size="14" fill="#6b6b6b">there</text><text x="332" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="356" y="46" width="287" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="380" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="380" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="401" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The tool call</text><text x="372" y="122" font-size="14" fill="#6b6b6b">what Execution Details showed when you</text><text x="372" y="141" font-size="14" fill="#6b6b6b">checked your live tool</text><text x="668" y="126" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">AND</text><rect x="692" y="46" width="287" height="151" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.9" stroke-width="3"/><circle cx="716" cy="76" r="13" fill="#630031" opacity="0.3"/><text x="716" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="737" y="82" font-size="17" font-weight="600" fill="#2b2b2b">The manager</text><text x="708" y="122" font-size="14" fill="#6b6b6b">what the manager should know or check</text><text x="708" y="141" font-size="14" fill="#6b6b6b">before acting on the recommendation,</text><text x="708" y="160" font-size="14" fill="#6b6b6b">and why</text></svg></div>
+    <figcaption class="plib-tile-caption">Answer all three parts. The third part counts most.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>When your instructor asks, write your reflection in that thread, in your own words and without help from the AI. Hokie AI acknowledges it in one sentence.</p>
+  <p>Write all three of these about your team's recommendation. First, name the gate where your team's recommendation needed the most work, and say what the agent's answer showed there AND second, say what Execution Details showed when you checked your live tool AND third, say what the manager should know or check before acting on the recommendation, and why. Three parts.</p>
+  <p>Your instructor gives the third part the most weight. Write 100 to 200 words. Then export your reflection thread as a .zip and upload it to Canvas.</p>
+</div>
+
+<div class="plib-prompt-r" role="region" aria-label="Contribution R13.2.1">
+  <div class="plib-prompt-header">
+    <span class="plib-prompt-id plib-r-id">R13.2.1</span>
+    <span class="plib-prompt-type-label plib-reflect-label">Your reflection</span>
+    <span class="plib-ai-badge plib-ai-acknowledge">AI: acknowledge</span>
+  </div>
+  <p class="plib-reflect-instruction">Write your response in the box below (target: 100 to 200 words), then click Copy and paste into Hokie AI.</p>
+  <textarea id="textarea_35" class="plib-textarea"
+            placeholder="Write your response here..."
+            aria-label="Write your contribution for R13.2.1"
+            data-maxwords="200" data-maxchars="2000"
+            oninput="updateCounter('prompt_35', 'textarea_35')"></textarea>
+  <div class="plib-counter" id="counter_prompt_35" aria-live="polite" aria-atomic="true">
+    <span id="wc_prompt_35">0</span> / 200 words&nbsp;·&nbsp;
+    <span id="cc_prompt_35">0</span> / 2000 characters
+    <span class="plib-counter-min">minimum: 100 words</span>
+  </div>
+  <div class="plib-warn" id="warn_prompt_35" role="alert" aria-live="polite"></div>
+  <div class="plib-prompt-text" id="text_prompt_35"
+       data-prefix="### R13.2.1&#10;----------&#10;"
+       data-suffix="&#10;----------&#10;###"
+       data-tid="textarea_35"
+       data-maxwords="200"
+       data-maxchars="2000"
+       data-minwords="100"></div>
+  <button class="plib-copy-btn plib-copy-btn-reflect" onclick="copyWithInput('prompt_35', this)"
+          aria-label="Copy contribution R13.2.1 to clipboard">
+    <span aria-hidden="true">&#128203;</span> Copy contribution
+  </button>
+</div>
+
+<div class="plib-submit">
+  <div class="plib-submit-title">Before you leave</div>
+  <p class="plib-submit-p">Export this thread as a .zip file, then upload it to the Canvas assignment. Your work is not submitted until Canvas shows your file.</p>
+  <a class="plib-submit-btn" href="https://canvas.vt.edu/courses/233475/assignments/2844153" target="_blank" rel="noopener noreferrer">Open the Canvas assignment</a>
+  <div class="plib-submit-note">Opens in a new tab, so this page stays where it is.</div>
+</div>
+
+</div>
+</main>
+<script>
+function countWords(text) {
+  return text.trim() === '' ? 0 : text.trim().split(/[ \t\n\r]+/).length;
+}
+function announce(msg) {
+  var el = document.getElementById('plib-live');
+  if (!el) { el = document.createElement('div'); el.id = 'plib-live';
+    el.setAttribute('aria-live','polite'); el.setAttribute('aria-atomic','true');
+    el.style.cssText='position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;';
+    document.body.appendChild(el); }
+  el.textContent = ''; setTimeout(function(){ el.textContent = msg; }, 50);
+}
+function autoResize(ta) {
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(ta.scrollHeight + 2, 600) + 'px';
+}
+function updateCounter(bid, tid) {
+  var ta = document.getElementById(tid);
+  var textEl = document.getElementById('text_' + bid);
+  var wcEl = document.getElementById('wc_' + bid);
+  var ccEl = document.getElementById('cc_' + bid);
+  var ctrEl = document.getElementById('counter_' + bid);
+  if (!ta) return;
+  autoResize(ta);
+  var maxwords = textEl ? parseInt(textEl.getAttribute('data-maxwords') || '0') : 0;
+  var maxchars = textEl ? parseInt(textEl.getAttribute('data-maxchars') || '0') : 0;
+  var minwords = textEl ? parseInt(textEl.getAttribute('data-minwords') || '0') : 0;
+  var text = ta.value;
+  var words = countWords(text);
+  var chars = text.length;
+  if (maxchars && chars > maxchars) {
+    ta.value = text.substring(0, maxchars);
+    text = ta.value; words = countWords(text); chars = text.length;
+  }
+  if (wcEl) wcEl.textContent = words;
+  if (ccEl) ccEl.textContent = chars;
+  if (ctrEl && maxwords) {
+    var pct = words / maxwords;
+    var cls = pct >= 1.0 ? 'bad' : (pct >= 0.8 || (minwords && words < minwords)) ? 'warn' : 'ok';
+    if (pct >= 1.0) { ctrEl.className = 'plib-counter at-limit'; }
+    else { ctrEl.className = 'plib-counter'; }
+    if (wcEl) wcEl.className = 'plib-count-' + cls;
+    if (ccEl) ccEl.className = 'plib-count-' + cls;
+  }
+}
+function copyPrompt(id, btn) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var text = (el.getAttribute('data-copy') || el.textContent || '').replace(/&#10;/g, '\n');
+  var label = (btn.getAttribute('aria-label') || 'item').replace('Copy ','').replace(' to clipboard','');
+  doCopy(text, btn, label + ' copied.', '&#10003; Copied', 2000);
+}
+function copyWithInput(bid, btn) {
+  var el = document.getElementById('text_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!el) return;
+  var tid = el.getAttribute('data-tid');
+  var inputEl = document.getElementById(tid);
+  var prefix = (el.getAttribute('data-prefix') || '').replace(/&#10;/g, '\n');
+  var suffix = (el.getAttribute('data-suffix') || '').replace(/&#10;/g, '\n');
+  var userText = inputEl ? inputEl.value.trim() : '';
+  if (userText.replace(/[\t\n\r ]/g, '').length < 2) {
+    if (warnEl) warnEl.textContent = 'Please write your response before copying.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  var maxwords = parseInt(el.getAttribute('data-maxwords') || '0');
+  var maxchars = parseInt(el.getAttribute('data-maxchars') || '0');
+  var minwords = parseInt(el.getAttribute('data-minwords') || '0');
+  if (minwords && countWords(userText) < minwords) {
+    if (warnEl) warnEl.textContent = 'Response is below the minimum of ' + minwords + ' words.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  if (maxwords && countWords(userText) > maxwords) {
+    if (warnEl) warnEl.textContent = 'Response exceeds the ' + maxwords + ' word limit.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  if (warnEl) warnEl.textContent = '';
+  doCopy(prefix + userText + suffix, btn, 'Copied. Paste into Hokie AI.', '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+function doCopy(text, btn, announcement, label, duration) {
+  function ok() {
+    var orig = btn.innerHTML; btn.innerHTML = label; btn.classList.add('copied');
+    announce(announcement);
+    setTimeout(function() { btn.innerHTML = orig; btn.classList.remove('copied'); }, duration);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(ok).catch(function() { fallback(text, ok); });
+  } else { fallback(text, ok); }
+}
+function fallback(text, cb) {
+  var ta = document.createElement('textarea'); ta.value = text;
+  ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); cb(); } catch(e) {}
+  document.body.removeChild(ta);
+}
+function copyStructured(bid, blockId, btn) {
+  var container = document.getElementById('qitems_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!container) return;
+  var outerDiv = container.closest('.plib-prompt-q');
+  var aiDirective = outerDiv ? (outerDiv.getAttribute('data-ai-directive') || '') : '';
+  var items = container.querySelectorAll('.plib-q-item');
+  var lines = [];
+  var emptyItems = [];
+
+  items.forEach(function(itemEl) {
+    var n = itemEl.getAttribute('data-item-n');
+    var render = itemEl.getAttribute('data-render');
+    var selections = [];
+
+    if (render === 'dropdown') {
+      var sel = itemEl.querySelector('select');
+      if (sel && sel.value) selections.push(sel.value);
+    } else if (render === 'likert') {
+      var checkedRadio = itemEl.querySelector('input[type="radio"]:checked');
+      if (checkedRadio) selections.push(checkedRadio.value);
+    } else if (render === 'checkbox') {
+      var checks = itemEl.querySelectorAll('input[type="checkbox"]:checked');
+      checks.forEach(function(c) { selections.push(c.value); });
+    }
+
+    if (selections.length === 0) {
+      emptyItems.push(n);
+    } else {
+      lines.push('ITEM ' + n + ': ' + selections.join(', '));
+    }
+  });
+
+  if (emptyItems.length > 0) {
+    if (warnEl) {
+      warnEl.textContent = 'Please make a selection for ITEM '
+        + emptyItems.join(', ITEM ') + ' before copying.';
+    }
+    return;
+  }
+
+  if (warnEl) warnEl.textContent = '';
+
+  var directiveLine = aiDirective ? aiDirective + '\n' : '';
+  var envelope = '### ' + blockId + '\n----------\n' + directiveLine + 'RESPONSE:\n'
+    + lines.join('\n') + '\n----------\n###';
+  doCopy(envelope, btn,
+    'Structured response copied. Paste into Hokie AI.',
+    '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+function enforceCheckboxCap(itemEl) {
+  var max = parseInt(itemEl.getAttribute('data-max-select') || '0', 10);
+  if (!max || max < 2) return;
+  var checks = itemEl.querySelectorAll('input[type="checkbox"]');
+  var checked = itemEl.querySelectorAll('input[type="checkbox"]:checked');
+  var atCap = checked.length >= max;
+  checks.forEach(function(c) {
+    if (!c.checked) c.disabled = atCap;
+  });
+}
+function moveItem(btn, direction) {
+  var li = btn.closest('.plib-o-item');
+  if (!li) return;
+  var list = li.parentElement;
+  if (!list) return;
+  if (direction === 'up') {
+    var prev = li.previousElementSibling;
+    if (prev) list.insertBefore(li, prev);
+  } else if (direction === 'down') {
+    var next = li.nextElementSibling;
+    if (next) list.insertBefore(next, li);
+  }
+  updateArrowStates(list);
+}
+function updateArrowStates(list) {
+  var items = list.querySelectorAll('.plib-o-item');
+  items.forEach(function(li, idx) {
+    var rankEl = li.querySelector('.plib-o-rank');
+    if (rankEl) rankEl.textContent = (idx + 1) + '.';
+    var upBtn = li.querySelector('.plib-o-arrow-up');
+    var downBtn = li.querySelector('.plib-o-arrow-down');
+    if (upBtn) upBtn.disabled = (idx === 0);
+    if (downBtn) downBtn.disabled = (idx === items.length - 1);
+    var itemText = li.getAttribute('data-item-text') || '';
+    if (upBtn) upBtn.setAttribute('aria-label', 'Move ' + itemText + ' up');
+    if (downBtn) downBtn.setAttribute('aria-label', 'Move ' + itemText + ' down');
+  });
+}
+function copyOrdered(bid, blockId, btn) {
+  var list = document.getElementById('oitems_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!list) return;
+  var outerDiv = list.closest('.plib-prompt-o');
+  var aiDirective = outerDiv ? (outerDiv.getAttribute('data-ai-directive') || '') : '';
+  var question = list.getAttribute('data-question') || '';
+  var items = list.querySelectorAll('.plib-o-item');
+  var lines = [];
+  items.forEach(function(li, idx) {
+    var itemText = li.getAttribute('data-item-text') || '';
+    lines.push((idx + 1) + '. ' + itemText);
+  });
+  if (warnEl) warnEl.textContent = '';
+  var directiveLine = aiDirective ? aiDirective + '\n' : '';
+  var envelope = '### ' + blockId + '\n----------\n' + directiveLine + 'RESPONSE:\nQuestion: '
+    + question + '\n' + lines.join('\n') + '\n----------\n###';
+  doCopy(envelope, btn,
+    'Ordered response copied. Paste into Hokie AI.',
+    '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var checkboxItems = document.querySelectorAll('.plib-q-item[data-render="checkbox"]');
+  checkboxItems.forEach(function(itemEl) {
+    var checks = itemEl.querySelectorAll('input[type="checkbox"]');
+    checks.forEach(function(c) {
+      c.addEventListener('change', function() { enforceCheckboxCap(itemEl); });
+    });
+  });
+  var oLists = document.querySelectorAll('.plib-o-list');
+  oLists.forEach(function(list) {
+    updateArrowStates(list);
+  });
+});
+</script>
+</body>
+</html>

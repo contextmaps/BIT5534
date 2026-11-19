@@ -1,0 +1,69 @@
+COBBLEVANE REALTY, GOVERNANCE SHEET
+PM09. Cobblevane Realty is made up. With this sheet your team takes its recommendation with the most at stake through the five governance gates your instructor showed on Lumenvale, with one question at each gate. Your team uses the answers as material for the governance box of its progress report 2 team thread, which your team writes in its own words. About twenty five minutes, with the model run.
+
+
+YOUR BUSINESS AT THE GATES
+
+Who decides: The managing broker, who sets the brokerage's list price advice, with each seller deciding the list price.
+Who is affected: Sellers and buyers, often families and first time owners.
+Your live tool: get_mortgage_rates, from FRED, Freddie Mac's weekly average 30 year fixed mortgage rate. Freddie Mac publishes the rate once a week, on Thursdays, so the latest rate can be up to a week old.
+
+
+THE RECOMMENDATION
+
+Your team's recommendation for the gates is to advise sellers to cut the price of the listings with the highest chance of sitting unsold for 90 days. It belongs to the decision on the price cut in your brief. If your team's synthesis has a recommendation with more at stake, your team may use it instead, with the report behind it, and change the first message below to match.
+
+
+RUN THE MODEL
+
+Open the REG tool from the analytics workbench, load cobblevane_listings.csv, and fit this run. Then press Save report and keep the .txt file.
+
+Target: unsold_90
+Validation: the Validation column
+Inputs: list_month, neighborhood, bedrooms, bathrooms, square_feet, lot_acres, home_age_years, years_since_renovation, school_rating, miles_to_downtown and list_over_estimate_pct
+Leave out: price_reductions, because it is recorded after the outcome; listing_description, a text column; sale_price_usd, the other target; and every other column of the file, such as the id and date columns.
+
+
+THE FIRST MESSAGE
+
+Start a new thread with your team's agent, attach the .txt report, and send the message below.
+
+COPY:
+Our recommendation is to advise sellers to cut the price of the listings with the highest chance of sitting unsold for 90 days. It belongs to the decision on the price cut. The attached report is a REG fit of unsold_90, the report the recommendation rests on. I will ask you one question about it at each of five governance gates.
+
+
+GATE 1, LIVE DATA
+
+COPY:
+Call get_mortgage_rates and say which of its values bear on this recommendation, each with its date. What should the managing broker do if the tool fails?
+
+Then open Execution Details and look at Tool Calls. Check that the agent called get_mortgage_rates and that each value in its answer matches the tool's response.
+
+
+GATE 2, EVIDENCE
+
+COPY:
+Which numbers in the attached report support this recommendation, and how far can the managing broker trust them? Name the validation rows behind them and any input recorded after the outcome.
+
+
+GATE 3, FAIRNESS AND PRIVACY
+
+COPY:
+Under this recommendation, sellers in some neighborhoods get different advice from others. Could neighborhood or school_rating stand in for the race of the people who live there, and would acting on it steer buyers or sellers in a way fair housing law forbids?
+
+
+GATE 4, AUTHORITY
+
+COPY:
+Which part of this recommendation is yours, and which part does the managing broker decide? Does any part go beyond the conclusions our brief lists under CONCLUSIONS THE AGENT MAY NOT DRAW?
+
+
+GATE 5, MONITORING
+
+COPY:
+If the managing broker acts on this recommendation, which number would show that it worked, which number would show that it went wrong, and when should we look again? How would we notice if get_mortgage_rates stopped working?
+
+
+THEN READ THE ANSWERS
+
+Read the five answers with the box "Reading the answers, gate by gate" on the lecture page, and decide which gate needs the most work. That gate is the main risk of your recommendation, and what would make it pass is your safeguard. Write your team's governance box in your own words.

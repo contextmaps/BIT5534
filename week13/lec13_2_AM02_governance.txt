@@ -1,0 +1,69 @@
+BRINDLEWOOD MOTORS, GOVERNANCE SHEET
+AM02. Brindlewood Motors is made up. With this sheet your team takes its recommendation with the most at stake through the five governance gates your instructor showed on Lumenvale, with one question at each gate. Your team uses the answers as material for the governance box of its progress report 2 team thread, which your team writes in its own words. About twenty five minutes, with the model run.
+
+
+YOUR BUSINESS AT THE GATES
+
+Who decides: The buyer, who bids at auction, and the sales manager, who sets list prices and price cuts.
+Who is affected: Customers, mostly local families and students.
+Your live tool: get_recalls, from the National Highway Traffic Safety Administration, the recalls for one make, model and model year. NHTSA lists a Count of 0 for a car without recalls and also for a make or model spelled differently from its own list, so a zero needs a second look.
+
+
+THE RECOMMENDATION
+
+Your team's recommendation for the gates is to bid less at auction for the cars with the highest chance of sitting unsold for 60 days. It belongs to the decision on the bid in your brief. If your team's synthesis has a recommendation with more at stake, your team may use it instead, with the report behind it, and change the first message below to match.
+
+
+RUN THE MODEL
+
+Open the REG tool from the analytics workbench, load brindlewood_vehicles.csv, and fit this run. Then press Save report and keep the .txt file.
+
+Target: unsold_60
+Validation: the Validation column
+Inputs: lot, make, body_style, model_year, mileage, prior_owners, accident_history, open_recall, recon_cost_usd, markup_pct and listing_photos
+Leave out: price_cuts, because it is recorded after the outcome; listing_description, a text column; sale_price_usd, the other target; and every other column of the file, such as the id and date columns.
+
+
+THE FIRST MESSAGE
+
+Start a new thread with your team's agent, attach the .txt report, and send the message below.
+
+COPY:
+Our recommendation is to bid less at auction for the cars with the highest chance of sitting unsold for 60 days. It belongs to the decision on the bid. The attached report is a REG fit of unsold_60, the report the recommendation rests on. I will ask you one question about it at each of five governance gates.
+
+
+GATE 1, LIVE DATA
+
+COPY:
+Call get_recalls and say which of its values bear on this recommendation, each with its date. What should the buyer or the sales manager do if the tool fails?
+
+Then open Execution Details and look at Tool Calls. Check that the agent called get_recalls and that each value in its answer matches the tool's response.
+
+
+GATE 2, EVIDENCE
+
+COPY:
+Which numbers in the attached report support this recommendation, and how far can the buyer or the sales manager trust them? Name the validation rows behind them and any input recorded after the outcome.
+
+
+GATE 3, FAIRNESS AND PRIVACY
+
+COPY:
+Under this recommendation, customers may pay different prices or see different cars. Could acting on it put a car with an open recall in front of a customer without the recall named, and is any group of customers, such as students, more exposed to it?
+
+
+GATE 4, AUTHORITY
+
+COPY:
+Which part of this recommendation is yours, and which part does the buyer or the sales manager decide? Does any part go beyond the conclusions our brief lists under CONCLUSIONS THE AGENT MAY NOT DRAW?
+
+
+GATE 5, MONITORING
+
+COPY:
+If the buyer or the sales manager acts on this recommendation, which number would show that it worked, which number would show that it went wrong, and when should we look again? How would we notice if get_recalls stopped working?
+
+
+THEN READ THE ANSWERS
+
+Read the five answers with the box "Reading the answers, gate by gate" on the lecture page, and decide which gate needs the most work. That gate is the main risk of your recommendation, and what would make it pass is your safeguard. Write your team's governance box in your own words.

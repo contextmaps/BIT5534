@@ -1,0 +1,69 @@
+FERNHOLLOW PHYSICAL THERAPY, GOVERNANCE SHEET
+AM01. Fernhollow Physical Therapy is made up. With this sheet your team takes its recommendation with the most at stake through the five governance gates your instructor showed on Lumenvale, with one question at each gate. Your team uses the answers as material for the governance box of its progress report 2 team thread, which your team writes in its own words. About twenty five minutes, with the model run.
+
+
+YOUR BUSINESS AT THE GATES
+
+Who decides: The operations manager, who sets the reminder policy, the call list and the double booking plan.
+Who is affected: Patients, many of them older patients on Medicare after surgery.
+Your live tool: get_forecast, from Open-Meteo, the forecast for the five clinic towns for the next 3 days. The forecast covers 3 days, so a visit later in the week falls outside it.
+
+
+THE RECOMMENDATION
+
+Your team's recommendation for the gates is to put the patients with the highest chance of missing their next visit on tomorrow's call list, up to 15 calls a day at each clinic. It belongs to the decision on the call list in your brief. If your team's synthesis has a recommendation with more at stake, your team may use it instead, with the report behind it, and change the first message below to match.
+
+
+RUN THE MODEL
+
+Open the REG tool from the analytics workbench, load fernhollow_courses.csv, and fit this run. Then press Save report and keep the .txt file.
+
+Target: missed_next
+Validation: the Validation column
+Inputs: clinic, patient_age, distance_miles, injury_type, insurance_type, copay_usd, visits_prescribed, days_referral_to_first_visit, prior_missed_visits, next_visit_weekday, next_visit_slot, reminder_method, forecast_precip_pct and forecast_low_f
+Leave out: no_show_fee_billed, because it is recorded after the outcome; front_desk_notes, a text column; visits_completed, the other target; and every other column of the file, such as the id and date columns.
+
+
+THE FIRST MESSAGE
+
+Start a new thread with your team's agent, attach the .txt report, and send the message below.
+
+COPY:
+Our recommendation is to put the patients with the highest chance of missing their next visit on tomorrow's call list, up to 15 calls a day at each clinic. It belongs to the decision on the call list. The attached report is a REG fit of missed_next, the report the recommendation rests on. I will ask you one question about it at each of five governance gates.
+
+
+GATE 1, LIVE DATA
+
+COPY:
+Call get_forecast and say which of its values bear on this recommendation, each with its date. What should the operations manager do if the tool fails?
+
+Then open Execution Details and look at Tool Calls. Check that the agent called get_forecast and that each value in its answer matches the tool's response.
+
+
+GATE 2, EVIDENCE
+
+COPY:
+Which numbers in the attached report support this recommendation, and how far can the operations manager trust them? Name the validation rows behind them and any input recorded after the outcome.
+
+
+GATE 3, FAIRNESS AND PRIVACY
+
+COPY:
+Under this recommendation, some patients are treated differently from others. Could patient_age, insurance_type or distance_miles stand in for age, income or disability, and does acting on it use what front_desk_notes say about a patient in a way the patient would not expect?
+
+
+GATE 4, AUTHORITY
+
+COPY:
+Which part of this recommendation is yours, and which part does the operations manager decide? Does any part go beyond the conclusions our brief lists under CONCLUSIONS THE AGENT MAY NOT DRAW?
+
+
+GATE 5, MONITORING
+
+COPY:
+If the operations manager acts on this recommendation, which number would show that it worked, which number would show that it went wrong, and when should we look again? How would we notice if get_forecast stopped working?
+
+
+THEN READ THE ANSWERS
+
+Read the five answers with the box "Reading the answers, gate by gate" on the lecture page, and decide which gate needs the most work. That gate is the main risk of your recommendation, and what would make it pass is your safeguard. Write your team's governance box in your own words.

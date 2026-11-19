@@ -1,0 +1,69 @@
+THISTLECREST HOME STORES, GOVERNANCE SHEET
+PM08. Thistlecrest Home Stores is made up. With this sheet your team takes its recommendation with the most at stake through the five governance gates your instructor showed on Lumenvale, with one question at each gate. Your team uses the answers as material for the governance box of its progress report 2 team thread, which your team writes in its own words. About twenty five minutes, with the model run.
+
+
+YOUR BUSINESS AT THE GATES
+
+Who decides: The regional HR director, who sets starting wages and the hiring plan.
+Who is affected: New associates and the people applying.
+Your live tool: get_unemployment, from the Bureau of Labor Statistics, the national unemployment rate, month by month. BLS answers 25 calls a day without a key, publishes each month about a month later, and reports the national rate, which can differ from a region's job market.
+
+
+THE RECOMMENDATION
+
+Your team's recommendation for the gates is to raise the starting wage at the stores whose new hires have the highest chance of quitting within six months. It belongs to the decision on the starting wage in your brief. If your team's synthesis has a recommendation with more at stake, your team may use it instead, with the report behind it, and change the first message below to match.
+
+
+RUN THE MODEL
+
+Open the REG tool from the analytics workbench, load thistlecrest_hires.csv, and fit this run. Then press Save report and keep the .txt file.
+
+Target: quit_6mo
+Validation: the Validation column
+Inputs: region, store_type, hiring_channel, prior_retail_years, training_score, starting_wage_usd, local_market_wage_usd, commute_miles, hours_requested, hours_scheduled and manager_tenure_years
+Leave out: exit_interview_done, because it is recorded after the outcome; onboarding_answer, a text column; sales_per_hour_usd, the other target; and every other column of the file, such as the id and date columns.
+
+
+THE FIRST MESSAGE
+
+Start a new thread with your team's agent, attach the .txt report, and send the message below.
+
+COPY:
+Our recommendation is to raise the starting wage at the stores whose new hires have the highest chance of quitting within six months. It belongs to the decision on the starting wage. The attached report is a REG fit of quit_6mo, the report the recommendation rests on. I will ask you one question about it at each of five governance gates.
+
+
+GATE 1, LIVE DATA
+
+COPY:
+Call get_unemployment and say which of its values bear on this recommendation, each with its date. What should the regional HR director do if the tool fails?
+
+Then open Execution Details and look at Tool Calls. Check that the agent called get_unemployment and that each value in its answer matches the tool's response.
+
+
+GATE 2, EVIDENCE
+
+COPY:
+Which numbers in the attached report support this recommendation, and how far can the regional HR director trust them? Name the validation rows behind them and any input recorded after the outcome.
+
+
+GATE 3, FAIRNESS AND PRIVACY
+
+COPY:
+Under this recommendation, some hires get different wages or schedules from others. Could prior_retail_years, hiring_channel or commute_miles stand in for age, race or disability, and does acting on it use what onboarding_answer says about a person in a way the person would not expect?
+
+
+GATE 4, AUTHORITY
+
+COPY:
+Which part of this recommendation is yours, and which part does the regional HR director decide? Does any part go beyond the conclusions our brief lists under CONCLUSIONS THE AGENT MAY NOT DRAW?
+
+
+GATE 5, MONITORING
+
+COPY:
+If the regional HR director acts on this recommendation, which number would show that it worked, which number would show that it went wrong, and when should we look again? How would we notice if get_unemployment stopped working?
+
+
+THEN READ THE ANSWERS
+
+Read the five answers with the box "Reading the answers, gate by gate" on the lecture page, and decide which gate needs the most work. That gate is the main risk of your recommendation, and what would make it pass is your safeguard. Write your team's governance box in your own words.

@@ -1,0 +1,69 @@
+LADLEWICK SANDWICH CO., GOVERNANCE SHEET
+PM05. Ladlewick Sandwich Co. is made up. With this sheet your team takes its recommendation with the most at stake through the five governance gates your instructor showed on Lumenvale, with one question at each gate. Your team uses the answers as material for the governance box of its progress report 2 team thread, which your team writes in its own words. About twenty five minutes, with the model run.
+
+
+YOUR BUSINESS AT THE GATES
+
+Who decides: The real estate committee, which approves or rejects each candidate site.
+Who is affected: Franchisees and the neighborhoods of candidate sites.
+Your live tools: get_state_income and get_state_population, from Data USA, the Census Bureau's American Community Survey for 2019 to 2023, by state. The survey covers 2019 to 2023, so the values are several years old, and a state figure is a poor guide to one trade area. The county tool needs a key your team registers.
+
+
+THE RECOMMENDATION
+
+Your team's recommendation for the gates is to reject the candidate sites with the highest chance of closing within two years. It belongs to the decision on the site approval in your brief. If your team's synthesis has a recommendation with more at stake, your team may use it instead, with the report behind it, and change the first message below to match.
+
+
+RUN THE MODEL
+
+Open the REG tool from the analytics workbench, load ladlewick_sites.csv, and fit this run. Then press Save report and keep the .txt file.
+
+Target: closed_2yr
+Validation: the Validation column
+Inputs: state, site_type, street_traffic_daily, drive_through_lanes, seats, square_feet, nearest_competitor_miles, trade_area_median_income_usd, rent_per_sqft_usd and local_wage_usd
+Leave out: lease_break_fee_usd, because it is recorded after the outcome; consultant_notes, a text column; annual_sales_usd, the other target; and every other column of the file, such as the id and date columns.
+
+
+THE FIRST MESSAGE
+
+Start a new thread with your team's agent, attach the .txt report, and send the message below.
+
+COPY:
+Our recommendation is to reject the candidate sites with the highest chance of closing within two years. It belongs to the decision on the site approval. The attached report is a REG fit of closed_2yr, the report the recommendation rests on. I will ask you one question about it at each of five governance gates.
+
+
+GATE 1, LIVE DATA
+
+COPY:
+Call get_state_income or get_state_population and say which of its values bear on this recommendation, each with its date. What should the real estate committee do if the tool fails?
+
+Then open Execution Details and look at Tool Calls. Check that the agent called get_state_income or get_state_population and that each value in its answer matches the tool's response.
+
+
+GATE 2, EVIDENCE
+
+COPY:
+Which numbers in the attached report support this recommendation, and how far can the real estate committee trust them? Name the validation rows behind them and any input recorded after the outcome.
+
+
+GATE 3, FAIRNESS AND PRIVACY
+
+COPY:
+Under this recommendation, sites in some places are approved and others are not. Could trade_area_median_income_usd or the state income from get_state_income stand in for the race or age of the people who live near a site, and does acting on it use what consultant_notes say about a site or a franchisee in a way they would not expect?
+
+
+GATE 4, AUTHORITY
+
+COPY:
+Which part of this recommendation is yours, and which part does the real estate committee decide? Does any part go beyond the conclusions our brief lists under CONCLUSIONS THE AGENT MAY NOT DRAW?
+
+
+GATE 5, MONITORING
+
+COPY:
+If the real estate committee acts on this recommendation, which number would show that it worked, which number would show that it went wrong, and when should we look again? How would we notice if get_state_income or get_state_population stopped working?
+
+
+THEN READ THE ANSWERS
+
+Read the five answers with the box "Reading the answers, gate by gate" on the lecture page, and decide which gate needs the most work. That gate is the main risk of your recommendation, and what would make it pass is your safeguard. Write your team's governance box in your own words.

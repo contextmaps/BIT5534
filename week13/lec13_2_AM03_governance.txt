@@ -1,0 +1,69 @@
+PLUMTABLE KITCHEN KITS, GOVERNANCE SHEET
+AM03. Plumtable Kitchen Kits is made up. With this sheet your team takes its recommendation with the most at stake through the five governance gates your instructor showed on Lumenvale, with one question at each gate. Your team uses the answers as material for the governance box of its progress report 2 team thread, which your team writes in its own words. About twenty five minutes, with the model run.
+
+
+YOUR BUSINESS AT THE GATES
+
+Who decides: The retention manager, who chooses who receives a retention offer, and the pricing team, which sets the price increase.
+Who is affected: Subscribers, mostly couples and young families.
+Your live tool: get_food_prices, from the Bureau of Labor Statistics, the consumer price index for food at home, month by month. BLS answers 25 calls a day without a key, publishes each month about a month later, and reports prices for United States cities as a whole.
+
+
+THE RECOMMENDATION
+
+Your team's recommendation for the gates is to send a retention offer to the subscribers with the highest chance of cancelling in the next 90 days. It belongs to the decision on the retention offer in your brief. If your team's synthesis has a recommendation with more at stake, your team may use it instead, with the report behind it, and change the first message below to match.
+
+
+RUN THE MODEL
+
+Open the REG tool from the analytics workbench, load plumtable_subscribers.csv, and fit this run. Then press Save report and keep the .txt file.
+
+Target: cancels_90d
+Validation: the Validation column
+Inputs: state, plan_type, household_size, signup_channel, tenure_weeks, weekly_price_usd, price_increase_pct, discount_share, skip_rate, avg_recipe_rating and delivery_delays_90d
+Leave out: cancel_reason_recorded, because it is recorded after the outcome; last_service_note, a text column; spend_next_quarter_usd, the other target; and every other column of the file, such as the id and date columns.
+
+
+THE FIRST MESSAGE
+
+Start a new thread with your team's agent, attach the .txt report, and send the message below.
+
+COPY:
+Our recommendation is to send a retention offer to the subscribers with the highest chance of cancelling in the next 90 days. It belongs to the decision on the retention offer. The attached report is a REG fit of cancels_90d, the report the recommendation rests on. I will ask you one question about it at each of five governance gates.
+
+
+GATE 1, LIVE DATA
+
+COPY:
+Call get_food_prices and say which of its values bear on this recommendation, each with its date. What should the retention manager or the pricing team do if the tool fails?
+
+Then open Execution Details and look at Tool Calls. Check that the agent called get_food_prices and that each value in its answer matches the tool's response.
+
+
+GATE 2, EVIDENCE
+
+COPY:
+Which numbers in the attached report support this recommendation, and how far can the retention manager or the pricing team trust them? Name the validation rows behind them and any input recorded after the outcome.
+
+
+GATE 3, FAIRNESS AND PRIVACY
+
+COPY:
+Under this recommendation, some subscribers are treated differently from others. Could state, household_size or signup_channel stand in for income or family status, and does acting on it use what last_service_note says about a subscriber, or a guess about diet or health from plan_type, in a way the subscriber would not expect?
+
+
+GATE 4, AUTHORITY
+
+COPY:
+Which part of this recommendation is yours, and which part does the retention manager or the pricing team decide? Does any part go beyond the conclusions our brief lists under CONCLUSIONS THE AGENT MAY NOT DRAW?
+
+
+GATE 5, MONITORING
+
+COPY:
+If the retention manager or the pricing team acts on this recommendation, which number would show that it worked, which number would show that it went wrong, and when should we look again? How would we notice if get_food_prices stopped working?
+
+
+THEN READ THE ANSWERS
+
+Read the five answers with the box "Reading the answers, gate by gate" on the lecture page, and decide which gate needs the most work. That gate is the main risk of your recommendation, and what would make it pass is your safeguard. Write your team's governance box in your own words.

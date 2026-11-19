@@ -1,0 +1,69 @@
+LOOMWISE APPAREL, GOVERNANCE SHEET
+PM02. Loomwise Apparel is made up. With this sheet your team takes its recommendation with the most at stake through the five governance gates your instructor showed on Lumenvale, with one question at each gate. Your team uses the answers as material for the governance box of its progress report 2 team thread, which your team writes in its own words. About twenty five minutes, with the model run.
+
+
+YOUR BUSINESS AT THE GATES
+
+Who decides: The ecommerce manager, who sets the return policy and the promotions in each market.
+Who is affected: Customers in each market.
+Your live tool: get_rates, from Frankfurter, the exchange rates published by the European Central Bank. The European Central Bank publishes rates on working days only, so on a weekend or a holiday the latest rates are the last working day's.
+
+
+THE RECOMMENDATION
+
+Your team's recommendation for the gates is to charge for returns in the markets whose orders have the highest chance of coming back. It belongs to the decision on the return policy in your brief. If your team's synthesis has a recommendation with more at stake, your team may use it instead, with the report behind it, and change the first message below to match.
+
+
+RUN THE MODEL
+
+Open the REG tool from the analytics workbench, load loomwise_orders.csv, and fit this run. Then press Save report and keep the .txt file.
+
+Target: returned
+Validation: the Validation column
+Inputs: country, category, items, list_value_usd, discount_pct, sizes_consistent, used_size_guide, past_return_rate and shipping_days
+Leave out: refund_amount_usd, because it is recorded after the outcome; last_review_text, a text column; margin_usd, the other target; and every other column of the file, such as the id and date columns.
+
+
+THE FIRST MESSAGE
+
+Start a new thread with your team's agent, attach the .txt report, and send the message below.
+
+COPY:
+Our recommendation is to charge for returns in the markets whose orders have the highest chance of coming back. It belongs to the decision on the return policy. The attached report is a REG fit of returned, the report the recommendation rests on. I will ask you one question about it at each of five governance gates.
+
+
+GATE 1, LIVE DATA
+
+COPY:
+Call get_rates and say which of its values bear on this recommendation, each with its date. What should the ecommerce manager do if the tool fails?
+
+Then open Execution Details and look at Tool Calls. Check that the agent called get_rates and that each value in its answer matches the tool's response.
+
+
+GATE 2, EVIDENCE
+
+COPY:
+Which numbers in the attached report support this recommendation, and how far can the ecommerce manager trust them? Name the validation rows behind them and any input recorded after the outcome.
+
+
+GATE 3, FAIRNESS AND PRIVACY
+
+COPY:
+Under this recommendation, customers in some markets or with some return histories are treated differently. Could country or past_return_rate stand in for something a customer cannot change, and does acting on it use the sizes customers bought or what last_review_text says in a way they would not expect?
+
+
+GATE 4, AUTHORITY
+
+COPY:
+Which part of this recommendation is yours, and which part does the ecommerce manager decide? Does any part go beyond the conclusions our brief lists under CONCLUSIONS THE AGENT MAY NOT DRAW?
+
+
+GATE 5, MONITORING
+
+COPY:
+If the ecommerce manager acts on this recommendation, which number would show that it worked, which number would show that it went wrong, and when should we look again? How would we notice if get_rates stopped working?
+
+
+THEN READ THE ANSWERS
+
+Read the five answers with the box "Reading the answers, gate by gate" on the lecture page, and decide which gate needs the most work. That gate is the main risk of your recommendation, and what would make it pass is your safeguard. Write your team's governance box in your own words.

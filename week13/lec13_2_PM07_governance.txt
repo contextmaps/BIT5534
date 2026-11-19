@@ -1,0 +1,69 @@
+KETTLE RIDGE MUNICIPAL ELECTRIC, GOVERNANCE SHEET
+PM07. Kettle Ridge Municipal Electric is made up. With this sheet your team takes its recommendation with the most at stake through the five governance gates your instructor showed on Lumenvale, with one question at each gate. Your team uses the answers as material for the governance box of its progress report 2 team thread, which your team writes in its own words. About twenty five minutes, with the model run.
+
+
+YOUR BUSINESS AT THE GATES
+
+Who decides: The customer service manager, who decides which households receive a payment plan offer.
+Who is affected: Households.
+Your live tool: get_forecast, from Open-Meteo, the temperature forecast for Kettle Ridge for the next 7 days. The forecast covers 7 days of temperatures, so a monthly power purchase needs more than one week of forecast.
+
+
+THE RECOMMENDATION
+
+Your team's recommendation for the gates is to offer a payment plan to the households with the highest chance of leaving a bill unpaid for 60 days. It belongs to the decision on the payment plan offer in your brief. If your team's synthesis has a recommendation with more at stake, your team may use it instead, with the report behind it, and change the first message below to match.
+
+
+RUN THE MODEL
+
+Open the REG tool from the analytics workbench, load kettleridge_accounts.csv, and fit this run. Then press Save report and keep the .txt file.
+
+Target: unpaid_60
+Validation: the Validation column
+Inputs: month, neighborhood, home_sqft, home_age_years, heating_type, occupants, avg_temp_f, budget_billing, past_late_payments and usual_monthly_kwh
+Leave out: disconnect_notice_sent, because it is recorded after the outcome; service_call_notes, a text column; usage_kwh, the other target; and every other column of the file, such as the id and date columns.
+
+
+THE FIRST MESSAGE
+
+Start a new thread with your team's agent, attach the .txt report, and send the message below.
+
+COPY:
+Our recommendation is to offer a payment plan to the households with the highest chance of leaving a bill unpaid for 60 days. It belongs to the decision on the payment plan offer. The attached report is a REG fit of unpaid_60, the report the recommendation rests on. I will ask you one question about it at each of five governance gates.
+
+
+GATE 1, LIVE DATA
+
+COPY:
+Call get_forecast and say which of its values bear on this recommendation, each with its date. What should the customer service manager do if the tool fails?
+
+Then open Execution Details and look at Tool Calls. Check that the agent called get_forecast and that each value in its answer matches the tool's response.
+
+
+GATE 2, EVIDENCE
+
+COPY:
+Which numbers in the attached report support this recommendation, and how far can the customer service manager trust them? Name the validation rows behind them and any input recorded after the outcome.
+
+
+GATE 3, FAIRNESS AND PRIVACY
+
+COPY:
+Under this recommendation, some households are offered help and others are not. Could neighborhood, home_age_years or heating_type stand in for income, age or disability, and does acting on it use what service_call_notes say about a household in a way the household would not expect?
+
+
+GATE 4, AUTHORITY
+
+COPY:
+Which part of this recommendation is yours, and which part does the customer service manager decide? Does any part go beyond the conclusions our brief lists under CONCLUSIONS THE AGENT MAY NOT DRAW?
+
+
+GATE 5, MONITORING
+
+COPY:
+If the customer service manager acts on this recommendation, which number would show that it worked, which number would show that it went wrong, and when should we look again? How would we notice if get_forecast stopped working?
+
+
+THEN READ THE ANSWERS
+
+Read the five answers with the box "Reading the answers, gate by gate" on the lecture page, and decide which gate needs the most work. That gate is the main risk of your recommendation, and what would make it pass is your safeguard. Write your team's governance box in your own words.
