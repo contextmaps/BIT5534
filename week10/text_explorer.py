@@ -58,7 +58,8 @@ def read_table(path):
 
 def text_columns(df):
     """Columns holding strings, longest average text first."""
-    obj = [c for c in df.columns if df[c].dtype == object]
+    # pandas 3 reads text as the str dtype, pandas 2 as object; both count as text here.
+    obj = [c for c in df.columns if pd.api.types.is_object_dtype(df[c]) or pd.api.types.is_string_dtype(df[c])]
     return sorted(obj, key=lambda c: -df[c].astype(str).str.len().mean())
 
 
