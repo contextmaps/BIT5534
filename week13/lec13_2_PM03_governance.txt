@@ -1,5 +1,5 @@
 TASKMEADOW, GOVERNANCE SHEET
-PM03. Taskmeadow is made up. With this sheet your team takes its recommendation with the most at stake through the five governance gates your instructor showed on Lumenvale, with one question at each gate. Your team uses the answers as material for the governance box of its progress report 2 team thread, which your team writes in its own words. About twenty five minutes, with the model run.
+PM03. Taskmeadow is made up. With this sheet your team takes one recommendation through the five governance gates your instructor showed on Lumenvale, with one question at each gate. Your team uses the answers as material for the governance box of its progress report 2 team thread, which your team writes in its own words. About twenty five minutes, with the model run.
 
 
 YOUR BUSINESS AT THE GATES
@@ -55,7 +55,7 @@ Under this recommendation, some payments are held longer or some projects are ch
 GATE 4, AUTHORITY
 
 COPY:
-Which part of this recommendation is yours, and which part does the trust and safety manager decide? Does any part go beyond the conclusions our brief lists under CONCLUSIONS THE AGENT MAY NOT DRAW?
+Which part of this recommendation is yours, and which part does the trust and safety manager decide? Does any part go beyond the conclusions listed in our brief under CONCLUSIONS THE AGENT MAY NOT DRAW?
 
 
 GATE 5, MONITORING
@@ -66,4 +66,4 @@ If the trust and safety manager acts on this recommendation, which number would 
 
 THEN READ THE ANSWERS
 
-Read the five answers with the box "Reading the answers, gate by gate" on the lecture page, and decide which gate needs the most work. That gate is the main risk of your recommendation, and what would make it pass is your safeguard. Write your team's governance box in your own words.
+Read the five answers with the box "Reading the answers, gate by gate" on the lecture page, and decide at which gate your team has the most work to do. The main risk of your recommendation sits at that gate, and the work that would pass it is your safeguard. Write your team's governance box in your own words.

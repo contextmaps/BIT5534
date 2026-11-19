@@ -1,12 +1,12 @@
 LADLEWICK SANDWICH CO., GOVERNANCE SHEET
-PM05. Ladlewick Sandwich Co. is made up. With this sheet your team takes its recommendation with the most at stake through the five governance gates your instructor showed on Lumenvale, with one question at each gate. Your team uses the answers as material for the governance box of its progress report 2 team thread, which your team writes in its own words. About twenty five minutes, with the model run.
+PM05. Ladlewick Sandwich Co. is made up. With this sheet your team takes one recommendation through the five governance gates your instructor showed on Lumenvale, with one question at each gate. Your team uses the answers as material for the governance box of its progress report 2 team thread, which your team writes in its own words. About twenty five minutes, with the model run.
 
 
 YOUR BUSINESS AT THE GATES
 
 Who decides: The real estate committee, which approves or rejects each candidate site.
 Who is affected: Franchisees and the neighborhoods of candidate sites.
-Your live tools: get_state_income and get_state_population, from Data USA, the Census Bureau's American Community Survey for 2019 to 2023, by state. The survey covers 2019 to 2023, so the values are several years old, and a state figure is a poor guide to one trade area. The county tool needs a key your team registers.
+Your live tools: get_state_income and get_state_population, from Data USA, the Census Bureau's American Community Survey for 2019 to 2023, by state. The survey covers 2019 to 2023, so the values are several years old, and a state figure is a poor guide to one trade area. Your team registers a key before it can use the county tool.
 
 
 THE RECOMMENDATION
@@ -55,7 +55,7 @@ Under this recommendation, sites in some places are approved and others are not.
 GATE 4, AUTHORITY
 
 COPY:
-Which part of this recommendation is yours, and which part does the real estate committee decide? Does any part go beyond the conclusions our brief lists under CONCLUSIONS THE AGENT MAY NOT DRAW?
+Which part of this recommendation is yours, and which part does the real estate committee decide? Does any part go beyond the conclusions listed in our brief under CONCLUSIONS THE AGENT MAY NOT DRAW?
 
 
 GATE 5, MONITORING
@@ -66,4 +66,4 @@ If the real estate committee acts on this recommendation, which number would sho
 
 THEN READ THE ANSWERS
 
-Read the five answers with the box "Reading the answers, gate by gate" on the lecture page, and decide which gate needs the most work. That gate is the main risk of your recommendation, and what would make it pass is your safeguard. Write your team's governance box in your own words.
+Read the five answers with the box "Reading the answers, gate by gate" on the lecture page, and decide at which gate your team has the most work to do. The main risk of your recommendation sits at that gate, and the work that would pass it is your safeguard. Write your team's governance box in your own words.
