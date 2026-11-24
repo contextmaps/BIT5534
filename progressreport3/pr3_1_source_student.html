@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deliverable 3, Presentation, Team Submission</title>
+<style>
+:root {
+  --c-text:#1a1a1a; --c-muted:#4a4a4a;
+  --c-meta-bg:#f4f6f9; --c-meta-border:#d0d7e2;
+  --c-obj-bg:#eef4fb; --c-obj-accent:#1a5da0;
+  --c-ctx-bg:#fffbf0; --c-ctx-border:#e8d8a0; --c-ctx-label:#5c4400;
+  --c-ctx-s-bg:#f0f7ff; --c-ctx-s-border:#a0c8f0; --c-ctx-s-label:#1a4a80;
+  --c-nar-bg:#f9f9f9; --c-nar-border:#bbb;
+  --c-dis-bg:#f0f4ff; --c-dis-border:#8090cc; --c-dis-label:#1e2e80;
+  --c-sys-bg:#f3f0ff; --c-sys-border:#9080d0; --c-sys-label:#3a2090;
+  --c-scr-bg:#fff8e8; --c-scr-border:#d0a030; --c-scr-label:#6b4a00;
+  --c-s-bg:#f0faf4; --c-s-border:#70c090; --c-s-id:#14552f;
+  --c-r-bg:#fff8f0; --c-r-border:#d0a040; --c-r-id:#6b3e00;
+  --c-mk-bg:#f0f0ff; --c-mk-border:#8080c8; --c-mk-id:#2a2a80;
+  --c-m-bg:#f0f8ff; --c-m-border:#70a8d0; --c-m-id:#0a4a70;
+  --c-mc-bg:#f8f8ff; --c-mc-border:#a0a0d0;
+  --c-btn:#14552f; --c-btn-r:#6b3e00; --c-btn-mk:#2a2a80;
+  --c-btn-mo:#0a4a70; --c-btn-mc:#3a3a6a;
+  --c-q-bg:#f0fafd; --c-q-border:#70b8d0; --c-q-id:#0a5070;
+  --c-btn-q:#0a5070;
+  --c-o-bg:#fef6f0; --c-o-border:#e89870; --c-o-id:#a04510;
+  --c-btn-o:#a04510;
+  --radius:8px; --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --page:1100px;
+}
+/* Two layers. The wrapper takes the width Canvas gives it, up to --page, so it
+   never overflows a narrow frame and never needs a per-machine number. Everything
+   inside fills the block it sits in. */
+.plib-wrap{font-family:var(--font);color:var(--c-text);max-width:min(var(--page),100% - 2rem);margin:0 auto;padding:1rem 0}
+/* Every block spans the page so their left and right edges line up down the
+   column, and the text inside fills the block.
+
+   There is no reading column. D-032 put prose in a 720px column inside a 1100px
+   wrapper, and on 2026-09-02 the instructor read the rendered result and rejected
+   it: every text block stopped two thirds of the way across its own card and
+   stranded the rest, and a bordered box that stops short of the card it sits in
+   reads as broken rather than as typography. The wrapper's own
+   min(1100px, 100% - 2rem) is now the only bound, so a line never exceeds about
+   1055px. The cost is real and is worth stating. A long paragraph at 1055px reads
+   worse than the same paragraph at 800, and what pays for it is the writing
+   standard's rule on paragraph length, which now carries the load the column used
+   to carry. Recorded as D-043, amending D-032. */
+.plib-wrap > *{max-width:100%}
+.plib-submit{margin:2rem 0 1rem;padding:1.4rem 1.6rem;border-radius:var(--radius);background:var(--c-obj-bg);border:2px solid var(--c-obj-accent)}
+.plib-submit-title{font-size:13px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--c-obj-accent)}
+.plib-submit-p{margin:.5rem 0 1rem;font-size:15px;line-height:1.65}
+.plib-submit-btn{display:inline-block;background:var(--c-obj-accent);color:#fff;text-decoration:none;font-size:16px;font-weight:600;padding:.7rem 1.4rem;border-radius:var(--radius)}
+.plib-submit-btn:hover{filter:brightness(1.12)}
+.plib-submit-btn:focus{outline:3px solid var(--c-obj-accent);outline-offset:3px}
+.plib-submit-note{margin-top:.55rem;font-size:13px;color:var(--c-muted)}
+.plib-material{margin:1.6rem 0;padding:1.2rem 1.4rem;border-radius:var(--radius);background:var(--c-s-bg);border:1px solid var(--c-s-border)}
+.plib-caution{background:#fff8ec;border:1px solid #f0c98a;border-left:6px solid #CF4420}.plib-caution-tag{color:#a8380f !important;font-weight:700}.plib-caution-list{margin:.4em 0 .2em 1.2em;padding:0}.plib-caution-list li{margin:.35em 0;line-height:1.45}
+.plib-info{background:#f3f4f8;border:1px solid #c9cde0;border-left:5px solid #5a6aa8}
+.plib-info-tag{color:#4a5a98 !important}
+.plib-info-box{background:#fff;border-color:#c9cde0;max-height:none}
+.plib-material-tag{font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--c-s-id)}
+.plib-material-title{margin-top:.3rem;font-size:17px;font-weight:600;color:var(--c-text)}
+.plib-material-box{margin:.9rem 0 1.1rem;padding:.9rem 1rem;max-height:22rem;overflow:auto;background:#fff;border:1px solid var(--c-s-border);border-radius:6px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;color:var(--c-text)}
+.plib-material-box:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+.plib-material-btns{display:flex;flex-wrap:wrap;gap:.6rem}
+.plib-material-copies{margin:.9rem 0 0;display:flex;flex-wrap:wrap;gap:.8rem}
+.plib-copyrow{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;padding:.55rem .7rem;background:#fff;border:1px solid var(--c-s-border);border-radius:6px}
+.plib-copyrow-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-s-id)}
+.plib-copyrow-code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;color:var(--c-text)}
+.plib-copy-btn-row{padding:.3rem .6rem;font-size:12px}
+.plib-material-btn{display:inline-block;background:var(--c-s-id);color:#fff;text-decoration:none;font-size:15px;font-weight:600;padding:.6rem 1.2rem;border-radius:var(--radius)}
+.plib-material-btn:hover{filter:brightness(1.25)}
+.plib-material-btn:focus{outline:3px solid var(--c-s-id);outline-offset:3px}
+.plib-material-note{margin-top:.55rem;font-size:13px;color:var(--c-muted)}
+.plib-section{margin:2.25rem 0 1.1rem;padding-top:.9rem;border-top:3px solid var(--c-obj-accent)}
+.plib-section-n{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--c-muted)}
+.plib-section-t{font-size:23px;font-weight:700;letter-spacing:.04em;color:var(--c-obj-accent);margin-top:2px}
+.plib-wrap > .plib-section:first-child{margin-top:.5rem}
+.plib-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;margin-bottom:1.25rem}
+.plib-tile{background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);padding:.9rem;display:flex;flex-direction:column}
+.plib-tile img{width:100%;height:auto;border-radius:4px;background:#faf7f8}
+.plib-tile figure,.plib-tile{margin:0}
+/* A drawing narrower than its grid cell is centred in it. render_tiles caps the
+   wrapper at the SVG's own viewBox width so a 400px card is not blown up to the
+   full row, and without this the drawing sat against the left edge with the slack
+   stranded on the right, which is the same fault D-043 removed from the prose. */
+.plib-tile-svg{width:100%;margin-left:auto;margin-right:auto}
+.plib-tile-svg svg{width:100%;height:auto;display:block}
+.plib-tile-caption{font-size:13px;line-height:1.55;color:var(--c-text);margin-top:auto;padding-top:.6rem}
+.plib-meta{background:var(--c-meta-bg);border:1px solid var(--c-meta-border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1.5rem}
+.plib-meta-course{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--c-muted);margin-bottom:4px}
+.plib-meta-title{font-size:20px;font-weight:600;margin:4px 0 8px}
+.plib-meta-week{font-size:13px;color:var(--c-muted);margin-bottom:2px}
+.plib-meta-details{font-size:12px;color:var(--c-muted);margin-top:8px}
+.plib-objectives{background:var(--c-obj-bg);border-left:4px solid var(--c-obj-accent);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.5rem}
+.plib-objectives-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-obj-accent);font-weight:700;margin-bottom:8px}
+.plib-objectives-intro{margin:0 0 8px;font-size:14px;line-height:1.6;font-style:italic;color:var(--c-muted)}
+.plib-objectives-list{margin:0;padding-left:1.25rem}
+.plib-objectives-list li{margin-bottom:6px;font-size:14px;line-height:1.6}
+.plib-context{background:var(--c-ctx-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-context-student{background:var(--c-ctx-s-bg);border-color:var(--c-ctx-s-border)}
+.plib-context-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-ctx-label);font-weight:700;margin-bottom:8px}
+.plib-context-student .plib-context-label{color:var(--c-ctx-s-label)}
+.plib-context-body p{margin:4px 0;font-size:13px;line-height:1.6;color:var(--c-muted)}
+.plib-formula{margin:1rem 0;padding:1rem 1.25rem;background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:var(--radius);text-align:center}
+.plib-formula-body{overflow-x:auto;color:var(--c-text);padding:2px 0}
+.plib-formula-svg{max-width:100%;height:auto}
+.plib-formula-caption{margin-top:.85rem;font-size:13px;line-height:1.6;color:var(--c-muted);text-align:left}
+.plib-formula-missing{font-size:13px;color:var(--c-muted);text-align:left}
+.plib-formula-note{font-size:12px;margin-top:6px}
+.plib-formula-source{margin-top:.85rem;text-align:left}
+.plib-formula-source summary{font-size:12px;color:var(--c-muted);cursor:pointer}
+.plib-formula-latex{margin:6px 0 0;padding:8px 10px;background:var(--c-ctx-bg);border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.5;white-space:pre-wrap;color:var(--c-muted)}
+.plib-context-pre{margin:8px 0;padding:10px 12px;background:var(--c-meta-bg);border:1px solid var(--c-ctx-border);border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.55;color:var(--c-text);white-space:pre;overflow-x:auto}
+.plib-context-bullet{font-size:13px;color:var(--c-muted);padding-left:1rem;position:relative;margin-bottom:3px}
+.plib-context-bullet::before{content:"\2022";position:absolute;left:0}
+.plib-script{background:var(--c-scr-bg);border:1px solid var(--c-scr-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-script-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-scr-label);font-weight:700;margin-bottom:10px}
+.plib-script-list{margin:0;padding-left:1.25rem}
+.plib-script-list li{font-size:14px;line-height:1.6;margin-bottom:8px}
+.plib-script-time{font-weight:700;color:var(--c-scr-label);font-family:monospace;background:rgba(208,160,48,.15);padding:1px 6px;border-radius:3px}
+.plib-narration{background:var(--c-nar-bg);border-left:3px solid var(--c-nar-border);padding:.9rem 1.25rem;margin-bottom:1rem;border-radius:0 var(--radius) var(--radius) 0}
+.plib-narration p{margin:0 0 8px;font-size:14px;line-height:1.7}
+.plib-narration p:last-child{margin-bottom:0}
+.plib-narration-list{margin:4px 0;padding-left:1.25rem}
+.plib-narration-list li{font-size:14px;line-height:1.6;margin-bottom:4px}
+.plib-discussion{background:var(--c-dis-bg);border:1px solid var(--c-dis-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-slide{margin:0 0 1.25rem;text-align:center}
+.plib-slide-img{max-width:100%;height:auto;border:1px solid var(--c-dis-border);border-radius:var(--radius);box-shadow:0 1px 4px rgba(0,0,0,.08);background:#faf7f8;min-height:60px}
+.plib-slide-caption{font-size:13px;color:var(--c-muted);margin-top:.4rem}
+.plib-slide-script{margin-top:.6rem;text-align:left;font-size:13px;color:var(--c-muted)}
+.plib-slide-script summary{cursor:pointer;font-weight:600}
+.plib-slide-script-body{white-space:pre-wrap;background:rgba(0,0,0,.04);border-radius:var(--radius);padding:.6rem .8rem;margin-top:.4rem}
+.plib-discussion-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-dis-label);font-weight:700;margin-bottom:8px}
+.plib-discussion-intro{margin:0 0 8px;font-size:14px;line-height:1.6;font-style:italic;color:var(--c-dis-label)}
+.plib-discussion-list{margin:0;padding-left:1.25rem}
+.plib-discussion-list li{font-size:14px;line-height:1.6;margin-bottom:6px;color:var(--c-dis-label)}
+.plib-scenarios{margin-bottom:1rem}
+.plib-scenarios-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:#630031;font-weight:700;margin-bottom:8px}
+.plib-scenario-card{background:var(--c-ctx-s-bg);border:1px solid var(--c-ctx-s-border);border-left:4px solid #630031;border-radius:var(--radius);padding:.7rem 1rem;margin-bottom:.6rem}
+.plib-scenario-title{font-weight:700;font-size:14px;color:#630031;margin-bottom:4px}
+.plib-scenario-body{margin:0 0 4px;font-size:14px;line-height:1.6}
+.plib-scenario-line{font-size:13px;line-height:1.55;margin:2px 0 0;padding-left:1rem;position:relative}
+.plib-scenario-line::before{content:"›";position:absolute;left:.2rem;color:#CF4420;font-weight:700}
+.plib-system{background:var(--c-sys-bg);border:1px solid var(--c-sys-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem}
+.plib-system-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-sys-label);font-weight:700;margin-bottom:8px}
+.plib-system-note{font-weight:400;text-transform:none;letter-spacing:0;font-style:italic}
+.plib-prompt-s-ref{opacity:.92;border-style:dashed}
+.plib-ref-note{font-size:12px;color:var(--c-muted);font-style:italic;margin-top:6px}
+.plib-prompt-text{display:none}
+.plib-prompt-display{font-size:14px;line-height:1.7;white-space:pre-wrap;background:rgba(255,255,255,.6);border-radius:4px;padding:.6rem .8rem;margin-bottom:10px}
+.plib-prompt-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.plib-prompt-id{font-size:12px;font-weight:700;font-family:monospace;padding:2px 7px;border-radius:4px}
+.plib-prompt-type-label{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c-muted);font-weight:600}
+.plib-prompt-s{background:var(--c-s-bg);border:1px solid var(--c-s-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-prompt-s .plib-prompt-id{color:var(--c-s-id);background:rgba(20,85,47,.1)}
+.plib-prompt-r{background:var(--c-r-bg);border:1px solid var(--c-r-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-r-id{color:var(--c-r-id)!important;background:rgba(107,62,0,.1)!important}
+.plib-reflect-label{color:var(--c-r-id)!important}
+.plib-reflect-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-prompt-marker{background:var(--c-mk-bg);border:2px solid var(--c-mk-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-marker-id{color:var(--c-mk-id)!important;background:rgba(42,42,128,.1)!important}
+.plib-marker-label{color:var(--c-mk-id)!important}
+.plib-marker-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-marker-display{border-left:3px solid var(--c-mk-border);max-height:18em;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;box-shadow:inset 0 -10px 10px -10px rgba(0,0,0,.18)}
+.plib-prompt-m{background:var(--c-m-bg);border:1.5px solid var(--c-m-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:.5rem}
+.plib-m-id{color:var(--c-m-id)!important;background:rgba(10,74,112,.1)!important}
+.plib-m-label{color:var(--c-m-id)!important}
+.plib-m-badge{font-size:11px;background:var(--c-m-id);color:#fff;padding:2px 8px;border-radius:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.plib-m-instructions{background:rgba(255,255,255,.7);border-radius:6px;padding:10px 14px;margin-bottom:12px}
+.plib-m-instructions-label{font-size:12px;font-weight:700;color:var(--c-m-id);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.plib-m-steps{margin:0;padding-left:1.25rem}
+.plib-m-steps li{font-size:13px;line-height:1.6;margin-bottom:4px}
+.plib-m-seed{background:rgba(255,255,255,.5);border-left:3px solid var(--c-m-border);padding:8px 12px;margin-bottom:12px;border-radius:0 4px 4px 0}
+.plib-m-seed-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-m-id);margin-bottom:4px}
+.plib-m-seed-text{font-size:13px;line-height:1.6;white-space:pre-wrap}
+.plib-prompt-m-close{background:var(--c-mc-bg);border:1px dashed var(--c-mc-border);border-radius:var(--radius);padding:.75rem 1.25rem;margin-bottom:1.25rem}
+.plib-m-close-label{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.plib-m-close-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-copy-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;font-size:13px;font-weight:500;border:1.5px solid var(--c-btn);background:transparent;color:var(--c-btn);border-radius:6px;cursor:pointer;transition:background .15s,color .15s}
+.plib-copy-btn:hover{background:var(--c-btn);color:#fff}
+.plib-copy-btn:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+.plib-copy-btn.copied{background:#333;color:#fff;border-color:#333}
+.plib-copy-btn-reflect{border-color:var(--c-btn-r);color:var(--c-btn-r)}
+.plib-copy-btn-reflect:hover{background:var(--c-btn-r);color:#fff}
+.plib-copy-btn-marker{border-color:var(--c-btn-mk);color:var(--c-btn-mk)}
+.plib-copy-btn-marker:hover{background:var(--c-btn-mk);color:#fff}
+.plib-copy-btn-m-open{border-color:var(--c-btn-mo);color:var(--c-btn-mo)}
+.plib-copy-btn-m-open:hover{background:var(--c-btn-mo);color:#fff}
+.plib-copy-btn-m-close{border-color:var(--c-btn-mc);color:var(--c-btn-mc)}
+.plib-copy-btn-m-close:hover{background:var(--c-btn-mc);color:#fff}
+.plib-textarea{display:block;width:100%;box-sizing:border-box;padding:10px 12px;font-size:14px;font-family:var(--font);line-height:1.6;border:1.5px solid var(--c-r-border);border-radius:6px;margin-bottom:10px;background:#fff;color:var(--c-text);resize:vertical;min-height:120px}
+.plib-prompt-input{min-height:0;margin:10px 0 6px}
+.plib-textarea:focus{outline:3px solid #005fcc;outline-offset:2px;border-color:#005fcc}
+.plib-counter{font-size:13px;color:var(--c-muted);margin-bottom:8px;font-variant-numeric:tabular-nums}
+.plib-counter.at-limit{color:#b00020;font-weight:600}
+.plib-counter .plib-count-ok{color:#14552f}
+.plib-counter .plib-count-warn{color:#8a4a00}
+.plib-counter .plib-count-bad{color:#b00020;font-weight:600}
+.plib-counter-min{font-size:12px;color:var(--c-muted);margin-left:8px}
+.plib-warn{font-size:13px;color:#b00020;font-weight:600;margin-bottom:8px;min-height:20px}
+.plib-prompt-q{background:var(--c-q-bg);border:1px solid var(--c-q-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-q-id{color:var(--c-q-id)!important;background:rgba(10,80,112,.1)!important}
+.plib-q-label{color:var(--c-q-id)!important}
+.plib-q-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-q-items{display:flex;flex-direction:column;gap:14px;margin-bottom:10px}
+.plib-q-item{background:rgba(255,255,255,.6);border-radius:6px;padding:10px 12px}
+.plib-q-question{font-size:14px;font-weight:500;display:block;margin-bottom:8px;line-height:1.5}
+.plib-q-item-num{font-family:monospace;font-weight:700;color:var(--c-q-id);margin-right:6px}
+.plib-q-cap-note{font-weight:400;font-style:italic;color:var(--c-muted);margin-left:6px;font-size:13px}
+.plib-q-select{width:100%;padding:6px 8px;font-size:14px;border:1px solid var(--c-q-border);border-radius:4px;background:#fff}
+.plib-q-likert{display:flex;flex-wrap:wrap;gap:10px}
+.plib-q-likert-opt{display:flex;align-items:center;gap:5px;font-size:14px;cursor:pointer}
+.plib-q-likert-stack{flex-direction:column;flex-wrap:nowrap;gap:6px}
+.plib-q-statement{font-weight:700}
+.plib-q-likert-stack .plib-q-likert-opt{align-items:flex-start}
+.plib-q-likert-stack .plib-q-likert-opt input{margin-top:3px}
+.plib-q-checkboxes{display:flex;flex-direction:column;gap:6px}
+.plib-q-check-opt{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.plib-q-check-opt input[disabled] + span{opacity:.5}
+.plib-copy-btn-q{border-color:var(--c-btn-q);color:var(--c-btn-q)}
+.plib-copy-btn-q:hover{background:var(--c-btn-q);color:#fff}
+.plib-prompt-o{background:var(--c-o-bg);border:1px solid var(--c-o-border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem}
+.plib-o-id{color:var(--c-o-id)!important;background:rgba(160,69,16,.1)!important}
+.plib-o-label{color:var(--c-o-id)!important}
+.plib-o-instruction{font-size:13px;color:var(--c-muted);font-style:italic;margin-bottom:10px}
+.plib-o-question{font-size:14px;font-weight:500;margin-bottom:10px;line-height:1.5}
+.plib-o-list{list-style:none;padding:0;margin:0 0 10px 0;display:flex;flex-direction:column;gap:6px}
+.plib-o-item{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.7);border-radius:6px;padding:8px 10px;font-size:14px}
+.plib-o-rank{font-family:monospace;font-weight:700;color:var(--c-o-id);min-width:1.5em;text-align:right}
+.plib-o-item-text{flex:1}
+.plib-o-controls{display:flex;flex-direction:column;gap:2px}
+.plib-o-arrow{background:transparent;border:1px solid var(--c-o-border);color:var(--c-o-id);width:28px;height:22px;font-size:14px;line-height:1;cursor:pointer;border-radius:3px;padding:0}
+.plib-o-arrow:hover:not([disabled]){background:var(--c-o-border);color:#fff}
+.plib-o-arrow[disabled]{opacity:.25;cursor:default}
+.plib-copy-btn-o{border-color:var(--c-btn-o);color:var(--c-btn-o)}
+.plib-copy-btn-o:hover{background:var(--c-btn-o);color:#fff}
+.plib-demo-badge{font-size:11px;color:var(--c-muted);background:rgba(0,0,0,.05);padding:2px 8px;border-radius:3px;font-style:italic;margin-left:8px}
+.plib-ai-badge{font-size:11px;padding:2px 8px;border-radius:3px;font-family:monospace;margin-left:8px}
+.plib-ai-respond{background:#e8f5e8;color:#2c5e2c}
+.plib-ai-acknowledge{background:#fef0e6;color:#8c4a1a}
+.plib-ai-archive{background:#f0e8f5;color:#5a2c8c}
+</style>
+</head>
+<body>
+<a href="#main-content" class="plib-skip-link">Skip to main content</a>
+<style>.plib-skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;}.plib-skip-link:focus{position:static;width:auto;height:auto;background:#005fcc;color:#fff;padding:8px 16px;font-size:14px;font-weight:600;border-radius:4px;text-decoration:none;display:inline-block;margin:8px;}</style>
+<main id="main-content">
+<div class="plib-wrap">
+<div class="plib-meta">
+  <div class="plib-meta-course">BIT 5534 Applied Business Intelligence and Analytics</div>
+  <div class="plib-meta-week">Week 13 · Progress Report 3 · Part 1 of 2</div>
+  <div class="plib-meta-title">Deliverable 3, Presentation, Team Submission</div>
+  <div class="plib-meta-details"><span><strong>Platform:</strong> PowerPoint, with screenshots of the team's agent in Hokie AI</span>&ensp;·&ensp;<span><strong>Submission:</strong> One .zip file per team containing the PowerPoint file, uploaded to Canvas by one team member</span></div>
+</div>
+
+<div class="plib-objectives">
+  <div class="plib-objectives-label">Learning Objectives</div>
+  <p class="plib-objectives-intro">By the end of this progress report, each team will be able to:</p>
+  <ol class="plib-objectives-list">
+    <li>Present the course project, from the business brief to a recommendation, in at most 15 slides and 12 minutes.</li>
+    <li>Support each finding with a number, the model and report from which it was obtained, and its validation.</li>
+    <li>Show how the team worked with its agent and how the recommendation with the greatest consequences would be governed.</li>
+    <li>Deliver the presentation as a team, with every member speaking.</li>
+  </ol>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 1 of 5</div><div class="plib-section-t">ORIENTATION</div></div>
+
+<div class="plib-narration">
+  <p>Progress report 3 is the final deliverable of the course project. Each team presents to the class what it learned about its business. The presentation is built from progress reports 1 and 2, in particular from the decisions, the big picture, the governance box and the story in the progress report 2 team thread.</p>
+  <p>Progress report 3 consists of two Canvas assignments with the same deadline. One member uploads the team's slides, worth 100 points, to Progress Report 3 from this page. Every member submits a peer evaluation, which has no points of its own, to Peer Evaluation 3 from the Deliverable 3, Presentation, Peer Evaluation page. The slides cannot be changed after the deadline, and each team presents the slides it submitted.</p>
+  <p>After each presentation, every student evaluates the presenting team on the five criteria described on this page. At the end of each presentation session, every student also ranks the teams that presented in that session. The instructor sets each team's grade from the evaluations and the rankings. Each member's share of the team grade is then adjusted according to the peer evaluations, as in progress reports 1 and 2.</p>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 2 of 5</div><div class="plib-section-t">THE STORY</div></div>
+
+<div class="plib-tiles" id="plib-tiles-6">
+  <figure class="plib-tile">
+    <div class="plib-tile-svg" style="max-width:1000px" role="img" aria-label="Five boxes joined by THEN, the story of the investigation. Brief, the business, its decisions and their financial impact. Exploration, the models, the text explorer and the findings of each member. Agent, the team's conversation with its agent, with live data. Governance, the main risk of the recommendation with the greatest consequences, and its control. Intelligence, the insights and the recommendation for the manager."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 238" font-family="Segoe UI,-apple-system,sans-serif"><rect width="1000" height="238" rx="10" fill="#faf7f8"/><text x="500" y="28" font-size="16" font-weight="600" text-anchor="middle" fill="#2b2b2b">The story of the investigation</text><rect x="21" y="46" width="153" height="170" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="45" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="45" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">1</text><text x="66" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Brief</text><text x="37" y="122" font-size="14" fill="#6b6b6b">the business, its</text><text x="37" y="141" font-size="14" fill="#6b6b6b">decisions and their</text><text x="37" y="160" font-size="14" fill="#6b6b6b">financial impact</text><text x="198" y="136" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">THEN</text><rect x="222" y="46" width="153" height="170" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="246" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="246" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">2</text><text x="267" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Exploration</text><text x="238" y="122" font-size="14" fill="#6b6b6b">the models, the</text><text x="238" y="141" font-size="14" fill="#6b6b6b">text explorer and</text><text x="238" y="160" font-size="14" fill="#6b6b6b">the findings of each</text><text x="238" y="179" font-size="14" fill="#6b6b6b">member</text><text x="399" y="136" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">THEN</text><rect x="423" y="46" width="153" height="170" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="447" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="447" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">3</text><text x="468" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Agent</text><text x="439" y="122" font-size="14" fill="#6b6b6b">the team's</text><text x="439" y="141" font-size="14" fill="#6b6b6b">conversation with</text><text x="439" y="160" font-size="14" fill="#6b6b6b">its agent, with live</text><text x="439" y="179" font-size="14" fill="#6b6b6b">data</text><text x="601" y="136" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">THEN</text><rect x="625" y="46" width="153" height="170" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="649" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="649" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">4</text><text x="670" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Governance</text><text x="641" y="122" font-size="14" fill="#6b6b6b">the main risk of the</text><text x="641" y="141" font-size="14" fill="#6b6b6b">recommendation</text><text x="641" y="160" font-size="14" fill="#6b6b6b">with the greatest</text><text x="641" y="179" font-size="14" fill="#6b6b6b">consequences, and</text><text x="641" y="198" font-size="14" fill="#6b6b6b">its control</text><text x="802" y="136" font-size="15" font-weight="700" text-anchor="middle" fill="#630031" opacity="0.75">THEN</text><rect x="826" y="46" width="153" height="170" rx="10" fill="#fff" stroke="#630031" stroke-opacity="0.45" stroke-width="2"/><circle cx="850" cy="76" r="13" fill="#630031" opacity="0.15"/><text x="850" y="82" font-size="15" font-weight="700" text-anchor="middle" fill="#630031">5</text><text x="871" y="82" font-size="17" font-weight="600" fill="#2b2b2b">Intelligence</text><text x="842" y="122" font-size="14" fill="#6b6b6b">the insights and the</text><text x="842" y="141" font-size="14" fill="#6b6b6b">recommendation</text><text x="842" y="160" font-size="14" fill="#6b6b6b">for the manager</text></svg></div>
+    <figcaption class="plib-tile-caption">The story is presented in the order in which the team carried out its work.</figcaption>
+  </figure>
+</div>
+
+<div class="plib-narration">
+  <p>The presentation is organized as the story of the investigation, in the order in which the team carried it out.</p>
+  <ol class="plib-narration-list">
+    <li>The business. Present the decisions the business faces and their financial impact, using the planning figures in the brief.</li>
+    <li>The exploration. Explain how the work was divided, which models were fitted, how the text explorer was used if the team used it, and which findings mattered most. These are taken from the insight lines and the decisions in the team thread.</li>
+    <li>The agent. Show the team's conversation with its agent about the findings, including the live data the agent retrieved.</li>
+    <li>Governance. For the recommendation with the greatest consequences, state its main risk, the safeguard, who decides, what is monitored and what would stop the action. These are taken from the governance box.</li>
+    <li>Business intelligence. State what the findings mean for the business, what the manager should do first and its expected value, and which questions remain open. These are taken from the big picture and the story.</li>
+  </ol>
+  <p>A presentation is stronger with two further elements. The first is an assumption in the brief that was contradicted by the data, shown with the number and the report from which it was obtained. The second is a result the team set aside because it appeared better than it was, for example a model fitted with a column recorded after the outcome, or an accuracy equal to the share of the most common answer. The team should explain why the result was set aside.</p>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 3 of 5</div><div class="plib-section-t">THE SLIDES</div></div>
+
+<div class="plib-narration">
+  <p>The recommended slides below are ordered by the story and matched to the five criteria. Teams may use them as an outline and adapt them as needed.</p>
+</div>
+
+<div class="plib-material plib-info" id="plib-material-10">
+  <div class="plib-material-tag plib-info-tag">For reading</div>
+  <div class="plib-material-title">Recommended slides</div>
+  <pre class="plib-material-box plib-info-box">Recommended slides (at most 15)
+
+ 1  Title: team code, business and members
+ 2  The business and its decisions                       criterion 1
+ 3  The financial impact, in planning figures           criterion 1
+ 4  The exploration: division of work, models and text   criterion 2
+ 5  Finding                                              criterion 2
+ 6  Finding                                              criterion 2
+ 7  Finding                                              criterion 2
+ 8  Assumptions contradicted by the data                 criterion 2
+ 9  Results set aside                                    criterion 2
+10  The agent and the live data                          criterion 3
+11  Governance of the main recommendation                criterion 3
+12  Recommendation                                       criterion 4
+13  Open questions and next steps                        criterion 4
+14  Questions
+
+One slide is left for a fourth finding. Criterion 5, the delivery, applies to the whole
+presentation.</pre>
+  <div class="plib-material-note">For reading. Nothing in this box is pasted anywhere.</div>
+</div>
+
+<div class="plib-narration">
+  <p>Most of the content of the presentation was written in progress report 2. The box below shows the earlier work from which each recommended slide can be drawn. The feedback on progress report 2 includes a suggested mapping of each team's own material onto these slides.</p>
+</div>
+
+<div class="plib-material plib-info" id="plib-material-12">
+  <div class="plib-material-tag plib-info-tag">For reading</div>
+  <div class="plib-material-title">From earlier work to the slides</div>
+  <pre class="plib-material-box plib-info-box">Material from earlier work                                 Recommended slides
+
+The brief: the business and its three decisions            2
+The brief: the planning figures                            3
+The division of the work and the insight lines             4
+The first, second and third decisions                      5, 6 and 7
+Assumptions in the brief contradicted by the findings      8
+Results set aside in the exploration threads               9
+The conversation with the agent in the team thread         10
+The governance box                                         11
+The big picture                                            12
+Open questions in the big picture and the story            13
+The story in order                                         the order of slides 2 to 13</pre>
+  <div class="plib-material-note">For reading. Nothing in this box is pasted anywhere.</div>
+</div>
+
+<div class="plib-narration">
+  <p>The following rules apply to every team.</p>
+  <ol class="plib-narration-list">
+    <li>The presentation has at most 15 slides, including the title slide and the Questions slide.</li>
+    <li>The presentation lasts at most 12 minutes. The instructor keeps time and stops the presentation at 12 minutes.</li>
+    <li>Each slide contains little text, in type of 20 points or larger and about 30 words or fewer. The rest is said aloud.</li>
+    <li>All slides use one design, with the same fonts, colors and layout.</li>
+    <li>The agent is shown in screenshots, with one exchange and one live data call. The presentations run on the instructor's computer, so a live demonstration is not possible.</li>
+    <li>Every member presents. The slides are divided fairly among the members, and the presentation is rehearsed individually and as a team, with a timer.</li>
+    <li>Presenters wear business casual dress.</li>
+    <li>The presentation is saved as a PowerPoint file in 16:9 format, with fonts embedded and without video or links that require a login. The file is then compressed into a .zip file named with the team code, such as PM06_PR3.zip.</li>
+  </ol>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 4 of 5</div><div class="plib-section-t">THE EVALUATION</div></div>
+
+<div class="plib-narration">
+  <p>Each criterion is stated as a sentence about the strongest presentation and is worth 20 points. After each presentation, every student rates agreement with each sentence on a five-point scale. The instructor reviews the ratings and the rankings to set the team grade. Teams should read the five sentences before building their slides.</p>
+</div>
+
+<div class="plib-material plib-info" id="plib-material-16">
+  <div class="plib-material-tag plib-info-tag">For reading</div>
+  <div class="plib-material-title">The five criteria</div>
+  <pre class="plib-material-box plib-info-box">The five criteria, 20 points each
+
+1. The business problem
+   At the beginning of the presentation, the team stated the decisions the business
+   faces and their financial impact, using the figures in the brief.
+
+2. The evidence
+   The team supported each key finding with a number, the model and report from which
+   the number was obtained, and its validation.
+
+3. The agent and governance
+   The team showed an exchange with its agent and a live data call, and explained how
+   the recommendation with the greatest consequences would be governed.
+
+4. The business intelligence
+   The team based its recommendation on its findings and stated what the manager should
+   do first and the expected value of that action.
+
+5. The delivery
+   The team finished within 12 minutes, used clear and consistent slides, and every
+   member presented.
+
+After each presentation, every student rates agreement with each statement on a five-
+point scale from strongly agree to strongly disagree.</pre>
+  <div class="plib-material-note">For reading. Nothing in this box is pasted anywhere.</div>
+</div>
+
+<div class="plib-section"><div class="plib-section-n">Section 5 of 5</div><div class="plib-section-t">SUBMISSION</div></div>
+
+<div class="plib-narration">
+  <p>One member compresses the team's PowerPoint file into a .zip file and uploads it to Progress Report 3 in Canvas. The slides cannot be changed after the deadline.</p>
+  <p>The morning section presents in two sessions, with AM01 to AM03 in the first session and AM04 to AM06 in the second. The afternoon section presents PM01 to PM05 in the first session and PM06 to PM10 in the second.</p>
+  <p>Every student attends both presentation sessions in full unless excused by the instructor. The evaluations and the rankings are completed in class and cannot be made up later.</p>
+</div>
+
+<div class="plib-submit">
+  <div class="plib-submit-title">Turn it in</div>
+  <p class="plib-submit-p">Upload your .zip file to the Canvas assignment for this part. The work is submitted only when the file appears in Canvas.</p>
+  <a class="plib-submit-btn" href="https://canvas.vt.edu/courses/233475/assignments/2894823" target="_blank" rel="noopener noreferrer">Open the Canvas assignment</a>
+  <div class="plib-submit-note">The assignment opens in a new tab.</div>
+</div>
+
+</div>
+</main>
+<script>
+function countWords(text) {
+  return text.trim() === '' ? 0 : text.trim().split(/[ \t\n\r]+/).length;
+}
+function announce(msg) {
+  var el = document.getElementById('plib-live');
+  if (!el) { el = document.createElement('div'); el.id = 'plib-live';
+    el.setAttribute('aria-live','polite'); el.setAttribute('aria-atomic','true');
+    el.style.cssText='position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;';
+    document.body.appendChild(el); }
+  el.textContent = ''; setTimeout(function(){ el.textContent = msg; }, 50);
+}
+function autoResize(ta) {
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(ta.scrollHeight + 2, 600) + 'px';
+}
+function updateCounter(bid, tid) {
+  var ta = document.getElementById(tid);
+  var textEl = document.getElementById('text_' + bid);
+  var wcEl = document.getElementById('wc_' + bid);
+  var ccEl = document.getElementById('cc_' + bid);
+  var ctrEl = document.getElementById('counter_' + bid);
+  if (!ta) return;
+  autoResize(ta);
+  var maxwords = textEl ? parseInt(textEl.getAttribute('data-maxwords') || '0') : 0;
+  var maxchars = textEl ? parseInt(textEl.getAttribute('data-maxchars') || '0') : 0;
+  var minwords = textEl ? parseInt(textEl.getAttribute('data-minwords') || '0') : 0;
+  var text = ta.value;
+  var words = countWords(text);
+  var chars = text.length;
+  if (maxchars && chars > maxchars) {
+    ta.value = text.substring(0, maxchars);
+    text = ta.value; words = countWords(text); chars = text.length;
+  }
+  if (wcEl) wcEl.textContent = words;
+  if (ccEl) ccEl.textContent = chars;
+  if (ctrEl && maxwords) {
+    var pct = words / maxwords;
+    var cls = pct >= 1.0 ? 'bad' : (pct >= 0.8 || (minwords && words < minwords)) ? 'warn' : 'ok';
+    if (pct >= 1.0) { ctrEl.className = 'plib-counter at-limit'; }
+    else { ctrEl.className = 'plib-counter'; }
+    if (wcEl) wcEl.className = 'plib-count-' + cls;
+    if (ccEl) ccEl.className = 'plib-count-' + cls;
+  }
+}
+function copyPrompt(id, btn) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var text = (el.getAttribute('data-copy') || el.textContent || '').replace(/&#10;/g, '\n');
+  var label = (btn.getAttribute('aria-label') || 'item').replace('Copy ','').replace(' to clipboard','');
+  doCopy(text, btn, label + ' copied.', '&#10003; Copied', 2000);
+}
+function copyWithInput(bid, btn) {
+  var el = document.getElementById('text_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!el) return;
+  var tid = el.getAttribute('data-tid');
+  var inputEl = document.getElementById(tid);
+  var prefix = (el.getAttribute('data-prefix') || '').replace(/&#10;/g, '\n');
+  var suffix = (el.getAttribute('data-suffix') || '').replace(/&#10;/g, '\n');
+  var userText = inputEl ? inputEl.value.trim() : '';
+  if (userText.replace(/[\t\n\r ]/g, '').length < 2) {
+    if (warnEl) warnEl.textContent = 'Please write your response before copying.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  var maxwords = parseInt(el.getAttribute('data-maxwords') || '0');
+  var maxchars = parseInt(el.getAttribute('data-maxchars') || '0');
+  var minwords = parseInt(el.getAttribute('data-minwords') || '0');
+  if (minwords && countWords(userText) < minwords) {
+    if (warnEl) warnEl.textContent = 'Response is below the minimum of ' + minwords + ' words.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  if (maxwords && countWords(userText) > maxwords) {
+    if (warnEl) warnEl.textContent = 'Response exceeds the ' + maxwords + ' word limit.';
+    if (inputEl) inputEl.focus(); return;
+  }
+  if (warnEl) warnEl.textContent = '';
+  doCopy(prefix + userText + suffix, btn, 'Copied. Paste into Hokie AI.', '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+function doCopy(text, btn, announcement, label, duration) {
+  function ok() {
+    var orig = btn.innerHTML; btn.innerHTML = label; btn.classList.add('copied');
+    announce(announcement);
+    setTimeout(function() { btn.innerHTML = orig; btn.classList.remove('copied'); }, duration);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(ok).catch(function() { fallback(text, ok); });
+  } else { fallback(text, ok); }
+}
+function fallback(text, cb) {
+  var ta = document.createElement('textarea'); ta.value = text;
+  ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); cb(); } catch(e) {}
+  document.body.removeChild(ta);
+}
+function copyStructured(bid, blockId, btn) {
+  var container = document.getElementById('qitems_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!container) return;
+  var outerDiv = container.closest('.plib-prompt-q');
+  var aiDirective = outerDiv ? (outerDiv.getAttribute('data-ai-directive') || '') : '';
+  var items = container.querySelectorAll('.plib-q-item');
+  var lines = [];
+  var emptyItems = [];
+
+  items.forEach(function(itemEl) {
+    var n = itemEl.getAttribute('data-item-n');
+    var render = itemEl.getAttribute('data-render');
+    var selections = [];
+
+    if (render === 'dropdown') {
+      var sel = itemEl.querySelector('select');
+      if (sel && sel.value) selections.push(sel.value);
+    } else if (render === 'likert') {
+      var checkedRadio = itemEl.querySelector('input[type="radio"]:checked');
+      if (checkedRadio) selections.push(checkedRadio.value);
+    } else if (render === 'checkbox') {
+      var checks = itemEl.querySelectorAll('input[type="checkbox"]:checked');
+      checks.forEach(function(c) { selections.push(c.value); });
+    }
+
+    if (selections.length === 0) {
+      emptyItems.push(n);
+    } else {
+      lines.push('ITEM ' + n + ': ' + selections.join(', '));
+    }
+  });
+
+  if (emptyItems.length > 0) {
+    if (warnEl) {
+      warnEl.textContent = 'Please make a selection for ITEM '
+        + emptyItems.join(', ITEM ') + ' before copying.';
+    }
+    return;
+  }
+
+  if (warnEl) warnEl.textContent = '';
+
+  var directiveLine = aiDirective ? aiDirective + '\n' : '';
+  var envelope = '### ' + blockId + '\n----------\n' + directiveLine + 'RESPONSE:\n'
+    + lines.join('\n') + '\n----------\n###';
+  doCopy(envelope, btn,
+    'Structured response copied. Paste into Hokie AI.',
+    '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+function enforceCheckboxCap(itemEl) {
+  var max = parseInt(itemEl.getAttribute('data-max-select') || '0', 10);
+  if (!max || max < 2) return;
+  var checks = itemEl.querySelectorAll('input[type="checkbox"]');
+  var checked = itemEl.querySelectorAll('input[type="checkbox"]:checked');
+  var atCap = checked.length >= max;
+  checks.forEach(function(c) {
+    if (!c.checked) c.disabled = atCap;
+  });
+}
+function moveItem(btn, direction) {
+  var li = btn.closest('.plib-o-item');
+  if (!li) return;
+  var list = li.parentElement;
+  if (!list) return;
+  if (direction === 'up') {
+    var prev = li.previousElementSibling;
+    if (prev) list.insertBefore(li, prev);
+  } else if (direction === 'down') {
+    var next = li.nextElementSibling;
+    if (next) list.insertBefore(next, li);
+  }
+  updateArrowStates(list);
+}
+function updateArrowStates(list) {
+  var items = list.querySelectorAll('.plib-o-item');
+  items.forEach(function(li, idx) {
+    var rankEl = li.querySelector('.plib-o-rank');
+    if (rankEl) rankEl.textContent = (idx + 1) + '.';
+    var upBtn = li.querySelector('.plib-o-arrow-up');
+    var downBtn = li.querySelector('.plib-o-arrow-down');
+    if (upBtn) upBtn.disabled = (idx === 0);
+    if (downBtn) downBtn.disabled = (idx === items.length - 1);
+    var itemText = li.getAttribute('data-item-text') || '';
+    if (upBtn) upBtn.setAttribute('aria-label', 'Move ' + itemText + ' up');
+    if (downBtn) downBtn.setAttribute('aria-label', 'Move ' + itemText + ' down');
+  });
+}
+function copyOrdered(bid, blockId, btn) {
+  var list = document.getElementById('oitems_' + bid);
+  var warnEl = document.getElementById('warn_' + bid);
+  if (!list) return;
+  var outerDiv = list.closest('.plib-prompt-o');
+  var aiDirective = outerDiv ? (outerDiv.getAttribute('data-ai-directive') || '') : '';
+  var question = list.getAttribute('data-question') || '';
+  var items = list.querySelectorAll('.plib-o-item');
+  var lines = [];
+  items.forEach(function(li, idx) {
+    var itemText = li.getAttribute('data-item-text') || '';
+    lines.push((idx + 1) + '. ' + itemText);
+  });
+  if (warnEl) warnEl.textContent = '';
+  var directiveLine = aiDirective ? aiDirective + '\n' : '';
+  var envelope = '### ' + blockId + '\n----------\n' + directiveLine + 'RESPONSE:\nQuestion: '
+    + question + '\n' + lines.join('\n') + '\n----------\n###';
+  doCopy(envelope, btn,
+    'Ordered response copied. Paste into Hokie AI.',
+    '&#10003; Copied. Paste into Hokie AI', 3000);
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var checkboxItems = document.querySelectorAll('.plib-q-item[data-render="checkbox"]');
+  checkboxItems.forEach(function(itemEl) {
+    var checks = itemEl.querySelectorAll('input[type="checkbox"]');
+    checks.forEach(function(c) {
+      c.addEventListener('change', function() { enforceCheckboxCap(itemEl); });
+    });
+  });
+  var oLists = document.querySelectorAll('.plib-o-list');
+  oLists.forEach(function(list) {
+    updateArrowStates(list);
+  });
+});
+</script>
+</body>
+</html>
