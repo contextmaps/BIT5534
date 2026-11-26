@@ -481,8 +481,8 @@
     <a class="macro-card" data-phase="3" href="#phase-3" style="text-decoration:none;">
       <p class="macro-eyebrow">Phase III</p>
       <p class="macro-title">Project &amp; Delivery</p>
-      <p class="macro-desc">A browser dashboard of the course's models with an AI agent beside it, built in class and presented to peers.</p>
-      <p class="macro-weeks">Weeks 11&ndash;15 &middot; 9 lectures</p>
+      <p class="macro-desc">A team investigation of a made up business with the course's models in a browser workbench and an AI agent beside it, presented to peers.</p>
+      <p class="macro-weeks">Weeks 11&ndash;15 &middot; 6 lectures, 2 presentation days</p>
     </a>
   </nav>
 
@@ -536,7 +536,7 @@ const PHASES = [
     n: 3,
     kicker: "Phase III \u00b7 Weeks 11\u201315",
     title: "Project and Delivery",
-    sub: "Each team builds a browser dashboard of the course's models on one made up business, with a Hokie AI agent beside it that reads the results and retrieves one kind of live public data. Six sessions each add one capability, first on the class case Lumenvale and then on the team's own project, followed by presentations to the other teams and a closing session.",
+    sub: "Each team investigates one made up business with the course's models in a browser workbench, with a Hokie AI agent beside it that reads the results and retrieves one kind of live public data. Six sessions each add one capability, first on the class case Lumenvale and then on the team's own project, followed by two presentation days on which every student evaluates the other teams.",
     weeks: [11, 12, 13, 14, 15],
   },
 ];
@@ -610,17 +610,14 @@ const LECTURES = [
   { id: "lec13_2", week: 13, phase: 3, mode: "project_lab", title: "Governing a Recommendation, from the Data to Monitoring",
     business: "One Lumenvale recommendation taken through five governance gates, from the data to monitoring, then each team takes its own recommendation through the gates with its governance sheet." },
   // Week 14
-  { id: "lec14_1_AM", week: 14, phase: 3, mode: "capstone_demonstration", title: "Presentations, Session 1, Morning Section",
-    business: "AM01, AM02 and AM03 present their course projects. Every student evaluates each presenting team on the five criteria of progress report 3 and ranks the teams at the end of the session." },
-  { id: "lec14_2_AM", week: 14, phase: 3, mode: "capstone_demonstration", title: "Presentations, Session 2, Morning Section",
-    business: "AM04, AM05 and AM06 present their course projects. Every student evaluates each presenting team on the five criteria of progress report 3 and ranks the teams at the end of the session." },
-  { id: "lec14_1_PM", week: 14, phase: 3, mode: "capstone_demonstration", extra: true, title: "Presentations, Session 1, Afternoon Section",
-    business: "PM01 to PM05 present their course projects. Every student evaluates each presenting team on the five criteria of progress report 3 and ranks the teams at the end of the session." },
-  { id: "lec14_2_PM", week: 14, phase: 3, mode: "capstone_demonstration", extra: true, title: "Presentations, Session 2, Afternoon Section",
-    business: "PM06 to PM10 present their course projects. Every student evaluates each presenting team on the five criteria of progress report 3 and ranks the teams at the end of the session." },
-  // Week 15
-  { id: "lec15_1", week: 15, phase: 3, mode: "consolidation", title: "Course Wrap-Up and Closing Reflections",
-    business: "What the semester established about building analytics with an assistant, and where the habit goes after this course." },
+  { id: "pr3_3_1_AM", week: 14, phase: 3, mode: "capstone_demonstration", title: "Presentation Day 1, Morning Section",
+    business: "AM01, AM02 and AM03 present their course projects. Every student evaluates each presenting team on the five criteria of progress report 3 and ranks the teams at the end of the day." },
+  { id: "pr3_3_2_AM", week: 14, phase: 3, mode: "capstone_demonstration", title: "Presentation Day 2, Morning Section",
+    business: "AM04, AM05 and AM06 present their course projects. Every student evaluates each presenting team on the five criteria of progress report 3 and ranks the teams at the end of the day." },
+  { id: "pr3_3_1_PM", week: 14, phase: 3, mode: "capstone_demonstration", extra: true, title: "Presentation Day 1, Afternoon Section",
+    business: "PM01 to PM05 present their course projects. Every student evaluates each presenting team on the five criteria of progress report 3 and ranks the teams at the end of the day." },
+  { id: "pr3_3_2_PM", week: 14, phase: 3, mode: "capstone_demonstration", extra: true, title: "Presentation Day 2, Afternoon Section",
+    business: "PM06 to PM10 present their course projects. Every student evaluates each presenting team on the five criteria of progress report 3 and ranks the teams at the end of the day." },
 ];
 
 /* ============================================================
@@ -660,10 +657,9 @@ const WEEKS = {
   9:  { title: "Model Comparison",                    dates: "10/20, 10/22", due: "HW 8" },
   10: { title: "Text Analytics",                      dates: "10/27, 10/29", due: "HW 9, teams form" },
   11: { title: "An Agent and Its Knowledge",          dates: "11/03, 11/05", due: "Project choices" },
-  12: { title: "The Browser Dashboard and Skills",    dates: "11/10, 11/12", due: "Deliverable 1, Fri 11/13" },
+  12: { title: "The Browser Workbench and Skills",    dates: "11/10, 11/12", due: "Deliverable 1, Fri 11/13" },
   13: { title: "Live Data, Text and Governance",      dates: "11/17, 11/19", due: "Deliverable 2, Fri 11/20" },
-  14: { title: "Team Presentations",                  dates: "12/01, 12/03", due: "Deliverable 3, Mon 11/30, and presentations" },
-  15: { title: "Course Wrap-Up",                      dates: "12/08",        due: "Not graded" },
+  14: { title: "Presentations", label: "14, 15",     dates: "12/03, 12/08", due: "Deliverable 3, Wed 12/02, and presentations" },
 };
 
 /* ============================================================
@@ -729,7 +725,7 @@ const HOMEWORK = [
   { id: "pr2_3", week: 12, part: 3, title: "Deliverable 2, Progress Report, Peer Evaluation",
     business: "Every student submits individually, due with the team's submission: how the team worked, your own share and what you brought to the team thread, anyone who went above and beyond the others, and anyone who contributed less." },
   { id: "pr3_1", week: 13, part: 1, title: "Deliverable 3, Presentation, Team Submission",
-    business: "One PowerPoint file per team, compressed as a .zip file, due Monday 11/30: at most 15 slides that tell the story of the investigation, from the brief to a recommendation, for a presentation of at most 12 minutes in which every member speaks." },
+    business: "One PowerPoint file per team, compressed as a .zip file, due Wednesday 12/2: at most 15 slides that tell the story of the investigation, from the brief to a recommendation, for a presentation of at most 12 minutes in which every member speaks." },
   { id: "pr3_2", week: 13, part: 2, title: "Deliverable 3, Presentation, Peer Evaluation",
     business: "Every student submits individually, due with the team's slides: how the team worked, the slides you prepared and presented, and any teammate who contributed more or less than the other members." },
 ];
@@ -737,8 +733,7 @@ const HOMEWORK = [
 /* Weeks with no homework show what the outline says is due instead. */
 const NO_HOMEWORK_NOTE = {
   1:  "No homework this week. Week 1 is not graded.",
-  14: "No homework. Teams present in both sessions. Every student evaluates each presenting team and ranks the teams at the end of each session.",
-  15: "No homework. The last meeting is not graded.",
+  14: "No homework. Teams present on two presentation days. Every student evaluates each presenting team and ranks the teams at the end of each day.",
 };
 
 const CANVAS_LINKS = {
@@ -768,11 +763,10 @@ const CANVAS_LINKS = {
   "lec12_2":  "https://canvas.vt.edu/courses/233475/assignments/2844150",
   "lec13_1":  "https://canvas.vt.edu/courses/233475/assignments/2844152",
   "lec13_2":  "https://canvas.vt.edu/courses/233475/assignments/2844153",
-  "lec14_1_AM": "https://canvas.vt.edu/courses/233475/assignments/2844155",
-  "lec14_1_PM": "https://canvas.vt.edu/courses/233475/assignments/2894826",
-  "lec14_2_AM": "https://canvas.vt.edu/courses/233475/assignments/2844156",
-  "lec14_2_PM": "https://canvas.vt.edu/courses/233475/assignments/2894827",
-  "lec15_1":  "https://canvas.vt.edu/courses/233475/assignments/2844157",
+  "pr3_3_1_AM": "https://canvas.vt.edu/courses/233475/assignments/2844155",
+  "pr3_3_1_PM": "https://canvas.vt.edu/courses/233475/assignments/2894826",
+  "pr3_3_2_AM": "https://canvas.vt.edu/courses/233475/assignments/2844156",
+  "pr3_3_2_PM": "https://canvas.vt.edu/courses/233475/assignments/2894827",
 };
 
 /* The same idea for the homework parts. A row left as "" shows the tile
@@ -866,7 +860,7 @@ PHASES.forEach(phase => {
     const weekEl = document.createElement("div");
     weekEl.className = "week";
     weekEl.innerHTML = `
-      <div class="week-label">Week<span class="num">${weekNum}</span></div>
+      <div class="week-label">${meta.label ? "Weeks" : "Week"}<span class="num">${meta.label || weekNum}</span></div>
       <div class="week-body">
         <div class="week-head">
           <h3 class="week-title">${meta.title || ""}</h3>
